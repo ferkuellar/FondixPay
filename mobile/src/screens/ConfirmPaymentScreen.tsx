@@ -22,7 +22,8 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
   }
 
   function pay() {
-    const payment = payService(service.id);
+    const serviceId = route.params.serviceId;
+    const payment = payService(serviceId);
     navigation.replace('PaymentSuccess', { paymentId: payment.id });
   }
 
@@ -42,4 +43,3 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
     </Screen>
   );
 }
-

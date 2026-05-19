@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.modules.integrations.aggregator_mock.client import AggregatorMockClient
 from app.modules.notifications.repository import create_notification
+from app.modules.payments.models import Payment
 from app.modules.payments import repository
 from app.modules.receipts.repository import create_receipt
 from app.modules.user_services.repository import get_for_user

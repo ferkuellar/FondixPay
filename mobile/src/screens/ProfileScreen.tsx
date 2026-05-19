@@ -2,12 +2,13 @@ import { Text, View } from 'react-native';
 
 import { PrimaryButton } from '../components/PrimaryButton';
 import { Screen } from '../components/Screen';
-import { useSessionStore } from '../store/sessionStore';
+import { useAuthStore } from '../store/authStore';
 import { sharedStyles } from './styles';
 
 export function ProfileScreen() {
-  const phone = useSessionStore((state) => state.phone);
-  const clearSession = useSessionStore((state) => state.clearSession);
+  const isLoading = useAuthStore((state) => state.isLoading);
+  const signOut = useAuthStore((state) => state.signOut);
+  const user = useAuthStore((state) => state.user);
 
   return (
     <Screen>
@@ -15,11 +16,12 @@ export function ProfileScreen() {
         <Text style={sharedStyles.title}>Mi perfil</Text>
         <View style={sharedStyles.card}>
           <Text style={sharedStyles.body}>Telefono</Text>
-          <Text style={{ fontSize: 22, fontWeight: '800' }}>{phone ?? 'Demo'}</Text>
+          <Text style={{ fontSize: 22, fontWeight: '800' }}>{user?.phone ?? 'Sin telefono'}</Text>
         </View>
-        <PrimaryButton onPress={clearSession}>Cerrar sesion</PrimaryButton>
+        <PrimaryButton disabled={isLoading} onPress={signOut}>
+          {isLoading ? 'Cerrando...' : 'Cerrar sesion'}
+        </PrimaryButton>
       </View>
     </Screen>
   );
 }
-

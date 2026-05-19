@@ -28,6 +28,11 @@ export const sharedStyles = StyleSheet.create({
     flex: 1,
     gap: 16,
   },
+  error: {
+    color: '#B91C1C',
+    fontSize: 15,
+    lineHeight: 21,
+  },
   input: {
     backgroundColor: colors.surface,
     borderColor: colors.border,
@@ -50,4 +55,3 @@ export const sharedStyles = StyleSheet.create({
     fontWeight: '800',
   },
 });
-

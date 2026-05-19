@@ -10,9 +10,10 @@ export async function apiRequest<T>(path: string, options: RequestInit = {}): Pr
   });
 
   if (!response.ok) {
-    throw new Error('No pudimos completar esto. Intenta otra vez.');
+    const errorBody = await response.json().catch(() => undefined);
+    const message = typeof errorBody?.detail === 'string' ? errorBody.detail : 'No pudimos completar esto. Intenta otra vez.';
+    throw new Error(message);
   }
 
   return response.json() as Promise<T>;
 }
-
