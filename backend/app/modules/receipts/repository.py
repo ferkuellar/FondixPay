@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 
+from app.modules.payments.models import Payment
 from app.modules.receipts.models import Receipt
 
 
@@ -15,8 +16,7 @@ def list_for_user(db: Session, user_id: int) -> list[Receipt]:
     return (
         db.query(Receipt)
         .join(Receipt.payment)
-        .filter_by(user_id=user_id)
+        .filter(Payment.user_id == user_id)
         .order_by(Receipt.id.desc())
         .all()
     )
-
