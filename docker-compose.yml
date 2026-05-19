@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-fondix_pay}
+      POSTGRES_USER: ${POSTGRES_USER:-fondix}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fondix}
+    ports:
+      - "5432:5432"
+    volumes:
+      - fondix_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-fondix} -d ${POSTGRES_DB:-fondix_pay}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_URL: postgresql+psycopg://fondix:fondix@postgres:5432/fondix_pay
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  fondix_postgres:
+

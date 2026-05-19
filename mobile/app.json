@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "FONDIX PAY",
+    "slug": "fondix-pay",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "fondixpay",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#0F766E"
+      }
+    },
+    "extra": {
+      "apiUrl": "http://127.0.0.1:8000"
+    }
+  }
+}
+
