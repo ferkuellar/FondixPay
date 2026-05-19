@@ -15,6 +15,7 @@ export type Provider = {
   id: string;
   name: string;
   category: string;
+  icon: string;
 };
 
 export type SavedService = {
@@ -29,9 +30,9 @@ export type SavedService = {
 export type Payment = {
   id: string;
   serviceName: string;
+  providerName: string;
   amount: number;
   status: 'SUCCESS';
   paidAt: string;
   folio: string;
 };
-

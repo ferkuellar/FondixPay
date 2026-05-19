@@ -2,26 +2,26 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
 import { Text, View } from 'react-native';
 
-import { AddServiceScreen } from '../screens/AddServiceScreen';
-import { ConfirmPaymentScreen } from '../screens/ConfirmPaymentScreen';
-import { HistoryScreen } from '../screens/HistoryScreen';
-import { HomeScreen } from '../screens/HomeScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
-import { PaymentSuccessScreen } from '../screens/PaymentSuccessScreen';
-import { ProfileScreen } from '../screens/ProfileScreen';
-import { ServiceDetailScreen } from '../screens/ServiceDetailScreen';
 import { OtpVerificationScreen } from '../screens/auth/OtpVerificationScreen';
 import { PhoneLoginScreen } from '../screens/auth/PhoneLoginScreen';
+import { HomeScreen } from '../screens/home/HomeScreen';
+import { ConfirmPaymentScreen } from '../screens/payments/ConfirmPaymentScreen';
+import { HistoryScreen } from '../screens/payments/HistoryScreen';
+import { PaymentSuccessScreen } from '../screens/payments/PaymentSuccessScreen';
+import { ProfileScreen } from '../screens/profile/ProfileScreen';
+import { AddServiceScreen } from '../screens/services/AddServiceScreen';
+import { ServiceDetailScreen } from '../screens/services/ServiceDetailScreen';
 import { useAuthStore } from '../store/authStore';
 import { colors } from '../theme/colors';
 import type { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export function RootNavigator() {
+export function AppNavigator() {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isRestoring = useAuthStore((state) => state.isRestoring);
   const restoreSession = useAuthStore((state) => state.restoreSession);
-  const token = useAuthStore((state) => state.token);
 
   useEffect(() => {
     restoreSession();
@@ -37,17 +37,16 @@ export function RootNavigator() {
 
   return (
     <Stack.Navigator
-      initialRouteName={token ? 'Home' : 'PhoneLogin'}
       screenOptions={{
         contentStyle: { backgroundColor: colors.background },
         headerShadowVisible: false,
         headerTitleStyle: { color: colors.text },
       }}
     >
-      {token ? (
+      {isAuthenticated ? (
         <>
           <Stack.Screen name="Home" component={HomeScreen} options={{ headerBackVisible: false, title: 'FONDIX PAY' }} />
-          <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Guardar servicio' }} />
+          <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Agregar servicio' }} />
           <Stack.Screen name="ServiceDetail" component={ServiceDetailScreen} options={{ title: 'Tu servicio' }} />
           <Stack.Screen name="ConfirmPayment" component={ConfirmPaymentScreen} options={{ title: 'Confirmar pago' }} />
           <Stack.Screen name="PaymentSuccess" component={PaymentSuccessScreen} options={{ headerBackVisible: false, title: 'Listo' }} />

@@ -5,12 +5,15 @@ import { getMe, logout, requestOtp, verifyOtp, type AuthUser } from '../services
 
 type AuthState = {
   error?: string;
+  isAuthenticated: boolean;
   isLoading: boolean;
   isRestoring: boolean;
   otpDev?: string;
   token?: string;
   user?: AuthUser;
   clearError: () => void;
+  login: (phone: string, otp: string) => Promise<void>;
+  logout: () => Promise<void>;
   requestLoginCode: (phone: string) => Promise<void>;
   restoreSession: () => Promise<void>;
   signInWithOtp: (phone: string, otp: string) => Promise<void>;
@@ -20,6 +23,7 @@ type AuthState = {
 const TOKEN_KEY = 'fondix_pay_token';
 
 export const useAuthStore = create<AuthState>((set, get) => ({
+  isAuthenticated: false,
   isLoading: false,
   isRestoring: true,
   clearError: () => set({ error: undefined }),
@@ -40,14 +44,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
       if (!token) {
-        set({ isRestoring: false, token: undefined, user: undefined });
+        set({ isAuthenticated: false, isRestoring: false, token: undefined, user: undefined });
         return;
       }
       const user = await getMe(token);
-      set({ isRestoring: false, token, user });
+      set({ isAuthenticated: true, isRestoring: false, token, user });
     } catch {
       await SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => undefined);
-      set({ isRestoring: false, token: undefined, user: undefined });
+      set({ isAuthenticated: false, isRestoring: false, token: undefined, user: undefined });
     }
   },
   signInWithOtp: async (phone, otp) => {
@@ -55,7 +59,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const response = await verifyOtp(phone, otp);
       await SecureStore.setItemAsync(TOKEN_KEY, response.access_token);
-      set({ otpDev: undefined, token: response.access_token, user: response.user });
+      set({ isAuthenticated: true, otpDev: undefined, token: response.access_token, user: response.user });
     } catch (error) {
       set({ error: getErrorMessage(error) });
       throw error;
@@ -70,9 +74,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await logout(token).catch(() => undefined);
       await SecureStore.deleteItemAsync(TOKEN_KEY);
     } finally {
-      set({ error: undefined, isLoading: false, otpDev: undefined, token: undefined, user: undefined });
+      set({ error: undefined, isAuthenticated: false, isLoading: false, otpDev: undefined, token: undefined, user: undefined });
     }
   },
+  login: async (phone, otp) => get().signInWithOtp(phone, otp),
+  logout: async () => get().signOut(),
 }));
 
 function getErrorMessage(error: unknown) {
