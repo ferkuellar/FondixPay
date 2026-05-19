@@ -39,7 +39,7 @@ export function HomeScreen({ navigation }: Props) {
             </View>
             <View style={{ flex: 1, gap: 4 }}>
               <Text style={{ color: colors.text, fontSize: 18, fontWeight: '800' }}>{service.alias}</Text>
-              <Text style={{ color: colors.muted }}>{service.provider.name} · {service.dueText}</Text>
+              <Text style={{ color: colors.muted }}>{service.provider.displayName} · {service.dueText}</Text>
             </View>
             <View style={{ alignItems: 'flex-end', gap: 8 }}>
               <Text style={{ color: service.amountDue > 0 ? colors.text : colors.success, fontSize: 19, fontWeight: '800' }}>

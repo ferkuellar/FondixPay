@@ -30,7 +30,7 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
     const payment: Payment = {
       id: `${Date.now()}`,
       serviceName: service.alias,
-      providerName: service.provider.name,
+      providerName: service.provider.displayName,
       amount: service.amountDue,
       status: 'SUCCESS',
       paidAt: new Date().toISOString(),

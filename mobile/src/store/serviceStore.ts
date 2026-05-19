@@ -3,25 +3,39 @@ import { create } from 'zustand';
 import type { Provider, SavedService } from '../types';
 
 const providers: Provider[] = [
-  { id: 'cfe', name: 'CFE', category: 'Luz', icon: '⚡' },
-  { id: 'telmex', name: 'Telmex', category: 'Internet', icon: '📶' },
-  { id: 'telcel', name: 'Telcel', category: 'Telefono', icon: '📱' },
-  { id: 'agua', name: 'Agua', category: 'Agua', icon: '💧' },
-  { id: 'gas', name: 'Gas', category: 'Gas', icon: '🔥' },
-  { id: 'izzi', name: 'Izzi', category: 'Internet / cable', icon: '📺' },
+  {
+    id: '1',
+    name: 'cfe',
+    displayName: 'CFE',
+    category: 'ELECTRICITY',
+    iconKey: 'electricity',
+    integrationType: 'MOCK',
+    isActive: true,
+    sortOrder: 1,
+    icon: '⚡',
+  },
+  {
+    id: '2',
+    name: 'telmex',
+    displayName: 'Telmex',
+    category: 'INTERNET',
+    iconKey: 'internet',
+    integrationType: 'MOCK',
+    isActive: true,
+    sortOrder: 2,
+    icon: '📶',
+  },
 ];
 
 type ServiceState = {
-  providers: Provider[];
   services: SavedService[];
-  addService: (providerId: string, alias: string, reference: string) => SavedService;
+  addService: (provider: Provider, alias: string, reference: string) => SavedService;
   getService: (serviceId: string) => SavedService | undefined;
   markServicePaid: (serviceId: string) => void;
   removeService: (serviceId: string) => void;
 };
 
 export const useServiceStore = create<ServiceState>((set, get) => ({
-  providers,
   services: [
     {
       id: 'demo-cfe',
@@ -40,13 +54,12 @@ export const useServiceStore = create<ServiceState>((set, get) => ({
       dueText: 'vence manana',
     },
   ],
-  addService: (providerId, alias, reference) => {
-    const provider = providers.find((item) => item.id === providerId) ?? providers[0];
+  addService: (provider, alias, reference) => {
     const amountDue = 250 + (reference.split('').reduce((sum, char) => sum + char.charCodeAt(0), 0) % 1100);
     const service: SavedService = {
       id: `${Date.now()}`,
       provider,
-      alias: alias.trim() || provider.category,
+      alias: alias.trim() || provider.displayName,
       reference,
       amountDue,
       dueText: 'vence en 3 dias',

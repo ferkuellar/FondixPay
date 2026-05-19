@@ -14,7 +14,12 @@ export type RootStackParamList = {
 export type Provider = {
   id: string;
   name: string;
+  displayName: string;
   category: string;
+  iconKey: string;
+  integrationType: string;
+  isActive: boolean;
+  sortOrder: number;
   icon: string;
 };
 

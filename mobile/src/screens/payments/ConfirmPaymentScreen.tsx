@@ -38,7 +38,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
           <Text style={sharedStyles.title}>Confirmar pago</Text>
           <View style={sharedStyles.card}>
             <Text style={{ color: colors.text, fontSize: 44 }}>{service.provider.icon}</Text>
-            <Text style={{ color: colors.text, fontSize: 24, fontWeight: '800', marginTop: 12 }}>{service.provider.name}</Text>
+            <Text style={{ color: colors.text, fontSize: 24, fontWeight: '800', marginTop: 12 }}>{service.provider.displayName}</Text>
             <Text style={sharedStyles.body}>{service.alias}</Text>
             <Text style={[sharedStyles.amount, { marginTop: 24 }]}>${service.amountDue.toFixed(0)}</Text>
           </View>

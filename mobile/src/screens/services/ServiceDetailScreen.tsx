@@ -44,7 +44,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
       <View style={sharedStyles.container}>
         <View style={sharedStyles.card}>
           <Text style={{ color: colors.text, fontSize: 44 }}>{currentService.provider.icon}</Text>
-          <Text style={{ color: colors.muted, fontSize: 16, marginTop: 8 }}>{currentService.provider.name}</Text>
+          <Text style={{ color: colors.muted, fontSize: 16, marginTop: 8 }}>{currentService.provider.displayName}</Text>
           <Text style={{ color: colors.text, fontSize: 28, fontWeight: '800', marginTop: 8 }}>{currentService.alias}</Text>
           <Text style={{ color: colors.muted, marginTop: 8 }}>Referencia {currentService.reference}</Text>
           <Text style={[sharedStyles.amount, { marginTop: 24 }]}>${currentService.amountDue.toFixed(0)}</Text>
