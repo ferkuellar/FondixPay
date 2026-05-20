@@ -17,3 +17,10 @@ Updated: 2026-05-19
 | App Store / Play Store readiness missing | Medium | Roadmap includes Phase 15 | Define store checklist later |
 | Regulatory risk if product becomes fintech wallet | High | Wallet not approved | Keep scope to service payments until legal review |
 | Scope creep across wallet, KYC, admin, and real payments | High | AXON-AI sprint boundaries | Require decisions before expanding scope |
+| Development OTP is returned in API response | High | Mock/dev status documented | Gate or remove `otp_dev` outside development |
+| JWT secret has insecure default fallback | High | `.env.example` uses placeholder | Fail startup outside development without strong secret |
+| `Base.metadata.create_all` runs at startup | High | Alembic scaffold exists | Replace with migration discipline before production |
+| No rate limiting on OTP or sensitive endpoints | High | Documented in security docs | Add rate limiting before any pilot |
+| Mobile dependency audit reports high vulnerabilities | High | No forced breaking upgrade applied | Plan Expo/dependency upgrade path |
+| Backend tests are missing | Medium | Manual/TestClient checks documented | Add auth/API/ownership/payment mock tests |
+| CI validation is missing | Medium | Commands documented | Add CI for backend and mobile typecheck |

@@ -1,46 +1,90 @@
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
 
-import { colors } from '../theme/colors';
+import { colors, radius, shadows, spacing, typography } from '../theme';
+
+type Variant = 'primary' | 'secondary' | 'success' | 'danger';
+type Size = 'lg' | 'md';
 
 type Props = {
   children: ReactNode;
   onPress: () => void;
   disabled?: boolean;
+  loading?: boolean;
+  variant?: Variant;
+  size?: Size;
 };
 
-export function PrimaryButton({ children, onPress, disabled }: Props) {
+export function PrimaryButton({
+  children,
+  onPress,
+  disabled,
+  loading,
+  variant = 'primary',
+  size = 'lg',
+}: Props) {
+  const isDisabled = disabled || loading;
+
   return (
     <Pressable
       accessibilityRole="button"
-      disabled={disabled}
+      accessibilityState={{ disabled: isDisabled, busy: loading }}
+      disabled={isDisabled}
       onPress={onPress}
-      style={({ pressed }) => [styles.button, pressed && styles.pressed, disabled && styles.disabled]}
+      style={({ pressed }) => [
+        styles.base,
+        size === 'md' && styles.md,
+        styles[variant],
+        pressed && !isDisabled && styles.pressed,
+        isDisabled && styles.disabled,
+        variant === 'primary' && !isDisabled && shadows.button,
+      ]}
     >
-      <Text style={styles.label}>{children}</Text>
+      {loading ? (
+        <ActivityIndicator color={variant === 'secondary' ? colors.primary : '#FFFFFF'} />
+      ) : (
+        <Text style={[styles.label, variant === 'secondary' && styles.secondaryLabel]}>{children}</Text>
+      )}
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  button: {
+  base: {
     alignItems: 'center',
-    backgroundColor: colors.primary,
-    borderRadius: 8,
-    minHeight: 56,
+    borderRadius: radius.md,
     justifyContent: 'center',
-    paddingHorizontal: 20,
+    minHeight: 52,
+    paddingHorizontal: spacing.xl,
+  },
+  danger: {
+    backgroundColor: colors.danger,
   },
   disabled: {
     opacity: 0.45,
   },
   label: {
+    ...typography.button,
     color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '700',
+  },
+  md: {
+    minHeight: 44,
   },
   pressed: {
-    backgroundColor: colors.primaryDark,
+    opacity: 0.9,
+  },
+  primary: {
+    backgroundColor: colors.primary,
+  },
+  secondary: {
+    backgroundColor: colors.bg,
+    borderColor: colors.primary,
+    borderWidth: 1.5,
+  },
+  secondaryLabel: {
+    color: colors.primary,
+  },
+  success: {
+    backgroundColor: colors.success,
   },
 });
-

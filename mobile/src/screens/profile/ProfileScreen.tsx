@@ -1,9 +1,10 @@
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { BottomTabBar } from '../../components/BottomTabBar';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { useAuthStore } from '../../store/authStore';
-import { sharedStyles } from '../styles';
+import { colors, radius, spacing, typography } from '../../theme';
 
 export function ProfileScreen() {
   const isLoading = useAuthStore((state) => state.isLoading);
@@ -11,21 +12,60 @@ export function ProfileScreen() {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <Screen>
-      <View style={sharedStyles.container}>
-        <Text style={sharedStyles.title}>Mi perfil</Text>
-        <View style={sharedStyles.card}>
-          <Text style={sharedStyles.body}>Telefono</Text>
-          <Text style={{ fontSize: 22, fontWeight: '800' }}>{user?.phone ?? 'Sin telefono'}</Text>
+    <Screen padded={false} style={styles.screen}>
+      <View style={styles.content}>
+        <Text style={styles.title}>Mi perfil</Text>
+        <View style={styles.card}>
+          <Text style={styles.label}>Teléfono</Text>
+          <Text style={styles.value}>{user?.phone ?? 'Sin teléfono'}</Text>
         </View>
-        <View style={sharedStyles.card}>
-          <Text style={sharedStyles.body}>Cuenta</Text>
-          <Text style={{ fontSize: 18, fontWeight: '800' }}>Demo segura</Text>
+        <View style={styles.card}>
+          <Text style={styles.label}>Cuenta</Text>
+          <Text style={styles.value}>Demo segura</Text>
+          <Text style={styles.note}>Pagos simulados — no es dinero real.</Text>
         </View>
-        <PrimaryButton disabled={isLoading} onPress={logout}>
-          {isLoading ? 'Cerrando...' : 'Cerrar sesion'}
+        <PrimaryButton disabled={isLoading} loading={isLoading} onPress={logout} variant="danger">
+          CERRAR SESIÓN
         </PrimaryButton>
       </View>
+      <BottomTabBar active="Profile" />
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.bg,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    gap: spacing.xs,
+    padding: spacing.lg,
+  },
+  content: {
+    flex: 1,
+    gap: spacing.lg,
+    padding: spacing.xl,
+  },
+  label: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+  },
+  note: {
+    ...typography.caption,
+    color: colors.warning,
+    marginTop: spacing.sm,
+  },
+  screen: {
+    flex: 1,
+  },
+  title: {
+    ...typography.title,
+    color: colors.textPrimary,
+  },
+  value: {
+    ...typography.heading,
+    color: colors.textPrimary,
+    fontSize: 20,
+  },
+});

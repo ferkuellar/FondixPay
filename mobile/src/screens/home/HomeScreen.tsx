@@ -1,19 +1,23 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { BottomTabBar } from '../../components/BottomTabBar';
+import { EmptyState } from '../../components/EmptyState';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
+import { ServiceCard } from '../../components/ServiceCard';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
-import { colors } from '../../theme/colors';
+import { colors, radius, shadows, spacing, typography } from '../../theme';
 import type { RootStackParamList } from '../../types';
-import { sharedStyles } from '../styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export function HomeScreen({ navigation }: Props) {
   const services = useServiceStore((state) => state.services);
   const selectService = usePaymentStore((state) => state.selectService);
+  const userName = 'Ana';
+  const totalDue = services.reduce((sum, service) => sum + Math.max(service.amountDue, 0), 0);
 
   function payNow(serviceId: string) {
     selectService(serviceId);
@@ -21,48 +25,94 @@ export function HomeScreen({ navigation }: Props) {
   }
 
   return (
-    <Screen>
-      <ScrollView contentContainerStyle={{ gap: 18, paddingBottom: 24 }}>
-        <View style={{ gap: 8 }}>
-          <Text style={sharedStyles.title}>Hola</Text>
-          <Text style={sharedStyles.body}>Servicios guardados</Text>
+    <Screen padded={false} style={styles.screen}>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <View style={styles.header}>
+          <Text style={styles.greeting}>Hola, {userName} 👋</Text>
         </View>
 
-        {services.map((service) => (
-          <Pressable
-            key={service.id}
-            onPress={() => navigation.navigate('ServiceDetail', { serviceId: service.id })}
-            style={sharedStyles.serviceRow}
-          >
-            <View style={sharedStyles.serviceIcon}>
-              <Text style={{ fontSize: 28 }}>{service.provider.icon}</Text>
-            </View>
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text style={{ color: colors.text, fontSize: 18, fontWeight: '800' }}>{service.alias}</Text>
-              <Text style={{ color: colors.muted }}>{service.provider.displayName} · {service.dueText}</Text>
-            </View>
-            <View style={{ alignItems: 'flex-end', gap: 8 }}>
-              <Text style={{ color: service.amountDue > 0 ? colors.text : colors.success, fontSize: 19, fontWeight: '800' }}>
-                ${service.amountDue.toFixed(0)}
-              </Text>
-              <Pressable
-                accessibilityRole="button"
-                disabled={service.amountDue <= 0}
-                onPress={() => payNow(service.id)}
-                style={[sharedStyles.smallButton, service.amountDue <= 0 && { opacity: 0.45 }]}
-              >
-                <Text style={sharedStyles.smallButtonText}>{service.amountDue > 0 ? 'Pagar' : 'Listo'}</Text>
-              </Pressable>
-            </View>
-          </Pressable>
-        ))}
+        <Text style={styles.sectionTitle}>Pagos pendientes</Text>
 
-        <View style={sharedStyles.actions}>
-          <PrimaryButton onPress={() => navigation.navigate('AddService')}>+ Agregar servicio</PrimaryButton>
-          <Text style={sharedStyles.link} onPress={() => navigation.navigate('History')}>Ver historial</Text>
-          <Text style={sharedStyles.link} onPress={() => navigation.navigate('Profile')}>Mi perfil</Text>
-        </View>
+        {services.length === 0 ? (
+          <EmptyState
+            action={<PrimaryButton onPress={() => navigation.navigate('AddService')}>AGREGAR PRIMER SERVICIO</PrimaryButton>}
+            message="Agrega luz, internet o celular para verlos aquí."
+            title="Aún no tienes servicios"
+          />
+        ) : (
+          <View style={styles.list}>
+            {services.map((service) => (
+              <ServiceCard
+                key={service.id}
+                onPay={() => payNow(service.id)}
+                onPress={() => navigation.navigate('ServiceDetail', { serviceId: service.id })}
+                service={service}
+              />
+            ))}
+          </View>
+        )}
+
+        {services.length > 0 ? (
+          <View style={[styles.summaryCard, shadows.card]}>
+            <View>
+              <Text style={styles.summaryLabel}>Total a pagar este mes</Text>
+              <Text style={styles.summaryAmount}>${totalDue.toFixed(0)}</Text>
+            </View>
+            <Text style={styles.summaryEmoji}>👛</Text>
+          </View>
+        ) : null}
       </ScrollView>
+      <BottomTabBar active="Home" />
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  greeting: {
+    ...typography.title,
+    color: colors.textPrimary,
+    fontSize: 24,
+  },
+  header: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+  },
+  list: {
+    gap: spacing.md,
+    paddingHorizontal: spacing.xl,
+  },
+  screen: {
+    flex: 1,
+  },
+  scroll: {
+    gap: spacing.lg,
+    paddingBottom: spacing.lg,
+  },
+  sectionTitle: {
+    ...typography.heading,
+    color: colors.textPrimary,
+    fontSize: 18,
+    paddingHorizontal: spacing.xl,
+  },
+  summaryAmount: {
+    ...typography.title,
+    color: colors.textPrimary,
+    marginTop: spacing.xs,
+  },
+  summaryCard: {
+    alignItems: 'center',
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.lg,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginHorizontal: spacing.xl,
+    padding: spacing.xl,
+  },
+  summaryEmoji: {
+    fontSize: 40,
+  },
+  summaryLabel: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+  },
+});

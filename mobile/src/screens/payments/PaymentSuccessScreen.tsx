@@ -1,12 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
+import { SuccessIllustration } from '../../components/SuccessIllustration';
 import { usePaymentStore } from '../../store/paymentStore';
-import { colors } from '../../theme/colors';
+import { colors, spacing, typography } from '../../theme';
 import type { RootStackParamList } from '../../types';
-import { sharedStyles } from '../styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PaymentSuccess'>;
 
@@ -15,18 +15,62 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
 
   return (
     <Screen>
-      <View style={[sharedStyles.container, { justifyContent: 'center' }]}>
-        <Text style={{ color: colors.success, fontSize: 56, textAlign: 'center' }}>✓</Text>
-        <Text style={[sharedStyles.title, { color: colors.success, textAlign: 'center' }]}>Ya quedo pagado</Text>
-        <Text style={[sharedStyles.body, { textAlign: 'center' }]}>
-          {payment ? `${payment.providerName} por $${payment.amount.toFixed(0)}` : 'Tu pago se guardo.'}
+      <View style={styles.container}>
+        <SuccessIllustration />
+        <Text style={styles.title}>¡Ya quedó pagado!</Text>
+        <Text style={styles.body}>
+          {payment
+            ? `Tu pago de ${payment.providerName} por $${payment.amount.toFixed(0)} se guardó correctamente.`
+            : 'Tu pago se guardó correctamente.'}
         </Text>
-        {payment ? <Text style={[sharedStyles.body, { textAlign: 'center' }]}>Folio {payment.folio}</Text> : null}
-        <View style={sharedStyles.actions}>
-          <PrimaryButton onPress={() => navigation.replace('History')}>Ver historial</PrimaryButton>
-          <Text style={sharedStyles.link} onPress={() => navigation.replace('Home')}>Volver al inicio</Text>
+        {payment ? (
+          <>
+            <Text style={styles.refLabel}>Número de referencia</Text>
+            <Text style={styles.refValue}>{payment.folio}</Text>
+          </>
+        ) : null}
+        <View style={styles.actions}>
+          <PrimaryButton onPress={() => navigation.replace('History')} variant="secondary">
+            VER COMPROBANTE
+          </PrimaryButton>
+          <PrimaryButton onPress={() => navigation.replace('Home')}>LISTO</PrimaryButton>
         </View>
       </View>
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  actions: {
+    gap: spacing.md,
+    marginTop: spacing.xxxl,
+    width: '100%',
+  },
+  body: {
+    ...typography.body,
+    color: colors.textSecondary,
+    marginTop: spacing.md,
+    textAlign: 'center',
+  },
+  container: {
+    alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
+  },
+  refLabel: {
+    ...typography.caption,
+    color: colors.textMuted,
+    marginTop: spacing.xl,
+  },
+  refValue: {
+    ...typography.heading,
+    color: colors.textPrimary,
+    marginTop: spacing.xs,
+  },
+  title: {
+    ...typography.title,
+    color: colors.textPrimary,
+    marginTop: spacing.xl,
+    textAlign: 'center',
+  },
+});

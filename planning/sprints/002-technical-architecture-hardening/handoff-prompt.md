@@ -17,3 +17,5 @@ Read first:
 Task: audit and harden the existing Expo/FastAPI implementation without adding features. Focus on backend structure, config, database/session, auth/security, CORS, errors, dependencies, mobile state/API client, typecheck/tests, `.env.example`, and Docker Compose.
 
 Do not integrate real payments, KYC, wallet, microservices, Kubernetes, or production release changes.
+
+Current Phase 2 output: read `docs/TECHNICAL_HARDENING_AUDIT.md` before starting any follow-up hardening work. Treat its P0 backlog as the next implementation candidate list.

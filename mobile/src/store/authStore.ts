@@ -9,9 +9,11 @@ type AuthState = {
   isLoading: boolean;
   isRestoring: boolean;
   otpDev?: string;
+  showAccountWelcome: boolean;
   token?: string;
   user?: AuthUser;
   clearError: () => void;
+  dismissAccountWelcome: () => void;
   login: (phone: string, otp: string) => Promise<void>;
   logout: () => Promise<void>;
   requestLoginCode: (phone: string) => Promise<void>;
@@ -26,7 +28,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   isAuthenticated: false,
   isLoading: false,
   isRestoring: true,
+  showAccountWelcome: false,
   clearError: () => set({ error: undefined }),
+  dismissAccountWelcome: () => set({ showAccountWelcome: false }),
   requestLoginCode: async (phone) => {
     set({ error: undefined, isLoading: true, otpDev: undefined });
     try {
@@ -59,7 +63,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const response = await verifyOtp(phone, otp);
       await SecureStore.setItemAsync(TOKEN_KEY, response.access_token);
-      set({ isAuthenticated: true, otpDev: undefined, token: response.access_token, user: response.user });
+      set({
+        isAuthenticated: true,
+        otpDev: undefined,
+        showAccountWelcome: true,
+        token: response.access_token,
+        user: response.user,
+      });
     } catch (error) {
       set({ error: getErrorMessage(error) });
       throw error;

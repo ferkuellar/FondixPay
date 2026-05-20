@@ -1,16 +1,20 @@
 import type { ReactNode } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+import { SafeAreaView, StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { colors } from '../theme/colors';
+import { colors, spacing } from '../theme';
 
 type Props = {
   children: ReactNode;
+  style?: ViewStyle;
+  padded?: boolean;
 };
 
-export function Screen({ children }: Props) {
+export function Screen({ children, style, padded = true }: Props) {
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.content}>{children}</View>
+      <StatusBar style="dark" />
+      <View style={[styles.content, padded && styles.padded, style]}>{children}</View>
     </SafeAreaView>
   );
 }
@@ -18,11 +22,13 @@ export function Screen({ children }: Props) {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    padding: 20,
+  },
+  padded: {
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
   },
   safe: {
-    backgroundColor: colors.background,
+    backgroundColor: colors.bg,
     flex: 1,
   },
 });
-

@@ -51,3 +51,45 @@ Decision: Future UI/UX work must align with `fondix.png` if that asset is added 
 Rationale: Visual direction must be explicit before production polish.
 
 Current asset status: `fondix.png` was not found in this repo during Phase 1 inspection.
+
+## ADR-009 - Phase 2 Is Audit Baseline, Not Feature Hardening
+
+Decision: Phase 2 records the technical hardening baseline and backlog without changing runtime behavior.
+
+Rationale: The product still runs mock/dev flows. The safest next step is to document exact risks and implement hardening in targeted follow-up work.
+
+## ADR-010 - Keep Mock Payment Flow Unchanged During Technical Audit
+
+Decision: Payment, receipt, user service, and mobile navigation behavior remain unchanged in Phase 2.
+
+Rationale: The phase goal is architecture audit and validation. Changing payment semantics before ledger/audit/provider decisions would create hidden risk.
+
+## ADR-011 - Do Not Apply Breaking Dependency Fixes Automatically
+
+Decision: `npm audit fix --force` will not be applied automatically during Phase 2.
+
+Rationale: The audit indicates a breaking Expo upgrade path. Dependency remediation must be planned and validated separately.
+
+## ADR-012 - Development OTP Length (6 Digits)
+
+Decision: The development OTP remains 6 digits (`123456`) as documented in `AGENTS.md` and implemented in the current codebase. The 4-digit OTP shown in mockups `03-otp-input.png` and `04-otp-active.png` is outdated. `OtpVerificationScreen` must render 6 input boxes, not 4.
+
+Rationale: Changing OTP length would alter auth semantics and dev tooling without an approved auth sprint. Visual mockups for OTP are superseded for digit count only.
+
+## ADR-013 - UI Visual Reference Assets
+
+Decision: `fondix.png` is not used. Sprint 003 visual reference is the 14 per-screen PNGs in `references/` (`01-splash.png` through `14-history.png`). `docs/UI_UX_GUIDELINES.md` must note this at sprint close.
+
+Rationale: Per-screen references are present in the repo and map directly to implementation screens. This supersedes the asset status note in ADR-008 for Sprint 003 execution.
+
+## ADR-014 - Mobile Styling Approach (StyleSheet + Theme Tokens)
+
+Decision: Keep React Native `StyleSheet` with centralized design tokens under `mobile/src/theme/`. Do not introduce NativeWind, Tailwind, or other styling frameworks in Sprint 003.
+
+Rationale: Preserve the existing implementation pattern and avoid a large structural migration without justification.
+
+## ADR-015 - Splash Illustration Placeholder
+
+Decision: The central splash illustration (person with phone and floating service icons in `01-splash.png`) is implemented as a marked visual placeholder (`View` with background + emoji) until the real asset is delivered. Code must include a `TODO` comment referencing the pending asset.
+
+Rationale: The illustration is not available as a production asset in the repo; a labeled placeholder avoids blocking the rest of the UI system work.

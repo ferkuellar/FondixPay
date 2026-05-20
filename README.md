@@ -14,6 +14,7 @@ Documentos principales:
 - [planning/ROADMAP.md](planning/ROADMAP.md): fases oficiales del proyecto.
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): arquitectura actual documentada.
 - [docs/SECURITY.md](docs/SECURITY.md): riesgos y reglas de seguridad.
+- [docs/TECHNICAL_HARDENING_AUDIT.md](docs/TECHNICAL_HARDENING_AUDIT.md): auditoria tecnica de Fase 2.
 
 ## Estructura 
 
@@ -71,11 +72,11 @@ Advertencia: este flujo es solo para desarrollo y validacion de producto. No eje
 
 ## Siguiente fase recomendada
 
-Fase 2 - Technical Architecture Hardening: auditar backend, mobile, configuracion, seguridad, dependencias, manejo de errores, estado mobile, `.env.example`, Docker y pruebas iniciales sin agregar nuevas features.
+Fase 3 - UI/UX Production System, salvo que se priorice primero implementar los P0 de hardening registrados en `docs/TECHNICAL_HARDENING_AUDIT.md`.
 
 ## Primer commit sugerido
 
 ```powershell
 git add .
-git commit -m "phase-1: align existing fondixpay repo with axon-ai operating model"
+git commit -m "phase-2: audit and harden technical architecture baseline"
 ```

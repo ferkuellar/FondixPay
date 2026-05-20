@@ -2,6 +2,7 @@ export type RootStackParamList = {
   Onboarding: undefined;
   PhoneLogin: undefined;
   OtpVerification: { phone: string };
+  AccountCreated: undefined;
   Home: undefined;
   AddService: undefined;
   ServiceDetail: { serviceId: string };

@@ -1,11 +1,14 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Text, View } from 'react-native';
+import { useState } from 'react';
+import { View } from 'react-native';
 
+import { ErrorState } from '../../components/ErrorState';
+import { LoadingState } from '../../components/LoadingState';
+import { PaymentSummaryCard } from '../../components/PaymentSummaryCard';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
-import { colors } from '../../theme/colors';
 import type { RootStackParamList } from '../../types';
 import { sharedStyles } from '../styles';
 
@@ -14,36 +17,70 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ConfirmPayment'>;
 export function ConfirmPaymentScreen({ navigation, route }: Props) {
   const service = useServiceStore((state) => state.getService(route.params.serviceId));
   const payService = usePaymentStore((state) => state.payService);
+  const [isPaying, setIsPaying] = useState(false);
+  const [paymentFailed, setPaymentFailed] = useState(false);
 
   if (!service) {
     return (
       <Screen>
         <View style={sharedStyles.container}>
-          <Text style={sharedStyles.title}>No encontramos este servicio</Text>
-          <PrimaryButton onPress={() => navigation.replace('Home')}>Volver al inicio</PrimaryButton>
+          <ErrorState
+            message="No encontramos este servicio."
+            onRetry={() => navigation.replace('Home')}
+            retryLabel="VOLVER AL INICIO"
+          />
         </View>
       </Screen>
     );
   }
 
+  if (paymentFailed) {
+    return (
+      <Screen>
+        <ErrorState
+          message="No pudimos completar el pago. Intenta de nuevo."
+          onRetry={() => setPaymentFailed(false)}
+        />
+      </Screen>
+    );
+  }
+
+  if (isPaying) {
+    return (
+      <Screen>
+        <LoadingState message="Procesando pago..." />
+      </Screen>
+    );
+  }
+
   function pay() {
-    const payment = payService(route.params.serviceId);
-    navigation.replace('PaymentSuccess', { paymentId: payment.id });
+    setIsPaying(true);
+    setPaymentFailed(false);
+    setTimeout(() => {
+      try {
+        const payment = payService(route.params.serviceId);
+        setIsPaying(false);
+        navigation.replace('PaymentSuccess', { paymentId: payment.id });
+      } catch {
+        setIsPaying(false);
+        setPaymentFailed(true);
+      }
+    }, 700);
   }
 
   return (
     <Screen>
       <View style={[sharedStyles.container, { justifyContent: 'space-between' }]}>
-        <View style={{ gap: 16 }}>
-          <Text style={sharedStyles.title}>Confirmar pago</Text>
-          <View style={sharedStyles.card}>
-            <Text style={{ color: colors.text, fontSize: 44 }}>{service.provider.icon}</Text>
-            <Text style={{ color: colors.text, fontSize: 24, fontWeight: '800', marginTop: 12 }}>{service.provider.displayName}</Text>
-            <Text style={sharedStyles.body}>{service.alias}</Text>
-            <Text style={[sharedStyles.amount, { marginTop: 24 }]}>${service.amountDue.toFixed(0)}</Text>
-          </View>
-        </View>
-        <PrimaryButton disabled={service.amountDue <= 0} onPress={pay}>Pagar ahora</PrimaryButton>
+        <PaymentSummaryCard
+          alias={service.alias}
+          amount={service.amountDue}
+          category={service.provider.category}
+          providerName={service.provider.displayName}
+          reference={service.reference}
+        />
+        <PrimaryButton disabled={service.amountDue <= 0} onPress={pay} variant="success">
+          PAGAR
+        </PrimaryButton>
       </View>
     </Screen>
   );

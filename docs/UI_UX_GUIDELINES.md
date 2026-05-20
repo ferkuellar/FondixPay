@@ -8,15 +8,16 @@ Visual style should be professional fintech: clear hierarchy, calm colors, stron
 
 ## Visual Reference
 
-`fondix.png` should guide Phase 3 if added to the repo or `references/`.
+Sprint 003 uses per-screen PNG mockups in `references/` (`01-splash.png` through `14-history.png`), not a single `fondix.png` file.
 
-Current status: `fondix.png` was not found during Phase 1 inspection.
+`fondix.png` was not found in this repo during Phase 1 inspection and is superseded for UI work by ADR-013.
 
 ## Current Screens
 
 - Onboarding.
 - PhoneLogin.
 - OtpVerification.
+- AccountCreated.
 - Home.
 - AddService.
 - ServiceDetail.
@@ -54,3 +55,13 @@ Current status: `fondix.png` was not found during Phase 1 inspection.
 ## Consistency
 
 Use shared theme tokens for color, typography, spacing, and components. Avoid one-off screen styling during Phase 3.
+
+## Language (product copy)
+
+- Prefer: "Ya quedó pagado", "Pagar", "Listo".
+- Primary actions in uppercase on buttons: `PAGAR`, `CONTINUAR`, `LISTO`.
+- Development OTP remains 6 digits (`123456`); OTP UI uses 6 boxes (ADR-012).
+
+## Visual reference note (2026-05-19)
+
+Phase 3 alignment uses `references/01-splash.png` … `references/14-history.png` as the authoritative per-screen mockups. `fondix.png` is not used.

@@ -12,6 +12,16 @@
 8. Run mobile typecheck if dependencies are installed or document why not.
 9. Apply minimal hardening only when it does not create new product scope.
 10. Update `planning/DECISIONS.md`, `docs/SECURITY.md`, or `docs/ARCHITECTURE.md` if durable decisions are made.
+11. Create `docs/TECHNICAL_HARDENING_AUDIT.md` with findings by severity and prioritized backlog.
+
+## Validation Evidence Captured
+
+- Backend Python compilation with `python -m compileall app`.
+- FastAPI app import and route listing.
+- `TestClient` validation for `/health`, `/docs`, and `/openapi.json`.
+- Mobile dependency installation with `npm install`.
+- Mobile TypeScript validation with `npm run typecheck`.
+- Mobile dependency audit with `npm audit --audit-level=moderate`.
 
 ## Candidate Focus Areas
 

@@ -19,6 +19,8 @@ Audit and harden the existing technical architecture without adding new features
 - Run or add initial typecheck/test commands where practical.
 - Review `docker-compose.yml`.
 - Document findings and recommended fixes.
+- Create `docs/TECHNICAL_HARDENING_AUDIT.md`.
+- Update AXON-AI state, risks, and decisions with Phase 2 findings.
 
 ## Out of Scope
 
@@ -32,7 +34,8 @@ Audit and harden the existing technical architecture without adding new features
 
 ## Required Output
 
-- Technical audit summary.
-- Small, justified hardening changes if approved by sprint scope.
-- Tests or validation commands executed.
-- Updated docs if architecture decisions change.
+- Technical audit report.
+- Validation evidence for backend and mobile.
+- Risk register updates.
+- Prioritized hardening backlog.
+- No functional changes unless separately approved.
