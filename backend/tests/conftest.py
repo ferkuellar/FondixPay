@@ -11,6 +11,15 @@ from sqlalchemy.pool import StaticPool
 from app.core.database import Base, get_db
 from app.core.security import create_access_token
 from app.main import app
+from app.modules.audit.models import AuditEvent
+from app.modules.ledger.models import (
+    LedgerAccount,
+    LedgerEntry,
+    PaymentAttempt,
+    PaymentIntent,
+    ProviderTransaction,
+    ReconciliationRecord,
+)
 from app.modules.notifications.models import Notification
 from app.modules.payments.models import Payment, PaymentStatus
 from app.modules.receipts.models import Receipt

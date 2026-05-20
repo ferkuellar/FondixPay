@@ -3,7 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import Base, engine
+from app.core.request_context import RequestContextMiddleware
+from app.modules.audit.models import AuditEvent
 from app.modules.auth.routes import router as auth_router
+from app.modules.ledger.models import (
+    LedgerAccount,
+    LedgerEntry,
+    PaymentAttempt,
+    PaymentIntent,
+    ProviderTransaction,
+    ReconciliationRecord,
+)
 from app.modules.notifications.routes import router as notifications_router
 from app.modules.payments.routes import router as payments_router
 from app.modules.receipts.routes import router as receipts_router
@@ -14,6 +24,8 @@ from app.modules.users.routes import router as users_router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FONDIX PAY API", version="0.1.0")
+
+app.add_middleware(RequestContextMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

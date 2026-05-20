@@ -219,3 +219,33 @@ Rationale: Double tap, network retries, and provider timeouts are normal payment
 Decision: Before integrating Prontipagos, FondixPay must map service catalog, reference validation, amount lookup, payment execution, provider confirmation, error codes, receipts, and reconciliation.
 
 Rationale: Provider-specific behavior must be explicit before sandbox or real integration work begins.
+
+## ADR-037 - Audit Event Writer Becomes Mandatory For Critical Actions
+
+Decision: Critical auth, user-service, payment, receipt, provider, and future admin actions must use the central audit event writer.
+
+Rationale: Audit behavior must be consistent, redacted, testable, and reviewable across modules.
+
+## ADR-038 - Request ID And Correlation ID Are First-Class Operational Identifiers
+
+Decision: Every request must carry or receive a `request_id`, and each financial flow must carry a `correlation_id`.
+
+Rationale: Support, incident review, financial investigation, and reconciliation require stable identifiers across API, audit, payments, receipts, and provider records.
+
+## ADR-039 - Payment Mock Must Use Idempotency Semantics Before Real Providers
+
+Decision: Mock payment confirmation must support idempotency semantics before any real provider is introduced.
+
+Rationale: Double taps and retries happen before provider integration; the mock flow should exercise the same duplicate-prevention discipline.
+
+## ADR-040 - Payment State Transitions Must Be Explicit
+
+Decision: Payment intent and attempt status changes must pass through a controlled state-transition validator.
+
+Rationale: Financial status changes should not be scattered as unchecked assignments because invalid transitions create false success, retry, and reconciliation risk.
+
+## ADR-041 - Alembic Is Preferred For Schema Evolution
+
+Decision: Ledger and audit tables are represented by Alembic migration when viable. `Base.metadata.create_all` may remain only as local/dev/test support while migration discipline is completed.
+
+Rationale: Production-like environments need repeatable schema evolution and rollback visibility.

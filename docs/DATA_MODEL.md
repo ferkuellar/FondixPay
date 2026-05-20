@@ -154,3 +154,35 @@ This model is proposed for Phase 5B implementation. No migrations are applied in
 - Provider references are not internal primary keys.
 - Ledger and audit records are append-only.
 - Receipt provider confirmation is separate from internal receipt generation.
+
+## Ledger and Audit Implementation Status
+
+Phase 5B implemented the first backend schema slice for ledger/audit support.
+
+Implemented tables/models:
+
+- `audit_events`
+- `payment_intents`
+- `payment_attempts`
+- `ledger_accounts`
+- `ledger_entries`
+- `provider_transactions`
+- `reconciliation_records`
+
+Migration:
+
+- `backend/alembic/versions/20260520_0001_ledger_audit_foundation.py`
+
+Current constraints:
+
+- Financial amounts use integer minor units for new ledger/payment intent models.
+- Currency is explicit and defaults to `MXN`.
+- Audit and ledger models are append-only by design, but DB-level update/delete guards are not yet implemented.
+- `Base.metadata.create_all` still exists for local/dev/test startup support and remains a production-hardening item.
+
+Pending:
+
+- Full production ledger posting rules.
+- Real provider transaction mapping.
+- Reconciliation job and review queue.
+- Admin/auditor access model.

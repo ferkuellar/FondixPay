@@ -8,6 +8,7 @@ from app.modules.payments.models import PaymentStatus
 
 class PaymentCreate(BaseModel):
     user_service_id: int
+    idempotency_key: str | None = None
 
 
 class PaymentRead(BaseModel):

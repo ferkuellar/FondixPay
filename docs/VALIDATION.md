@@ -127,3 +127,33 @@ Before real payment integration:
 - API tests must cover payment intent create/confirm/retry/status.
 - Security tests must cover forbidden access to audit/admin endpoints.
 - Reconciliation tests must cover matched and mismatched provider records.
+
+## Phase 5B Backend Validation
+
+Commands:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest
+```
+
+Current coverage added:
+
+- Audit event creation and sensitive metadata redaction.
+- Auth audit events for OTP request, OTP failure, OTP success, and login success.
+- Request ID generation and response echo.
+- Valid and invalid payment intent transitions.
+- Valid and invalid payment attempt transitions.
+- Integer minor-unit conversion for ledger amounts.
+- Ledger account and ledger entry persistence.
+- Mock payment idempotency duplicate blocking.
+- Mock payment audit, payment intent, payment attempt, provider transaction, and ledger trace creation.
+
+Still not covered:
+
+- Real provider submission.
+- Provider timeout/retry semantics.
+- Reconciliation import and mismatch review.
+- Admin/auditor audit read endpoints.
+- DB-level append-only enforcement.

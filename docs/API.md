@@ -238,3 +238,35 @@ These APIs are design-only for Phase 5A. They are not implemented yet.
 - Audit events generated: `provider.reconciliation_started`, `provider.reconciliation_completed`, `provider.reconciliation_mismatch`.
 - Idempotency behavior: duplicate run key prevents duplicate reconciliation for same provider/date/report.
 - Error states: duplicate run, missing report, provider unavailable, mismatch detected.
+
+## Phase 5B Current API Changes
+
+### Request Headers
+
+- `X-Request-ID`: optional inbound header. If provided, the backend echoes it in the response. If omitted, the backend generates a `req_...` value.
+- `X-Correlation-ID`: accepted by request context for future financial flow propagation. Current payment flows generate a correlation ID when none is supplied.
+
+### POST `/payments`
+
+Status: implemented mock/dev endpoint, contract preserved.
+
+Change:
+
+- Request body now accepts optional `idempotency_key`.
+
+Conceptual body:
+
+```json
+{
+  "user_service_id": 1,
+  "idempotency_key": "client-generated-key"
+}
+```
+
+Behavior:
+
+- With a new key, the backend creates a mock payment, payment intent, payment attempt, provider transaction trace, ledger trace entry, receipt, notification, and audit events.
+- With the same key for the same user after success, the backend returns the existing mock payment and emits `payment.duplicate_blocked`.
+- Payments remain mock/dev and are not provider-confirmed real money movement.
+
+No new public ledger, audit, admin, or reconciliation endpoints were implemented in Phase 5B.

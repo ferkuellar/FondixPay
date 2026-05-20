@@ -124,3 +124,38 @@ Daily reconciliation checklist:
 5. Create review records for mismatches.
 6. Emit reconciliation audit events.
 7. Escalate unresolved mismatches to finance/support.
+
+## Phase 5B Operational Notes
+
+Request tracing:
+
+- Every response includes `X-Request-ID`.
+- Support should ask for the request ID when investigating API failures.
+
+Payment tracing:
+
+- Mock payment flows now create a `correlation_id` in `payment_intents`.
+- Related audit events, ledger trace entries, attempts, and provider transaction mock records should be investigated by correlation ID.
+
+Operational checks:
+
+```powershell
+cd backend
+python -m pytest
+```
+
+Review targets:
+
+- `audit_events` for auth/payment/receipt event trails.
+- `payment_intents` for idempotency and high-level payment state.
+- `payment_attempts` for provider submission attempts.
+- `ledger_entries` for mock trace entries only.
+- `provider_transactions` for mock provider references only.
+
+Pending operations:
+
+- Real reconciliation job.
+- Manual review queue.
+- Provider outage runbook.
+- Alerting on failed/timeout/duplicate payment attempts.
+- Admin/auditor tooling with RBAC.

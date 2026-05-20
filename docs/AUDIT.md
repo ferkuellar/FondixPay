@@ -242,3 +242,34 @@ Admin/Future:
   "result": "success"
 }
 ```
+
+## Phase 5B Audit Implementation
+
+Implemented audit persistence:
+
+- Table/model: `audit_events`.
+- Writer: `backend/app/modules/audit/services.py`.
+- Redaction: sensitive metadata keys such as `otp`, `otp_dev`, `token`, `access_token`, `password`, `secret`, `jwt`, `pan`, `cvv`, and `card_number` are stored as `[REDACTED]`.
+
+Implemented event types:
+
+- `auth.otp_requested`
+- `auth.otp_verified`
+- `auth.login_success`
+- `auth.login_failed`
+- `user_service.created`
+- `user_service.validation_failed`
+- `payment.intent_created`
+- `payment.confirmed_by_user`
+- `payment.mock_submitted`
+- `payment.succeeded`
+- `payment.duplicate_blocked`
+- `receipt.generated`
+
+Known audit gaps:
+
+- No provider webhooks exist yet.
+- No admin/support actions exist yet.
+- Logout/session restore audit coverage remains incomplete.
+- DB-level immutability enforcement for audit events is pending.
+- Audit read endpoints for `AUDITOR`/`ADMIN` roles are pending.

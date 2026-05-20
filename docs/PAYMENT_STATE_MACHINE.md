@@ -149,3 +149,28 @@ stateDiagram-v2
 - Internal success while provider missing: manual review and possible reversal.
 - Amount mismatch: block final success and create reconciliation mismatch.
 - Duplicate provider reference: manual review before user-facing finality.
+
+## Phase 5B Implementation Status
+
+Implemented in `backend/app/modules/ledger/state_machine.py`:
+
+- PaymentIntent states: `created`, `awaiting_user_confirmation`, `confirmed_by_user`, `processing`, `provider_pending`, `provider_confirmed`, `succeeded`, `failed`, `cancelled`, `expired`, `reversed`, `disputed`.
+- PaymentAttempt states: `created`, `submitted_to_provider`, `accepted_by_provider`, `rejected_by_provider`, `timeout`, `failed`, `succeeded`, `duplicate_blocked`.
+- Validators reject invalid transitions through `InvalidStateTransition`.
+
+Current mock success path:
+
+1. `created`
+2. `awaiting_user_confirmation`
+3. `confirmed_by_user`
+4. `processing`
+5. `provider_pending`
+6. `provider_confirmed`
+7. `succeeded`
+
+Pending for provider phases:
+
+- Timeout handling.
+- Reversal and dispute workflows.
+- Retry after provider ambiguity.
+- Reconciliation-driven status correction.

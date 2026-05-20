@@ -354,3 +354,32 @@ Real payments remain blocked until:
 - Security review completed.
 - No secrets in repo.
 - CI/CD basic gate in place.
+
+## Phase 5B Implementation Status
+
+### Implemented
+
+- `AuditEvent` persistence model and central audit writer under `backend/app/modules/audit/`.
+- Sensitive audit payload redaction for keys such as OTP, token, secret, PAN, CVV, and card number.
+- `PaymentIntent`, `PaymentAttempt`, `LedgerAccount`, `LedgerEntry`, `ProviderTransaction`, and `ReconciliationRecord` models under `backend/app/modules/ledger/`.
+- Explicit payment intent and payment attempt state transition validators.
+- Request ID middleware that reads or generates `X-Request-ID` and returns it in responses.
+- Optional `idempotency_key` for mock `POST /payments`.
+- Mock payment trace integration: intent, attempt, provider transaction, ledger trace entry, and audit events.
+- Alembic migration `20260520_0001_ledger_audit_foundation.py`.
+- Backend tests for audit events, request IDs, state transitions, idempotency, ledger models, and mock payment audit integration.
+
+### Partial
+
+- `correlation_id` exists for payment flows, but is not yet propagated through every auth/support/provider operation.
+- Ledger entries are trace records for mock payments only; they are not real money movement.
+- Provider transactions are mock records only.
+- Reconciliation record model exists, but no reconciliation job or review queue exists.
+
+### Pending
+
+- Real provider mapping and Prontipagos adapter.
+- Provider timeout and ambiguous-state handling.
+- Reversal, dispute, refund, and support review flows.
+- Admin/auditor read endpoints with RBAC.
+- Production removal of startup `create_all` reliance.

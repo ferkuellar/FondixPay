@@ -1,6 +1,6 @@
 # Risks
 
-Updated: 2026-05-19
+Updated: 2026-05-20
 
 | Risk | Impact | Current Mitigation | Next Action |
 | --- | --- | --- | --- |
@@ -59,3 +59,10 @@ Updated: 2026-05-19
 | Raw provider payload sensitive data risk | SEV-2 / High | No real provider payloads yet | Store hashes/redacted payloads only unless approved |
 | Admin audit abuse risk | SEV-2 / High | Admin endpoints not implemented | Require RBAC and audit access logging |
 | Lack of immutable financial trail | SEV-1 / Production Blocker | Ledger/audit design created in 5A | Implement append-only ledger and audit records in Phase 5B |
+| Audit log implementation is partial | SEV-2 / High | Phase 5B implements central audit writer and events for auth/user-service/payment/receipt paths | Expand audit coverage to provider, admin, support, and all financial state changes before production |
+| Idempotency implementation is mock/dev only | SEV-2 / High | Phase 5B blocks duplicate mock payments by user/idempotency key | Extend idempotency to provider submission, retry windows, and conflicting payload detection before sandbox |
+| Double payment risk is partially mitigated | SEV-2 / High | Duplicate mock payment attempts with same key return the existing payment | Add UI idempotency key generation, payment recovery UX, and provider-grade guarantees |
+| Schema drift remains while `create_all` is active | SEV-2 / High | Alembic migration exists for ledger/audit tables | Remove production reliance on `create_all` before staging |
+| Reconciliation remains design-only | SEV-2 / High | `ReconciliationRecord` model exists | Implement reconciliation job, import, mismatch classification, and review queue later |
+| Provider timeout handling remains pending | SEV-2 / High | State machine includes timeout attempt state | Implement timeout handling with provider adapter and pending/ambiguous UX |
+| False success risk remains until provider mapping | SEV-2 / High | Mock traces are marked as mock; real payments remain blocked | Separate provider confirmation from user-facing final success in real-provider phase |

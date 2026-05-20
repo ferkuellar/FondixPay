@@ -131,3 +131,14 @@ Production remains blocked until rate limiting, RBAC, audit logs, ledger, migrat
 - Finance/admin/auditor roles must follow least privilege; support must see only the minimum data needed.
 - Provider references must not be treated as authorization proof.
 - User-facing success must depend on internal state plus provider confirmation rules, not client-side state.
+
+## Phase 5B Ledger/Audit Security Notes
+
+- Audit metadata is redacted before persistence for obvious sensitive keys including OTP, tokens, secrets, PAN, CVV, and card numbers.
+- `X-Request-ID` is available for support and incident investigation, but it must not be treated as authentication.
+- Payment `correlation_id` is used to connect internal mock payment records; future provider integrations must propagate it without exposing secrets.
+- `idempotency_key` prevents duplicate mock payment creation for the same user/key; future provider work must bind it to amount, service, and provider operation to reject conflicting retries.
+- Provider payloads must remain hashed/redacted. Raw secrets, raw PAN, CVV, auth tokens, and provider credentials must never be stored in audit or ledger records.
+- Audit/admin read access remains pending and must require backend RBAC before exposure.
+
+Production remains blocked until rate limiting, RBAC, full audit coverage, production ledger semantics, provider confirmation mapping, and reconciliation controls exist.

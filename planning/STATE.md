@@ -2,9 +2,9 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 5A - Ledger & Audit Foundation Design (completed).
+Current phase: Phase 5B - Ledger & Audit Implementation (completed).
 
-Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, and ledger/audit foundation design. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
+Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, and a minimal backend ledger/audit/idempotency implementation. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
 ## Phase Status
 
@@ -16,7 +16,8 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Phase 4B - Backend Safety & Test Foundation: completed; adds isolated pytest fixtures and API/security smoke coverage.
 - Phase 4C - UX/Product Risk Register: completed; incorporates Senior UX/Product audit findings into decisions, risks, roadmap, validation, audit, and backlog.
 - Phase 5A - Ledger & Audit Foundation Design: completed; defines ledger, audit, idempotency, payment state, provider transaction, reconciliation, and recovery design.
-- Next phase: Phase 5B - Ledger & Audit Implementation.
+- Phase 5B - Ledger & Audit Implementation: completed; implements audit events, ledger models, payment intents/attempts, request IDs, state transitions, mock idempotency, Alembic migration, and backend tests.
+- Next phase: Phase 5C - Payment Trust & Fee Transparency.
 
 ## What Exists
 
@@ -41,16 +42,22 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Ledger/audit design is documented in `docs/LEDGER_AND_AUDIT_DESIGN.md`.
 - Payment state machine is documented in `docs/PAYMENT_STATE_MACHINE.md`.
 - Ledger/audit backlog is documented in `planning/LEDGER_AUDIT_BACKLOG.md`.
+- Backend `audit` module with append-only `AuditEvent` model and audit writer.
+- Backend `ledger` module with `PaymentIntent`, `PaymentAttempt`, `LedgerAccount`, `LedgerEntry`, `ProviderTransaction`, and `ReconciliationRecord` models.
+- `X-Request-ID` middleware for request traceability.
+- Mock payment idempotency with optional `idempotency_key` on `POST /payments`.
+- Payment state transition validator under `backend/app/modules/ledger/state_machine.py`.
+- Alembic migration `20260520_0001_ledger_audit_foundation.py` for ledger/audit tables.
+- Backend tests for audit events, request context, payment state machine, ledger models, payment idempotency, and payment audit integration.
 
 ## What Is Missing
 
 - Refresh tokens, server-side session inventory, token revocation, device trust, and auth audit logs.
-- Formal financial ledger implementation.
-- Audit log implementation for financial and administrative actions.
-- Idempotency key implementation.
-- Payment intent and payment attempt implementation.
-- Provider transaction tracking.
-- Reconciliation records and review workflow.
+- Production-grade ledger semantics beyond mock trace entries.
+- Complete audit coverage for every auth, financial, provider, and future admin action.
+- Provider-grade idempotency around real provider submission.
+- Real provider transaction tracking.
+- Reconciliation execution and manual review workflow.
 - Documented and implemented permissions/RBAC.
 - CI/CD pipelines.
 - Real payment provider decision and integration.
@@ -75,7 +82,7 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 
 The current repo must not be considered production financial software. It is a governed MVP mock/dev base.
 
-Commercial production with real money is blocked by UX/Product criticals, missing ledger/audit implementation, and payment provider/compliance gaps.
+Commercial production with real money is blocked by UX/Product criticals, incomplete production-grade ledger/audit semantics, missing real provider confirmation/reconciliation, and payment provider/compliance gaps.
 
 Internal validation without real money remains allowed.
 
