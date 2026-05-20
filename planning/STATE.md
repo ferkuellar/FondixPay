@@ -2,9 +2,9 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 4A - Auth & Session Security P0 (completed).
+Current phase: Phase 4B - Backend Safety & Test Foundation (completed).
 
-Status: MVP mock/dev mobile app with a shared visual design system and targeted auth/session P0 hardening completed. Backend payment semantics remain mock/dev. Product is not production-ready.
+Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, and backend safety test foundation. Backend payment semantics remain mock/dev. Product is not production-ready.
 
 ## Phase Status
 
@@ -13,7 +13,8 @@ Status: MVP mock/dev mobile app with a shared visual design system and targeted 
 - Phase 2 - Technical Architecture Hardening: completed as audit/documentation baseline.
 - Phase 3 - UI/UX Production System: completed (see `planning/sprints/003-ui-ux-production-system/COMPLETION_REPORT.md` for caveats).
 - Phase 4A - Auth & Session Security P0: completed; closes P0 auth/session risks around OTP dev leakage and weak JWT config outside development.
-- Next phase: Phase 4B - Backend Safety & Test Foundation.
+- Phase 4B - Backend Safety & Test Foundation: completed; adds isolated pytest fixtures and API/security smoke coverage.
+- Next phase: Phase 5A - Ledger & Audit Foundation Design.
 
 ## What Exists
 
@@ -31,6 +32,8 @@ Status: MVP mock/dev mobile app with a shared visual design system and targeted 
 - Mobile `npm run typecheck` passes.
 - Auth config validates production-like environments for strong JWT secret, explicit CORS, and disabled dev OTP responses.
 - Backend auth tests cover OTP dev response gating, weak JWT config rejection, invalid token handling, valid `/auth/me`, and wrong OTP failure.
+- Backend pytest suite covers `/health`, `/openapi.json`, auth dev flow, public provider catalog, protected endpoints, and user-scoped list boundaries.
+- Backend tests use isolated in-memory SQLite fixtures and do not depend on local manual data.
 
 ## What Is Missing
 
@@ -38,7 +41,6 @@ Status: MVP mock/dev mobile app with a shared visual design system and targeted 
 - Formal financial ledger.
 - Audit logs for financial and administrative actions.
 - Documented and implemented permissions/RBAC.
-- Automated backend and mobile tests.
 - CI/CD pipelines.
 - Real payment provider decision and integration.
 - Production splash illustration asset (placeholder in app per ADR-015).

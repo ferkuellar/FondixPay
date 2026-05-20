@@ -111,3 +111,27 @@ Auth required: yes.
 Behavior: returns a logout message. Server-side revocation is not implemented in Phase 4A.
 
 Pending risk: stolen access tokens remain valid until expiry.
+
+## Phase 4B Endpoint Matrix
+
+| Endpoint | Public/Protected | Expected Success | Expected Errors | Pending |
+| --- | --- | --- | --- | --- |
+| `GET /health` | Public | `200` with app status | N/A | Add readiness/DB check later |
+| `GET /openapi.json` | Public/dev docs | `200` OpenAPI schema | N/A | Review exposure by environment |
+| `POST /auth/request-otp` | Public | OTP request accepted; dev may include `otp_dev` | `422` invalid phone | Rate limiting, real OTP provider |
+| `POST /auth/verify-otp` | Public | token + user | `400` wrong OTP, `422` invalid payload | Brute-force controls, audit logs |
+| `GET /auth/me` | Protected | current user | `401` invalid/missing token | Session inventory |
+| `POST /auth/logout` | Protected | logout message | `401` invalid/missing token | Server-side revocation |
+| `GET /users/me` | Protected | current user | `401` missing/invalid token | RBAC later |
+| `GET /service-providers` | Public read | provider list | N/A | Admin-only writes if added |
+| `GET /service-providers/category/{category}` | Public read | filtered provider list | `422` invalid category | Admin-only writes if added |
+| `GET /service-providers/{provider_id}` | Public read | provider detail | `404` missing provider | Admin-only writes if added |
+| `GET /user-services` | Protected | current user's services | `401` missing/invalid token | More ownership mutation tests |
+| `POST /user-services` | Protected | creates current user's service | `401`, `404`, `422` | Provider validation hardening |
+| `GET /user-services/{service_id}` | Protected | own service detail | `401`, `404` cross-user/missing | Full ownership matrix |
+| `GET /payments` | Protected | current user's payments | `401` missing/invalid token | Idempotency, ledger, audit |
+| `POST /payments` | Protected | mock payment | `401`, `400`, `404` | No real money, no idempotency |
+| `GET /receipts` | Protected | current user's receipts | `401` missing/invalid token | Receipt verification |
+| `GET /notifications` | Protected | current user's notifications | `401` missing/invalid token | Delivery channels |
+
+Phase 4B tests cover the basic protected/public classification and user-scoped list boundaries. They do not certify production readiness.

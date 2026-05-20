@@ -79,3 +79,31 @@ Remaining production blockers:
 - Refresh/revocation/session inventory.
 - RBAC enforcement.
 - Ledger and audit foundation before any real payments.
+
+## Phase 4B Security Validation Results
+
+Automated tests now cover:
+
+- Invalid bearer token rejected by `/auth/me`.
+- Development OTP flow still works in test/dev conditions.
+- Anonymous access rejected for:
+  - `GET /users/me`
+  - `GET /user-services`
+  - `POST /user-services`
+  - `GET /payments`
+  - `POST /payments`
+  - `GET /receipts`
+  - `GET /notifications`
+- User-scoped list endpoints do not return another user's services, payments, receipts, or notifications.
+- Public service provider catalog remains public read-only.
+
+Security risks still pending:
+
+- Rate limiting and OTP abuse controls.
+- RBAC/permissions beyond current user ownership.
+- Audit log persistence.
+- Server-side session revocation.
+- Ledger and financial integrity checks.
+- Payment idempotency and reconciliation.
+
+Production remains blocked until rate limiting, RBAC, audit logs, ledger, migration discipline, and provider decisions are completed.

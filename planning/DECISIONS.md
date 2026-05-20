@@ -117,3 +117,27 @@ Rationale: Real money movement requires trustworthy identity, traceability, and 
 Decision: Phase 4A keeps the current access-token-only model. Refresh tokens, token revocation, device trust, and server-side session inventory are deferred to a later auth/session phase.
 
 Rationale: Adding a complete token lifecycle requires schema, API, mobile storage, revocation semantics, and migration work outside this P0 hardening scope.
+
+## ADR-020 - Backend Tests Required Before Real Payment Integration
+
+Decision: No real payment integration may start until backend tests cover at minimum auth, payments, receipts, and user-scoped data boundaries.
+
+Rationale: Payment providers must not be connected on top of unverified access control and mock-payment behavior.
+
+## ADR-021 - Test Database Isolation
+
+Decision: Backend tests must use an isolated test database, SQLite in memory, or another controlled test database mechanism. Tests must not depend on manual local data.
+
+Rationale: Repeatable tests require deterministic setup and teardown independent from developer machines.
+
+## ADR-022 - Migration Discipline Before Production
+
+Decision: `Base.metadata.create_all(bind=engine)` may remain for dev/mock while this phase focuses on tests. Before staging or production, schema changes must move to Alembic as the disciplined source of truth.
+
+Rationale: Automatic table creation masks schema drift and is not acceptable for production-like environments.
+
+## ADR-023 - Predictable API Errors
+
+Decision: API errors must remain predictable, avoid sensitive details, and be testable. Broad response-envelope refactors are deferred unless mobile compatibility is planned.
+
+Rationale: The current mobile app expects FastAPI-style errors in several places; safety improvements must not break clients casually.

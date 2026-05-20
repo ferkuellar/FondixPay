@@ -33,3 +33,57 @@
 ## Phase 1 Validation
 
 Phase 1 validates documentation completeness only. It does not certify runtime behavior.
+
+## Phase 4B Backend Validation
+
+Backend commands:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest
+```
+
+Mobile compatibility command:
+
+```powershell
+cd mobile
+npm run typecheck
+```
+
+Pytest strategy:
+
+- Tests live under `backend/tests/`.
+- `conftest.py` provides a FastAPI `TestClient`, isolated in-memory SQLite database, `get_db` override, and data factories.
+- Tests do not depend on PostgreSQL, Docker, external providers, or manual local data.
+- Schema is created and dropped per test through SQLAlchemy metadata for the isolated test database.
+
+Current coverage:
+
+- App import through TestClient.
+- `GET /health`.
+- `GET /openapi.json`.
+- Development auth flow: request OTP and verify OTP.
+- Phase 4A security/config behavior.
+- Invalid token rejection.
+- Public service provider catalog.
+- Protected route rejection without token for users, user-services, payments, receipts, and notifications.
+- User-scoped list boundaries for user services, payments, receipts, and notifications.
+
+Not covered yet:
+
+- Rate limiting.
+- RBAC roles.
+- Full mutation ownership matrix.
+- Payment idempotency.
+- Ledger entries.
+- Audit log persistence.
+- Alembic migration execution.
+- Provider webhook behavior.
+
+Before any real payment integration:
+
+- Backend pytest must pass.
+- Payment and receipt tests must be expanded around idempotency, ledger, and audit.
+- User-scoped ownership tests must cover detail and mutation paths.
+- CI must run backend tests and mobile typecheck.

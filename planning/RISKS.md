@@ -29,3 +29,8 @@ Updated: 2026-05-19
 | Mobile dependency audit reports high vulnerabilities | High | No forced breaking upgrade applied | Plan Expo/dependency upgrade path |
 | Backend tests are missing | Medium | Manual/TestClient checks documented | Add auth/API/ownership/payment mock tests |
 | CI validation is missing | Medium | Commands documented | Add CI for backend and mobile typecheck |
+| Backend regression risk in auth and protected routes | High | Phase 4B pytest suite covers auth and protected endpoints | Add CI gate so tests run on every change |
+| Data leakage between users | High | User-scoped list tests added for services, payments, receipts, notifications | Expand ownership tests for detail/mutation endpoints in domain hardening |
+| Schema drift from `create_all` | High | Risk documented; tests isolate schema in SQLite | Move production-like schema management to Alembic before staging |
+| Inconsistent API errors | Medium | Invalid token and auth error behavior tested | Define full API error contract in backend safety follow-up |
+| Payments mock lacks idempotency | High | Protected endpoint coverage exists; real payments remain blocked | Address in Payments Mock Hardening before provider work |

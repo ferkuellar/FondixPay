@@ -1,18 +1,13 @@
-import uuid
-
 import pytest
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
+from sqlalchemy.orm import Session
 
 from app.core.config import Settings
-from app.core.database import SessionLocal
 from app.core.security import create_access_token
-from app.main import app
 from app.modules.auth import models as auth_models
 from app.modules.auth import services as auth_services
 from app.modules.users.models import User
-
-client = TestClient(app)
 
 
 def _secure_settings(**overrides: object) -> Settings:
@@ -65,24 +60,20 @@ def test_production_rejects_enabled_otp_dev_response() -> None:
         _secure_settings(otp_dev_response_enabled=True)
 
 
-def test_auth_me_rejects_invalid_token() -> None:
+def test_auth_me_rejects_invalid_token(client: TestClient) -> None:
     response = client.get("/auth/me", headers={"Authorization": "Bearer invalid-token"})
 
     assert response.status_code == 401
     assert response.json()["detail"] == "Sesion no valida"
 
 
-def test_auth_me_accepts_valid_token() -> None:
-    phone = f"55{uuid.uuid4().int % 10**8:08d}"
-    db = SessionLocal()
-    try:
-        user = User(phone=phone)
-        db.add(user)
-        db.commit()
-        db.refresh(user)
-        token = create_access_token(str(user.id))
-    finally:
-        db.close()
+def test_auth_me_accepts_valid_token(client: TestClient, db_session: Session) -> None:
+    phone = "5512340001"
+    user = User(phone=phone)
+    db_session.add(user)
+    db_session.commit()
+    db_session.refresh(user)
+    token = create_access_token(str(user.id))
 
     response = client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
 
@@ -90,7 +81,7 @@ def test_auth_me_accepts_valid_token() -> None:
     assert response.json()["phone"] == phone
 
 
-def test_incorrect_otp_fails() -> None:
+def test_incorrect_otp_fails(client: TestClient) -> None:
     response = client.post(
         "/auth/verify-otp",
         json={"phone": "5511111111", "otp": "000000"},
