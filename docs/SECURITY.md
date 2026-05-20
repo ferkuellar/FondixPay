@@ -164,3 +164,11 @@ Production remains blocked until rate limiting, RBAC, full audit coverage, produ
 - Admin/support must not see sensitive card details.
 - Mock payment method is allowed only for development/internal validation without real money.
 - A real payment cannot proceed without a valid selected method and backend ownership validation.
+# Payment Method Mock Security
+
+- Phase 5E mock payment methods do not capture PAN, CVV, expiration date, CLABE, or real payment credentials.
+- Expo Secure Store is not used for mock payment methods because there is no sensitive payment credential to persist.
+- A demo method must not be treated as a provider token, card vault reference, or real authorization.
+- Production payment methods require approved provider tokenization and compliance review.
+- Logs, receipts, and UI must not expose sensitive payment credentials.
+- Real payment methods remain blocked until provider selection, tokenization, audit logs, tests, and recovery paths are complete.

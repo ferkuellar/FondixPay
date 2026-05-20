@@ -199,3 +199,15 @@ python -m pytest
 cd mobile
 npm run typecheck
 ```
+# Payment Method Mock UX Validation
+
+- App can start with no payment methods.
+- User can add a demo payment method.
+- User can select a demo payment method.
+- ConfirmPayment shows selected method.
+- ConfirmPayment blocks or disables payment when no method is selected.
+- CTA keeps the Phase 5C final total.
+- No phantom hardcoded card is shown.
+- No real card number, CVV, CLABE, expiration date, or bank credential is requested.
+- PaymentSuccess and receipt show method used when available.
+- `npm run typecheck` must pass after mobile changes.

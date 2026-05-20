@@ -80,3 +80,12 @@ Updated: 2026-05-20
 | Payment method unavailable without fallback | SEV-2 / High | Strategy documents unavailable state | Implement fallback UX before real payments |
 | Real payment confirmed without clear method | SEV-1 / Production Blocker | Real payments remain blocked | Require selected method in future confirmation flow |
 | Support cannot inspect method safely | SEV-2 / High | Operations docs require safe display label only | Add support/admin views with RBAC later |
+# Phase 5E Payment Method UX Risks
+
+| Severity | Risk | Status | Notes |
+|---|---|---|---|
+| SEV-1 | Phantom card or payment method shown before user action | Mitigated for mock UX | ConfirmPayment now requires a selected method from local state. |
+| SEV-1 | Real card data captured without tokenization | Reduced | Mock flow does not request PAN, CVV, CLABE, or real credentials. |
+| SEV-2 | User confusion between demo and real charge | Reduced | Demo/no-charge copy is shown in method screens and confirmation. |
+| SEV-2 | No real payment provider or tokenization | Pending | Must be resolved before real payments. |
+| SEV-2 | No complete payment recovery path | Pending | Recommended next phase: Phase 5F. |

@@ -25,6 +25,15 @@ export function ReceiptCard({ payment, receiptUnavailable }: Props) {
           <Text style={styles.value}>{formatMoneyMinor(payment.feeMinor)}</Text>
         </View>
       </View>
+      {payment.paymentMethodLabel ? (
+        <View style={styles.methodLine}>
+          <Text style={styles.label}>Método</Text>
+          <Text style={styles.value}>
+            {payment.paymentMethodLabel}
+            {payment.paymentMethodIsMock ? ' · sin cargo real' : ''}
+          </Text>
+        </View>
+      ) : null}
       <Text style={styles.folio}>Folio {payment.folio}</Text>
       {receiptUnavailable ? (
         <Text style={styles.unavailable}>Comprobante no disponible por ahora.</Text>
@@ -63,6 +72,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  methodLine: {
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+    paddingTop: spacing.sm,
   },
   subtitle: {
     ...typography.bodySmall,

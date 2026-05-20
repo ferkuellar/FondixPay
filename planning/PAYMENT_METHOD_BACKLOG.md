@@ -16,3 +16,16 @@ Updated: 2026-05-20
 | PM-010 | SEV-1 | Audit | Payment method audit events | Future implementation phase | Open |
 | PM-011 | SEV-1 | Tests | Payment method API/ownership tests | Future implementation phase | Open |
 | PM-012 | SEV-2 | Providers | Provider integration later | After provider decision | Open |
+# Phase 5E Status Update
+
+| ID | Severity | Area | Work | Phase suggested | Status |
+|---|---|---|---|---|---|
+| PM-UX-001 | SEV-1 | Mobile UX | Mock payment method component | 5E | implemented |
+| PM-UX-002 | SEV-1 | Mobile UX | Payment methods screen | 5E | implemented |
+| PM-UX-003 | SEV-1 | Mobile UX | Add payment method mock screen | 5E | implemented |
+| PM-UX-004 | SEV-1 | Mobile UX | Select payment method before confirmation | 5E | implemented |
+| PM-UX-005 | SEV-1 | Product risk | Remove phantom card risk | 5E | implemented for mock/dev |
+| PM-BE-001 | SEV-2 | Backend | PaymentMethod backend model/API | Future | pending |
+| PM-SEC-001 | SEV-1 | Security | Provider tokenization decision | Future | pending |
+| PM-PROV-001 | SEV-2 | Product | SPEI/OXXO/CoDi evaluation | Future | pending |
+| PM-QA-001 | SEV-2 | QA | Real payment method tests | Future | pending |

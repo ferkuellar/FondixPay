@@ -303,3 +303,34 @@ Rationale: Mock methods are useful for flow validation but cannot imply real pro
 Decision: Before any real payment, confirmation must include selected method, final total, and a change-method action.
 
 Rationale: Payment consent requires both amount and method clarity.
+# ADR-051 — Payment method mock UX before real provider
+
+## Decision
+FondixPay will provide a mobile mock/dev UX for adding and selecting a payment method before integrating any real provider.
+
+## Status
+Accepted.
+
+# ADR-052 — Demo payment methods must be explicitly labeled
+
+## Decision
+Every demo payment method must clearly state that it is simulated and does not generate real charges.
+
+## Status
+Accepted.
+
+# ADR-053 — No real card fields in mock flow
+
+## Decision
+The mock flow must not ask for card number, CVV, expiration, CLABE, or any real payment credential.
+
+## Status
+Accepted.
+
+# ADR-054 — Payment confirmation must display selected method
+
+## Decision
+Payment confirmation must display the selected payment method and allow the user to add or change it before paying.
+
+## Status
+Accepted.

@@ -12,6 +12,7 @@ type Props = {
   reference: string;
   amount: number;
   paymentMethod?: string;
+  paymentMethodNote?: string;
 };
 
 export function PaymentSummaryCard({
@@ -20,7 +21,8 @@ export function PaymentSummaryCard({
   alias,
   reference,
   amount,
-  paymentMethod = 'Método demo - pago simulado sin cargo real',
+  paymentMethod = 'Método pendiente',
+  paymentMethodNote,
 }: Props) {
   const breakdown = calculatePaymentBreakdown(amount);
 
@@ -59,6 +61,7 @@ export function PaymentSummaryCard({
       <View style={styles.row}>
         <Text style={styles.label}>Método de pago</Text>
         <Text style={styles.value}>{paymentMethod}</Text>
+        {paymentMethodNote ? <Text style={styles.note}>{paymentMethodNote}</Text> : null}
       </View>
     </View>
   );
@@ -90,6 +93,10 @@ const styles = StyleSheet.create({
   label: {
     ...typography.caption,
     color: colors.textSecondary,
+  },
+  note: {
+    ...typography.caption,
+    color: colors.textMuted,
   },
   line: {
     alignItems: 'center',

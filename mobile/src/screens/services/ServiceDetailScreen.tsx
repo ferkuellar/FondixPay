@@ -1,11 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { AmountDisplay } from '../../components/AmountDisplay';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { SecondaryButton } from '../../components/SecondaryButton';
+import { usePaymentMethodStore } from '../../store/paymentMethodStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
 import { colors, radius, spacing, typography } from '../../theme';
@@ -19,6 +20,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
   const service = useServiceStore((state) => state.getService(route.params.serviceId));
   const removeService = useServiceStore((state) => state.removeService);
   const selectService = usePaymentStore((state) => state.selectService);
+  const selectedPaymentMethod = usePaymentMethodStore((state) => state.getSelectedPaymentMethod());
 
   if (!service) {
     return (
@@ -69,16 +71,37 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
             <Text style={styles.value}>May 2026</Text>
           </View>
           <Text style={styles.methodTitle}>Método de pago</Text>
-          <View style={styles.methodSelected}>
-            <View style={styles.radioSelected} />
-            <Text style={styles.methodText}>Método demo - sin cargo real</Text>
-            <Text style={styles.mockBadge}>MOCK</Text>
-          </View>
-          <View style={styles.methodRow}>
+          {selectedPaymentMethod ? (
+            <View style={styles.methodSelected}>
+              <View style={styles.radioSelected} />
+              <View style={styles.methodCopy}>
+                <Text style={styles.methodText}>{selectedPaymentMethod.label}</Text>
+                <Text style={styles.methodDescription}>{selectedPaymentMethod.description}</Text>
+              </View>
+              <Text style={styles.mockBadge}>DEMO</Text>
+            </View>
+          ) : (
+            <View style={styles.methodPending}>
+              <View style={styles.radio} />
+              <View style={styles.methodCopy}>
+                <Text style={styles.methodText}>Método pendiente</Text>
+                <Text style={styles.methodDescription}>Agrega un método demo antes de confirmar.</Text>
+              </View>
+            </View>
+          )}
+          <Pressable
+            accessibilityRole="button"
+            onPress={() =>
+              navigation.navigate(selectedPaymentMethod ? 'PaymentMethods' : 'AddPaymentMethodMock', {
+                serviceId: currentService.id,
+              })
+            }
+            style={styles.methodRow}
+          >
             <View style={styles.radio} />
-            <Text style={styles.methodText}>Agregar método de pago (pendiente)</Text>
+            <Text style={styles.methodText}>{selectedPaymentMethod ? 'Cambiar método demo' : 'Agregar método demo'}</Text>
             <Feather color={colors.primary} name="plus" size={18} />
-          </View>
+          </Pressable>
         </View>
 
         <Text style={styles.secure}>
@@ -135,6 +158,24 @@ const styles = StyleSheet.create({
   },
   methodRow: {
     alignItems: 'center',
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.md,
+    padding: spacing.md,
+  },
+  methodCopy: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  methodDescription: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  methodPending: {
+    alignItems: 'center',
+    backgroundColor: colors.bgSubtle,
     borderColor: colors.border,
     borderRadius: radius.md,
     borderWidth: 1,

@@ -307,3 +307,16 @@ Future required events:
 - `payment_method.mock_selected`
 
 Payment method audit metadata must exclude PAN, CVV, raw provider payloads, and secrets.
+# Payment Method Events
+
+The following events are required for future backend-backed payment methods:
+
+- `payment_method.add_started`
+- `payment_method.add_completed`
+- `payment_method.add_failed`
+- `payment_method.selected`
+- `payment_method.changed`
+- `payment_method.removed`
+- `payment_method.mock_selected`
+
+Phase 5E uses local mobile mock state only, so these events are documented as future/pending and do not count as durable audit logs yet.

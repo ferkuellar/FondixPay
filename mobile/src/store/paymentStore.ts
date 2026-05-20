@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import type { Payment, SavedService } from '../types';
 import { calculatePaymentBreakdown } from '../utils/money';
+import { usePaymentMethodStore } from './paymentMethodStore';
 import { useServiceStore } from './serviceStore';
 
 type PaymentState = {
@@ -26,6 +27,11 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
       throw new Error('Servicio no encontrado');
     }
 
+    const selectedPaymentMethod = usePaymentMethodStore.getState().getSelectedPaymentMethod();
+    if (!selectedPaymentMethod) {
+      throw new Error('Método de pago requerido');
+    }
+
     const breakdown = calculatePaymentBreakdown(service.amountDue);
     set({ paymentAmount: service.amountDue, paymentStatus: 'processing', selectedService: service });
 
@@ -41,6 +47,9 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
       feeLabel: breakdown.feeLabel,
       feeDescription: breakdown.feeDescription,
       isMock: breakdown.isMock,
+      paymentMethodId: selectedPaymentMethod.id,
+      paymentMethodLabel: selectedPaymentMethod.label,
+      paymentMethodIsMock: selectedPaymentMethod.isMock,
       status: 'SUCCESS',
       paidAt: new Date().toISOString(),
       folio: `FP-${Date.now()}`,

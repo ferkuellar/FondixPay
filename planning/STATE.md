@@ -93,3 +93,12 @@ Commercial production with real money is blocked by remaining UX/Product critica
 Internal validation without real money remains allowed.
 
 Prontipagos is not integrated. It is only a future provider/aggregator candidate and requires provider transaction mapping before sandbox work.
+# Phase 5E — Payment Method UX Mock Implementation
+
+- Current phase: Phase 5E — Payment Method UX Mock Implementation.
+- Status: completed for mock/dev mobile UX.
+- This phase implemented local mobile mock payment methods so the app no longer relies on a phantom card or invisible payment method.
+- Real payments remain blocked.
+- Prontipagos remains not integrated.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 5F — Payment Recovery Paths.

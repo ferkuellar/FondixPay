@@ -187,3 +187,9 @@ Future operations requirements:
   - `payment_method_add_failure_rate`
   - `payment_method_selection_change_rate`
   - `payment_method_unavailable_count`
+# Payment Method Mock Operations
+
+- Internal beta support must understand that Phase 5E demo methods do not generate real charges.
+- Tickets about real payment methods remain out of scope until a provider and tokenization strategy are approved.
+- Support copy must distinguish “método demo” from a real card, SPEI, CoDi, OXXO, or provider-backed payment method.
+- Pending operational risks: provider downtime handling, token lifecycle, payment method validation, and failed payment recovery.

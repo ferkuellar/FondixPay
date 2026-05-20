@@ -37,3 +37,11 @@ Updated: 2026-05-20
 - Evaluate SPEI/OXXO/CoDi with users aged 30-65.
 - Add payment method API/tests in future backend phase.
 - Integrate payment method audit events.
+# Phase 5E UX/Product Backlog Update
+
+| ID | Severidad | Hallazgo | Impacto | Fase sugerida | Estado |
+|---|---|---|---|---|---|
+| UX-PM-001 | SEV-1 | Falta pantalla/flujo de método de pago | Usuario no podía agregar o seleccionar método antes de pagar | 5E | implemented for mock/dev |
+| UX-PM-002 | SEV-1 | Tarjeta/método fantasma | Confusión y riesgo de falsa producción | 5E | mitigated |
+| UX-PM-003 | SEV-2 | Método de pago real no definido | Bloquea pagos reales | Future provider phase | pending |
+| UX-PM-004 | SEV-2 | Recovery path de pago incompleto | Usuario no sabe qué hacer ante fallo | 5F | pending |

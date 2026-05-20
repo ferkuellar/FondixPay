@@ -40,6 +40,13 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
                 <Text style={styles.totalValue}>{formatMoneyMinor(payment.totalMinor)}</Text>
               </View>
             </View>
+            {payment.paymentMethodLabel ? (
+              <View style={styles.methodBox}>
+                <Text style={styles.lineLabel}>Método usado</Text>
+                <Text style={styles.lineValue}>{payment.paymentMethodLabel}</Text>
+                {payment.paymentMethodIsMock ? <Text style={styles.mockCopy}>Método demo · sin cargo real</Text> : null}
+              </View>
+            ) : null}
             <Text style={styles.refLabel}>Número de referencia</Text>
             <Text style={styles.refValue}>{payment.folio}</Text>
           </>
@@ -98,6 +105,18 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.textPrimary,
     fontWeight: '700',
+  },
+  methodBox: {
+    backgroundColor: colors.primarySoft,
+    borderRadius: 12,
+    gap: spacing.xs,
+    marginTop: spacing.md,
+    padding: spacing.md,
+    width: '100%',
+  },
+  mockCopy: {
+    ...typography.caption,
+    color: colors.textSecondary,
   },
   refValue: {
     ...typography.heading,

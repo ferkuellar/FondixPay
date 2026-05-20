@@ -262,3 +262,19 @@ Objective: operations, metrics, support, improvements, and continuous audit.
 Deliverables: operational cadence, incident process, metrics review, audit review.
 Acceptance: product can be maintained beyond launch.
 Out of scope: ad hoc operations without ownership.
+# Phase 5E — Payment Method UX Mock Implementation
+
+## Objective
+Implement mobile mock/dev UX for adding, selecting, and changing a demo payment method before payment confirmation.
+
+## Status
+Completed for mock/dev mobile UX.
+
+## Out of Scope
+- Real providers.
+- Real card storage.
+- Prontipagos.
+- Real money movement.
+
+## Next
+Phase 5F — Payment Recovery Paths.

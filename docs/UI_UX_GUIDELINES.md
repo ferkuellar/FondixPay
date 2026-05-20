@@ -108,3 +108,15 @@ Before FondixPay can support real payments, the product UX must satisfy these re
 - Add future help copy: "¿Por qué pedimos esto?"
 - Use future card copy only when provider tokenization exists: "Nunca guardamos el número completo de tu tarjeta." and "El método de pago se procesa con un proveedor autorizado."
 - Until tokenization/provider is approved, avoid card-entry forms.
+# Payment Method Mock UX
+
+Before real providers exist, FondixPay must use an explicit mock/dev payment method flow:
+
+- The app starts with no payment method.
+- The user can add a demo method without entering real card, CVV, CLABE, or bank data.
+- The selected method is visible before confirming payment.
+- The user can change the selected method before paying.
+- Every demo method must say “Método demo” or equivalent.
+- Confirmation must state that no real charge will occur.
+- Payment success and receipt views should show the method used when available.
+- Fee breakdown from Phase 5C must remain visible and unchanged.

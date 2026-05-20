@@ -9,8 +9,10 @@ import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { OtpVerificationScreen } from '../screens/auth/OtpVerificationScreen';
 import { PhoneLoginScreen } from '../screens/auth/PhoneLoginScreen';
 import { HomeScreen } from '../screens/home/HomeScreen';
+import { AddPaymentMethodMockScreen } from '../screens/payments/AddPaymentMethodMockScreen';
 import { ConfirmPaymentScreen } from '../screens/payments/ConfirmPaymentScreen';
 import { HistoryScreen } from '../screens/payments/HistoryScreen';
+import { PaymentMethodsScreen } from '../screens/payments/PaymentMethodsScreen';
 import { PaymentSuccessScreen } from '../screens/payments/PaymentSuccessScreen';
 import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { AddServiceScreen } from '../screens/services/AddServiceScreen';
@@ -81,6 +83,12 @@ export function AppNavigator() {
           <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Agregar servicio' }} />
           <Stack.Screen name="ServiceDetail" component={ServiceDetailScreen} options={{ title: 'Tu servicio' }} />
           <Stack.Screen name="ConfirmPayment" component={ConfirmPaymentScreen} options={{ title: 'Confirmar pago' }} />
+          <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} options={{ title: 'Métodos de pago' }} />
+          <Stack.Screen
+            name="AddPaymentMethodMock"
+            component={AddPaymentMethodMockScreen}
+            options={{ title: 'Agregar método demo' }}
+          />
           <Stack.Screen
             name="PaymentSuccess"
             component={PaymentSuccessScreen}

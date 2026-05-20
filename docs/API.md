@@ -362,3 +362,17 @@ Status: proposed, not implemented.
 - Role: `USER`.
 - Audit events: `payment_method.validation_failed` if invalid.
 - Security notes: no provider secrets in response.
+# Phase 5E Payment Method API Status
+
+Phase 5E does not implement backend payment method endpoints. The payment method flow is local mobile mock/dev state only.
+
+Future/proposed payment method endpoints remain not implemented:
+
+- `GET /payment-methods`
+- `POST /payment-methods`
+- `POST /payment-methods/mock`
+- `PATCH /payment-methods/{id}/default`
+- `DELETE /payment-methods/{id}`
+- `POST /payment-methods/{id}/validate`
+
+Do not document these endpoints as available until backend models, authorization, audit events, tokenization strategy, and tests exist.
