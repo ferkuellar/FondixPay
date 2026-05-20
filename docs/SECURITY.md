@@ -107,3 +107,13 @@ Security risks still pending:
 - Payment idempotency and reconciliation.
 
 Production remains blocked until rate limiting, RBAC, audit logs, ledger, migration discipline, and provider decisions are completed.
+
+## Phase 4C UX/Product Security Notes
+
+- OTP visual design must remain 6 digits. Any 4-digit OTP mockup is obsolete.
+- Trust signals do not replace real security controls.
+- Do not promise "secure" without explaining concrete controls such as data protection, support, auditability, and provider handling.
+- Do not store card data unless tokenization, provider approval, and compliance responsibilities are defined.
+- Real payment method handling requires an approved provider decision and compliance review.
+- Payment error screens must state whether a charge happened, did not happen, or is pending confirmation.
+- Fee disclosure is a security/trust requirement because hidden fees create disputes and user harm.

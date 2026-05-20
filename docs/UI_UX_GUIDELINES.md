@@ -65,3 +65,17 @@ Use shared theme tokens for color, typography, spacing, and components. Avoid on
 ## Visual reference note (2026-05-19)
 
 Phase 3 alignment uses `references/01-splash.png` … `references/14-history.png` as the authoritative per-screen mockups. `fondix.png` is not used.
+
+## UX/Product Critical Requirements Before Real Payments
+
+Before FondixPay can support real payments, the product UX must satisfy these requirements:
+
+- Fee visible before payment confirmation, on confirmation, and on receipt.
+- OTP UI and design handoffs must remain 6 digits.
+- Payment method must be explicit; users need a clear add/select/manage method flow.
+- Payment recovery path is mandatory: failure state, retry, change method, support, and charged/not-charged clarity.
+- Trust signals must explain real controls: operator identity, data protection, fee transparency, support, and security model.
+- Longer flows should use stepper/progress cues where user context can be lost.
+- Empty, loading, error, success, disabled, and pending states must be present for payment-critical screens.
+- Receipt must behave as proof: view, download, share, and status clarity.
+- Support entry points must be visible after failed or uncertain payment outcomes.

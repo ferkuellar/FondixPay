@@ -34,3 +34,18 @@ Updated: 2026-05-19
 | Schema drift from `create_all` | High | Risk documented; tests isolate schema in SQLite | Move production-like schema management to Alembic before staging |
 | Inconsistent API errors | Medium | Invalid token and auth error behavior tested | Define full API error contract in backend safety follow-up |
 | Payments mock lacks idempotency | High | Protected endpoint coverage exists; real payments remain blocked | Address in Payments Mock Hardening before provider work |
+| Fee not visible before payment confirmation | SEV-1 / Production Blocker | Real payments remain blocked | Add fee disclosure before confirmation, on confirmation, and on receipt in Phase 5B |
+| Missing payment recovery path | SEV-1 / Production Blocker | Mock flow only; production blocked | Design failure, retry, change-method, support, and charged/not-charged paths in Phase 5D |
+| Missing payment method flow | SEV-1 / Production Blocker | Current method UI is demo/static | Design add/select/manage payment method flow in Phase 5C before real payments |
+| Audit and ledger absent before money movement | SEV-1 / Production Blocker | Real payments blocked by ADRs | Design ledger, audit events, idempotency, and traceability in Phase 5A |
+| Trust signals insufficient for target users | SEV-2 / High | Product remains mock/dev | Add real trust requirements to onboarding/payment UX in Phase 5B |
+| 4-digit OTP mockup obsolete | SEV-2 / High | ADR-012 and ADR-026 keep implementation at 6 digits | Remove or supersede 4-digit OTP references in future design work |
+| Support and reclamation path undefined | SEV-2 / High | Support scope remains future work | Define support/reclamation UX in Phase 5E |
+| Surprise fee can trigger chargeback or complaints | SEV-2 / High | Real payments blocked | Validate fee comprehension before provider integration |
+| Payment method setup abandonment risk | SEV-2 / High | No real method setup exists yet | Design low-friction method setup with clear copy and error states |
+| Double payment attempt risk after failure | SEV-2 / High | Payment is mock/dev | Add idempotency and recovery UX before real payments |
+| Add service flow lacks explicit stepper | SEV-3 / Medium | Current flow works as MVP | Add progress clarity during user-services hardening |
+| Service list lacks search or other path | SEV-3 / Medium | Current catalog is small | Add catalog search/other path when provider list grows |
+| History lacks filters | SEV-3 / Medium | Mock history is small | Add filters before scaled receipt/history use |
+| Financial microcopy can be ambiguous | SEV-3 / Medium | Product remains mock/dev | Tighten copy around certainty, totals, and next actions |
+| Receipt download/share proof is not clear enough | SEV-3 / Medium | Receipt is mock/dev | Define receipt proof, download, share, and verification semantics in Phase 5E |

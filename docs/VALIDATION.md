@@ -87,3 +87,17 @@ Before any real payment integration:
 - Payment and receipt tests must be expanded around idempotency, ledger, and audit.
 - User-scoped ownership tests must cover detail and mutation paths.
 - CI must run backend tests and mobile typecheck.
+
+## UX/Product Validation Before Real Payments
+
+The product must be validated with users before real payment launch:
+
+- User understands FondixPay commission before tapping confirm.
+- User can identify the final total.
+- User understands what to do if payment fails.
+- User can find support from a failed or uncertain payment state.
+- User understands whether they were charged or not charged.
+- User can download or share a receipt.
+- User can add or select a payment method without anxiety or ambiguity.
+- User does not depend on a card-only path if the target segment includes non-bancarized users.
+- Test the payment flow with users aged 30-65 before closed beta with real money.

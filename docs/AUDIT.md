@@ -74,3 +74,21 @@ Minimum event fields:
 - `created_at`
 
 Phase 4A does not implement the audit log table. Real payments remain blocked until auth and financial audit events are implemented.
+
+## Phase 4C Payment UX Audit Events
+
+The following payment UX events must be emitted when audit logging is implemented:
+
+- `payment.fee_disclosed`
+- `payment.method_selected`
+- `payment.method_added`
+- `payment.confirmation_viewed`
+- `payment.confirmed`
+- `payment.failed`
+- `payment.retry_requested`
+- `payment.support_requested`
+- `receipt.viewed`
+- `receipt.shared`
+- `receipt.downloaded`
+
+These events must not store raw card data, OTP codes, access tokens, or unnecessary personal data. They should include safe correlation IDs, actor identity when known, payment/receipt identifiers when available, and result status.

@@ -4,7 +4,7 @@ Updated: 2026-05-20
 
 ## Current Route Summary
 
-FondixPay is currently a governed MVP mock/dev mobile app. It has AXON-AI operating documentation, a technical hardening audit, and a mobile UI/UX production system aligned to per-screen references under `references/`.
+FondixPay is currently a governed MVP mock/dev mobile app. It has AXON-AI operating documentation, a technical hardening audit, a mobile UI/UX production system aligned to per-screen references under `references/`, auth/session P0 hardening, backend safety tests, and a UX/Product risk register.
 
 Current practical position:
 
@@ -12,21 +12,25 @@ Current practical position:
 - Phase 1: completed.
 - Phase 2: completed as audit/documentation baseline, not full hardening implementation.
 - Phase 3: completed with caveats documented in `planning/sprints/003-ui-ux-production-system/COMPLETION_REPORT.md`.
-- Recommended next phase: Phase 4A - Auth & Session Security P0.
+- Phase 4A: completed.
+- Phase 4B: completed.
+- Phase 4C: completed as UX/Product governance and backlog registration.
+- Recommended next phase: Phase 5A - Ledger & Audit Foundation Design.
 
-Before any real payment provider work, the project must complete auth/session hardening, backend tests, audit-log foundation, and mock-payment hardening. Real payments remain blocked.
+Before any real payment provider work, the project must complete ledger/audit design, fee transparency, payment method flow, payment recovery paths, support/receipt proof, and provider selection. Real payments remain blocked.
 
 ## Immediate Recommended Path
 
-1. Phase 4A - Auth & Session Security P0.
-2. Phase 4B - Backend Safety & Test Foundation.
-3. Phase 5 - User Services Domain Hardening.
-4. Phase 6 - Payments Mock Hardening.
-5. Phase 7 - Ledger & Audit Foundation.
-6. Phase 8 - Admin/Support Scope Definition.
-7. Phase 9 - Payment Provider Selection.
+1. Phase 5A - Ledger & Audit Foundation Design.
+2. Phase 5B - Payment Trust & Fee Transparency.
+3. Phase 5C - Payment Method Flow.
+4. Phase 5D - Payment Recovery Paths.
+5. Phase 5E - Support & Receipt Proof.
+6. Phase 5 - User Services Domain Hardening.
+7. Phase 6 - Payments Mock Hardening.
+8. Phase 9 - Payment Provider Selection.
 
-Phase 10 real payment integration must not start before Phases 4A, 4B, 6, 7, and 9 are accepted.
+Phase 10 real payment integration must not start before Phases 4A, 4B, 4C, 5A, 5B, 5C, 5D, 6, and 9 are accepted.
 
 ## Phase 0 - Product Definition
 
@@ -64,7 +68,7 @@ Out of scope: changing backend behavior and payment semantics.
 
 ## Phase 4A - Auth & Session Security P0
 
-Status: next recommended.
+Status: completed.
 Objective: remove production blockers from auth/session without changing product scope.
 Deliverables: environment-gated dev OTP response, strong secret validation outside development, OTP rate limiting plan or implementation, session expiration/revocation strategy, auth tests.
 Acceptance: dev OTP cannot leak outside development; insecure JWT defaults fail outside development; auth endpoints have tests; mobile session behavior remains compatible.
@@ -72,11 +76,59 @@ Out of scope: KYC and wallet.
 
 ## Phase 4B - Backend Safety & Test Foundation
 
-Status: planned.
+Status: completed.
 Objective: turn Phase 2 P0 technical risks into a safer backend baseline.
 Deliverables: pytest setup, `/health` test, auth tests, protected route ownership tests, mock payment tests, Alembic migration policy, startup behavior decision for `Base.metadata.create_all`.
 Acceptance: backend tests run locally and in documented commands; user-owned service/payment/receipt/notification access is covered by tests; migration policy is documented or implemented.
 Out of scope: real payments, new product features, admin console, and provider integration.
+
+## Phase 4C - UX/Product Risk Register
+
+Status: completed.
+Objective: formalize preliminary UX/Product fintech audit findings and convert them into AXON-AI decisions, risks, roadmap, validation criteria, audit events, and backlog.
+Deliverables: `docs/UX_PRODUCT_AUDIT.md`, `planning/UX_PRODUCT_BACKLOG.md`, Sprint 004C handoff, ADR-024 through ADR-029, UX/Product validation and security notes.
+Acceptance: commercial production is explicitly blocked by UX/Product criticals; internal validation without real money remains allowed.
+Out of scope: implementing screens, payment logic, provider integrations, backend changes, or auth changes.
+
+## Phase 5A - Ledger & Audit Foundation Design
+
+Status: recommended next.
+Objective: design ledger, audit logs, idempotency, and traceability before real money.
+Deliverables: ledger account model, ledger entry model, audit event model, idempotency keys, retention policy, correlation IDs, and implementation blueprint.
+Acceptance: every future financial action has a traceability design before provider integration starts.
+Out of scope: real payment provider integration and production money movement.
+
+## Phase 5B - Payment Trust & Fee Transparency
+
+Status: planned.
+Objective: show FondixPay fee, service amount, total, and trust microcopy before payment confirmation.
+Deliverables: fee disclosure requirements, confirmation copy, receipt fee fields, trust signals, and validation checklist.
+Acceptance: users can identify commission and final total before confirming payment.
+Out of scope: payment provider integration.
+
+## Phase 5C - Payment Method Flow
+
+Status: planned.
+Objective: design and implement explicit add/select/manage payment method flow compatible with MVP strategy.
+Deliverables: method flow requirements, allowed payment method decision, UX states, error states, and security/compliance constraints.
+Acceptance: no real payment screen assumes a preselected method without user action.
+Out of scope: storing raw card data or adding a provider without approved decision.
+
+## Phase 5D - Payment Recovery Paths
+
+Status: planned.
+Objective: design and implement failed/uncertain payment paths with retry, change method, support, and charged/not-charged clarity.
+Deliverables: error states, retry rules, support handoff, pending state copy, and audit event mapping.
+Acceptance: users know what happened and what to do after a failed or uncertain payment.
+Out of scope: real provider settlement logic.
+
+## Phase 5E - Support & Receipt Proof
+
+Status: planned.
+Objective: improve proof of payment, support visibility, receipt download/share, and post-payment status clarity.
+Deliverables: receipt proof requirements, download/share behavior, support entry points, status copy, and audit event mapping.
+Acceptance: users can preserve proof and contact support from relevant states.
+Out of scope: full admin/support console.
 
 ## Phase 5 - User Services Domain
 

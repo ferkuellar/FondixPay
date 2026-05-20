@@ -2,9 +2,9 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 4B - Backend Safety & Test Foundation (completed).
+Current phase: Phase 4C - UX/Product Risk Register (completed).
 
-Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, and backend safety test foundation. Backend payment semantics remain mock/dev. Product is not production-ready.
+Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, and UX/Product fintech risk register. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
 ## Phase Status
 
@@ -14,6 +14,7 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Phase 3 - UI/UX Production System: completed (see `planning/sprints/003-ui-ux-production-system/COMPLETION_REPORT.md` for caveats).
 - Phase 4A - Auth & Session Security P0: completed; closes P0 auth/session risks around OTP dev leakage and weak JWT config outside development.
 - Phase 4B - Backend Safety & Test Foundation: completed; adds isolated pytest fixtures and API/security smoke coverage.
+- Phase 4C - UX/Product Risk Register: completed; incorporates Senior UX/Product audit findings into decisions, risks, roadmap, validation, audit, and backlog.
 - Next phase: Phase 5A - Ledger & Audit Foundation Design.
 
 ## What Exists
@@ -34,6 +35,8 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Backend auth tests cover OTP dev response gating, weak JWT config rejection, invalid token handling, valid `/auth/me`, and wrong OTP failure.
 - Backend pytest suite covers `/health`, `/openapi.json`, auth dev flow, public provider catalog, protected endpoints, and user-scoped list boundaries.
 - Backend tests use isolated in-memory SQLite fixtures and do not depend on local manual data.
+- UX/Product audit is documented in `docs/UX_PRODUCT_AUDIT.md`.
+- UX/Product backlog is documented in `planning/UX_PRODUCT_BACKLOG.md`.
 
 ## What Is Missing
 
@@ -45,6 +48,10 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Real payment provider decision and integration.
 - Production splash illustration asset (placeholder in app per ADR-015).
 - Real payment method selection (UI is static demo on ServiceDetail).
+- Fee transparency before payment confirmation.
+- Payment recovery path for failed/uncertain payments.
+- Support/reclamation path for payment issues.
+- Receipt download/share proof semantics.
 - Native tab navigator (custom tab bar only).
 - Compliance strategy, observability, store release readiness.
 
@@ -59,3 +66,7 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 ## Boundary
 
 The current repo must not be considered production financial software. It is a governed MVP mock/dev base.
+
+Commercial production with real money is blocked by UX/Product criticals, missing ledger/audit foundation, and payment provider/compliance gaps.
+
+Internal validation without real money remains allowed.

@@ -141,3 +141,39 @@ Rationale: Automatic table creation masks schema drift and is not acceptable for
 Decision: API errors must remain predictable, avoid sensitive details, and be testable. Broad response-envelope refactors are deferred unless mobile compatibility is planned.
 
 Rationale: The current mobile app expects FastAPI-style errors in several places; safety improvements must not break clients casually.
+
+## ADR-024 - Commercial Production Is Blocked By UX/Product Critical Risks
+
+Decision: FondixPay cannot launch to commercial production with real money until the 5 critical UX/Product risks documented in `docs/UX_PRODUCT_AUDIT.md` are resolved.
+
+Rationale: Fee transparency, payment method ownership, recovery paths, trust signals, and OTP/security alignment are required before users can safely perform real payments.
+
+## ADR-025 - Fees Must Be Visible Before Payment Confirmation
+
+Decision: Every FondixPay fee must be visible before payment confirmation, on the confirmation screen, and on the receipt.
+
+Rationale: Hidden or late fees create user distrust, complaints, chargeback risk, and unacceptable fintech product risk.
+
+## ADR-026 - OTP Must Remain 6 Digits
+
+Decision: OTP design and future mockups must align to the current 6-digit OTP. Mockups that show 4 digits are obsolete for FondixPay.
+
+Rationale: The implementation and documented auth posture use a 6-digit OTP. Design drift around OTP length weakens security expectations and confuses implementation.
+
+## ADR-027 - Payment Method Flow Is Required Before Real Payments
+
+Decision: A real payment screen cannot assume a preselected card or method unless an approved add/select/manage payment method flow exists.
+
+Rationale: Users must explicitly understand and control how they pay before any real provider integration.
+
+## ADR-028 - Payment Recovery Path Is Mandatory
+
+Decision: Any real payment flow must include failure state, retry, change method, support path, and clear charged/not-charged messaging.
+
+Rationale: Payment ambiguity creates double-attempt, support, reconciliation, and trust risks.
+
+## ADR-029 - Trust Signals Are Product Requirements, Not Decoration
+
+Decision: Splash, onboarding, and payment surfaces must communicate real trust requirements: operator identity, data protection, fee transparency, support path, and security model.
+
+Rationale: Trust messaging must reflect actual controls and help non-bancarized or cautious users understand the product before paying.
