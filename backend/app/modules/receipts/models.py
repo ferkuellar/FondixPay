@@ -17,3 +17,31 @@ class Receipt(Base):
 
     payment = relationship("Payment", back_populates="receipt")
 
+    @property
+    def amount_minor(self) -> int:
+        return self.payment.amount_minor
+
+    @property
+    def fee_minor(self) -> int:
+        return self.payment.fee_minor
+
+    @property
+    def total_minor(self) -> int:
+        return self.payment.total_minor
+
+    @property
+    def currency(self) -> str:
+        return self.payment.currency
+
+    @property
+    def fee_label(self) -> str:
+        return self.payment.fee_label
+
+    @property
+    def payment_reference(self) -> str | None:
+        return self.payment.external_reference
+
+    @property
+    def is_mock(self) -> bool:
+        return True
+

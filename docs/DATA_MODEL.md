@@ -186,3 +186,29 @@ Pending:
 - Real provider transaction mapping.
 - Reconciliation job and review queue.
 - Admin/auditor access model.
+
+## Payment And Receipt Fee Transparency Status
+
+Phase 5C adds fee transparency without altering the legacy `payments` table schema.
+
+Current implemented response fields:
+
+- `amount_minor`
+- `fee_minor`
+- `total_minor`
+- `currency`
+- `fee_label`
+- `fee_description`
+- `is_mock`
+
+Current persistence:
+
+- `payment_intents` stores `amount_minor`, `fee_minor`, and `total_minor`.
+- Legacy `payments.amount` remains for compatibility.
+- Receipt breakdown is derived from the related payment response/model.
+
+Pending before production:
+
+- Decide whether legacy `payments` should persist fee fields directly or rely on `payment_intents`.
+- Approve the commercial fee model.
+- Add migration if payment/receipt tables need durable production fee fields.

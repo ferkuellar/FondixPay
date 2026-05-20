@@ -12,6 +12,7 @@ from app.modules.ledger.services import create_mock_attempt, get_or_create_mock_
 from app.modules.notifications.repository import create_notification
 from app.modules.payments.models import Payment
 from app.modules.payments import repository
+from app.modules.payments.fees import calculate_fee_minor, calculate_total_minor
 from app.modules.receipts.repository import create_receipt
 from app.modules.user_services.repository import get_for_user
 
@@ -54,12 +55,14 @@ def pay_service(
     amount = Decimal(user_service.amount_due)
     if amount <= 0:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No hay saldo pendiente")
+    fee_minor = calculate_fee_minor()
 
     intent, duplicate = get_or_create_mock_payment_intent(
         db,
         user_id=user_id,
         user_service_id=user_service.id,
         amount=amount,
+        fee_minor=fee_minor,
         idempotency_key=key,
         request_id=context.request_id,
         correlation_id=context.correlation_id,
@@ -72,7 +75,43 @@ def pay_service(
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Pago duplicado en proceso")
 
     attempt = create_mock_attempt(db, intent, request_id=context.request_id)
+    create_audit_event(
+        db,
+        event_type="payment.fee_disclosed",
+        actor_type="USER",
+        actor_id=user_id,
+        entity_type="PaymentIntent",
+        entity_id=intent.id,
+        result="success",
+        metadata={
+            "amount_minor": intent.amount_minor,
+            "fee_minor": fee_minor,
+            "total_minor": calculate_total_minor(intent.amount_minor, fee_minor),
+            "currency": "MXN",
+            "mock": True,
+        },
+        request_id=context.request_id,
+        correlation_id=intent.correlation_id,
+    )
     payment = repository.create(db, user_id, user_service.id, amount)
+    create_audit_event(
+        db,
+        event_type="payment.confirmed_with_total",
+        actor_type="USER",
+        actor_id=user_id,
+        entity_type="Payment",
+        entity_id=payment.id,
+        result="success",
+        metadata={
+            "amount_minor": intent.amount_minor,
+            "fee_minor": intent.fee_minor,
+            "total_minor": intent.total_minor,
+            "currency": intent.currency,
+            "mock": True,
+        },
+        request_id=context.request_id,
+        correlation_id=intent.correlation_id,
+    )
     result = AggregatorMockClient().pay_service(
         provider_name=user_service.provider.name,
         reference=user_service.reference,

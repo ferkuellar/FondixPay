@@ -157,3 +157,30 @@ Still not covered:
 - Reconciliation import and mismatch review.
 - Admin/auditor audit read endpoints.
 - DB-level append-only enforcement.
+
+## Phase 5C Fee Transparency Validation
+
+Checklist:
+
+- User sees service amount before paying.
+- User sees FondixPay fee before paying.
+- User sees final total before confirming.
+- Payment CTA shows final total.
+- Success screen shows amount, fee, and total.
+- Receipt/history card shows amount, fee, and total.
+- Backend calculates `total_minor = amount_minor + fee_minor`.
+- Backend uses integer minor units, not floats, for fee fields.
+- Mobile displays the same mock fee and total as backend configuration.
+- Trust copy is specific and avoids unsupported compliance/security claims.
+- Manual user validation should include users aged 30-65 before any real-money pilot.
+
+Automated validation:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest
+
+cd mobile
+npm run typecheck
+```

@@ -270,3 +270,32 @@ Behavior:
 - Payments remain mock/dev and are not provider-confirmed real money movement.
 
 No new public ledger, audit, admin, or reconciliation endpoints were implemented in Phase 5B.
+
+## Phase 5C Fee Transparency Fields
+
+Current implemented mock/dev payment response fields:
+
+- `amount_minor`: service amount in centavos.
+- `fee_minor`: FondixPay fee in centavos.
+- `total_minor`: service amount plus fee in centavos.
+- `currency`: currently `MXN`.
+- `fee_label`: user-facing fee label.
+- `fee_description`: user-facing fee explanation.
+- `is_mock`: marks the response as mock/dev.
+
+`POST /payments` returns these fields while preserving existing payment fields such as `amount`, `status`, and `external_reference`.
+
+Receipt responses now expose derived breakdown fields when listing `/receipts`:
+
+- `amount_minor`
+- `fee_minor`
+- `total_minor`
+- `currency`
+- `fee_label`
+- `payment_reference`
+- `is_mock`
+
+Pending:
+
+- A dedicated pre-confirmation quote endpoint does not exist yet.
+- Mobile local mock store still calculates the same fixed fee until it consumes backend payment responses directly.

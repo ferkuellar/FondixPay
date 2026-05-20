@@ -40,6 +40,7 @@ def get_or_create_mock_payment_intent(
     user_id: int,
     user_service_id: int,
     amount: Decimal,
+    fee_minor: int,
     idempotency_key: str,
     request_id: str | None,
     correlation_id: str | None,
@@ -61,13 +62,14 @@ def get_or_create_mock_payment_intent(
         return existing, True
 
     amount_minor = amount_to_minor_units(amount)
+    total_minor = amount_minor + fee_minor
     intent = repository.create_payment_intent(
         db,
         user_id=user_id,
         user_service_id=user_service_id,
         amount_minor=amount_minor,
-        fee_minor=0,
-        total_minor=amount_minor,
+        fee_minor=fee_minor,
+        total_minor=total_minor,
         idempotency_key=idempotency_key,
         correlation_id=correlation_id or new_correlation_id(),
     )
@@ -80,7 +82,7 @@ def get_or_create_mock_payment_intent(
         entity_id=intent.id,
         result="success",
         after={"status": intent.status.value},
-        metadata={"amount_minor": amount_minor, "fee_minor": 0, "total_minor": amount_minor, "currency": "MXN"},
+        metadata={"amount_minor": amount_minor, "fee_minor": fee_minor, "total_minor": total_minor, "currency": "MXN"},
         request_id=request_id,
         correlation_id=intent.correlation_id,
     )

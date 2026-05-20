@@ -7,6 +7,7 @@ import { SuccessIllustration } from '../../components/SuccessIllustration';
 import { usePaymentStore } from '../../store/paymentStore';
 import { colors, spacing, typography } from '../../theme';
 import type { RootStackParamList } from '../../types';
+import { formatMoneyMinor } from '../../utils/money';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PaymentSuccess'>;
 
@@ -20,11 +21,25 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
         <Text style={styles.title}>¡Ya quedó pagado!</Text>
         <Text style={styles.body}>
           {payment
-            ? `Tu pago de ${payment.providerName} por $${payment.amount.toFixed(0)} se guardó correctamente.`
+            ? `Tu pago mock/dev de ${payment.providerName} por ${formatMoneyMinor(payment.totalMinor)} se guardó correctamente.`
             : 'Tu pago se guardó correctamente.'}
         </Text>
         {payment ? (
           <>
+            <View style={styles.breakdown}>
+              <View style={styles.line}>
+                <Text style={styles.lineLabel}>Monto del servicio</Text>
+                <Text style={styles.lineValue}>{formatMoneyMinor(payment.amountMinor)}</Text>
+              </View>
+              <View style={styles.line}>
+                <Text style={styles.lineLabel}>{payment.feeLabel}</Text>
+                <Text style={styles.lineValue}>{formatMoneyMinor(payment.feeMinor)}</Text>
+              </View>
+              <View style={styles.totalLine}>
+                <Text style={styles.totalLabel}>Total pagado</Text>
+                <Text style={styles.totalValue}>{formatMoneyMinor(payment.totalMinor)}</Text>
+              </View>
+            </View>
             <Text style={styles.refLabel}>Número de referencia</Text>
             <Text style={styles.refValue}>{payment.folio}</Text>
           </>
@@ -52,6 +67,14 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     textAlign: 'center',
   },
+  breakdown: {
+    backgroundColor: colors.bgSubtle,
+    borderRadius: 12,
+    gap: spacing.sm,
+    marginTop: spacing.xl,
+    padding: spacing.lg,
+    width: '100%',
+  },
   container: {
     alignItems: 'center',
     flex: 1,
@@ -61,6 +84,20 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.textMuted,
     marginTop: spacing.xl,
+  },
+  line: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  lineLabel: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  lineValue: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '700',
   },
   refValue: {
     ...typography.heading,
@@ -72,5 +109,22 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     marginTop: spacing.xl,
     textAlign: 'center',
+  },
+  totalLabel: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '700',
+  },
+  totalLine: {
+    alignItems: 'center',
+    borderTopColor: colors.border,
+    borderTopWidth: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: spacing.sm,
+  },
+  totalValue: {
+    ...typography.heading,
+    color: colors.success,
   },
 });

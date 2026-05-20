@@ -273,3 +273,22 @@ Known audit gaps:
 - Logout/session restore audit coverage remains incomplete.
 - DB-level immutability enforcement for audit events is pending.
 - Audit read endpoints for `AUDITOR`/`ADMIN` roles are pending.
+
+## Phase 5C Fee Transparency Audit Events
+
+Implemented:
+
+- `payment.fee_disclosed`: emitted when the mock payment flow records the visible amount/fee/total.
+- `payment.confirmed_with_total`: emitted when the mock payment is confirmed with the total breakdown.
+
+Contract documented but not implemented as a separate backend event:
+
+- `payment.confirmation_viewed`: future event for a backend-backed quote/confirmation view. Current mobile confirmation is local mock state and has no backend quote endpoint.
+
+Required metadata:
+
+- `amount_minor`
+- `fee_minor`
+- `total_minor`
+- `currency`
+- `mock`

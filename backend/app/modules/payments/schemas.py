@@ -15,6 +15,13 @@ class PaymentRead(BaseModel):
     id: int
     user_service_id: int
     amount: Decimal
+    amount_minor: int
+    fee_minor: int
+    total_minor: int
+    currency: str
+    fee_label: str
+    fee_description: str
+    is_mock: bool
     status: PaymentStatus
     external_reference: str | None = None
     created_at: datetime

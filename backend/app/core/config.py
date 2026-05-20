@@ -26,6 +26,7 @@ class Settings(BaseSettings):
     otp_dev_response_enabled: bool = True
     app_env: AppEnv = "development"
     cors_origins: str = "http://localhost:19006,http://localhost:8081"
+    fondix_fee_minor: int = 750
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

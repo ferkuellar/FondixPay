@@ -159,3 +159,20 @@ Pending operations:
 - Provider outage runbook.
 - Alerting on failed/timeout/duplicate payment attempts.
 - Admin/auditor tooling with RBAC.
+
+## Phase 5C Fee Transparency Operations
+
+Support should be able to answer "me cobraron de más" tickets with:
+
+- Service amount.
+- FondixPay fee.
+- Final total.
+- Folio/mock reference.
+- Request ID/correlation ID when backend payment API is involved.
+
+Future operations requirements:
+
+- Support/admin views must show amount vs fee separately.
+- Finance dashboards should track fee revenue separately from service amount.
+- Reconciliation must separate provider service amount, FondixPay fee, and any provider costs.
+- Legal/commercial owners must approve final fee model before production.

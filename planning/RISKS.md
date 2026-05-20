@@ -66,3 +66,10 @@ Updated: 2026-05-20
 | Reconciliation remains design-only | SEV-2 / High | `ReconciliationRecord` model exists | Implement reconciliation job, import, mismatch classification, and review queue later |
 | Provider timeout handling remains pending | SEV-2 / High | State machine includes timeout attempt state | Implement timeout handling with provider adapter and pending/ambiguous UX |
 | False success risk remains until provider mapping | SEV-2 / High | Mock traces are marked as mock; real payments remain blocked | Separate provider confirmation from user-facing final success in real-provider phase |
+| Fee not visible before payment confirmation | SEV-1 / Production Blocker | Phase 5C shows fee and final total in mock/dev payment detail, confirmation, CTA, success, and receipt/history | Validate with users and replace mock fee with approved commercial model before real payments |
+| Surprise fee risk | SEV-2 / High | CTA and receipt now include total final for mock/dev flow | Run UX validation and legal copy review before pilot |
+| Total transparency legal/commercial risk | SEV-2 / High | Backend response includes amount/fee/total minor fields and mobile uses consistent breakdown | Define final commercial fee policy before production |
+| Backend/mobile fee inconsistency risk | SEV-2 / High | Backend exposes fee fields; mobile uses matching mock constant while local mock store is offline | Move mobile to backend fee source when real API flow replaces local mock store |
+| Unsupported trust claims risk | SEV-2 / High | Removed "Pago 100% seguro" from payment detail and added specific trust copy | Legal/security review all trust copy before production |
+| Receipt breakdown incomplete | SEV-2 / High | Receipt/history card shows service amount, fee, and total for mock/dev payments | Add downloadable/shareable proof in support/receipt phase |
+| Mock fee confused with production fee | SEV-2 / High | `FONDIX_FEE_MINOR` and docs mark fee as mock/dev | Require approved commercial fee model before real payments |

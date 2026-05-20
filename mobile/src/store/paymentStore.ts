@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import type { Payment, SavedService } from '../types';
+import { calculatePaymentBreakdown } from '../utils/money';
 import { useServiceStore } from './serviceStore';
 
 type PaymentState = {
@@ -25,6 +26,7 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
       throw new Error('Servicio no encontrado');
     }
 
+    const breakdown = calculatePaymentBreakdown(service.amountDue);
     set({ paymentAmount: service.amountDue, paymentStatus: 'processing', selectedService: service });
 
     const payment: Payment = {
@@ -32,6 +34,13 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
       serviceName: service.alias,
       providerName: service.provider.displayName,
       amount: service.amountDue,
+      amountMinor: breakdown.amountMinor,
+      feeMinor: breakdown.feeMinor,
+      totalMinor: breakdown.totalMinor,
+      currency: breakdown.currency,
+      feeLabel: breakdown.feeLabel,
+      feeDescription: breakdown.feeDescription,
+      isMock: breakdown.isMock,
       status: 'SUCCESS',
       paidAt: new Date().toISOString(),
       folio: `FP-${Date.now()}`,

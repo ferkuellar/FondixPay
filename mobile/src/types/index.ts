@@ -38,6 +38,13 @@ export type Payment = {
   serviceName: string;
   providerName: string;
   amount: number;
+  amountMinor: number;
+  feeMinor: number;
+  totalMinor: number;
+  currency: string;
+  feeLabel: string;
+  feeDescription: string;
+  isMock: boolean;
   status: 'SUCCESS';
   paidAt: string;
   folio: string;

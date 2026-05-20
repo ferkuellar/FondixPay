@@ -249,3 +249,27 @@ Rationale: Financial status changes should not be scattered as unchecked assignm
 Decision: Ledger and audit tables are represented by Alembic migration when viable. `Base.metadata.create_all` may remain only as local/dev/test support while migration discipline is completed.
 
 Rationale: Production-like environments need repeatable schema evolution and rollback visibility.
+
+## ADR-042 - Fee Disclosure Before Payment Confirmation
+
+Decision: FondixPay must show the service amount, FondixPay fee, and final total before a user confirms any payment.
+
+Rationale: Users must understand the cost of payment before consent. Hidden fees are a production blocker.
+
+## ADR-043 - Fee Breakdown Must Be Consistent Across Payment Screens
+
+Decision: Payment detail, confirmation, CTA, success, receipt, and history surfaces must use the same payment breakdown.
+
+Rationale: Inconsistent totals create support, complaint, chargeback, and trust risk.
+
+## ADR-044 - Mock Fee Model Is Allowed Only For Dev/MVP
+
+Decision: A fixed mock/dev fee model is allowed while payments remain mock. Before production, the fee model must be replaced or approved by product/legal/commercial stakeholders.
+
+Rationale: A mock fee is useful for UX validation but must not be mistaken for a final commercial model.
+
+## ADR-045 - Trust Copy Must Be Specific And Truthful
+
+Decision: FondixPay UI must use specific trust copy and must not claim regulation, PCI, tokenization, bank-grade protection, or "100% secure" controls unless implemented and approved.
+
+Rationale: Unsupported security/compliance claims create user harm and legal/commercial risk.

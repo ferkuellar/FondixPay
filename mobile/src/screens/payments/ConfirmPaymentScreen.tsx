@@ -10,6 +10,7 @@ import { Screen } from '../../components/Screen';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
 import type { RootStackParamList } from '../../types';
+import { calculatePaymentBreakdown, formatMoneyMinor } from '../../utils/money';
 import { sharedStyles } from '../styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ConfirmPayment'>;
@@ -33,6 +34,8 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
       </Screen>
     );
   }
+
+  const breakdown = calculatePaymentBreakdown(service.amountDue);
 
   if (paymentFailed) {
     return (
@@ -79,7 +82,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
           reference={service.reference}
         />
         <PrimaryButton disabled={service.amountDue <= 0} onPress={pay} variant="success">
-          PAGAR
+          Pagar {formatMoneyMinor(breakdown.totalMinor)}
         </PrimaryButton>
       </View>
     </Screen>

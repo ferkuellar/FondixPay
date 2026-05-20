@@ -2,9 +2,9 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 5B - Ledger & Audit Implementation (completed).
+Current phase: Phase 5C - Payment Trust & Fee Transparency (completed).
 
-Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, and a minimal backend ledger/audit/idempotency implementation. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
+Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, and mock/dev fee transparency. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
 ## Phase Status
 
@@ -17,7 +17,8 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Phase 4C - UX/Product Risk Register: completed; incorporates Senior UX/Product audit findings into decisions, risks, roadmap, validation, audit, and backlog.
 - Phase 5A - Ledger & Audit Foundation Design: completed; defines ledger, audit, idempotency, payment state, provider transaction, reconciliation, and recovery design.
 - Phase 5B - Ledger & Audit Implementation: completed; implements audit events, ledger models, payment intents/attempts, request IDs, state transitions, mock idempotency, Alembic migration, and backend tests.
-- Next phase: Phase 5C - Payment Trust & Fee Transparency.
+- Phase 5C - Payment Trust & Fee Transparency: completed; implements mock/dev fee model, payment breakdown, total CTA, receipt breakdown, trust microcopy, and backend fee tests.
+- Next phase: Phase 5D - Payment Method Strategy.
 
 ## What Exists
 
@@ -49,6 +50,9 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Payment state transition validator under `backend/app/modules/ledger/state_machine.py`.
 - Alembic migration `20260520_0001_ledger_audit_foundation.py` for ledger/audit tables.
 - Backend tests for audit events, request context, payment state machine, ledger models, payment idempotency, and payment audit integration.
+- Mock/dev fee model: fixed `FONDIX_FEE_MINOR=750` centavos.
+- Mobile payment detail, confirmation, success, and receipt/history surfaces show service amount, FondixPay fee, and final total.
+- Backend payment response exposes `amount_minor`, `fee_minor`, `total_minor`, `currency`, `fee_label`, `fee_description`, and `is_mock`.
 
 ## What Is Missing
 
@@ -63,7 +67,6 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Real payment provider decision and integration.
 - Production splash illustration asset (placeholder in app per ADR-015).
 - Real payment method selection (UI is static demo on ServiceDetail).
-- Fee transparency before payment confirmation.
 - Payment recovery path for failed/uncertain payments.
 - Support/reclamation path for payment issues.
 - Receipt download/share proof semantics.
@@ -82,7 +85,7 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 
 The current repo must not be considered production financial software. It is a governed MVP mock/dev base.
 
-Commercial production with real money is blocked by UX/Product criticals, incomplete production-grade ledger/audit semantics, missing real provider confirmation/reconciliation, and payment provider/compliance gaps.
+Commercial production with real money is blocked by remaining UX/Product criticals, incomplete production-grade ledger/audit semantics, missing real payment method strategy, missing recovery paths, missing real provider confirmation/reconciliation, and payment provider/compliance gaps.
 
 Internal validation without real money remains allowed.
 

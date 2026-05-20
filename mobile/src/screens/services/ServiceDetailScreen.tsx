@@ -10,6 +10,7 @@ import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
 import { colors, radius, spacing, typography } from '../../theme';
 import type { RootStackParamList } from '../../types';
+import { calculatePaymentBreakdown, formatMoneyMinor } from '../../utils/money';
 import { sharedStyles } from '../styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ServiceDetail'>;
@@ -31,6 +32,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
   }
 
   const currentService = service;
+  const breakdown = calculatePaymentBreakdown(currentService.amountDue);
 
   function pay() {
     selectService(currentService.id);
@@ -46,7 +48,18 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View style={styles.card}>
-          <AmountDisplay amount={currentService.amountDue} />
+          <AmountDisplay amount={breakdown.totalMinor / 100} label="Total final" />
+          <View style={styles.breakdown}>
+            <View style={styles.breakdownRow}>
+              <Text style={styles.label}>Monto del servicio</Text>
+              <Text style={styles.breakdownValue}>{formatMoneyMinor(breakdown.amountMinor)}</Text>
+            </View>
+            <View style={styles.breakdownRow}>
+              <Text style={styles.label}>{breakdown.feeLabel}</Text>
+              <Text style={styles.breakdownValue}>{formatMoneyMinor(breakdown.feeMinor)}</Text>
+            </View>
+            <Text style={styles.trustCopy}>Te mostraremos siempre la comisión antes de pagar.</Text>
+          </View>
           <View style={styles.row}>
             <Text style={styles.label}>Número de servicio</Text>
             <Text style={styles.value}>{currentService.reference}</Text>
@@ -69,12 +82,12 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
         </View>
 
         <Text style={styles.secure}>
-          <Feather color={colors.success} name="shield" size={14} /> Pago 100% seguro (demo)
+          <Feather color={colors.success} name="shield" size={14} /> No se realiza ningún cargo sin tu confirmación.
         </Text>
 
         <View style={styles.actions}>
           <PrimaryButton disabled={currentService.amountDue <= 0} onPress={pay} variant="primary">
-            PAGAR AHORA
+            Pagar {formatMoneyMinor(breakdown.totalMinor)}
           </PrimaryButton>
           <SecondaryButton onPress={remove}>Quitar servicio</SecondaryButton>
         </View>
@@ -99,6 +112,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     gap: spacing.lg,
+  },
+  breakdown: {
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.md,
+    gap: spacing.sm,
+    padding: spacing.md,
+  },
+  breakdownRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  breakdownValue: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '700',
   },
   label: {
     ...typography.caption,
@@ -152,6 +181,10 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.textMuted,
     textAlign: 'center',
+  },
+  trustCopy: {
+    ...typography.caption,
+    color: colors.textSecondary,
   },
   value: {
     ...typography.body,

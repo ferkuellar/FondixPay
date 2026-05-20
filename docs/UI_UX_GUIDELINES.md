@@ -79,3 +79,20 @@ Before FondixPay can support real payments, the product UX must satisfy these re
 - Empty, loading, error, success, disabled, and pending states must be present for payment-critical screens.
 - Receipt must behave as proof: view, download, share, and status clarity.
 - Support entry points must be visible after failed or uncertain payment outcomes.
+
+## Fee Transparency Requirements
+
+- Always show service amount, FondixPay fee, and final total before payment.
+- Payment CTA must include the final total, not only "Pagar".
+- Receipt and history must show the same breakdown.
+- Allowed trust copy:
+  - "Te mostraremos siempre la comisión antes de pagar."
+  - "No se realiza ningún cargo sin tu confirmación."
+  - "Guarda tu comprobante después de cada pago."
+- Prohibited copy until implemented/approved:
+  - "100% seguro"
+  - "Protección bancaria"
+  - "PCI compliant"
+  - "Tokenización segura"
+  - "Regulado por Banxico"
+- Fee comprehension must be validated with target users before real payments.

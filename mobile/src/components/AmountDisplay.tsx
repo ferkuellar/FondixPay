@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { colors, spacing, typography } from '../theme';
+import { formatMoneyMajor } from '../utils/money';
 
 type Props = {
   amount: number;
@@ -11,7 +12,7 @@ export function AmountDisplay({ amount, label = 'Total a pagar' }: Props) {
   return (
     <View style={styles.wrap}>
       <Text style={styles.label}>{label}</Text>
-      <Text style={styles.amount}>${amount.toFixed(0)}</Text>
+      <Text style={styles.amount}>{formatMoneyMajor(amount)}</Text>
     </View>
   );
 }

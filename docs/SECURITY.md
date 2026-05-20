@@ -142,3 +142,13 @@ Production remains blocked until rate limiting, RBAC, audit logs, ledger, migrat
 - Audit/admin read access remains pending and must require backend RBAC before exposure.
 
 Production remains blocked until rate limiting, RBAC, full audit coverage, production ledger semantics, provider confirmation mapping, and reconciliation controls exist.
+
+## Phase 5C Trust And Fee Security Notes
+
+- Fee disclosure is treated as a user-protection requirement, not decoration.
+- The UI must not hide the FondixPay fee or final total before confirmation.
+- Trust copy must remain truthful and specific.
+- Do not use "100% seguro" or imply PCI, tokenization, banking protection, or regulatory approval without implementation and review.
+- No card storage was added in Phase 5C.
+- Receipt breakdown must not expose sensitive payment method details.
+- Mock fee values must not be treated as production commercial policy.
