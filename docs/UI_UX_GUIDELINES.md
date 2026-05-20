@@ -96,3 +96,15 @@ Before FondixPay can support real payments, the product UX must satisfy these re
   - "Tokenización segura"
   - "Regulado por Banxico"
 - Fee comprehension must be validated with target users before real payments.
+
+## Payment Method UX Requirements
+
+- Do not show a card or payment method as selected unless a real or explicitly mock method exists.
+- If no method exists, show an empty state and CTA: "Agregar método de pago".
+- The selected method must be visible before payment confirmation.
+- The user must be able to change method before paying.
+- Mock/dev method must be clearly labeled as simulated and no real charge.
+- Do not force card-only UX for users who may be non-banked or partially banked.
+- Add future help copy: "¿Por qué pedimos esto?"
+- Use future card copy only when provider tokenization exists: "Nunca guardamos el número completo de tu tarjeta." and "El método de pago se procesa con un proveedor autorizado."
+- Until tokenization/provider is approved, avoid card-entry forms.

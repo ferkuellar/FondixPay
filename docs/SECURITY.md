@@ -152,3 +152,15 @@ Production remains blocked until rate limiting, RBAC, full audit coverage, produ
 - No card storage was added in Phase 5C.
 - Receipt breakdown must not expose sensitive payment method details.
 - Mock fee values must not be treated as production commercial policy.
+
+## Payment Method Security
+
+- Full PAN must never be stored.
+- CVV must never be stored.
+- Future cards require provider tokenization and provider vault.
+- Mobile Secure Store must not store card numbers, CVV, provider secrets, or raw payment credentials.
+- Logs and audit events must store only safe labels, method IDs, provider token references, and redacted metadata.
+- Payment method delete should be soft delete internally and provider detach/delete when supported.
+- Admin/support must not see sensitive card details.
+- Mock payment method is allowed only for development/internal validation without real money.
+- A real payment cannot proceed without a valid selected method and backend ownership validation.

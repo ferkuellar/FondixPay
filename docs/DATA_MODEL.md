@@ -212,3 +212,53 @@ Pending before production:
 - Decide whether legacy `payments` should persist fee fields directly or rely on `payment_intents`.
 - Approve the commercial fee model.
 - Add migration if payment/receipt tables need durable production fee fields.
+
+## Payment Method Proposed Model
+
+Status: proposed, not implemented.
+
+### `payment_methods`
+
+| Field | Purpose |
+| --- | --- |
+| `id` | Internal primary key. |
+| `user_id` | Owner user. |
+| `type` | `mock`, `card_token`, `spei`, `codi`, `store_cash`, or future type. |
+| `provider_name` | Provider/vault name when applicable. |
+| `provider_token_reference` | Provider token reference, never raw PAN/CVV. |
+| `display_label` | Safe label shown to user/support. |
+| `last4` | Nullable last four digits for tokenized cards only. |
+| `brand` | Nullable card/network/rail label. |
+| `status` | `active`, `pending_validation`, `failed`, `unavailable`, `deleted`. |
+| `is_default` | User default flag. |
+| `is_mock` | True for dev/internal mock methods. |
+| `created_at` | Created timestamp. |
+| `updated_at` | Updated timestamp. |
+| `deleted_at` | Soft delete timestamp. |
+
+### `payment_method_events`
+
+- `id`
+- `payment_method_id`
+- `user_id`
+- `event_type`
+- `result`
+- `metadata_json`
+- `request_id`
+- `correlation_id`
+- `created_at`
+
+### `user_payment_preferences`
+
+- `id`
+- `user_id`
+- `default_payment_method_id`
+- `created_at`
+- `updated_at`
+
+Rules:
+
+- Do not store PAN.
+- Do not store CVV.
+- Token references must be provider-generated.
+- Mock payment methods must not be used for real money.

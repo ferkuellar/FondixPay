@@ -176,3 +176,14 @@ Future operations requirements:
 - Finance dashboards should track fee revenue separately from service amount.
 - Reconciliation must separate provider service amount, FondixPay fee, and any provider costs.
 - Legal/commercial owners must approve final fee model before production.
+
+## Payment Method Operations
+
+- Support must identify the method used via safe display label only.
+- Logs must not include PAN, CVV, or raw provider card payloads.
+- Method failure incidents should capture request ID, user ID, method ID, safe display label, provider status, and audit event IDs.
+- Future metrics:
+  - `payment_method_add_success_rate`
+  - `payment_method_add_failure_rate`
+  - `payment_method_selection_change_rate`
+  - `payment_method_unavailable_count`

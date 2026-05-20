@@ -20,7 +20,7 @@ export function PaymentSummaryCard({
   alias,
   reference,
   amount,
-  paymentMethod = 'Tarjeta demo **** 9021',
+  paymentMethod = 'Método demo - pago simulado sin cargo real',
 }: Props) {
   const breakdown = calculatePaymentBreakdown(amount);
 

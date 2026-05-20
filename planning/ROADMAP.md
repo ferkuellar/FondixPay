@@ -16,7 +16,10 @@ Current practical position:
 - Phase 4B: completed.
 - Phase 4C: completed as UX/Product governance and backlog registration.
 - Phase 5A: completed as ledger/audit design.
-- Recommended next phase: Phase 5B - Ledger & Audit Implementation.
+- Phase 5B: completed as ledger/audit implementation baseline.
+- Phase 5C: completed as fee transparency baseline.
+- Phase 5D: current/completed as payment method strategy.
+- Recommended next phase: Phase 5E - Payment Method UX Mock Implementation.
 
 Before any real payment provider work, the project must implement ledger/audit, idempotency, fee transparency, payment method strategy, payment recovery paths, Prontipagos sandbox design, support/receipt proof, and provider selection. Real payments remain blocked.
 
@@ -25,11 +28,12 @@ Before any real payment provider work, the project must implement ledger/audit, 
 1. Phase 5B - Ledger & Audit Implementation.
 2. Phase 5C - Payment Trust & Fee Transparency.
 3. Phase 5D - Payment Method Strategy.
-4. Phase 5E - Prontipagos Sandbox Integration Design.
+4. Phase 5E - Payment Method UX Mock Implementation.
 5. Phase 5F - Payment Recovery Paths.
-6. Phase 5 - User Services Domain Hardening.
-7. Phase 6 - Payments Mock Hardening.
-8. Phase 9 - Payment Provider Selection.
+6. Phase 5G - Prontipagos Sandbox Integration Design.
+7. Phase 5 - User Services Domain Hardening.
+8. Phase 6 - Payments Mock Hardening.
+9. Phase 9 - Payment Provider Selection.
 
 Phase 10 real payment integration must not start before Phases 4A, 4B, 4C, 5A, 5B, 5C, 5D, 5E, 5F, 6, and 9 are accepted.
 
@@ -101,7 +105,7 @@ Out of scope: real payment provider integration and production money movement.
 
 ## Phase 5B - Ledger & Audit Implementation
 
-Status: recommended next.
+Status: completed.
 Objective: implement ledger/audit models, migrations, audit event writer, correlation IDs, idempotency keys, state transition validator, and tests.
 Deliverables: Alembic migrations, SQLAlchemy models, services, middleware, tests, and documentation updates.
 Acceptance: append-only ledger/audit records, idempotency, and payment state transitions are enforced and tested.
@@ -109,7 +113,7 @@ Out of scope: real provider integration and mobile redesign.
 
 ## Phase 5C - Payment Trust & Fee Transparency
 
-Status: planned.
+Status: completed.
 Objective: show FondixPay fee, service amount, total, and trust microcopy before payment confirmation.
 Deliverables: fee disclosure requirements, confirmation copy, receipt fee fields, trust signals, and validation checklist.
 Acceptance: users can identify commission and final total before confirming payment.
@@ -117,13 +121,21 @@ Out of scope: payment provider integration.
 
 ## Phase 5D - Payment Method Strategy
 
-Status: planned.
+Status: completed.
 Objective: design/implement the MVP payment method strategy without storing raw card data or assuming unsupported methods.
-Deliverables: allowed method decision, tokenization rules, UX states, error states, provider constraints, and compliance notes.
-Acceptance: no real payment screen assumes a preselected method without user action.
+Deliverables: allowed method decision, tokenization rules, UX states, provider constraints, compliance notes, and phantom-card label removal.
+Acceptance: no current payment screen implies a real preselected card; future real payment requires selected method.
 Out of scope: storing raw card data or adding a provider without approved decision.
 
-## Phase 5E - Prontipagos Sandbox Integration Design
+## Phase 5E - Payment Method UX Mock Implementation
+
+Status: planned.
+Objective: implement mock add/select/change payment method UX without real provider or card storage.
+Deliverables: AddPaymentMethod screen, SelectPaymentMethod screen, mock payment method component, empty state, and confirmation integration.
+Acceptance: user can add/select/change a clearly mock method before mock payment.
+Out of scope: tokenization, real provider, PAN/CVV storage, real money.
+
+## Phase 5G - Prontipagos Sandbox Integration Design
 
 Status: planned.
 Objective: design Prontipagos sandbox integration without real money.

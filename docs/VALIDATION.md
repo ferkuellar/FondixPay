@@ -51,6 +51,21 @@ cd mobile
 npm run typecheck
 ```
 
+## Payment Method Validation
+
+Future validation checklist:
+
+- User cannot confirm real payment without a valid selected method.
+- User can see selected method before paying.
+- User can change method before paying.
+- UI does not show phantom cards.
+- PAN and CVV are never persisted.
+- Mock method appears only in dev/internal validation.
+- Payment method actions generate audit events.
+- Payment method APIs enforce ownership.
+- Tokenized card flow rejects raw PAN/CVV payloads.
+- Non-banked users can complete validation with an approved non-card path if selected for MVP.
+
 Pytest strategy:
 
 - Tests live under `backend/tests/`.

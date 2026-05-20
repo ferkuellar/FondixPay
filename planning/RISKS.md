@@ -73,3 +73,10 @@ Updated: 2026-05-20
 | Unsupported trust claims risk | SEV-2 / High | Removed "Pago 100% seguro" from payment detail and added specific trust copy | Legal/security review all trust copy before production |
 | Receipt breakdown incomplete | SEV-2 / High | Receipt/history card shows service amount, fee, and total for mock/dev payments | Add downloadable/shareable proof in support/receipt phase |
 | Mock fee confused with production fee | SEV-2 / High | `FONDIX_FEE_MINOR` and docs mark fee as mock/dev | Require approved commercial fee model before real payments |
+| Phantom card shown in UI | SEV-1 / Production Blocker | Phase 5D relabels current method as mock/dev and documents no real method flow | Implement add/select/change method UX in Phase 5E |
+| PCI risk from card capture without tokenization | SEV-1 / Production Blocker | No real card form or storage exists | Require provider vault/tokenization before card support |
+| Non-banked users excluded by card-only strategy | SEV-2 / High | Strategy requires SPEI/OXXO/CoDi evaluation | Validate method preference with target users |
+| Sensitive payment method data in logs | SEV-1 / Production Blocker | Docs require redaction and safe labels only | Enforce in future API/tests |
+| Payment method unavailable without fallback | SEV-2 / High | Strategy documents unavailable state | Implement fallback UX before real payments |
+| Real payment confirmed without clear method | SEV-1 / Production Blocker | Real payments remain blocked | Require selected method in future confirmation flow |
+| Support cannot inspect method safely | SEV-2 / High | Operations docs require safe display label only | Add support/admin views with RBAC later |

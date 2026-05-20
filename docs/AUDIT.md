@@ -292,3 +292,18 @@ Required metadata:
 - `total_minor`
 - `currency`
 - `mock`
+
+## Payment Method Audit Events
+
+Future required events:
+
+- `payment_method.add_started`
+- `payment_method.add_completed`
+- `payment_method.add_failed`
+- `payment_method.selected`
+- `payment_method.changed`
+- `payment_method.removed`
+- `payment_method.validation_failed`
+- `payment_method.mock_selected`
+
+Payment method audit metadata must exclude PAN, CVV, raw provider payloads, and secrets.

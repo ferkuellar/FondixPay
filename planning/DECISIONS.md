@@ -273,3 +273,33 @@ Rationale: A mock fee is useful for UX validation but must not be mistaken for a
 Decision: FondixPay UI must use specific trust copy and must not claim regulation, PCI, tokenization, bank-grade protection, or "100% secure" controls unless implemented and approved.
 
 Rationale: Unsupported security/compliance claims create user harm and legal/commercial risk.
+
+## ADR-046 - No Phantom Payment Methods
+
+Decision: The app must not show cards or other methods as real selected methods unless a real flow or explicit mock method exists.
+
+Rationale: Phantom methods mislead users and create support, security, and compliance risk.
+
+## ADR-047 - Raw Card Data Must Never Be Stored
+
+Decision: FondixPay will not store full PAN, CVV, or sensitive card data. Future cards must use an approved provider tokenization/vault flow.
+
+Rationale: Raw card storage creates unacceptable PCI and data exposure risk.
+
+## ADR-048 - Payment Method Strategy Must Consider Non-Banked Users
+
+Decision: The MVP strategy must evaluate SPEI, OXXO/store payment, CoDi, or similar non-card options for non-banked or partially banked users.
+
+Rationale: A card-only strategy may exclude a meaningful user segment and increase abandonment.
+
+## ADR-049 - Mock Payment Method Allowed Only In Dev/Internal Validation
+
+Decision: Mock payment method can be used only for development and internal/closed validation without real money, and must be clearly labeled.
+
+Rationale: Mock methods are useful for flow validation but cannot imply real provider capability.
+
+## ADR-050 - Payment Confirmation Requires Selected Payment Method
+
+Decision: Before any real payment, confirmation must include selected method, final total, and a change-method action.
+
+Rationale: Payment consent requires both amount and method clarity.

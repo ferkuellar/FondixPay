@@ -71,12 +71,12 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
           <Text style={styles.methodTitle}>Método de pago</Text>
           <View style={styles.methodSelected}>
             <View style={styles.radioSelected} />
-            <Text style={styles.methodText}>Tarjeta demo **** 9021</Text>
-            <Text style={styles.visa}>VISA</Text>
+            <Text style={styles.methodText}>Método demo - sin cargo real</Text>
+            <Text style={styles.mockBadge}>MOCK</Text>
           </View>
           <View style={styles.methodRow}>
             <View style={styles.radio} />
-            <Text style={styles.methodText}>Nueva tarjeta</Text>
+            <Text style={styles.methodText}>Agregar método de pago (pendiente)</Text>
             <Feather color={colors.primary} name="plus" size={18} />
           </View>
         </View>
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     fontWeight: '600',
   },
-  visa: {
+  mockBadge: {
     color: colors.primary,
     fontWeight: '800',
   },

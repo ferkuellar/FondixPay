@@ -299,3 +299,66 @@ Pending:
 
 - A dedicated pre-confirmation quote endpoint does not exist yet.
 - Mobile local mock store still calculates the same fixed fee until it consumes backend payment responses directly.
+
+## Future Payment Method APIs
+
+Status: proposed, not implemented.
+
+### GET `/payment-methods`
+
+- Purpose: list safe payment methods for the current user.
+- Auth required: yes.
+- Role: `USER`.
+- Response: id, type, display label, status, default flag, mock flag.
+- Audit events: optional `payment_method.list_viewed`.
+- Security notes: no PAN/CVV.
+
+### POST `/payment-methods`
+
+- Purpose: create a future tokenized method.
+- Auth required: yes.
+- Role: `USER`.
+- Request body conceptual: type, provider token reference, display metadata.
+- Response body conceptual: created safe payment method.
+- Audit events: `payment_method.add_started`, `payment_method.add_completed`, `payment_method.add_failed`.
+- Security notes: provider tokenization required; raw card data is rejected.
+
+### POST `/payment-methods/mock`
+
+- Purpose: create/select dev-only mock payment method.
+- Auth required: yes.
+- Role: `USER`.
+- Response body conceptual: mock method with `is_mock=true`.
+- Audit events: `payment_method.mock_selected`.
+- Security notes: disabled outside dev/internal validation.
+
+### PATCH `/payment-methods/{id}/default`
+
+- Purpose: set selected/default method.
+- Auth required: yes.
+- Role: `USER`.
+- Audit events: `payment_method.selected`, `payment_method.changed`.
+- Security notes: ownership required.
+
+### DELETE `/payment-methods/{id}`
+
+- Purpose: soft delete/detach method.
+- Auth required: yes.
+- Role: `USER`.
+- Audit events: `payment_method.removed`.
+- Security notes: detach provider token when applicable.
+
+### GET `/payment-methods/{id}`
+
+- Purpose: read safe detail.
+- Auth required: yes.
+- Role: `USER`.
+- Security notes: safe display fields only.
+
+### POST `/payment-methods/{id}/validate`
+
+- Purpose: validate availability before payment.
+- Auth required: yes.
+- Role: `USER`.
+- Audit events: `payment_method.validation_failed` if invalid.
+- Security notes: no provider secrets in response.
