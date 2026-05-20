@@ -1,5 +1,6 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
+import { Image, StyleSheet } from 'react-native';
 
 import { LoadingState } from '../components/LoadingState';
 import { Screen } from '../components/Screen';
@@ -19,6 +20,17 @@ import { colors } from '../theme';
 import type { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+
+function HeaderLogo() {
+  return (
+    <Image
+      accessibilityLabel="Fondix Pay"
+      resizeMode="contain"
+      source={require('../assets/images/header.png')}
+      style={styles.headerLogo}
+    />
+  );
+}
 
 export function AppNavigator() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -60,7 +72,11 @@ export function AppNavigator() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{ headerBackVisible: false, title: 'FONDIX PAY' }}
+            options={{
+              headerBackVisible: false,
+              headerTitle: () => <HeaderLogo />,
+              headerTitleAlign: 'center',
+            }}
           />
           <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Agregar servicio' }} />
           <Stack.Screen name="ServiceDetail" component={ServiceDetailScreen} options={{ title: 'Tu servicio' }} />
@@ -83,3 +99,10 @@ export function AppNavigator() {
     </Stack.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  headerLogo: {
+    height: 120,
+    width: 340,
+  },
+});

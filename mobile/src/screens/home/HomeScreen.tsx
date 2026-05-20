@@ -74,8 +74,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   header: {
+    marginTop: spacing.md,
     paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
+    paddingTop: 0,
   },
   list: {
     gap: spacing.md,
