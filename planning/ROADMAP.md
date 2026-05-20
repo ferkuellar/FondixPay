@@ -4,7 +4,7 @@ Updated: 2026-05-20
 
 ## Current Route Summary
 
-FondixPay is currently a governed MVP mock/dev mobile app. It has AXON-AI operating documentation, a technical hardening audit, a mobile UI/UX production system aligned to per-screen references under `references/`, auth/session P0 hardening, backend safety tests, and a UX/Product risk register.
+FondixPay is currently a governed MVP mock/dev mobile app. It has AXON-AI operating documentation, a technical hardening audit, a mobile UI/UX production system aligned to per-screen references under `references/`, auth/session P0 hardening, backend safety tests, a UX/Product risk register, and ledger/audit foundation design.
 
 Current practical position:
 
@@ -15,22 +15,23 @@ Current practical position:
 - Phase 4A: completed.
 - Phase 4B: completed.
 - Phase 4C: completed as UX/Product governance and backlog registration.
-- Recommended next phase: Phase 5A - Ledger & Audit Foundation Design.
+- Phase 5A: completed as ledger/audit design.
+- Recommended next phase: Phase 5B - Ledger & Audit Implementation.
 
-Before any real payment provider work, the project must complete ledger/audit design, fee transparency, payment method flow, payment recovery paths, support/receipt proof, and provider selection. Real payments remain blocked.
+Before any real payment provider work, the project must implement ledger/audit, idempotency, fee transparency, payment method strategy, payment recovery paths, Prontipagos sandbox design, support/receipt proof, and provider selection. Real payments remain blocked.
 
 ## Immediate Recommended Path
 
-1. Phase 5A - Ledger & Audit Foundation Design.
-2. Phase 5B - Payment Trust & Fee Transparency.
-3. Phase 5C - Payment Method Flow.
-4. Phase 5D - Payment Recovery Paths.
-5. Phase 5E - Support & Receipt Proof.
+1. Phase 5B - Ledger & Audit Implementation.
+2. Phase 5C - Payment Trust & Fee Transparency.
+3. Phase 5D - Payment Method Strategy.
+4. Phase 5E - Prontipagos Sandbox Integration Design.
+5. Phase 5F - Payment Recovery Paths.
 6. Phase 5 - User Services Domain Hardening.
 7. Phase 6 - Payments Mock Hardening.
 8. Phase 9 - Payment Provider Selection.
 
-Phase 10 real payment integration must not start before Phases 4A, 4B, 4C, 5A, 5B, 5C, 5D, 6, and 9 are accepted.
+Phase 10 real payment integration must not start before Phases 4A, 4B, 4C, 5A, 5B, 5C, 5D, 5E, 5F, 6, and 9 are accepted.
 
 ## Phase 0 - Product Definition
 
@@ -92,13 +93,21 @@ Out of scope: implementing screens, payment logic, provider integrations, backen
 
 ## Phase 5A - Ledger & Audit Foundation Design
 
-Status: recommended next.
+Status: completed.
 Objective: design ledger, audit logs, idempotency, and traceability before real money.
-Deliverables: ledger account model, ledger entry model, audit event model, idempotency keys, retention policy, correlation IDs, and implementation blueprint.
+Deliverables: `docs/LEDGER_AND_AUDIT_DESIGN.md`, `docs/PAYMENT_STATE_MACHINE.md`, proposed data model, future API contracts, audit catalog, validation/security/operations strategy, `planning/LEDGER_AUDIT_BACKLOG.md`.
 Acceptance: every future financial action has a traceability design before provider integration starts.
 Out of scope: real payment provider integration and production money movement.
 
-## Phase 5B - Payment Trust & Fee Transparency
+## Phase 5B - Ledger & Audit Implementation
+
+Status: recommended next.
+Objective: implement ledger/audit models, migrations, audit event writer, correlation IDs, idempotency keys, state transition validator, and tests.
+Deliverables: Alembic migrations, SQLAlchemy models, services, middleware, tests, and documentation updates.
+Acceptance: append-only ledger/audit records, idempotency, and payment state transitions are enforced and tested.
+Out of scope: real provider integration and mobile redesign.
+
+## Phase 5C - Payment Trust & Fee Transparency
 
 Status: planned.
 Objective: show FondixPay fee, service amount, total, and trust microcopy before payment confirmation.
@@ -106,15 +115,23 @@ Deliverables: fee disclosure requirements, confirmation copy, receipt fee fields
 Acceptance: users can identify commission and final total before confirming payment.
 Out of scope: payment provider integration.
 
-## Phase 5C - Payment Method Flow
+## Phase 5D - Payment Method Strategy
 
 Status: planned.
-Objective: design and implement explicit add/select/manage payment method flow compatible with MVP strategy.
-Deliverables: method flow requirements, allowed payment method decision, UX states, error states, and security/compliance constraints.
+Objective: design/implement the MVP payment method strategy without storing raw card data or assuming unsupported methods.
+Deliverables: allowed method decision, tokenization rules, UX states, error states, provider constraints, and compliance notes.
 Acceptance: no real payment screen assumes a preselected method without user action.
 Out of scope: storing raw card data or adding a provider without approved decision.
 
-## Phase 5D - Payment Recovery Paths
+## Phase 5E - Prontipagos Sandbox Integration Design
+
+Status: planned.
+Objective: design Prontipagos sandbox integration without real money.
+Deliverables: catalog sync design, reference validation, amount lookup, payment execution contract, provider status mapping, error mapping, receipt/folio mapping, timeout policy, retry policy, and reconciliation design.
+Acceptance: provider transaction mapping is accepted before implementation.
+Out of scope: production credentials, real payments, and live provider traffic.
+
+## Phase 5F - Payment Recovery Paths
 
 Status: planned.
 Objective: design and implement failed/uncertain payment paths with retry, change method, support, and charged/not-charged clarity.
@@ -122,7 +139,7 @@ Deliverables: error states, retry rules, support handoff, pending state copy, an
 Acceptance: users know what happened and what to do after a failed or uncertain payment.
 Out of scope: real provider settlement logic.
 
-## Phase 5E - Support & Receipt Proof
+## Phase 5G - Support & Receipt Proof
 
 Status: planned.
 Objective: improve proof of payment, support visibility, receipt download/share, and post-payment status clarity.

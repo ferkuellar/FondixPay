@@ -117,3 +117,17 @@ Production remains blocked until rate limiting, RBAC, audit logs, ledger, migrat
 - Real payment method handling requires an approved provider decision and compliance review.
 - Payment error screens must state whether a charge happened, did not happen, or is pending confirmation.
 - Fee disclosure is a security/trust requirement because hidden fees create disputes and user harm.
+
+## Phase 5A Financial Data Protection
+
+- Financial data must use least privilege access by role.
+- Audit logs must not expose raw card data, OTP codes, access tokens, provider secrets, or full sensitive provider payloads.
+- Provider payload storage should use hashing and redaction by default.
+- Raw secrets, full PAN, CVV, and provider credentials must never be stored in application tables or committed to repo.
+- Payment methods must be tokenized by an approved provider before real use.
+- Idempotency keys must be scoped to user, operation, and resource to avoid cross-user replay.
+- Future provider requests should support signing or authenticated webhook verification when provider capability exists.
+- Audit/admin endpoints must be restricted to `AUDITOR`, `FINANCE`, `ADMIN`, or `SUPER_ADMIN` according to the final RBAC matrix.
+- Finance/admin/auditor roles must follow least privilege; support must see only the minimum data needed.
+- Provider references must not be treated as authorization proof.
+- User-facing success must depend on internal state plus provider confirmation rules, not client-side state.

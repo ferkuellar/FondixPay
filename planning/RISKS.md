@@ -49,3 +49,13 @@ Updated: 2026-05-19
 | History lacks filters | SEV-3 / Medium | Mock history is small | Add filters before scaled receipt/history use |
 | Financial microcopy can be ambiguous | SEV-3 / Medium | Product remains mock/dev | Tighten copy around certainty, totals, and next actions |
 | Receipt download/share proof is not clear enough | SEV-3 / Medium | Receipt is mock/dev | Define receipt proof, download, share, and verification semantics in Phase 5E |
+| No ledger before real payments | SEV-1 / Production Blocker | Real payments remain blocked | Implement ledger accounts and ledger entries in Phase 5B |
+| No audit logs before real payments | SEV-1 / Production Blocker | Audit catalog documented | Implement audit event persistence and writer in Phase 5B |
+| Double payment risk without idempotency | SEV-1 / Production Blocker | Real payments blocked; mock protected by tests only | Implement idempotency keys before provider submission |
+| False success risk without provider confirmation | SEV-1 / Production Blocker | Mock/dev status documented | Separate provider confirmation from user-facing success |
+| Reconciliation mismatch risk | SEV-2 / High | Reconciliation design documented | Implement reconciliation records and review queue before production |
+| Receipt inconsistency risk | SEV-2 / High | Receipt remains mock/dev | Tie receipt state to payment/provider/ledger state |
+| Provider timeout ambiguity | SEV-2 / High | Timeout not used in current mock flow | Design timeout as pending/ambiguous, not success |
+| Raw provider payload sensitive data risk | SEV-2 / High | No real provider payloads yet | Store hashes/redacted payloads only unless approved |
+| Admin audit abuse risk | SEV-2 / High | Admin endpoints not implemented | Require RBAC and audit access logging |
+| Lack of immutable financial trail | SEV-1 / Production Blocker | Ledger/audit design created in 5A | Implement append-only ledger and audit records in Phase 5B |

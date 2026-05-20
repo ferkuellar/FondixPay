@@ -101,3 +101,29 @@ The product must be validated with users before real payment launch:
 - User can add or select a payment method without anxiety or ambiguity.
 - User does not depend on a card-only path if the target segment includes non-bancarized users.
 - Test the payment flow with users aged 30-65 before closed beta with real money.
+
+## Ledger and Audit Validation
+
+Future Phase 5B+ tests must validate:
+
+- Amounts are stored as integer minor units.
+- `fee_minor + amount_minor = total_minor`.
+- Duplicate idempotency key does not create a second payment intent or provider submission.
+- Payment state transitions follow the approved state machine.
+- Invalid transitions are rejected.
+- Ledger entries are append-only.
+- Audit event is created for each financial state change.
+- Receipt is not marked `provider_confirmed` without provider confirmation rules being satisfied.
+- Provider timeout does not equal success.
+- Reconciliation mismatch creates a review record.
+- User cannot access another user's payment intent.
+- Admin/auditor roles are required for audit endpoints.
+- Provider payloads are redacted or hashed in tests.
+- Reversal creates compensating ledger entries instead of destructive updates.
+
+Before real payment integration:
+
+- Backend tests must cover idempotency, audit event creation, ledger append-only behavior, and ownership.
+- API tests must cover payment intent create/confirm/retry/status.
+- Security tests must cover forbidden access to audit/admin endpoints.
+- Reconciliation tests must cover matched and mismatched provider records.

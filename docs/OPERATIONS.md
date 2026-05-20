@@ -84,3 +84,43 @@ Production blockers:
 - No ledger.
 - No migration discipline enforcement.
 - No observability/incident runbooks.
+
+## Phase 5A Payment Operations Strategy
+
+Future payment operations must include:
+
+- Payment monitoring for intent, attempt, provider, ledger, and receipt states.
+- Failed payment queue.
+- Pending/timeout payment queue.
+- Reconciliation monitoring.
+- Audit log review workflow.
+- Provider outage handling.
+- Retry policy with idempotency rules.
+- Manual review queue for mismatches, duplicate provider references, missing receipts, and user claims.
+- Daily settlement/conciliation checklist.
+
+Future metrics:
+
+- `payment_success_rate`
+- `payment_failure_rate`
+- `provider_timeout_rate`
+- `duplicate_blocked_count`
+- `reconciliation_mismatch_count`
+- `receipt_generation_failure_count`
+
+Provider outage handling:
+
+- Stop new real provider submissions if outage threshold is met.
+- Keep existing pending payments in non-success state until provider evidence arrives.
+- Display user-facing pending/support status rather than guessed success.
+- Preserve provider request hashes, audit events, and correlation IDs.
+
+Daily reconciliation checklist:
+
+1. Import or fetch provider report.
+2. Compare provider transactions against internal payment intents and attempts.
+3. Verify ledger entries for succeeded/reversed payments.
+4. Verify receipt state for provider-confirmed payments.
+5. Create review records for mismatches.
+6. Emit reconciliation audit events.
+7. Escalate unresolved mismatches to finance/support.

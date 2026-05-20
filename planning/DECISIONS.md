@@ -177,3 +177,45 @@ Rationale: Payment ambiguity creates double-attempt, support, reconciliation, an
 Decision: Splash, onboarding, and payment surfaces must communicate real trust requirements: operator identity, data protection, fee transparency, support path, and security model.
 
 Rationale: Trust messaging must reflect actual controls and help non-bancarized or cautious users understand the product before paying.
+
+## ADR-030 - No Real Payments Before Ledger And Audit Foundation
+
+Decision: FondixPay will not integrate real payments until ledger, audit logs, idempotency, and minimum tests are implemented and accepted.
+
+Rationale: Real money movement without traceability, auditability, and duplicate prevention creates unacceptable financial and operational risk.
+
+## ADR-031 - Amounts Stored As Integer Minor Units
+
+Decision: All financial amounts must be stored as integers in minor units, such as centavos, with explicit currency.
+
+Rationale: Floats and ambiguous currency fields create rounding and reconciliation errors.
+
+## ADR-032 - Ledger Entries Are Append-Only
+
+Decision: Ledger entries must not be destructively updated or deleted. Errors and reversals are represented with compensating entries.
+
+Rationale: Financial history must be immutable and reviewable.
+
+## ADR-033 - Audit Events Are Append-Only
+
+Decision: Critical financial, auth, provider, and future admin actions must emit immutable audit events.
+
+Rationale: Auditability is required for support, finance, compliance, incident review, and provider reconciliation.
+
+## ADR-034 - Provider Confirmation Is Separate From User-Facing Success
+
+Decision: The app must not display final payment confirmation until provider confirmation rules and internal ledger requirements are satisfied.
+
+Rationale: Provider acceptance, timeout, internal success, and user-facing success are different states. Collapsing them creates false-success risk.
+
+## ADR-035 - Idempotency Required For Payment Confirmation
+
+Decision: Payment confirmation and retry must use idempotency keys to prevent double provider submission or double charge.
+
+Rationale: Double tap, network retries, and provider timeouts are normal payment-system failure modes.
+
+## ADR-036 - Prontipagos Integration Requires Provider Transaction Mapping
+
+Decision: Before integrating Prontipagos, FondixPay must map service catalog, reference validation, amount lookup, payment execution, provider confirmation, error codes, receipts, and reconciliation.
+
+Rationale: Provider-specific behavior must be explicit before sandbox or real integration work begins.

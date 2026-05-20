@@ -2,9 +2,9 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 4C - UX/Product Risk Register (completed).
+Current phase: Phase 5A - Ledger & Audit Foundation Design (completed).
 
-Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, and UX/Product fintech risk register. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
+Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, and ledger/audit foundation design. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
 ## Phase Status
 
@@ -15,7 +15,8 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Phase 4A - Auth & Session Security P0: completed; closes P0 auth/session risks around OTP dev leakage and weak JWT config outside development.
 - Phase 4B - Backend Safety & Test Foundation: completed; adds isolated pytest fixtures and API/security smoke coverage.
 - Phase 4C - UX/Product Risk Register: completed; incorporates Senior UX/Product audit findings into decisions, risks, roadmap, validation, audit, and backlog.
-- Next phase: Phase 5A - Ledger & Audit Foundation Design.
+- Phase 5A - Ledger & Audit Foundation Design: completed; defines ledger, audit, idempotency, payment state, provider transaction, reconciliation, and recovery design.
+- Next phase: Phase 5B - Ledger & Audit Implementation.
 
 ## What Exists
 
@@ -37,12 +38,19 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Backend tests use isolated in-memory SQLite fixtures and do not depend on local manual data.
 - UX/Product audit is documented in `docs/UX_PRODUCT_AUDIT.md`.
 - UX/Product backlog is documented in `planning/UX_PRODUCT_BACKLOG.md`.
+- Ledger/audit design is documented in `docs/LEDGER_AND_AUDIT_DESIGN.md`.
+- Payment state machine is documented in `docs/PAYMENT_STATE_MACHINE.md`.
+- Ledger/audit backlog is documented in `planning/LEDGER_AUDIT_BACKLOG.md`.
 
 ## What Is Missing
 
 - Refresh tokens, server-side session inventory, token revocation, device trust, and auth audit logs.
-- Formal financial ledger.
-- Audit logs for financial and administrative actions.
+- Formal financial ledger implementation.
+- Audit log implementation for financial and administrative actions.
+- Idempotency key implementation.
+- Payment intent and payment attempt implementation.
+- Provider transaction tracking.
+- Reconciliation records and review workflow.
 - Documented and implemented permissions/RBAC.
 - CI/CD pipelines.
 - Real payment provider decision and integration.
@@ -67,6 +75,8 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 
 The current repo must not be considered production financial software. It is a governed MVP mock/dev base.
 
-Commercial production with real money is blocked by UX/Product criticals, missing ledger/audit foundation, and payment provider/compliance gaps.
+Commercial production with real money is blocked by UX/Product criticals, missing ledger/audit implementation, and payment provider/compliance gaps.
 
 Internal validation without real money remains allowed.
+
+Prontipagos is not integrated. It is only a future provider/aggregator candidate and requires provider transaction mapping before sandbox work.

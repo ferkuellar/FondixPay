@@ -135,3 +135,106 @@ Pending risk: stolen access tokens remain valid until expiry.
 | `GET /notifications` | Protected | current user's notifications | `401` missing/invalid token | Delivery channels |
 
 Phase 4B tests cover the basic protected/public classification and user-scoped list boundaries. They do not certify production readiness.
+
+## Future Ledger/Audit/Payment APIs
+
+These APIs are design-only for Phase 5A. They are not implemented yet.
+
+### POST `/payments/intents`
+
+- Purpose: create a payment intent with amount, fee, total, currency, user service, and idempotency key.
+- Auth required: yes.
+- Role required: `USER`.
+- Request body conceptual: `user_service_id`, `amount_minor`, `fee_minor`, `currency`, `idempotency_key`.
+- Response body conceptual: payment intent ID, status, totals, expiration, correlation ID.
+- Audit events generated: `payment.intent_created`, `payment.fee_disclosed`.
+- Idempotency behavior: duplicate key returns existing intent/current state.
+- Error states: invalid service, cross-user service, expired service amount, duplicate conflict, validation error.
+
+### GET `/payments/intents/{id}`
+
+- Purpose: fetch current payment intent state for the owner.
+- Auth required: yes.
+- Role required: `USER` for own intent; future `SUPPORT`, `FINANCE`, `ADMIN`, `AUDITOR` read according to policy.
+- Request body conceptual: none.
+- Response body conceptual: intent, attempts summary, receipt status, user-facing status.
+- Audit events generated: optional `payment.intent_viewed` if policy requires.
+- Idempotency behavior: not applicable.
+- Error states: not found, unauthorized, forbidden.
+
+### POST `/payments/intents/{id}/confirm`
+
+- Purpose: user confirms payment and starts provider submission.
+- Auth required: yes.
+- Role required: `USER`.
+- Request body conceptual: `idempotency_key`, selected payment method token/reference, accepted fee/total snapshot.
+- Response body conceptual: intent status, attempt status, user-facing status, correlation ID.
+- Audit events generated: `payment.confirmed_by_user`, `payment.submitted_to_provider`, provider events as applicable.
+- Idempotency behavior: duplicate confirm does not create a second provider submission.
+- Error states: expired intent, fee mismatch, method missing, duplicate blocked, provider timeout, provider rejected.
+
+### POST `/payments/intents/{id}/retry`
+
+- Purpose: retry a failed or ambiguous payment according to safe retry rules.
+- Auth required: yes.
+- Role required: `USER`.
+- Request body conceptual: `idempotency_key`, retry reason, payment method reference.
+- Response body conceptual: current intent and attempt state.
+- Audit events generated: `payment.retry_requested`, `payment.duplicate_blocked` if applicable.
+- Idempotency behavior: retry key scopes duplicate retry.
+- Error states: retry not allowed, provider pending, duplicate blocked, provider timeout.
+
+### GET `/payments/{id}/status`
+
+- Purpose: get user-facing payment status derived from internal state and provider evidence.
+- Auth required: yes.
+- Role required: `USER` for own payment; support/finance/admin/auditor future read policy.
+- Request body conceptual: none.
+- Response body conceptual: internal status, user-facing status, receipt status, support flag.
+- Audit events generated: optional status viewed event if required.
+- Idempotency behavior: not applicable.
+- Error states: not found, forbidden.
+
+### GET `/receipts/{id}`
+
+- Purpose: fetch receipt proof and provider confirmation state.
+- Auth required: yes.
+- Role required: `USER` for own receipt; support/finance/admin/auditor future read policy.
+- Request body conceptual: none.
+- Response body conceptual: receipt, status, provider confirmation flag, download/share metadata.
+- Audit events generated: `receipt.viewed`.
+- Idempotency behavior: not applicable.
+- Error states: not found, unavailable, forbidden.
+
+### GET `/audit/events`
+
+- Purpose: read audit events for authorized audit/support/admin use.
+- Auth required: yes.
+- Role required: `AUDITOR`, `ADMIN`, or `SUPER_ADMIN`; narrower support view may be added later.
+- Request body conceptual: query filters for event type, entity, actor, correlation ID, time window.
+- Response body conceptual: paginated audit events with redacted metadata.
+- Audit events generated: `admin.audit_events_viewed` if implemented.
+- Idempotency behavior: not applicable.
+- Error states: forbidden, invalid filters.
+
+### GET `/admin/reconciliation`
+
+- Purpose: list reconciliation runs and mismatch summaries.
+- Auth required: yes.
+- Role required: `FINANCE`, `ADMIN`, `AUDITOR`, or `SUPER_ADMIN`.
+- Request body conceptual: query filters for provider, date, status.
+- Response body conceptual: reconciliation records, matched/mismatch counts, review status.
+- Audit events generated: optional `provider.reconciliation_viewed`.
+- Idempotency behavior: not applicable.
+- Error states: forbidden, invalid date/provider.
+
+### POST `/admin/reconciliation/run`
+
+- Purpose: start a reconciliation run against imported/provider report data.
+- Auth required: yes.
+- Role required: `FINANCE`, `ADMIN`, or `SUPER_ADMIN`.
+- Request body conceptual: provider name, reconciliation date, report reference/import ID.
+- Response body conceptual: reconciliation run ID, status, summary.
+- Audit events generated: `provider.reconciliation_started`, `provider.reconciliation_completed`, `provider.reconciliation_mismatch`.
+- Idempotency behavior: duplicate run key prevents duplicate reconciliation for same provider/date/report.
+- Error states: duplicate run, missing report, provider unavailable, mismatch detected.
