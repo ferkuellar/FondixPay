@@ -8,7 +8,8 @@ export type AuthUser = {
 
 type RequestOtpResponse = {
   message: string;
-  otp_dev: string;
+  expires_in_seconds?: number;
+  otp_dev?: string;
 };
 
 type VerifyOtpResponse = {

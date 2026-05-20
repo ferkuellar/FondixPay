@@ -51,31 +51,37 @@ export function NumericKeypad({ onKeyPress, onBackspace }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: colors.bgSubtle,
-    borderTopColor: colors.border,
-    borderTopWidth: 1,
-    gap: spacing.sm,
+    backgroundColor: colors.bg,
+    gap: 7,
     paddingBottom: spacing.lg,
     paddingHorizontal: spacing.sm,
-    paddingTop: spacing.md,
+    paddingTop: spacing.sm,
   },
   key: {
     alignItems: 'center',
     backgroundColor: colors.bg,
-    borderRadius: radius.sm,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    borderWidth: 1,
     flex: 1,
     justifyContent: 'center',
-    minHeight: 48,
+    minHeight: 42,
+    shadowColor: '#0F172A',
+    shadowOffset: { height: 1, width: 0 },
+    shadowOpacity: 0.06,
+    shadowRadius: 3,
   },
   keySpacer: {
     flex: 1,
   },
   keyText: {
-    ...typography.heading,
     color: colors.textPrimary,
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 24,
   },
   row: {
     flexDirection: 'row',
-    gap: spacing.sm,
+    gap: 7,
   },
 });

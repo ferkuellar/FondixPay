@@ -41,28 +41,35 @@ export function PhoneLoginScreen({ navigation }: Props) {
   return (
     <Screen padded={false} style={styles.screen}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
-        <View style={styles.content}>
-          <Text style={styles.title}>Ingresa tu número de celular</Text>
-          <PhoneInput value={cleanPhone} />
-          <Text style={styles.hint}>Te enviaremos un código de verificación</Text>
-          {otpDev ? <Text style={styles.devHint}>Código de prueba: {otpDev}</Text> : null}
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-          <PrimaryButton disabled={cleanPhone.length < 10} loading={isLoading} onPress={continueToOtp}>
-            CONTINUAR
-          </PrimaryButton>
+        <View style={styles.centered}>
+          <View style={styles.content}>
+            <Text style={styles.title}>Ingresa tu número de celular</Text>
+            <PhoneInput value={cleanPhone} />
+            <Text style={styles.hint}>Te enviaremos un código de verificación</Text>
+            {otpDev ? <Text style={styles.devHint}>Código de prueba: {otpDev}</Text> : null}
+            {error ? <Text style={styles.error}>{error}</Text> : null}
+            <PrimaryButton disabled={cleanPhone.length < 10} loading={isLoading} onPress={continueToOtp}>
+              CONTINUAR
+            </PrimaryButton>
+          </View>
+          <NumericKeypad onBackspace={backspace} onKeyPress={appendDigit} />
         </View>
-        <NumericKeypad onBackspace={backspace} onKeyPress={appendDigit} />
       </KeyboardAvoidingView>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  content: {
+  centered: {
     flex: 1,
-    gap: spacing.lg,
+    justifyContent: 'center',
+    paddingBottom: spacing.xl,
+  },
+  content: {
+    gap: spacing.md,
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,
+    paddingBottom: spacing.md,
   },
   devHint: {
     ...typography.bodySmall,

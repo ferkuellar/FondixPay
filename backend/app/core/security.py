@@ -29,10 +29,11 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         user_id = payload.get("sub")
         if user_id is None:
             raise credentials_error
-    except JWTError as exc:
+        user_pk = int(user_id)
+    except (JWTError, ValueError) as exc:
         raise credentials_error from exc
 
-    user = db.get(User, int(user_id))
+    user = db.get(User, user_pk)
     if user is None:
         raise credentials_error
     return user

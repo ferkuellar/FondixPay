@@ -42,27 +42,29 @@ export function OtpVerificationScreen({ route }: Props) {
 
   return (
     <Screen>
-      <View style={styles.container}>
-        <Text style={styles.title}>Código de verificación</Text>
-        <Text style={styles.body}>
-          Enviamos un código a{'\n'}
-          {formatPhoneDisplay(route.params.phone)}
-        </Text>
-        {otpDev ? <Text style={styles.devHint}>Código de prueba: {otpDev}</Text> : null}
-        <OtpInput error={Boolean(error)} onChange={setOtp} value={otp} />
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-        <Text style={styles.resendPrompt}>¿No recibiste el código?</Text>
-        <Text style={styles.resend}>
-          {secondsLeft > 0 ? (
-            <Text style={styles.resendMuted}>Reenviar código en 00:{String(secondsLeft).padStart(2, '0')}</Text>
-          ) : (
-            <Text style={styles.resendAction}>Reenviar código</Text>
-          )}
-        </Text>
-        <View style={styles.actions}>
-          <PrimaryButton disabled={otp.length < 6} loading={isLoading} onPress={continueToHome}>
-            ENTRAR
-          </PrimaryButton>
+      <View style={styles.centered}>
+        <View style={styles.container}>
+          <Text style={styles.title}>Código de verificación</Text>
+          <Text style={styles.body}>
+            Enviamos un código a{'\n'}
+            {formatPhoneDisplay(route.params.phone)}
+          </Text>
+          {otpDev ? <Text style={styles.devHint}>Código de prueba: {otpDev}</Text> : null}
+          <OtpInput error={Boolean(error)} onChange={setOtp} value={otp} />
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+          <Text style={styles.resendPrompt}>¿No recibiste el código?</Text>
+          <Text style={styles.resend}>
+            {secondsLeft > 0 ? (
+              <Text style={styles.resendMuted}>Reenviar código en 00:{String(secondsLeft).padStart(2, '0')}</Text>
+            ) : (
+              <Text style={styles.resendAction}>Reenviar código</Text>
+            )}
+          </Text>
+          <View style={styles.actions}>
+            <PrimaryButton disabled={otp.length < 6} loading={isLoading} onPress={continueToHome}>
+              ENTRAR
+            </PrimaryButton>
+          </View>
         </View>
       </View>
     </Screen>
@@ -78,8 +80,12 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     textAlign: 'center',
   },
-  container: {
+  centered: {
     flex: 1,
+    justifyContent: 'center',
+    paddingBottom: spacing.xl,
+  },
+  container: {
     gap: spacing.lg,
   },
   devHint: {

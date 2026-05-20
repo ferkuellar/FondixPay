@@ -2,9 +2,9 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 3 - UI/UX Production System (completed with caveats).
+Current phase: Phase 4A - Auth & Session Security P0 (completed).
 
-Status: MVP mock/dev mobile app with a shared visual design system (theme tokens, reusable components, screen polish). Backend and payment semantics unchanged. Product is not production-ready.
+Status: MVP mock/dev mobile app with a shared visual design system and targeted auth/session P0 hardening completed. Backend payment semantics remain mock/dev. Product is not production-ready.
 
 ## Phase Status
 
@@ -12,7 +12,8 @@ Status: MVP mock/dev mobile app with a shared visual design system (theme tokens
 - Phase 1 - AXON-AI Alignment & Project Operating Pack: completed.
 - Phase 2 - Technical Architecture Hardening: completed as audit/documentation baseline.
 - Phase 3 - UI/UX Production System: completed (see `planning/sprints/003-ui-ux-production-system/COMPLETION_REPORT.md` for caveats).
-- Next phase: Phase 4A - Auth & Session Security P0, followed by Phase 4B - Backend Safety & Test Foundation.
+- Phase 4A - Auth & Session Security P0: completed; closes P0 auth/session risks around OTP dev leakage and weak JWT config outside development.
+- Next phase: Phase 4B - Backend Safety & Test Foundation.
 
 ## What Exists
 
@@ -28,10 +29,12 @@ Status: MVP mock/dev mobile app with a shared visual design system (theme tokens
 - Mock service providers, payments, receipts, history.
 - Docker Compose with PostgreSQL and backend.
 - Mobile `npm run typecheck` passes.
+- Auth config validates production-like environments for strong JWT secret, explicit CORS, and disabled dev OTP responses.
+- Backend auth tests cover OTP dev response gating, weak JWT config rejection, invalid token handling, valid `/auth/me`, and wrong OTP failure.
 
 ## What Is Missing
 
-- Production authentication hardening.
+- Refresh tokens, server-side session inventory, token revocation, device trust, and auth audit logs.
 - Formal financial ledger.
 - Audit logs for financial and administrative actions.
 - Documented and implemented permissions/RBAC.

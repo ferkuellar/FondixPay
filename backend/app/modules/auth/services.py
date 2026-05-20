@@ -1,18 +1,22 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.security import create_access_token
-from app.modules.auth.models import consume_otp, save_otp
+from app.modules.auth.models import OTP_TTL_SECONDS, consume_otp, save_otp
 from app.modules.auth.schemas import TokenResponse
 from app.modules.users.repository import get_or_create_by_phone
 
 
-def request_otp(phone: str) -> dict[str, str]:
+def request_otp(phone: str) -> dict[str, str | int]:
     otp = save_otp(phone)
-    return {
+    response: dict[str, str | int] = {
         "message": "Codigo enviado",
-        "otp_dev": otp,
+        "expires_in_seconds": OTP_TTL_SECONDS,
     }
+    if settings.allow_otp_dev_response:
+        response["otp_dev"] = otp
+    return response
 
 
 def verify_otp(db: Session, phone: str, otp: str) -> TokenResponse:

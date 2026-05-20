@@ -1,5 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, View } from 'react-native';
 
 import { PrimaryButton } from '../components/PrimaryButton';
 import { Screen } from '../components/Screen';
@@ -12,27 +12,20 @@ export function OnboardingScreen({ navigation }: Props) {
   return (
     <Screen padded={false}>
       <View style={styles.container}>
-        <View style={styles.brand}>
-          <Text style={styles.logoMark}>F</Text>
-          <Text style={styles.brandText}>
-            FONDIX <Text style={styles.brandAccent}>PAY</Text>
-          </Text>
-        </View>
-
-        {/* TODO: Replace with production splash illustration asset (person + floating service icons). */}
-        <View accessibilityLabel="Ilustración de bienvenida (placeholder)" style={styles.illustration}>
-          <Text style={styles.illustrationEmoji}>👩‍💻📱</Text>
-          <View style={styles.floatingIcons}>
-            <Text style={styles.floatIcon}>⚡</Text>
-            <Text style={styles.floatIcon}>📶</Text>
-            <Text style={styles.floatIcon}>📱</Text>
-            <Text style={styles.floatIcon}>💧</Text>
+        <View style={styles.content}>
+          <View style={styles.heroSection}>
+            <Image
+              accessibilityLabel="Ilustración de bienvenida de FondixPay"
+              resizeMode="contain"
+              source={require('../assets/images/onboarding-hero.png')}
+              style={styles.heroImage}
+            />
           </View>
-        </View>
 
-        <View style={styles.copy}>
-          <Text style={styles.title}>Paga todos tus servicios en un solo lugar</Text>
-          <Text style={styles.subtitle}>Rápido, fácil y seguro</Text>
+          <View style={styles.copy}>
+            <Text style={styles.title}>Paga todos tus servicios en un solo lugar</Text>
+            <Text style={styles.subtitle}>Rápido, fácil y seguro</Text>
+          </View>
         </View>
 
         <PrimaryButton onPress={() => navigation.navigate('PhoneLogin')}>EMPEZAR</PrimaryButton>
@@ -42,55 +35,29 @@ export function OnboardingScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  brand: {
-    alignItems: 'center',
-    gap: spacing.sm,
-    marginTop: spacing.xxxl,
-  },
-  brandAccent: {
-    color: colors.primary,
-  },
-  brandText: {
-    ...typography.heading,
-    color: colors.textPrimary,
-    letterSpacing: 1,
-  },
   container: {
     flex: 1,
     paddingHorizontal: spacing.xl,
     paddingBottom: spacing.xxxl,
+    paddingTop: spacing.lg,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingBottom: spacing.xxl,
   },
   copy: {
-    flex: 1,
     gap: spacing.sm,
-    justifyContent: 'center',
-    paddingVertical: spacing.xl,
+    paddingTop: spacing.xs,
   },
-  floatIcon: {
-    fontSize: 20,
-  },
-  floatingIcons: {
-    flexDirection: 'row',
-    gap: spacing.lg,
-    marginTop: spacing.md,
-  },
-  illustration: {
-    alignItems: 'center',
+  heroImage: {
     alignSelf: 'center',
-    backgroundColor: colors.primarySoft,
-    borderRadius: 120,
-    height: 220,
+    height: 380,
+    maxWidth: 390,
+    width: '112%',
+  },
+  heroSection: {
     justifyContent: 'center',
-    width: 220,
-  },
-  illustrationEmoji: {
-    fontSize: 56,
-  },
-  logoMark: {
-    color: colors.primary,
-    fontSize: 40,
-    fontStyle: 'italic',
-    fontWeight: '800',
   },
   subtitle: {
     ...typography.body,

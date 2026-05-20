@@ -93,3 +93,27 @@ Rationale: Preserve the existing implementation pattern and avoid a large struct
 Decision: The central splash illustration (person with phone and floating service icons in `01-splash.png`) is implemented as a marked visual placeholder (`View` with background + emoji) until the real asset is delivered. Code must include a `TODO` comment referencing the pending asset.
 
 Rationale: The illustration is not available as a production asset in the repo; a labeled placeholder avoids blocking the rest of the UI system work.
+
+## ADR-016 - Environment-Gated OTP Behavior
+
+Decision: Development OTP may be returned to the client only in `development` or `test` when `OTP_DEV_RESPONSE_ENABLED=true`. In `staging` and `production`, the backend must not return `otp_dev` to clients.
+
+Rationale: Returning OTP values is useful for local development but is unacceptable in production-like environments.
+
+## ADR-017 - No Insecure JWT Secret Outside Development
+
+Decision: `JWT_SECRET_KEY` is mandatory and must be strong in `staging` and `production`. Known placeholder values such as `change-me`, `dev-secret`, `secret`, and short values are rejected at settings validation time.
+
+Rationale: Weak JWT signing secrets allow token forgery and are a hard blocker for any production-like environment.
+
+## ADR-018 - Auth Hardening Before Real Payments
+
+Decision: No real payment integration may begin until minimum auth, session, audit, and ledger controls are closed and accepted.
+
+Rationale: Real money movement requires trustworthy identity, traceability, and server-side financial controls.
+
+## ADR-019 - Token Lifecycle Remains Access-Token-Only For Now
+
+Decision: Phase 4A keeps the current access-token-only model. Refresh tokens, token revocation, device trust, and server-side session inventory are deferred to a later auth/session phase.
+
+Rationale: Adding a complete token lifecycle requires schema, API, mobile storage, revocation semantics, and migration work outside this P0 hardening scope.

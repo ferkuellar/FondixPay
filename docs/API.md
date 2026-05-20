@@ -65,3 +65,49 @@ Source of truth for Phase 1: `backend/app/main.py`.
 - Current state: existing module.
 - Risks: delivery and privacy rules pending.
 - Pending: notification channels and permissions.
+
+## Phase 4A Auth Endpoint Rules
+
+### POST `/auth/request-otp`
+
+Purpose: request an OTP for phone login.
+
+Auth required: no.
+
+Development/test behavior: returns `message`, `expires_in_seconds`, and may include `otp_dev` only when `OTP_DEV_RESPONSE_ENABLED=true`.
+
+Staging/production behavior: returns `message` and `expires_in_seconds`; never returns `otp_dev`.
+
+Expected errors: validation error for invalid phone payload.
+
+Pending risk: no rate limiting or external OTP provider yet.
+
+### POST `/auth/verify-otp`
+
+Purpose: verify phone + OTP and return an access token.
+
+Auth required: no.
+
+Behavior: returns `access_token`, `token_type`, and `user` when the OTP matches. Incorrect OTP returns `400` with `Codigo incorrecto`.
+
+Pending risk: no brute-force lockout, no OTP attempt counter, no audit log.
+
+### GET `/auth/me`
+
+Purpose: return the current authenticated user from the bearer token.
+
+Auth required: yes.
+
+Behavior: valid token returns user; invalid, expired, malformed, or unknown-user tokens return `401` with `Sesion no valida`.
+
+Pending risk: access-token-only lifecycle; no server-side session inventory.
+
+### POST `/auth/logout`
+
+Purpose: local logout signal for the current access-token model.
+
+Auth required: yes.
+
+Behavior: returns a logout message. Server-side revocation is not implemented in Phase 4A.
+
+Pending risk: stolen access tokens remain valid until expiry.

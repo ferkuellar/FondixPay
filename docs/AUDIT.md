@@ -46,3 +46,31 @@ Audit logs are not implemented unless a later technical review proves otherwise.
 - Financial audit events should be append-only.
 - Administrative actions must include actor identity.
 - Provider webhooks must preserve correlation and processing state.
+
+## Phase 4A Auth Audit Contract
+
+The following auth/session events must be emitted when audit logging is implemented:
+
+- `auth.otp_requested`
+- `auth.otp_verified`
+- `auth.otp_failed`
+- `auth.login_success`
+- `auth.login_failed`
+- `auth.logout`
+- `auth.session_restored`
+- `auth.token_invalid`
+
+Minimum event fields:
+
+- `event_type`
+- `actor_user_id` when known
+- `phone_hash` for OTP events instead of raw phone where possible
+- `request_id`
+- `ip_address`
+- `user_agent`
+- `device_id` when available
+- `result`
+- `reason`
+- `created_at`
+
+Phase 4A does not implement the audit log table. Real payments remain blocked until auth and financial audit events are implemented.

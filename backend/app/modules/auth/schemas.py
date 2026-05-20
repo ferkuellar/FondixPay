@@ -43,7 +43,8 @@ class OtpVerifyRequest(BaseModel):
 
 class OtpSentResponse(BaseModel):
     message: str
-    otp_dev: str
+    expires_in_seconds: int
+    otp_dev: str | None = None
 
 
 class TokenResponse(BaseModel):

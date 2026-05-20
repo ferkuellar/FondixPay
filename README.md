@@ -70,13 +70,29 @@ docker compose up -d
 
 Advertencia: este flujo es solo para desarrollo y validacion de producto. No ejecuta pagos reales, no valida KYC, no concilia dinero, no genera recibos fiscales y no debe usarse con clientes finales.
 
+## Seguridad de autenticacion
+
+- El OTP `123456` es solo para `development`/`test`.
+- El backend solo devuelve `otp_dev` si `OTP_DEV_RESPONSE_ENABLED=true` y `APP_ENV` es `development` o `test`.
+- En `staging`/`production`, `JWT_SECRET_KEY` debe ser fuerte y `OTP_DEV_RESPONSE_ENABLED` debe estar deshabilitado.
+- `.env.example` contiene valores de ejemplo, no configuracion productiva.
+- Ver [docs/SECURITY.md](docs/SECURITY.md) y [planning/sprints/004a-auth-session-security-p0/COMPLETION_REPORT.md](planning/sprints/004a-auth-session-security-p0/COMPLETION_REPORT.md).
+
+Validaciones de auth:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest
+```
+
 ## Siguiente fase recomendada
 
-Fase 3 - UI/UX Production System, salvo que se priorice primero implementar los P0 de hardening registrados en `docs/TECHNICAL_HARDENING_AUDIT.md`.
+Fase 4B - Backend Safety & Test Foundation: ordenar tests, errores, migraciones, health checks, logging y base de auditoria.
 
 ## Primer commit sugerido
 
 ```powershell
 git add .
-git commit -m "phase-2: audit and harden technical architecture baseline"
+git commit -m "phase-4a: harden auth and session security baseline"
 ```

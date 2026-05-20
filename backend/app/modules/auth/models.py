@@ -4,6 +4,7 @@ from app.core.config import settings
 
 _otp_store: dict[str, tuple[str, datetime]] = {}
 OTP_TTL_MINUTES = 5
+OTP_TTL_SECONDS = OTP_TTL_MINUTES * 60
 
 
 def save_otp(phone: str) -> str:
