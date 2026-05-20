@@ -9,6 +9,9 @@ export type RootStackParamList = {
   ConfirmPayment: { serviceId: string };
   PaymentMethods: { serviceId?: string };
   AddPaymentMethodMock: { serviceId?: string };
+  PaymentFailed: { recovery: PaymentRecoveryContext };
+  PaymentPending: { recovery: PaymentRecoveryContext };
+  SupportPlaceholder: { recovery: PaymentRecoveryContext };
   PaymentSuccess: { paymentId: string };
   History: undefined;
   Profile: undefined;
@@ -27,6 +30,41 @@ export type PaymentMethod = {
   isDefault: boolean;
   isMock: boolean;
   status: PaymentMethodStatus;
+};
+
+export type PaymentStatus =
+  | 'idle'
+  | 'processing'
+  | 'succeeded'
+  | 'failed'
+  | 'pending'
+  | 'timeout'
+  | 'duplicate_blocked';
+
+export type PaymentFailureReason =
+  | 'insufficient_funds_mock'
+  | 'method_unavailable_mock'
+  | 'provider_timeout_mock'
+  | 'network_error_mock'
+  | 'duplicate_attempt_mock'
+  | 'unknown_mock';
+
+export type PaymentRecoveryAction = 'retry' | 'change_method' | 'contact_support' | 'view_status' | 'go_home';
+
+export type PaymentRecoveryContext = {
+  paymentId: string;
+  serviceId: string;
+  amountMinor: number;
+  feeMinor: number;
+  totalMinor: number;
+  currency: string;
+  serviceName: string;
+  providerName: string;
+  methodLabel: string;
+  status: PaymentStatus;
+  reason: PaymentFailureReason;
+  requestId?: string;
+  correlationId?: string;
 };
 
 export type Provider = {

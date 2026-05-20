@@ -334,3 +334,52 @@ Payment confirmation must display the selected payment method and allow the user
 
 ## Status
 Accepted.
+
+# ADR-055 — Payment recovery before real provider integration
+
+## Decision
+FondixPay must define payment recovery paths before Prontipagos sandbox work or any real payment integration.
+
+## Rationale
+Recovery paths prevent duplicate charges, ambiguous states, missing receipts, unsupported retries, and support cases without evidence.
+
+## Status
+Accepted.
+
+# ADR-056 — No paid state without sufficient confirmation
+
+## Decision
+No payment can be shown as paid without sufficient internal/provider confirmation rules.
+
+## Rationale
+Provider timeout, provider acceptance, backend processing, and final payment confirmation are different states. Collapsing them creates false-success risk.
+
+## Status
+Accepted.
+
+# ADR-057 — Retry must be idempotent
+
+## Decision
+Every future retry must use an idempotency key or equivalent duplicate-prevention mechanism.
+
+## Rationale
+Retries from double tap, network timeout, or provider uncertainty must not create duplicate charges.
+
+## Status
+Accepted.
+
+# ADR-058 — User-facing payment messages must reduce panic
+
+## Decision
+Payment recovery messages must state whether the result is failed, pending, timeout, or duplicate-blocked and must tell the user what to do next.
+
+## Status
+Accepted.
+
+# ADR-059 — Support path must expose safe troubleshooting references
+
+## Decision
+Payment recovery UX must prepare safe mock references now and future `request_id`/`correlation_id` references for support without exposing sensitive data.
+
+## Status
+Accepted.

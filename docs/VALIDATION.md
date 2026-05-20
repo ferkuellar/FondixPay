@@ -211,3 +211,35 @@ npm run typecheck
 - No real card number, CVV, CLABE, expiration date, or bank credential is requested.
 - PaymentSuccess and receipt show method used when available.
 - `npm run typecheck` must pass after mobile changes.
+
+# Payment Recovery Validation
+
+Future implementation must validate:
+
+- Provider timeout does not mark payment as paid.
+- Paid state requires sufficient confirmation.
+- Failed validation does not generate receipt.
+- Paid without receipt creates receipt recovery path.
+- Duplicate retry is blocked by idempotency.
+- Retry is allowed only for retry-safe states.
+- Failed payment method allows method change.
+- Ambiguous provider state creates recovery/support case.
+- User cannot access another user's recovery case.
+- SUPPORT/FINANCE/ADMIN roles are required for recovery queues.
+- Every recovery state transition emits audit event.
+- User-facing copy always gives next action.
+
+Phase 5F is documentation-only. No runtime tests are required unless code is changed.
+
+## Phase 5F Mock Recovery UX Checklist
+
+- Failed payment shows clear non-technical message.
+- Failed payment states when no real charge occurred.
+- Pending/timeout never routes to PaymentSuccess.
+- Retry returns to confirmation and does not create a hidden second outcome.
+- Change method works from failed recovery.
+- Support placeholder shows safe mock references.
+- Fee breakdown remains visible in failed and pending screens.
+- Selected method remains visible in recovery context.
+- User can exit recovery flow without being trapped.
+- `npm run typecheck` passes after mobile changes.

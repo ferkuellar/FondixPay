@@ -45,3 +45,17 @@ Updated: 2026-05-20
 | UX-PM-002 | SEV-1 | Tarjeta/método fantasma | Confusión y riesgo de falsa producción | 5E | mitigated |
 | UX-PM-003 | SEV-2 | Método de pago real no definido | Bloquea pagos reales | Future provider phase | pending |
 | UX-PM-004 | SEV-2 | Recovery path de pago incompleto | Usuario no sabe qué hacer ante fallo | 5F | pending |
+
+# Phase 5F Recovery Backlog Update
+
+| ID | Severidad | Hallazgo | Impacto | Fase sugerida | Estado |
+|---|---|---|---|---|---|
+| UX-REC-001 | SEV-1 | Falta pantalla de error de pago / recovery path | Confusión sobre cargo y siguiente acción | 5F | implemented for mock/dev |
+| UX-REC-002 | SEV-1 | Payment failed screen | Error sin ruta segura | 5F | implemented |
+| UX-REC-003 | SEV-1 | Payment pending screen | Pendiente podía confundirse con success | 5F | implemented |
+| UX-REC-004 | SEV-2 | Retry flow | Riesgo de abandono o doble intento | 5F | implemented mock/dev |
+| UX-REC-005 | SEV-2 | Change payment method from recovery | Método fallido sin alternativa | 5F | implemented |
+| UX-REC-006 | SEV-2 | Support placeholder | Usuario sin referencia segura | 5F | implemented placeholder |
+| UX-REC-007 | SEV-2 | Duplicate tap protection | Doble intento | 5F | implemented basic/mock |
+| UX-REC-008 | SEV-2 | Receipt unavailable state | Comprobante faltante | Future receipt/support phase | pending |
+| UX-REC-009 | SEV-2 | Provider timeout mapping | Estado real del proveedor | Provider sandbox phase | pending |

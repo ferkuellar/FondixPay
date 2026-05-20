@@ -174,3 +174,14 @@ Pending for provider phases:
 - Reversal and dispute workflows.
 - Retry after provider ambiguity.
 - Reconciliation-driven status correction.
+# Phase 5F Mock Recovery Status
+
+Mobile mock/dev recovery now exposes:
+
+- `succeeded`: routes to PaymentSuccess.
+- `failed`: routes to PaymentFailed.
+- `pending`: routes to PaymentPending.
+- `timeout`: routes to PaymentPending with “en verificación” copy.
+- `duplicate_blocked`: routes to PaymentFailed with duplicate-safe copy.
+
+Mock retry returns to confirmation and uses the selected method flow again. Pending/timeout are never shown as success. Provider-grade retries, provider status polling, receipt recovery, and reconciliation remain future backend/provider work.

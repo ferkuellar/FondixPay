@@ -12,11 +12,14 @@ import { HomeScreen } from '../screens/home/HomeScreen';
 import { AddPaymentMethodMockScreen } from '../screens/payments/AddPaymentMethodMockScreen';
 import { ConfirmPaymentScreen } from '../screens/payments/ConfirmPaymentScreen';
 import { HistoryScreen } from '../screens/payments/HistoryScreen';
+import { PaymentFailedScreen } from '../screens/payments/PaymentFailedScreen';
 import { PaymentMethodsScreen } from '../screens/payments/PaymentMethodsScreen';
+import { PaymentPendingScreen } from '../screens/payments/PaymentPendingScreen';
 import { PaymentSuccessScreen } from '../screens/payments/PaymentSuccessScreen';
 import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { AddServiceScreen } from '../screens/services/AddServiceScreen';
 import { ServiceDetailScreen } from '../screens/services/ServiceDetailScreen';
+import { SupportPlaceholderScreen } from '../screens/support/SupportPlaceholderScreen';
 import { useAuthStore } from '../store/authStore';
 import { colors } from '../theme';
 import type { RootStackParamList } from '../types';
@@ -88,6 +91,13 @@ export function AppNavigator() {
             name="AddPaymentMethodMock"
             component={AddPaymentMethodMockScreen}
             options={{ title: 'Agregar método demo' }}
+          />
+          <Stack.Screen name="PaymentFailed" component={PaymentFailedScreen} options={{ title: 'Pago no completado' }} />
+          <Stack.Screen name="PaymentPending" component={PaymentPendingScreen} options={{ title: 'Pago pendiente' }} />
+          <Stack.Screen
+            name="SupportPlaceholder"
+            component={SupportPlaceholderScreen}
+            options={{ title: 'Ayuda' }}
           />
           <Stack.Screen
             name="PaymentSuccess"

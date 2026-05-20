@@ -89,3 +89,28 @@ Updated: 2026-05-20
 | SEV-2 | User confusion between demo and real charge | Reduced | Demo/no-charge copy is shown in method screens and confirmation. |
 | SEV-2 | No real payment provider or tokenization | Pending | Must be resolved before real payments. |
 | SEV-2 | No complete payment recovery path | Pending | Recommended next phase: Phase 5F. |
+
+# Phase 5F Payment Recovery Risks
+
+| Severity | Risk | Status | Notes |
+|---|---|---|---|
+| SEV-1 | User pays twice | Design mitigated | Future implementation requires idempotency on retry and provider submission. |
+| SEV-1 | Payment marked successful without confirmation | Design mitigated | `paid` requires sufficient confirmation; timeout is not success. |
+| SEV-1 | Payment charged but no receipt | Open | Requires receipt recovery task and support/operations workflow. |
+| SEV-2 | Provider timeout misinterpreted | Design mitigated | Timeout maps to `provider_timeout` or `pending_confirmation`, not final success. |
+| SEV-1 | Missing idempotency in real provider retries | Open | Mock idempotency exists; provider-grade idempotency remains required. |
+| SEV-2 | Missing reconciliation | Open | Reconciliation remains future work. |
+| SEV-2 | Support lacks evidence | Open | Future recovery cases need audit/correlation IDs and safe provider references. |
+| SEV-2 | Ambiguous user messages reduce trust | Design mitigated | User-facing copy rules defined in `docs/PAYMENT_RECOVERY_PATHS.md`. |
+| SEV-2 | Fraud or abuse through retries | Open | Future retry limits and lockouts required. |
+| SEV-1 | Uncontrolled reversals/refunds | Open | Reversals are explicitly future/out of scope. |
+
+## Phase 5F Mock UX Implementation Update
+
+| Severity | Risk | Status | Notes |
+|---|---|---|---|
+| SEV-1 | Missing recovery path in mock flow | Mitigated for mock/dev | Failed, pending, timeout, duplicate-blocked, retry, change-method, and help placeholder are now represented in mobile. |
+| SEV-2 | Double tap during mock confirmation | Reduced | ConfirmPayment disables processing path and has duplicate-blocked mock scenario. |
+| SEV-1 | False success for pending state | Reduced | Pending/timeout route to PaymentPending, not PaymentSuccess. |
+| SEV-2 | Support without real context | Pending | Support placeholder only shows safe mock references until backend/support workflows exist. |
+| SEV-2 | Provider outage/reconciliation/reversal behavior | Pending | Requires real provider mapping and operations work. |

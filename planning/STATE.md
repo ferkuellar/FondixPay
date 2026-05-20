@@ -102,3 +102,14 @@ Prontipagos is not integrated. It is only a future provider/aggregator candidate
 - Prontipagos remains not integrated.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 5F — Payment Recovery Paths.
+
+# Phase 5F — Payment Recovery Paths
+
+- Current phase: Phase 5F — Payment Recovery Paths.
+- Mode: mock/dev mobile UX implementation plus recovery blueprint.
+- Status: completed for mock/dev recovery UX with failed, pending, timeout, duplicate-blocked, retry, change-method, and support-placeholder paths.
+- Dependency note: 5A, 5B, 5C, 5D, and 5E exist in the repo. 5E is currently `005e-payment-method-ux-mock-implementation`, not `005e-user-profile-kyc-onboarding-hardening`.
+- Real payments remain blocked.
+- Prontipagos remains not integrated.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 6A — Account & Balance Model Design before any simulated balance implementation.

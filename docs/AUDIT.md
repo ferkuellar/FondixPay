@@ -320,3 +320,53 @@ The following events are required for future backend-backed payment methods:
 - `payment_method.mock_selected`
 
 Phase 5E uses local mobile mock state only, so these events are documented as future/pending and do not count as durable audit logs yet.
+
+## Phase 5F Payment Recovery Audit Events
+
+Future recovery implementation must emit:
+
+- `payment.created`
+- `payment.validation_failed`
+- `payment.processing_started`
+- `payment.pending_confirmation`
+- `payment.provider_timeout`
+- `payment.paid`
+- `payment.failed`
+- `payment.duplicate_detected`
+- `payment.recovery_required`
+- `payment.support_required`
+- `payment.retry_requested`
+- `payment.retry_blocked`
+- `payment.cancelled`
+- `payment.reversal_requested`
+- `receipt.generation_failed`
+- `receipt.regeneration_requested`
+- `recovery.case_created`
+- `recovery.case_assigned`
+- `recovery.case_resolved`
+
+Required fields:
+
+- actor
+- entity
+- before
+- after
+- severity
+- requires_review
+- request_id
+- correlation_id
+- safe metadata only
+
+Recovery audit events must never store raw provider payloads, full card data, CVV, OTP codes, access tokens, or secrets.
+
+Phase 5F mobile mock implementation status:
+
+- `payment.failed`: future durable backend event.
+- `payment.pending`: future durable backend event.
+- `payment.timeout`: future durable backend event.
+- `payment.retry_requested`: future durable backend event.
+- `payment.duplicate_blocked`: future durable backend event.
+- `payment.support_requested`: future durable backend event.
+- `receipt.unavailable`: future durable backend event.
+
+The current mobile scenario selector and support placeholder do not count as persistent audit events.

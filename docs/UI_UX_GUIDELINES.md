@@ -120,3 +120,14 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Confirmation must state that no real charge will occur.
 - Payment success and receipt views should show the method used when available.
 - Fee breakdown from Phase 5C must remain visible and unchanged.
+
+## Payment Recovery UX Requirements
+
+- Failed, pending, timeout, and duplicate-attempt states must be explicit.
+- Failed payment copy must state when no charge was made.
+- Pending/timeout must never use success copy or confetti.
+- Retry must be offered only as a safe next action.
+- Change payment method must be available from failure recovery when a method flow exists.
+- Support entry must use safe references and must not promise real chat when unavailable.
+- Recovery screens must preserve amount, fee, total, and selected method breakdown.
+- User messages must avoid provider jargon and show the next action.

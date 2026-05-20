@@ -193,3 +193,23 @@ Future operations requirements:
 - Tickets about real payment methods remain out of scope until a provider and tokenization strategy are approved.
 - Support copy must distinguish “método demo” from a real card, SPEI, CoDi, OXXO, or provider-backed payment method.
 - Pending operational risks: provider downtime handling, token lifecycle, payment method validation, and failed payment recovery.
+
+# Payment Recovery Operations
+
+Future runbooks are required for:
+
+- Payment failed before provider confirmation.
+- Payment pending or provider timeout.
+- Duplicate payment attempt.
+- Receipt unavailable after confirmed payment.
+
+Future metrics:
+
+- `payment_failed_count`
+- `payment_pending_count`
+- `payment_retry_count`
+- `duplicate_blocked_count`
+- `support_requested_from_payment_error`
+- `receipt_unavailable_count`
+
+Phase 5F only adds mock/dev recovery UX and a support placeholder; it does not create a real support queue.

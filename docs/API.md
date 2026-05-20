@@ -376,3 +376,35 @@ Future/proposed payment method endpoints remain not implemented:
 - `POST /payment-methods/{id}/validate`
 
 Do not document these endpoints as available until backend models, authorization, audit events, tokenization strategy, and tests exist.
+
+# Future Payment Recovery APIs
+
+Phase 5F defines these endpoints as future/proposed only. They are not implemented.
+
+| Endpoint | Purpose | Auth Required | Future Role | Audit Event | Status |
+|---|---|---|---|---|---|
+| `GET /payments/{payment_id}/status` | Read payment status | yes | owner, SUPPORT, FINANCE | future `payment.status_viewed` | proposed |
+| `POST /payments/{payment_id}/retry` | Request retry | yes | owner | `payment.retry_requested` or `payment.retry_blocked` | proposed |
+| `POST /payments/{payment_id}/cancel` | Cancel safe pending payment | yes | owner, SUPPORT | `payment.cancelled` | proposed |
+| `POST /payments/{payment_id}/recovery-case` | Open recovery case | yes | owner, SUPPORT | `recovery.case_created` | proposed |
+| `GET /payment-recovery-cases` | List recovery cases | yes | SUPPORT, FINANCE, ADMIN | future `recovery.case_listed` | proposed |
+| `GET /payment-recovery-cases/{case_id}` | Read recovery case | yes | SUPPORT, FINANCE, ADMIN | future `recovery.case_viewed` | proposed |
+| `POST /payment-recovery-cases/{case_id}/assign` | Assign support case | yes | SUPPORT, ADMIN | `recovery.case_assigned` | proposed |
+| `POST /payment-recovery-cases/{case_id}/resolve` | Resolve support case | yes | SUPPORT, FINANCE, ADMIN | `recovery.case_resolved` | proposed |
+| `POST /receipts/{receipt_id}/regenerate` | Regenerate failed receipt | yes | SUPPORT, SYSTEM | `receipt.regeneration_requested` | proposed |
+
+Recovery endpoints require RBAC, audit logs, idempotency, provider status mapping, and support workflow before implementation.
+
+## Phase 5F Runtime Status
+
+Phase 5F recovery implementation is mobile mock/dev only. No backend recovery endpoints were added.
+
+Future backend error/status concepts must distinguish:
+
+- `payment_failed`
+- `provider_timeout`
+- `duplicate_payment_attempt`
+- `payment_pending_confirmation`
+- `receipt_unavailable`
+
+Clients must not map `provider_timeout` or `payment_pending_confirmation` to success.

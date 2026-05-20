@@ -1,0 +1,27 @@
+# Phase 5F Acceptance
+
+- [x] Dependency state for 5A-5E verified.
+- [x] Sprint folder 005F created.
+- [x] `docs/PAYMENT_RECOVERY_PATHS.md` created.
+- [x] Recovery scenarios defined.
+- [x] Payment states defined.
+- [x] Allowed and forbidden transitions defined.
+- [x] User UX messages/actions defined.
+- [x] Future admin/support UX defined.
+- [x] Future conceptual APIs defined.
+- [x] Audit events defined.
+- [x] Retry rules defined.
+- [x] Communication rules defined.
+- [x] Risks documented.
+- [x] Open questions documented.
+- [x] STATE, DECISIONS, RISKS, QUESTIONS updated.
+- [x] PaymentFailed screen exists.
+- [x] PaymentPending screen exists.
+- [x] ConfirmPayment handles success, failed, pending, timeout, and duplicate-blocked mock scenarios.
+- [x] Mock retry/change-method/support paths exist.
+- [x] Mobile typecheck executed and passing.
+- [x] No real payments implemented.
+- [x] No Prontipagos integration.
+- [x] No secrets added.
+- [x] No money movement.
+- [x] Production remains blocked.

@@ -14,3 +14,17 @@
 - What is the first publishable mobile version?
 - Will receipts need fiscal, provider, or internal verification semantics?
 - What retention policy applies to payment, receipt, and audit records?
+# Phase 5F Payment Recovery Questions
+
+- What exact payment states does Prontipagos return?
+- Does Prontipagos support later status lookup by provider reference?
+- Does Prontipagos return an external folio?
+- Does Prontipagos support reversals or refunds?
+- How long does real confirmation usually take?
+- Which provider errors are retry-safe?
+- Which provider errors require support/manual review?
+- What data does support need for a payment clarification?
+- What refund/reversal policy will FondixPay adopt?
+- Which notifications should be sent to the user during pending/recovery states?
+- What SLA should support use for `paid_pending_receipt`?
+- Which states should block a new payment for the same service reference?

@@ -172,3 +172,21 @@ Production remains blocked until rate limiting, RBAC, full audit coverage, produ
 - Production payment methods require approved provider tokenization and compliance review.
 - Logs, receipts, and UI must not expose sensitive payment credentials.
 - Real payment methods remain blocked until provider selection, tokenization, audit logs, tests, and recovery paths are complete.
+
+# Payment Recovery Security
+
+- Recovery states must not expose raw provider errors to users.
+- Support/admin recovery views must use RBAC and least privilege.
+- Recovery cases must include safe identifiers: internal folio, provider reference, request_id, and correlation_id.
+- Recovery audit metadata must be redacted.
+- Retry endpoints must be rate-limited and idempotent.
+- Provider timeout must not trigger uncontrolled automatic retry.
+- Reversal/refund actions require explicit finance/admin authorization and audit events.
+- Payment recovery data must not include PAN, CVV, access tokens, OTPs, or raw provider secrets.
+
+Phase 5F mock recovery UI rules:
+
+- Error messages remain user-safe and do not expose raw provider or technical errors.
+- Safe support references may be shown; secrets and payment credentials may not.
+- Pending/unknown status must not be relabeled as success.
+- Retry safety is represented in mock UX only; provider-grade idempotency remains required before real money.
