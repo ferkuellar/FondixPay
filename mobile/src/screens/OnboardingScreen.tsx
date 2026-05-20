@@ -48,16 +48,20 @@ const styles = StyleSheet.create({
   },
   copy: {
     gap: spacing.sm,
-    paddingTop: spacing.xs,
+    marginTop: spacing.lg,
   },
   heroImage: {
     alignSelf: 'center',
-    height: 380,
-    maxWidth: 390,
-    width: '112%',
+    height: 430,
+    maxWidth: 450,
+    width: '124%',
   },
   heroSection: {
+    alignItems: 'center',
+    height: 410,
     justifyContent: 'center',
+    marginHorizontal: -spacing.lg,
+    overflow: 'hidden',
   },
   subtitle: {
     ...typography.body,
