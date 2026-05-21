@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.core.request_context import RequestContextMiddleware
+from app.modules.accounts.models import Account, BalanceSnapshot, Movement
+from app.modules.accounts.routes import router as accounts_router
 from app.modules.audit.models import AuditEvent
 from app.modules.auth.routes import router as auth_router
 from app.modules.ledger.models import (
@@ -42,6 +44,7 @@ app.include_router(user_services_router, prefix="/user-services", tags=["user se
 app.include_router(payments_router, prefix="/payments", tags=["payments"])
 app.include_router(receipts_router, prefix="/receipts", tags=["receipts"])
 app.include_router(notifications_router, prefix="/notifications", tags=["notifications"])
+app.include_router(accounts_router, prefix="/account", tags=["account"])
 
 
 @app.get("/health")

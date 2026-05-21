@@ -128,3 +128,15 @@ Updated: 2026-05-20
 | SEV-2 | Movements not traceable | Open | Phase 6B must map movements to ledger/payment facts. |
 | SEV-2 | Account state changes not audited | Open | Audit contract defined; implementation pending. |
 | SEV-2 | Balance mismatch | Open | Calculation tests and investigation runbooks pending. |
+
+# Phase 6B Simulated Balance Implementation Risks
+
+| Severity | Risk | Status | Notes |
+|---|---|---|---|
+| SEV-1 | Simulated balance confused with real money | Mitigated for demo UX/API | API and mobile label balance as demo and not real money. |
+| SEV-2 | User claims demo balance as real funds | Reduced | Disclaimer is visible; legal/terms review remains future. |
+| SEV-2 | Balance inconsistent with real ledger | Pending | Phase 6B uses demo snapshots and seed movement, not production ledger posting rules. |
+| SEV-2 | Ledger incomplete for wallet semantics | Pending | Ledger baseline remains mock/payment audit foundation only. |
+| SEV-2 | Movements not traceable | Reduced | Demo movement seed is persisted and linked to demo account. |
+| SEV-1 | Regulatory wallet claims | Blocked | No wallet real claim or real funding rail was added. |
+| SEV-1 | Cross-user account access | Mitigated | Endpoint scope comes from current authenticated user and tests cover distinct accounts. |

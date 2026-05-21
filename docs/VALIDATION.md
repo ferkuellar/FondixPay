@@ -259,3 +259,11 @@ Phase 5F is documentation-only. No runtime tests are required unless code is cha
 - Displayed balance equals backend response in future implementation.
 - Mobile shows “Saldo demo” when demo balance is used.
 - Future calculation engine has deterministic tests.
+
+## Phase 6B Demo Balance Validation
+- `GET /account`, `GET /account/balance`, and `GET /account/movements` reject missing auth.
+- Balance response includes `is_demo=true`, `is_real_money=false`, MXN currency, disclaimer, and integer minor-unit fields.
+- Distinct authenticated users receive distinct demo accounts.
+- Home and account surfaces show `Saldo demo` and do not claim real funds.
+- Movement UI shows demo movement data or a demo empty state.
+- Run backend compile/tests and mobile typecheck before closing the phase.

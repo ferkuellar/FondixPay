@@ -200,3 +200,9 @@ Phase 5F mock recovery UI rules:
 - Account status changes and balance-affecting demo actions require audit events.
 - Admin/auditor balance access requires least privilege and safe read policies.
 - Logs must not leak other-user balance snapshots or sensitive payment/provider data.
+
+## Phase 6B Demo Account Security Notes
+- Account endpoints derive scope from `get_current_user`; no account ID is accepted from the client.
+- Mobile account data is kept in Zustand memory state and is not written to Secure Store.
+- Demo balance copy explicitly rejects real-money interpretation.
+- Balance and movement payloads contain no PAN, CVV, provider secrets, or regulated-funds claims.

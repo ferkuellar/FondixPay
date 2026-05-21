@@ -425,3 +425,17 @@ Phase 6A proposes these endpoints only:
 | `POST /account/release-hold` | Future internal hold release | yes | SYSTEM/FINANCE | proposed |
 
 Account/balance responses must label demo balance and must not claim real money unless approved production gates exist.
+
+## Phase 6B Demo Account APIs
+
+The following endpoints are implemented for authenticated demo/mock use:
+
+| Endpoint | Auth | Behavior |
+|---|---|---|
+| `GET /account` | Required | Returns the current user's demo account and creates it if absent. |
+| `GET /account/balance` | Required | Returns demo balance fields in integer MXN minor units. |
+| `GET /account/movements` | Required | Returns the current user's demo movement list. |
+
+`GET /account/balance` returns `available_minor`, `pending_minor`, `held_minor`, `simulated_minor`, `currency`, `is_demo=true`, `is_real_money=false`, `label`, `disclaimer`, and `as_of`.
+
+`POST /account/demo-credit`, statements, holds, and real balance operations remain future/proposed.

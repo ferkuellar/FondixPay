@@ -141,3 +141,9 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Provide empty state when no movements or demo balance exist.
 - Provide error state when balance cannot load.
 - Do not claim custody, regulation, or protected funds unless approved and true.
+
+## Phase 6B Demo Balance UX Status
+- Implemented surfaces must use `Saldo demo` as the balance label.
+- Every account or movement surface must preserve the no-real-money disclaimer.
+- Loading, error, and empty states must not substitute fake real-money copy.
+- Movements may be shown as demo credits/debits, but they must not imply provider settlement or regulated custody.

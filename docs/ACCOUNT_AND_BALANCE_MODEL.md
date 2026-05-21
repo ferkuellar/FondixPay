@@ -212,3 +212,11 @@ All endpoints are future/proposed.
 - Support/admin tooling.
 - Clear UX labels.
 - Terms/privacy review.
+
+## Phase 6B Implementation Status
+- Implemented: authenticated demo `Account`, demo `BalanceSnapshot`, and demo `Movement` models under the backend accounts module.
+- Implemented: `GET /account`, `GET /account/balance`, and `GET /account/movements`.
+- Implemented: mobile demo balance card, account screen, movements screen, in-memory Zustand account store, and authenticated account API client.
+- Implemented: explicit `Saldo demo` and no-real-money disclaimers in balance/movement surfaces.
+- Partial: the demo snapshot and seed movement are persisted and auditable, but balance is not yet calculated from production ledger posting rules.
+- Pending: real wallet, funding rails, holds, restrictions, provider settlement, reconciliation, legal/KYC model, and transaction-history hardening.

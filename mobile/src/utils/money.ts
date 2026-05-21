@@ -18,8 +18,12 @@ export function minorToMajor(amountMinor: number) {
   return amountMinor / 100;
 }
 
-export function formatMoneyMinor(amountMinor: number) {
-  return `$${minorToMajor(amountMinor).toFixed(2)}`;
+export function formatMoneyMinor(amountMinor: number, currency = PAYMENT_CURRENCY) {
+  return new Intl.NumberFormat('es-MX', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+  }).format(minorToMajor(amountMinor));
 }
 
 export function formatMoneyMajor(amount: number) {

@@ -178,6 +178,11 @@ Admin/Future:
 - `ip_address`
 - `user_agent`
 - `timestamp`
+
+## Phase 6B Audit Status
+- Implemented for the demo baseline: `account.created`, `balance.snapshot_created`, `movement.created`, and `balance.viewed`.
+- Pending for later account/balance phases: account status changes, restrictions, holds, demo debit adjustments, statements, and real balance investigation events.
+- Current Phase 6B events use the central audit writer with request context when invoked from the API.
 - `result`
 
 ### Actor Model

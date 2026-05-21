@@ -321,3 +321,10 @@ Status: proposed/design only for Phase 6A.
 - Ledger entries remain source of financial truth.
 - Demo balance must not mix with real provider settlement.
 - Amounts use integer minor units and explicit currency.
+
+## Phase 6B Account and Balance Implementation Status
+- Implemented in SQLAlchemy and Alembic for demo use: `accounts`, `balance_snapshots`, and `movements`.
+- `accounts.user_id` is unique so one demo account is created per authenticated user in this phase.
+- `balance_snapshots` stores a demo seed snapshot with integer MXN minor units and explicit `is_demo` / `is_real_money` flags.
+- `movements` stores a demo seed credit linked to the demo account; production ledger projection remains pending.
+- `account_events` remains proposed; central audit events cover the current account/balance/movement baseline.

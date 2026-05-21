@@ -229,3 +229,8 @@ Future metrics:
 - `account_restricted_count`
 - `balance_discrepancy_count`
 - `demo_balance_usage_count`
+
+## Phase 6B Demo Balance Operations
+- Internal support must treat Phase 6B balance values as demo data only.
+- A complaint that demo balance does not match expected UX should be investigated through the demo account, snapshot, movement, and audit events, not as a real-funds incident.
+- Future metrics remain required: `balance_view_count`, `movement_view_count`, `demo_credit_count`, and `balance_error_count`.

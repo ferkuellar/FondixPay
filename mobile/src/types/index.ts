@@ -4,6 +4,8 @@ export type RootStackParamList = {
   OtpVerification: { phone: string };
   AccountCreated: undefined;
   Home: undefined;
+  Account: undefined;
+  Movements: undefined;
   AddService: undefined;
   ServiceDetail: { serviceId: string };
   ConfirmPayment: { serviceId: string };
@@ -106,4 +108,51 @@ export type Payment = {
   status: 'SUCCESS';
   paidAt: string;
   folio: string;
+};
+
+export type AccountStatus = 'demo' | 'active' | 'restricted' | 'suspended' | 'closed';
+
+export type Account = {
+  id: number;
+  accountType: string;
+  status: AccountStatus;
+  currency: string;
+  isDemo: boolean;
+  createdAt: string;
+};
+
+export type Balance = {
+  accountId: number;
+  availableMinor: number;
+  pendingMinor: number;
+  heldMinor: number;
+  simulatedMinor: number;
+  currency: string;
+  isDemo: boolean;
+  isRealMoney: boolean;
+  label: string;
+  disclaimer: string;
+  asOf: string;
+};
+
+export type MovementType =
+  | 'demo_credit'
+  | 'demo_debit'
+  | 'service_payment'
+  | 'fee_charge'
+  | 'payment_reversal'
+  | 'adjustment';
+
+export type MovementDirection = 'credit' | 'debit';
+
+export type Movement = {
+  id: number;
+  type: MovementType;
+  direction: MovementDirection;
+  amountMinor: number;
+  currency: string;
+  status: string;
+  description: string;
+  isDemo: boolean;
+  createdAt: string;
 };

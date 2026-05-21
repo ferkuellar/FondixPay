@@ -124,3 +124,13 @@ Prontipagos is not integrated. It is only a future provider/aggregator candidate
 - Real payments remain blocked.
 - Real wallet remains blocked.
 - Next recommended phase: Phase 6B — Simulated Balance Implementation.
+
+# Phase 6B — Simulated Balance Implementation
+
+- Current phase: Phase 6B — Simulated Balance Implementation.
+- Status: implemented for authenticated demo account, simulated balance snapshot, demo movements, and mobile display surfaces.
+- Wallet real remains blocked.
+- Real payments remain blocked.
+- Prontipagos remains not integrated.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 7 — Movements, Receipts & Transaction History Hardening.

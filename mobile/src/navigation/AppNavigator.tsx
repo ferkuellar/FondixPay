@@ -5,6 +5,8 @@ import { Image, StyleSheet } from 'react-native';
 import { LoadingState } from '../components/LoadingState';
 import { Screen } from '../components/Screen';
 import { AccountCreatedScreen } from '../screens/auth/AccountCreatedScreen';
+import { AccountScreen } from '../screens/account/AccountScreen';
+import { MovementsScreen } from '../screens/account/MovementsScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { OtpVerificationScreen } from '../screens/auth/OtpVerificationScreen';
 import { PhoneLoginScreen } from '../screens/auth/PhoneLoginScreen';
@@ -92,6 +94,8 @@ export function AppNavigator() {
             component={AddPaymentMethodMockScreen}
             options={{ title: 'Agregar método demo' }}
           />
+          <Stack.Screen name="Account" component={AccountScreen} options={{ title: 'Cuenta demo' }} />
+          <Stack.Screen name="Movements" component={MovementsScreen} options={{ title: 'Movimientos demo' }} />
           <Stack.Screen name="PaymentFailed" component={PaymentFailedScreen} options={{ title: 'Pago no completado' }} />
           <Stack.Screen name="PaymentPending" component={PaymentPendingScreen} options={{ title: 'Pago pendiente' }} />
           <Stack.Screen

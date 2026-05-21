@@ -423,3 +423,43 @@ FondixPay will not implement a real wallet or real balance without legal review,
 
 ## Status
 Accepted.
+
+# ADR-065 — Simulated balance implementation is demo-only
+
+## Decision
+The Phase 6B balance implementation is demo/mock only and does not represent real money.
+
+## Status
+Accepted.
+
+# ADR-066 — Account balance endpoints require authentication
+
+## Decision
+Account, balance, and movement endpoints must require an authenticated user and only return data for the current user.
+
+## Status
+Accepted.
+
+# ADR-067 — Balance fields use integer minor units
+
+## Decision
+Available, pending, held, and simulated balance fields are exposed as integer minor units with explicit currency.
+
+## Status
+Accepted.
+
+# ADR-068 — Balance is not stored in Secure Store
+
+## Decision
+Mobile may keep demo balance in in-memory state but must not persist balance in Secure Store.
+
+## Status
+Accepted.
+
+# ADR-069 — Demo movements must display non-real-money disclaimer
+
+## Decision
+Balance and movement UI must communicate that demo data is simulated and not real money.
+
+## Status
+Accepted.

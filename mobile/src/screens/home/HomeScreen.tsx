@@ -1,11 +1,14 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
+import { BalanceCard } from '../../components/BalanceCard';
 import { BottomTabBar } from '../../components/BottomTabBar';
 import { EmptyState } from '../../components/EmptyState';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { ServiceCard } from '../../components/ServiceCard';
+import { useAccountStore } from '../../store/accountStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
 import { colors, radius, shadows, spacing, typography } from '../../theme';
@@ -15,9 +18,17 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export function HomeScreen({ navigation }: Props) {
   const services = useServiceStore((state) => state.services);
+  const balance = useAccountStore((state) => state.balance);
+  const accountError = useAccountStore((state) => state.error);
+  const accountLoading = useAccountStore((state) => state.isLoading);
+  const refreshAccountData = useAccountStore((state) => state.refreshAccountData);
   const selectService = usePaymentStore((state) => state.selectService);
   const userName = 'Ana';
   const totalDue = services.reduce((sum, service) => sum + Math.max(service.amountDue, 0), 0);
+
+  useEffect(() => {
+    void refreshAccountData();
+  }, [refreshAccountData]);
 
   function payNow(serviceId: string) {
     selectService(serviceId);
@@ -29,6 +40,13 @@ export function HomeScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
           <Text style={styles.greeting}>Hola, {userName} 👋</Text>
+        </View>
+
+        <View style={styles.balanceSection}>
+          <BalanceCard balance={balance} error={accountError} loading={accountLoading} />
+          <PrimaryButton onPress={() => navigation.navigate('Account')} size="md" variant="secondary">
+            VER CUENTA DEMO
+          </PrimaryButton>
         </View>
 
         <Text style={styles.sectionTitle}>Pagos pendientes</Text>
@@ -77,6 +95,10 @@ const styles = StyleSheet.create({
     marginTop: spacing.md,
     paddingHorizontal: spacing.xl,
     paddingTop: 0,
+  },
+  balanceSection: {
+    gap: spacing.md,
+    paddingHorizontal: spacing.xl,
   },
   list: {
     gap: spacing.md,

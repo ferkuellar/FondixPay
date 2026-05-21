@@ -11,6 +11,7 @@ from sqlalchemy.pool import StaticPool
 from app.core.database import Base, get_db
 from app.core.security import create_access_token
 from app.main import app
+from app.modules.accounts.models import Account, BalanceSnapshot, Movement
 from app.modules.audit.models import AuditEvent
 from app.modules.ledger.models import (
     LedgerAccount,
