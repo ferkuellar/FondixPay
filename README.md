@@ -48,7 +48,17 @@ API local:
 ```powershell
 cd mobile
 npm install
-npx expo start
+npm start
+```
+
+La app Expo real vive en `mobile/`. No ejecutes `npx expo start` desde la raiz del repo. El script de inicio fija Metro en el puerto `8081`, por lo que Expo Go debe abrir la URL que imprima Metro, normalmente `exp://192.168.1.136:8081` en la red local actual.
+
+Scripts seguros desde la raiz:
+
+```powershell
+npm run mobile:start
+npm run mobile:doctor
+npm run mobile:typecheck
 ```
 
 ## Docker
