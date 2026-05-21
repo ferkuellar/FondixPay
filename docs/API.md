@@ -539,3 +539,31 @@ Proof response fields include `payment_id`, nullable `receipt_id`, service/provi
 | `PATCH /notifications/{id}/read` | Mark one current-user notification read. | required | Emits `notification.read`; `404` for another user. |
 
 Push and email delivery remain future channels. Notification bodies must stay safe and must not include PAN, CVV, raw provider payloads, or secrets.
+
+## Future CRM Admin APIs
+
+Status: future/proposed for Phase 10B+. None of these endpoints exist in Phase 10A.
+
+| Endpoint | Purpose | Role | Permission | Sensitive response rule | Audit |
+|---|---|---|---|---|---|
+| `GET /admin/dashboard` | Operational KPI summary | CRM roles | `view_dashboard` | aggregates only | future admin view event |
+| `GET /admin/users` | Search users | `SUPPORT+` | `view_user` | masked identity | future search audit |
+| `GET /admin/users/{id}` | User detail | `SUPPORT+` | `view_user` | minimum necessary role view | `admin.user_viewed` |
+| `GET /admin/payments` | Search payments | `SUPPORT+` | `view_payment` | mapped payment/provider fields only | future search audit |
+| `GET /admin/payments/{id}` | Payment detail | `SUPPORT+` | `view_payment` | no raw provider payload/card secret | `admin.payment_viewed` |
+| `GET /admin/receipts` | Search receipts | `SUPPORT+` | `view_receipt` | proof-safe fields | future search audit |
+| `GET /admin/receipts/{id}` | Receipt detail | `SUPPORT+` | `view_receipt` | proof-safe fields | `admin.receipt_viewed` |
+| `GET /admin/ledger` | Ledger read view | finance/audit | `view_ledger` | read-only | `admin.ledger_viewed` |
+| `GET /admin/audit-events` | Audit event read | audit/admin policy | `view_audit_logs` | redacted metadata | `admin.audit_log_viewed` |
+| `GET /admin/reconciliation/card` | Card reconciliation | finance/audit | `view_reconciliation` | safe processor refs | `admin.reconciliation_viewed` |
+| `GET /admin/reconciliation/prontipagos` | Prontipagos reconciliation | finance/audit | `view_reconciliation` | safe provider refs | `admin.reconciliation_viewed` |
+| `GET /admin/manual-review` | Manual review queue | ops roles | queue read/open policy | safe evidence | future queue-view audit |
+| `GET /admin/manual-review/{id}` | Manual review detail | ops roles | queue read/open policy | safe evidence | future detail audit |
+| `PATCH /admin/manual-review/{id}` | Assign/update review | finance/admin | `resolve_manual_review` | safe resolution notes | assign/resolve audit |
+| `GET /admin/support/tickets` | Ticket list | support/admin | ticket read policy | safe notes | future list audit |
+| `POST /admin/support/tickets` | Create ticket | support/admin | `create_support_ticket` | safe note body | `admin.ticket_created` |
+| `PATCH /admin/support/tickets/{id}` | Update ticket | support/admin | `update_support_ticket` | safe status/notes | `admin.ticket_updated` |
+| `GET /admin/catalog/service-providers` | Catalog admin read | admin | catalog read/manage policy | catalog only | future catalog view audit |
+| `PATCH /admin/catalog/service-providers/{id}` | Catalog update | admin | `manage_catalog` | no secrets | future catalog change audit |
+
+Every future list endpoint requires filters and pagination. Export is denied unless an endpoint and permission explicitly allow controlled export.

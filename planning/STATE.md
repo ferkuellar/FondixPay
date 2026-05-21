@@ -2,7 +2,7 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 9 - Notifications, Receipts & Proof of Payment.
+Current phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
 
 Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, mock/dev fee transparency, explicit mock payment methods, recovery UX, demo balance/movements, and hardened mobile history/receipt detail semantics. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
@@ -27,7 +27,8 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Phase 8B - Prontipagos Sandbox Integration Design: completed.
 - Phase 8C - Sandbox Integration Implementation: completed for contractual mock backend orchestration.
 - Phase 9 - Notifications, Receipts & Proof of Payment: implemented for mock/sandbox receipt proof and in-app notifications.
-- Next recommended phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
+- Phase 10A - CRM Admin Panel Architecture & RBAC Design: current documentation/design phase.
+- Next recommended phase: Phase 10B - CRM Admin Panel Backend APIs.
 
 ## What Exists
 
@@ -188,3 +189,10 @@ Prontipagos is not integrated. It is the next separate sandbox design leg after 
 - Real payments remain blocked.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
+
+# Phase 10A - CRM Admin Panel Architecture & RBAC Design
+
+- Current phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
+- This phase designs the CRM Admin Panel, RBAC matrix, data redaction, support, reconciliation, audit, and manual-review architecture.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 10B - CRM Admin Panel Backend APIs.

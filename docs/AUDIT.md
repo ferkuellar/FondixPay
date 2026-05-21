@@ -526,3 +526,43 @@ Documented future receipt/notification events:
 - `notification.delivery_failed_future` for future push/email providers
 
 Metadata must keep status and support-safe identifiers only. Sharing from the current mobile local mock proof does not yet create a durable backend share event.
+
+## CRM/Admin Audit Events
+
+Future admin events:
+
+- `admin.login`
+- `admin.logout`
+- `admin.user_viewed`
+- `admin.payment_viewed`
+- `admin.receipt_viewed`
+- `admin.ledger_viewed`
+- `admin.audit_log_viewed`
+- `admin.ticket_created`
+- `admin.ticket_updated`
+- `admin.manual_review_opened`
+- `admin.manual_review_assigned`
+- `admin.manual_review_resolved`
+- `admin.reconciliation_viewed`
+- `admin.config_viewed`
+- `admin.config_changed`
+- `admin.role_changed`
+- `admin.export_requested`
+
+Required fields for future CRM admin events:
+
+- `admin_user_id`
+- `role`
+- `permission`
+- `entity_type`
+- `entity_id`
+- `action`
+- `result`
+- `before` and `after` when applicable
+- `request_id`
+- `correlation_id` when the entity belongs to a payment flow
+- `ip_address`
+- `user_agent`
+- `created_at`
+
+Admin audit metadata must stay redacted. A privileged read is still an action worth auditing when it exposes user, payment, receipt, ledger, reconciliation, audit, config, or export context.

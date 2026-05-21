@@ -473,3 +473,72 @@ Rules:
 Receipt statuses remain `generated`, `pending`, `unavailable`, and future `voided`. Proof statuses are `confirmed`, `pending`, `review`, and `unavailable`.
 
 Notification storage now includes `type`, `title`, nullable related `entity_type`/`entity_id`, read flag, and creation time. It is still an in-app baseline; push/email delivery records remain future.
+
+## CRM/Admin Proposed Model
+
+Status: proposed for Phase 10B+; Phase 10A adds no schema migration.
+
+Proposed entities:
+
+- `AdminUserRole` or explicit `UserRole` extension
+- `Permission`
+- `RolePermission`
+- `SupportTicket`
+- `SupportTicketNote`
+- `ManualReviewCase`
+- `ManualReviewEvent`
+- `ReconciliationCase`
+- `AdminActionAudit`
+
+### `SupportTicket`
+
+- `id`
+- `user_id` nullable
+- `payment_id` nullable
+- `receipt_id` nullable
+- `status`
+- `priority`
+- `category`
+- `assigned_to` nullable
+- `created_by`
+- `created_at`
+- `updated_at`
+
+### `ManualReviewCase`
+
+- `id`
+- `case_type`
+- `status`
+- `severity`
+- `user_id` nullable
+- `payment_id` nullable
+- `receipt_id` nullable
+- `card_reference` nullable and safe only
+- `provider_reference` nullable and safe only
+- `correlation_id` nullable
+- `assigned_to` nullable
+- `resolution` nullable
+- `created_at`
+- `updated_at`
+
+### `AdminActionAudit`
+
+- `id`
+- `admin_user_id`
+- `role`
+- `permission`
+- `action`
+- `entity_type`
+- `entity_id`
+- `result`
+- `metadata_json`
+- `request_id`
+- `ip_address`
+- `user_agent`
+- `created_at`
+
+Rules:
+
+- Manual review and support notes must be safe/redacted.
+- Admin audit and role models must not grant frontend-only authorization.
+- Ledger entries remain append-only and are not destructively editable from CRM.

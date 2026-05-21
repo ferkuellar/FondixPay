@@ -341,3 +341,43 @@ Future metrics:
 - `notification_created_count`
 - `notification_read_rate`
 - `support_from_receipt_count`
+
+## CRM Admin Operations
+
+CRM workflows required before commercial production:
+
+- Support investigation from masked identity, `payment_id`, `receipt_id`, `correlation_id`, or permitted provider reference.
+- Failed payment investigation using payment attempts, receipt status, safe card status, and user-safe next action.
+- Pending/timeout investigation without guessing provider confirmation.
+- Receipt unavailable investigation with proof state and manual-review escalation.
+- Card reconciliation view for processor charge evidence.
+- Prontipagos reconciliation view for service-payment evidence.
+- Manual-review queue assignment, escalation, notes, resolution, and closure.
+- Escalation from support to finance/admin when reconciliation or provider ambiguity exists.
+
+CRM runbooks should cover:
+
+- payment failed,
+- payment pending too long,
+- receipt unavailable,
+- card success plus Prontipagos failure,
+- amount mismatch,
+- duplicate suspected,
+- provider timeout,
+- user says provider was not paid,
+- privileged export request.
+
+CRM metrics:
+
+- `admin_login_count`
+- `failed_admin_login_count`
+- `support_ticket_count`
+- `manual_review_open_count`
+- `manual_review_resolution_time`
+- `payment_pending_count`
+- `payment_failed_count`
+- `receipt_unavailable_count`
+- `card_reconciliation_mismatch_count`
+- `prontipagos_reconciliation_mismatch_count`
+- `audit_log_view_count`
+- `export_request_count`

@@ -707,3 +707,33 @@ Status: Accepted.
 Decision: Receipt and payment status surfaces expose safe references such as payment id, receipt id, correlation id, and provider reference when applicable.
 
 Status: Accepted.
+
+## ADR-097 — CRM Admin Panel is required before commercial production
+
+Decision: FondixPay requires a CRM/Admin Panel before commercial production for support, reconciliation, manual review, auditability, and operations.
+
+Status: Accepted.
+
+## ADR-098 — CRM Admin Panel requires strict RBAC
+
+Decision: Every CRM view and action must be protected by explicit role and permission checks.
+
+Status: Accepted.
+
+## ADR-099 — Admin actions must be audited
+
+Decision: Every critical admin read or mutation must produce an audit event according to policy.
+
+Status: Accepted.
+
+## ADR-100 — CRM must not expose PAN, CVV, secrets or raw provider payloads
+
+Decision: CRM/Admin responses, logs, notes, and exports never expose PAN, CVV, sensitive tokens, secrets, or raw provider payloads.
+
+Status: Accepted.
+
+## ADR-101 — Manual review is required for ambiguous payment states
+
+Decision: Ambiguous conditions such as card success plus provider failure, provider timeout, receipt unavailable, or reconciliation mismatch must enter manual review.
+
+Status: Accepted.

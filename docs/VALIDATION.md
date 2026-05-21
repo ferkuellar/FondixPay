@@ -356,3 +356,18 @@ Backend coverage added:
 - [x] Notification list/read endpoints require auth and current-user scope.
 - [x] Backend compile/tests pass.
 - [x] Mobile typecheck passes.
+
+## CRM Admin Validation
+
+- [ ] `SUPPORT` cannot view PAN/CVV, secrets, card tokens, or raw provider payloads.
+- [ ] `SUPPORT` cannot mutate ledger or resolve prohibited financial review actions.
+- [ ] `FINANCE` can view card and Prontipagos reconciliation under permission checks.
+- [ ] `AUDITOR` is read-only.
+- [ ] `SUPER_ADMIN` changes are audited.
+- [ ] Admin APIs require authentication, role, and permission.
+- [ ] Admin actions create audit events.
+- [ ] Redaction is tested.
+- [ ] Export controls are tested.
+- [ ] User/payment/receipt/reference search respects permissions and pagination.
+
+Phase 10A is documentation/design only. Runtime validation becomes mandatory in Phase 10B when admin backend code is added.

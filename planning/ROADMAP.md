@@ -1,6 +1,6 @@
 # Roadmap
 
-Updated: 2026-05-20
+Updated: 2026-05-21
 
 ## Current Route Summary
 
@@ -20,8 +20,14 @@ Current practical position:
 - Phase 5C: completed as fee transparency baseline.
 - Phase 5D: completed as card payment method strategy.
 - Phase 5E: completed as card payment UX mock implementation.
-- Current phase: Phase 9 - Notifications, Receipts & Proof of Payment.
-- Recommended next phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
+- Phase 5F: completed as payment recovery paths.
+- Phase 6A/6B: completed for account/demo balance scope.
+- Phase 7: completed for movements, receipts, and transaction-history hardening.
+- Phase 8A/8B: completed as sandbox integration designs.
+- Phase 8C: completed for contractual sandbox/mock orchestration.
+- Phase 9: completed for notifications, receipts, and proof-of-payment hardening.
+- Current phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
+- Recommended next phase: Phase 10B - CRM Admin Panel Backend APIs.
 
 Before any real payment provider implementation, the project must preserve ledger/audit, idempotency, fee transparency, card payment method strategy, payment recovery paths, card processor sandbox design, Prontipagos sandbox design, support/receipt proof, and provider-selection gates. Real payments remain blocked.
 
@@ -217,29 +223,46 @@ Deliverables: tokenized card sandbox integration, Prontipagos sandbox implementa
 Acceptance: non-production sandbox flows are auditable, idempotent, redacted, and testable.
 Out of scope: commercial production launch.
 
-## Phase 9 - Card Processor Selection
+## Phase 9 - Notifications, Receipts & Proof of Payment
+
+Status: completed for mock/sandbox proof and in-app notification scope.
+Objective: harden payment evidence and status clarity before internal operations design.
+Deliverables: receipt/proof state model, user-scoped proof endpoints, in-app notifications, safe references, mock/sandbox disclaimers, and Phase 9 validation evidence.
+Acceptance: pending, timeout, failed, generated, and unavailable evidence states are not confused with confirmed payment.
+Out of scope: fiscal receipts, production providers, real push/email delivery, and commercial launch.
+
+## Phase 10A - CRM Admin Panel Architecture & RBAC Design
+
+Status: current design/documentation phase after Phase 9 and before Phase 11.
+Objective: define CRM modules, RBAC, redaction, support, reconciliation, manual review, audit, future APIs, and frontend architecture before implementation.
+Deliverables: CRM architecture, CRM RBAC matrix, CRM backlog, sprint handoff, and cross-doc production gates.
+Out of scope: admin endpoints, admin frontend, admin auth runtime, real roles in DB, provider integration, and money movement.
+
+## Phase 10B - CRM Admin Panel Backend APIs
+
+Status: planned next phase.
+Objective: implement permissioned admin backend contracts with auth, roles, redacted responses, audit events, fixtures, and RBAC tests.
+Out of scope: full CRM frontend.
+
+## Phase 10C - CRM Admin Panel Frontend Implementation
 
 Status: planned.
-Objective: select the real card processor and design integration without implementing it all at once.
-Deliverables: card processor comparison for Mexico, tokenization/vault model, risk assessment, chargeback notes, sandbox plan, webhook/status design, compliance questions.
-Acceptance: card processor decision is recorded in `planning/DECISIONS.md`.
-Out of scope: production money movement.
+Objective: build the internal web admin over the 10B permissioned API contracts.
+Out of scope: weakening backend authorization through frontend-only controls.
 
-## Phase 10 - Real Payment Integration
-
-Status: blocked until Phase 9 decision and pre-payment gates are complete.
-Objective: integrate selected provider in sandbox.
-Deliverables: sandbox integration, webhook handling, provider errors, tests.
-Acceptance: sandbox payments are traceable and reversible in non-production.
-Out of scope: production launch.
-
-## Phase 11 - Notifications & Receipts
+## Phase 10D - Support, Reconciliation & Manual Review Workflows
 
 Status: planned.
-Objective: implement push/email notifications and downloadable/verifiable receipts.
-Deliverables: notification channels, receipt verification, receipt detail/download, templates, delivery-state handling.
-Acceptance: users receive consistent payment status and receipt evidence.
-Out of scope: marketing messaging.
+Objective: complete operational workflows, queues, runbooks, and provider-leg reconciliation views before commercial production.
+Out of scope: destructive ledger editing and unsupported provider assumptions.
+
+## Phase 11 - Commercial Readiness Gate Review
+
+Status: planned after CRM/Admin operational design and implementation phases.
+Objective: review whether provider selection, security, operations, reconciliation, support, and release gates are ready for a controlled next implementation step.
+Deliverables: gate assessment, unresolved blocker list, validated dependency ordering, and launch-risk decision record.
+Acceptance: production blockers remain explicit and no commercial launch is inferred from sandbox/mock readiness.
+Out of scope: bypassing admin, provider, security, or compliance gates.
 
 ## Phase 12 - Security, Fraud & Compliance Review
 

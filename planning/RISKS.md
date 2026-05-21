@@ -232,3 +232,20 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | SEV-1 | Sensitive card data in proof | Mitigated for current path | Keep only safe method labels/last4 when approved. |
 | SEV-2 | Misleading notification content | Reduced | Typed in-app notifications distinguish state. |
 | SEV-1 | Mock/sandbox confused with production | Reduced | Proof and mobile disclaimer remain explicit. |
+
+# Phase 10A CRM Admin Risks
+
+| Severity | Risk | Current Mitigation | Next Action |
+|---|---|---|---|
+| SEV-1 / Production Blocker | No CRM/Admin Panel before production | Architecture and backlog defined | Implement protected admin backend and frontend phases. |
+| SEV-1 | No RBAC | Permission design defined | Implement role/permission enforcement and tests. |
+| SEV-1 | Admin data overexposure | Redaction contract defined | Verify responses, logs, notes, and exports. |
+| SEV-1 | PAN/CVV exposure | Explicit CRM prohibition | Test admin APIs and UI contracts. |
+| SEV-1 | Missing manual review queue | Workflow designed | Implement queue and case events before production. |
+| SEV-1 | Missing reconciliation visibility | Card and Prontipagos views designed separately | Implement reconciliation read paths. |
+| SEV-2 | Missing support workflow | Ticket/support workflow designed | Build ticket module and runbooks. |
+| SEV-1 / SEV-2 | Missing admin audit logs | Admin event catalog defined | Emit events for privileged views and actions. |
+| SEV-1 | Incorrect role permissions | RBAC matrix defined | Add route tests and denied-scenario tests. |
+| SEV-2 | Export abuse | Export controls designed | Require permission, audit, and policy gating. |
+| SEV-1 | Admin account compromise | Future MFA/session controls defined | Implement admin auth hardening. |
+| SEV-1 | Ledger destructive edits from admin | Read-only CRM ledger rule | Never expose destructive ledger mutation endpoints. |

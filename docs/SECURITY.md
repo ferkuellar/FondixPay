@@ -268,3 +268,16 @@ Phase 5F mock recovery UI rules:
 - Mobile sharing uses only mock proof text without sensitive payment credentials.
 - Notification content must not include PAN, CVV, OTP, access token, provider secret, or raw provider payload.
 - Receipt, payment proof, and notification reads are authenticated and current-user scoped.
+
+## CRM Admin Panel Security
+
+- Every admin API requires authentication, explicit role, explicit permission, response redaction, and tests.
+- Future admin MFA is required before commercial production.
+- Admin session management must add expiration, revocation/session inventory, login/logout audit, and no shared accounts.
+- Least privilege applies to support, finance, admin, auditor, and super-admin paths.
+- No PAN, CVV, card token, OTP, secret, session token, or raw provider payload may appear in CRM responses, logs, exports, or ticket notes.
+- Provider and audit data must use mapped/redacted views and safe references.
+- Exports require explicit controls, audit events, and policy gating.
+- Admin auth, search, export, and mutation paths need rate limiting and future lockout/backoff.
+- Future IP/device controls should be evaluated for privileged roles.
+- Ledger and audit views remain read-only from CRM; manual review preserves append-only evidence and audit trail.
