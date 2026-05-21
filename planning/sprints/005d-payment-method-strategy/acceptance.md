@@ -7,7 +7,8 @@
 - [x] ADR-046 through ADR-050 recorded.
 - [x] Payment method risks recorded.
 - [x] UX/Product backlog updated.
-- [x] Current phantom card copy is replaced with explicit mock/dev copy.
+- [x] Current phantom card copy is replaced with explicit card-demo copy.
+- [x] Card-only payment strategy is explicit and unsupported user-facing methods are out of scope.
 - [x] No provider was integrated.
 - [x] No card storage was added.
 - [x] No PAN/CVV was added.

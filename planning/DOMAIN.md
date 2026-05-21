@@ -8,6 +8,20 @@ Users need a simple mobile way to pay domestic services in Mexico without naviga
 
 Open the app, see pending services, pay, and obtain a receipt.
 
+FondixPay permite a usuarios en Mexico pagar servicios domesticos desde una app movil usando exclusivamente tarjeta de credito o debito como metodo de pago del usuario.
+
+Prontipagos se usara como agregador para ejecutar el pago del servicio. El procesador/tokenizador de tarjeta sera un proveedor futuro separado hasta que exista decision contractual y tecnica aprobada.
+
+No estan dentro del roadmap actual como metodo de pago del usuario:
+
+- SPEI.
+- CoDi.
+- OXXO.
+- Efectivo.
+- Cash-in.
+- Wallet balance.
+- Transferencia bancaria.
+
 ## Users
 
 - End user: registers services, reviews pending amounts, confirms payments, views receipts and history.
@@ -41,6 +55,6 @@ Open the app, see pending services, pay, and obtain a receipt.
 - Receipt: proof generated after payment flow.
 - History: user-facing record of previous payments.
 - Notification: message associated with user or payment state.
-- Future wallet: optional stored-value capability, not approved yet.
+- Demo account/balance: mock UX/testing capability only, not a real payment method.
 - Future ledger: accounting foundation before real money movement.
 - Future audit log: immutable trace for sensitive and financial events.

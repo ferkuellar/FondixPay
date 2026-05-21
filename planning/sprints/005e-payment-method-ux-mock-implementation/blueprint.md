@@ -1,10 +1,10 @@
-# Phase 5E Blueprint
+# Phase 5E Card Payment Blueprint
 
 ## Architecture
-- Mobile owns a temporary local mock payment method store.
-- Backend remains unchanged because no real payment method is implemented.
-- ConfirmPayment reads selected method from store and blocks payment until one exists.
-- ServiceDetail, PaymentSuccess, and ReceiptCard display mock method status without implying a real card.
+- Mobile owns a temporary local card-demo payment method store.
+- Backend remains unchanged because no real card payment method is implemented.
+- ConfirmPayment reads selected card demo from store and blocks payment until one exists.
+- ServiceDetail, PaymentSuccess, and ReceiptCard display card-demo status without implying a real card charge.
 
 ## Mobile Files
 - `mobile/src/store/paymentMethodStore.ts`
@@ -16,5 +16,5 @@
 
 ## Rules
 - No PAN, CVV, CLABE, provider token, or real payment credential is requested.
-- Mock methods are memory-only for this phase.
-- Every visible payment method must come from explicit local state.
+- Card demo records are memory-only for this phase.
+- Every visible card demo must come from explicit local state.

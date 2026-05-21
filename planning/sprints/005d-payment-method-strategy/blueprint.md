@@ -1,15 +1,15 @@
-# Sprint 005D Blueprint
+# Sprint 005D Card Payment Blueprint
 
 ## Strategy
 
-- Current MVP uses explicit mock payment method only.
-- Future real-money method must be selected after user research, provider selection, tokenization/compliance review, and reconciliation design.
-- SPEI/OXXO-like options should be evaluated because FondixPay may serve non-banked or partially banked users.
+- Current MVP uses explicit card demo only.
+- Future real-money user payment method is debit/credit card through a selected card processor after tokenization/compliance review.
+- Prontipagos remains the service-payment aggregator, separate from the future card processor.
 - Tokenized card is valid only with approved provider vault and no raw card storage.
 
 ## Mobile Adjustment
 
-- Replace hardcoded card copy with explicit mock/dev method labels.
+- Replace hardcoded card copy with explicit card-demo labels.
 - Keep flow working.
 - Do not add real card form.
 

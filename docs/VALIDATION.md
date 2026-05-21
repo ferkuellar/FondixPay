@@ -279,3 +279,13 @@ Phase 5F is documentation-only. No runtime tests are required unless code is cha
 - [ ] History filters, empty state, loading state, and error state remain present.
 - [ ] `npm run typecheck` passes for mobile history and receipt detail changes.
 - [ ] Backend tests run when backend history/receipt API behavior changes.
+
+## Card-Only Payment Strategy Validation
+
+- [ ] UI does not show unsupported user-facing payment methods.
+- [ ] Only card demo appears in the mock payment method path.
+- [ ] Confirmation shows the selected card demo, fee, and final total.
+- [ ] Mock UX does not ask for real PAN, CVV, CLABE, or bank-transfer data.
+- [ ] PAN and CVV are not stored.
+- [ ] Card-only model is documented in roadmap, strategy, domain, security, and backlog.
+- [ ] Real card payments remain blocked until card processor selection and tokenization are approved.

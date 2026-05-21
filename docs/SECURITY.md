@@ -213,3 +213,16 @@ Phase 5F mock recovery UI rules:
 - Support references in UI must be safe identifiers such as mock reference, request id, or correlation id.
 - Receipt copy must avoid regulated or provider-confirmed claims when the state is mock, pending, failed, timeout, or unavailable.
 - Future download/share flows require the same authorization and redaction checks as receipt detail.
+
+## Card Payment Security
+
+- FondixPay is card-only for user-facing payments in the current roadmap.
+- PAN must never be stored.
+- CVV must never be stored.
+- Future card payment requires approved processor tokenization and provider vault behavior.
+- PCI scope must be reviewed before any real card payment release.
+- Logs and support tools must never include card numbers or CVV.
+- Mobile Secure Store must not store PAN or CVV.
+- Recovery must handle declined card, expired card, invalid CVV, card auth failure, and processor timeout without exposing raw processor payloads.
+- Real card payments remain blocked until provider selection, security review, auditability, idempotency, recovery, tests, and fee transparency gates are accepted.
+- SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, and stored balance are out of scope as user-facing payment methods.

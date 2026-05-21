@@ -70,6 +70,14 @@ docker compose up -d
 
 Advertencia: este flujo es solo para desarrollo y validacion de producto. No ejecuta pagos reales, no valida KYC, no concilia dinero, no genera recibos fiscales y no debe usarse con clientes finales.
 
+## Payment Model
+
+FondixPay is card-only for user-facing service payments.
+
+Users pay with debit or credit card. Service payment execution is expected to use Prontipagos as the service payment aggregator. Prontipagos is separate from the future card processor unless a later contract/API decision explicitly says otherwise.
+
+Current implementation remains mock/dev. No real card processing or real service-payment execution is enabled yet.
+
 ## Seguridad de autenticacion
 
 - El OTP `123456` es solo para `development`/`test`.

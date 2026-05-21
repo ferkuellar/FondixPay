@@ -13,13 +13,6 @@ type PaymentMethodState = {
 };
 
 const mockTemplates: Record<PaymentMethodType, Omit<PaymentMethod, 'id' | 'isDefault'>> = {
-  demo: {
-    type: 'demo',
-    label: 'Método demo',
-    description: 'Pago simulado sin cargo real.',
-    isMock: true,
-    status: 'active',
-  },
   card_mock: {
     type: 'card_mock',
     label: 'Tarjeta demo',
@@ -28,26 +21,12 @@ const mockTemplates: Record<PaymentMethodType, Omit<PaymentMethod, 'id' | 'isDef
     isMock: true,
     status: 'active',
   },
-  spei_mock: {
-    type: 'spei_mock',
-    label: 'SPEI demo',
-    description: 'Transferencia simulada para validar el flujo.',
-    isMock: true,
-    status: 'active',
-  },
-  cash_mock: {
-    type: 'cash_mock',
-    label: 'Efectivo demo',
-    description: 'Pago en tienda simulado, sin cargo real.',
-    isMock: true,
-    status: 'active',
-  },
 };
 
 export const usePaymentMethodStore = create<PaymentMethodState>((set, get) => ({
   paymentMethods: [],
   selectedPaymentMethodId: undefined,
-  addMockPaymentMethod: (type = 'demo') => {
+  addMockPaymentMethod: (type = 'card_mock') => {
     const template = mockTemplates[type];
     const method: PaymentMethod = {
       ...template,

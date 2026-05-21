@@ -102,7 +102,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
             amount={service.amountDue}
             category={service.provider.category}
             paymentMethod={selectedPaymentMethod?.label}
-            paymentMethodNote={selectedPaymentMethod?.isMock ? 'Método demo · sin cargo real' : undefined}
+            paymentMethodNote={selectedPaymentMethod?.isMock ? 'Tarjeta demo · sin cargo real' : undefined}
             providerName={service.provider.displayName}
             reference={service.reference}
           />
@@ -124,7 +124,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
               </>
             ) : (
               <View style={styles.warning}>
-                <Text style={styles.warningTitle}>Agrega un método demo para continuar</Text>
+                <Text style={styles.warningTitle}>Agrega una tarjeta demo para continuar</Text>
                 <Text style={styles.warningText}>
                   No se realizará ningún cargo real. Este paso evita mostrar métodos de pago fantasma.
                 </Text>

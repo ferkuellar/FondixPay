@@ -44,7 +44,7 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
               <View style={styles.methodBox}>
                 <Text style={styles.lineLabel}>Método usado</Text>
                 <Text style={styles.lineValue}>{payment.paymentMethodLabel}</Text>
-                {payment.paymentMethodIsMock ? <Text style={styles.mockCopy}>Método demo · sin cargo real</Text> : null}
+                {payment.paymentMethodIsMock ? <Text style={styles.mockCopy}>Tarjeta demo · sin cargo real</Text> : null}
               </View>
             ) : null}
             <Text style={styles.refLabel}>Número de referencia</Text>

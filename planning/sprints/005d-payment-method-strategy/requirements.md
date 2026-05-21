@@ -1,13 +1,13 @@
-# Sprint 005D - Payment Method Strategy Requirements
+# Sprint 005D - Card Payment Method Strategy Requirements
 
 ## Goal
 
-Define the payment method strategy before real payments and remove the risk of phantom cards in the current UI.
+Define the card-only user payment strategy before real payments and remove the risk of phantom cards in the current UI.
 
 ## In Scope
 
-- Document payment method options for Mexico.
-- Recommend MVP strategy.
+- Document the card-only user payment decision for Mexico.
+- Separate future card processor from Prontipagos service-payment execution.
 - Define UX flows.
 - Define security rules.
 - Define audit events.
@@ -19,7 +19,7 @@ Define the payment method strategy before real payments and remove the risk of p
 
 - Real provider integration.
 - Card tokenization implementation.
-- SPEI/CoDi/OXXO integration.
+- SPEI/CoDi/OXXO/cash-in as user-facing payment methods.
 - Prontipagos integration.
 - Storing PAN/CVV.
 - Real money movement.

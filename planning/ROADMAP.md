@@ -18,22 +18,23 @@ Current practical position:
 - Phase 5A: completed as ledger/audit design.
 - Phase 5B: completed as ledger/audit implementation baseline.
 - Phase 5C: completed as fee transparency baseline.
-- Phase 5D: current/completed as payment method strategy.
-- Recommended next phase: Phase 5E - Payment Method UX Mock Implementation.
+- Phase 5D: completed as card payment method strategy.
+- Phase 5E: completed as card payment UX mock implementation.
+- Recommended next phase after current receipt/history hardening: Phase 8 - Simulated Payments, Charges & Transfers Hardening.
 
-Before any real payment provider work, the project must implement ledger/audit, idempotency, fee transparency, payment method strategy, payment recovery paths, Prontipagos sandbox design, support/receipt proof, and provider selection. Real payments remain blocked.
+Before any real payment provider work, the project must implement ledger/audit, idempotency, fee transparency, card payment method strategy, payment recovery paths, Prontipagos sandbox design, support/receipt proof, and card processor selection. Real payments remain blocked.
 
 ## Immediate Recommended Path
 
 1. Phase 5B - Ledger & Audit Implementation.
 2. Phase 5C - Payment Trust & Fee Transparency.
-3. Phase 5D - Payment Method Strategy.
-4. Phase 5E - Payment Method UX Mock Implementation.
+3. Phase 5D - Card Payment Method Strategy.
+4. Phase 5E - Card Payment UX Mock Implementation.
 5. Phase 5F - Payment Recovery Paths.
 6. Phase 5G - Prontipagos Sandbox Integration Design.
 7. Phase 5 - User Services Domain Hardening.
 8. Phase 6 - Payments Mock Hardening.
-9. Phase 9 - Payment Provider Selection.
+9. Phase 9 - Card Processor Selection.
 
 Phase 10 real payment integration must not start before Phases 4A, 4B, 4C, 5A, 5B, 5C, 5D, 5E, 5F, 6, and 9 are accepted.
 
@@ -119,20 +120,20 @@ Deliverables: fee disclosure requirements, confirmation copy, receipt fee fields
 Acceptance: users can identify commission and final total before confirming payment.
 Out of scope: payment provider integration.
 
-## Phase 5D - Payment Method Strategy
+## Phase 5D - Card Payment Method Strategy
 
 Status: completed.
-Objective: design/implement the MVP payment method strategy without storing raw card data or assuming unsupported methods.
-Deliverables: allowed method decision, tokenization rules, UX states, provider constraints, compliance notes, and phantom-card label removal.
-Acceptance: no current payment screen implies a real preselected card; future real payment requires selected method.
+Objective: define the card-only user payment strategy without storing raw card data or assuming unsupported methods.
+Deliverables: debit/credit card decision, tokenization rules, UX states, provider constraints, compliance notes, and phantom-card label removal.
+Acceptance: no current payment screen implies a real preselected card; future real payment requires selected card.
 Out of scope: storing raw card data or adding a provider without approved decision.
 
-## Phase 5E - Payment Method UX Mock Implementation
+## Phase 5E - Card Payment UX Mock Implementation
 
 Status: planned.
-Objective: implement mock add/select/change payment method UX without real provider or card storage.
-Deliverables: AddPaymentMethod screen, SelectPaymentMethod screen, mock payment method component, empty state, and confirmation integration.
-Acceptance: user can add/select/change a clearly mock method before mock payment.
+Objective: implement mock add/select/change card UX without real provider or card storage.
+Deliverables: add-card mock screen, select/change card mock UX, card demo component, empty state, and confirmation integration.
+Acceptance: user can add/select/change a clearly labeled card demo before mock payment.
 Out of scope: tokenization, real provider, PAN/CVV storage, real money.
 
 ## Phase 5G - Prontipagos Sandbox Integration Design
@@ -191,12 +192,12 @@ Deliverables: support/admin role scope, permission matrix, support use cases, fi
 Acceptance: admin/support/finance/auditor actions are role-defined and auditable on paper before implementation.
 Out of scope: unrestricted admin access and full admin console implementation.
 
-## Phase 9 - Payment Provider Selection
+## Phase 9 - Card Processor Selection
 
 Status: planned.
-Objective: select a real provider and design integration without implementing it all at once.
-Deliverables: provider comparison for Mexico, risk assessment, cost/settlement notes, sandbox plan, webhook design, compliance questions.
-Acceptance: provider decision is recorded in `planning/DECISIONS.md`.
+Objective: select the real card processor and design integration without implementing it all at once.
+Deliverables: card processor comparison for Mexico, tokenization/vault model, risk assessment, chargeback notes, sandbox plan, webhook/status design, compliance questions.
+Acceptance: card processor decision is recorded in `planning/DECISIONS.md`.
 Out of scope: production money movement.
 
 ## Phase 10 - Real Payment Integration
@@ -302,3 +303,5 @@ Status: planned.
 Objective: implement status, restriction, audit, and support behavior for accounts.
 
 Real wallet and real balance remain moved to a future regulated phase after legal/provider/custody decisions.
+
+Wallet/account/simulated balance work in the current roadmap is demo/account-model work only. It is not a user-facing payment method and does not replace debit or credit card.

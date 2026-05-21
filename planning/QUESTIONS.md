@@ -1,11 +1,10 @@
 # Open Questions
 
-- Will FondixPay only pay services, or will it also become a wallet?
-- Will the MVP handle real balance or only direct payments?
-- Which payment provider will be used in Mexico?
-- Is SPEI required?
-- Are card payments required?
-- Is cash-in/cash-out required?
+- Will FondixPay only pay services, or will it also keep demo account/balance UX for testing without making it a payment method?
+- Will the MVP handle only direct card payments while balance remains demo/non-payable?
+- Which card processor will be used in Mexico?
+- Which tokenization and provider-vault model will the card processor require?
+- Which card authorization and 3DS/auth challenge paths are required?
 - Is KYC required?
 - What transaction limits apply?
 - Which administrative users will exist at launch?

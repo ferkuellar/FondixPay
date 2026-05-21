@@ -104,7 +104,7 @@ Before FondixPay can support real payments, the product UX must satisfy these re
 - The selected method must be visible before payment confirmation.
 - The user must be able to change method before paying.
 - Mock/dev method must be clearly labeled as simulated and no real charge.
-- Do not force card-only UX for users who may be non-banked or partially banked.
+- The current roadmap is card-only for user-facing payments. UX research should reduce card trust and onboarding friction without showing unsupported payment methods.
 - Add future help copy: "¿Por qué pedimos esto?"
 - Use future card copy only when provider tokenization exists: "Nunca guardamos el número completo de tu tarjeta." and "El método de pago se procesa con un proveedor autorizado."
 - Until tokenization/provider is approved, avoid card-entry forms.
@@ -156,3 +156,13 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Pending and timeout entries must use review/pending copy, not paid-success copy.
 - Failed and duplicate-blocked entries must expose the next action without creating a confirmed receipt.
 - Empty, loading, error, and unavailable receipt states must be explicit.
+
+## Card Payment UX Requirements
+
+- User-facing payment method language must focus on debit and credit card.
+- Current mock UX must use `Tarjeta demo` when referring to the mock payment method.
+- Do not show SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, or stored balance as payment options.
+- Mock add-card copy must say `No ingreses datos reales de tarjeta`.
+- Mock add-card copy must say `Tarjeta demo no genera cargos reales`.
+- Confirmation must show selected card, demo last four digits when available, fee, final total, and change-card action.
+- Future real card UX must cover declined, expired, invalid CVV, processor timeout, and auth/3DS challenge states.

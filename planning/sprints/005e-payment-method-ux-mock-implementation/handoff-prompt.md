@@ -12,4 +12,4 @@ Read first:
 7. `docs/SECURITY.md`
 8. `docs/VALIDATION.md`
 
-Implement only mock/dev UX for payment methods. Do not capture real card data, do not store PAN/CVV, do not create real backend payment method models, and do not integrate Prontipagos or any payment provider.
+Implement only mock/dev card UX. Do not capture real card data, do not store PAN/CVV, do not create real backend card payment method models, and do not integrate Prontipagos or any card processor.

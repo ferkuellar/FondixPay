@@ -1,7 +1,7 @@
 # Phase 5E — Completion Report
 
 ## Executive Summary
-Phase 5E implemented a mobile-only mock/dev payment method UX. Users can now start without a method, add a demo method, select or change it, and see the selected method before confirming a mock payment.
+Phase 5E implemented a mobile-only mock/dev card UX. Users can now start without a card demo, add one, select or change it, and see the selected card demo before confirming a mock payment.
 
 ## Files Created
 - `mobile/src/store/paymentMethodStore.ts`
@@ -36,12 +36,12 @@ Phase 5E implemented a mobile-only mock/dev payment method UX. Users can now sta
 - `docs/OPERATIONS.md`
 
 ## Screens Implemented
-- Payment methods list.
-- Add mock payment method.
-- Confirm payment selected-method requirement.
+- Card payment methods list.
+- Add card demo.
+- Confirm payment selected-card requirement.
 
 ## Store Implemented
-- `paymentMethodStore` with local in-memory mock methods and selected method state.
+- `paymentMethodStore` with local in-memory card demo records and selected-card state.
 
 ## Risks Mitigated
 - Phantom card/method risk reduced.
@@ -49,8 +49,8 @@ Phase 5E implemented a mobile-only mock/dev payment method UX. Users can now sta
 - User confusion reduced through explicit demo/no-charge copy.
 
 ## Risks Pending
-- No real payment method provider.
-- No backend payment method persistence.
+- No real card processor.
+- No backend card payment method persistence.
 - No real provider tokenization.
 - No complete payment recovery path.
 

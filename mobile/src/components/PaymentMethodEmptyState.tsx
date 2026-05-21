@@ -16,7 +16,7 @@ export function PaymentMethodEmptyState({ onAdd }: Props) {
       </View>
       <Text style={styles.title}>Sin método de pago</Text>
       <Text style={styles.body}>
-        Agrega un método demo para probar el flujo. No se pedirán datos reales ni se realizará ningún cargo.
+        Agrega una tarjeta demo para probar el flujo. No se pedirán datos reales ni se realizará ningún cargo.
       </Text>
       <PrimaryButton onPress={onAdd}>AGREGAR MÉTODO DEMO</PrimaryButton>
     </View>

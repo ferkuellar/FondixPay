@@ -25,7 +25,7 @@ Updated: 2026-05-20
 - Approve final commercial fee model.
 - Run legal/security review of trust and fee copy.
 - Validate fee comprehension with users aged 30-65.
-- Decide if future comparison against OXXO or physical payment options is useful.
+- Keep payment-method research card-focused unless roadmap ownership explicitly changes ADR-075.
 - Replace mobile local mock fee source with backend fee source when mobile uses API payment flow.
 
 ## Phase 5D Follow-Up Items
@@ -34,7 +34,7 @@ Updated: 2026-05-20
 - Design SelectPaymentMethod screen.
 - Implement explicit mock payment method component.
 - Define tokenization provider decision criteria.
-- Evaluate SPEI/OXXO/CoDi with users aged 30-65.
+- Validate card trust, add-card clarity, and decline recovery with users aged 30-65.
 - Add payment method API/tests in future backend phase.
 - Integrate payment method audit events.
 # Phase 5E UX/Product Backlog Update

@@ -420,3 +420,19 @@ The following events are required for the future backend history/receipt project
 | `receipt.share_requested` | future | Real share flow not implemented. |
 
 All events must preserve actor, entity, request/correlation identifiers, safe receipt/payment references, and redacted metadata.
+
+## Card Payment Method Audit Events
+
+Current roadmap payment-method audit events are card-focused:
+
+- `payment_method.card_add_started`
+- `payment_method.card_tokenized`
+- `payment_method.card_add_failed`
+- `payment_method.card_selected`
+- `payment_method.card_changed`
+- `payment_method.card_removed`
+- `payment_method.card_declined`
+- `payment_method.card_auth_failed`
+- `payment_method.card_expired`
+
+Events must use safe card references only. Do not emit PAN or CVV in audit metadata.

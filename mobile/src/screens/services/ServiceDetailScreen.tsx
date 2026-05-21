@@ -85,7 +85,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
               <View style={styles.radio} />
               <View style={styles.methodCopy}>
                 <Text style={styles.methodText}>Método pendiente</Text>
-                <Text style={styles.methodDescription}>Agrega un método demo antes de confirmar.</Text>
+                <Text style={styles.methodDescription}>Agrega una tarjeta demo antes de confirmar.</Text>
               </View>
             </View>
           )}
@@ -99,7 +99,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
             style={styles.methodRow}
           >
             <View style={styles.radio} />
-            <Text style={styles.methodText}>{selectedPaymentMethod ? 'Cambiar método demo' : 'Agregar método demo'}</Text>
+            <Text style={styles.methodText}>{selectedPaymentMethod ? 'Cambiar tarjeta demo' : 'Agregar tarjeta demo'}</Text>
             <Feather color={colors.primary} name="plus" size={18} />
           </Pressable>
         </View>

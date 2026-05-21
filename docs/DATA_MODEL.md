@@ -339,3 +339,25 @@ The Phase 7 mobile projection treats visible history as a joinable view over pay
 | Demo movement | Phase 6B `movements` table | `movement_id`, `payment_id`, `receipt_id`, ledger entry |
 
 Receipt status values are explicit: `generated`, `pending`, `unavailable`, and future `voided`. A failed or pending payment attempt must not project a confirmed receipt merely because a history row exists.
+
+## Card-Focused Payment Method Model
+
+`PaymentMethod` is card-focused in the current roadmap.
+
+| Field | Notes |
+|---|---|
+| `id` | Internal payment method id. |
+| `user_id` | Card owner scope. |
+| `type` | `card` only for real roadmap payment methods. |
+| `card_brand` | Safe processor/card brand label. |
+| `last4` | Safe card display field. |
+| `exp_month` | Expiry month when processor-approved to retain. |
+| `exp_year` | Expiry year when processor-approved to retain. |
+| `provider_token_reference` | Token/vault reference, never PAN. |
+| `provider_name` | Future approved card processor. |
+| `status` | Active, pending validation, expired, unavailable, removed. |
+| `is_default` | Current selected/default card reference. |
+| `is_mock` | True for card demo. |
+| `deleted_at` | Soft delete/detach lifecycle. |
+
+No active user-facing payment-method types are planned for SPEI, CoDi, OXXO/store payment, cash-in, bank transfer, wallet balance, stored balance, or cash.

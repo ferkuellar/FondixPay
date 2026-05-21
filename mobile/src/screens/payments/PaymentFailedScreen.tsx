@@ -14,9 +14,9 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PaymentFailed'>;
 function failureMessage(reason: Props['route']['params']['recovery']['reason']) {
   switch (reason) {
     case 'method_unavailable_mock':
-      return 'Tu método demo no está disponible para este intento.';
+      return 'Tu tarjeta demo no está disponible para este intento.';
     case 'insufficient_funds_mock':
-      return 'El método demo no tiene disponibilidad suficiente para completar la simulación.';
+      return 'La tarjeta demo no tiene disponibilidad suficiente para completar la simulación.';
     case 'duplicate_attempt_mock':
       return 'Detectamos un intento duplicado y bloqueamos el reintento.';
     default:
@@ -46,7 +46,7 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
         <PaymentRecoverySummary recovery={recovery} />
         <View style={styles.notice}>
           <Text style={styles.noticeTitle}>Siguiente acción</Text>
-          <Text style={styles.noticeText}>Puedes reintentar de forma segura o cambiar el método demo antes de pagar.</Text>
+          <Text style={styles.noticeText}>Puedes reintentar de forma segura o cambiar la tarjeta demo antes de pagar.</Text>
         </View>
         <View style={styles.actions}>
           <PrimaryButton onPress={retry}>INTENTAR DE NUEVO</PrimaryButton>

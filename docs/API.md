@@ -450,3 +450,17 @@ Mobile history now expects explicit display concepts:
 - safe trace labels: payment id, receipt id when present, mock reference, `request_id` or `correlation_id` when available
 
 Future provider-backed history APIs must expose receipt status and must not mark `payment_pending_confirmation`, `provider_timeout`, `payment_failed`, `duplicate_payment_attempt`, or `receipt_unavailable` responses as provider-confirmed success.
+
+## Future Card Payment Method APIs
+
+The payment-method roadmap is card-only. Future card endpoints remain proposed until a card processor is selected:
+
+| Endpoint | Purpose | Notes |
+|---|---|---|
+| `GET /payment-methods` | List safe saved card references for current user. | Auth required; safe label, brand, last4, expiry, status only. |
+| `POST /payment-methods/card-token` | Attach processor tokenization result for a card. | Depends on future approved card processor; no PAN/CVV persistence. |
+| `PATCH /payment-methods/{id}/default` | Select default card. | Ownership check and audit required. |
+| `DELETE /payment-methods/{id}` | Soft delete/detach card reference. | Provider detach/delete rules required. |
+| `GET /payment-methods/{id}` | Read safe card detail. | No raw provider payload or sensitive card fields. |
+
+SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, and stored balance do not have user-facing payment-method APIs in the current roadmap.

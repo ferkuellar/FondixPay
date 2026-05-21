@@ -286,11 +286,11 @@ Decision: FondixPay will not store full PAN, CVV, or sensitive card data. Future
 
 Rationale: Raw card storage creates unacceptable PCI and data exposure risk.
 
-## ADR-048 - Payment Method Strategy Must Consider Non-Banked Users
+## ADR-048 - Payment Method Strategy Is Card-Focused
 
-Decision: The MVP strategy must evaluate SPEI, OXXO/store payment, CoDi, or similar non-card options for non-banked or partially banked users.
+Decision: Payment method UX must focus on debit and credit card add/select/change behavior for the current roadmap.
 
-Rationale: A card-only strategy may exclude a meaningful user segment and increase abandonment.
+Rationale: FondixPay is card-only for user-facing payments. Segment research may inform card onboarding and trust copy, but it must not reopen unsupported methods without a new roadmap decision.
 
 ## ADR-049 - Mock Payment Method Allowed Only In Dev/Internal Validation
 
@@ -303,203 +303,287 @@ Rationale: Mock methods are useful for flow validation but cannot imply real pro
 Decision: Before any real payment, confirmation must include selected method, final total, and a change-method action.
 
 Rationale: Payment consent requires both amount and method clarity.
+
 # ADR-051 — Payment method mock UX before real provider
 
 ## Decision
+
 FondixPay will provide a mobile mock/dev UX for adding and selecting a payment method before integrating any real provider.
 
 ## Status
+
 Accepted.
 
 # ADR-052 — Demo payment methods must be explicitly labeled
 
 ## Decision
+
 Every demo payment method must clearly state that it is simulated and does not generate real charges.
 
 ## Status
+
 Accepted.
 
 # ADR-053 — No real card fields in mock flow
 
 ## Decision
+
 The mock flow must not ask for card number, CVV, expiration, CLABE, or any real payment credential.
 
 ## Status
+
 Accepted.
 
 # ADR-054 — Payment confirmation must display selected method
 
 ## Decision
+
 Payment confirmation must display the selected payment method and allow the user to add or change it before paying.
 
 ## Status
+
 Accepted.
 
 # ADR-055 — Payment recovery before real provider integration
 
 ## Decision
+
 FondixPay must define payment recovery paths before Prontipagos sandbox work or any real payment integration.
 
 ## Rationale
+
 Recovery paths prevent duplicate charges, ambiguous states, missing receipts, unsupported retries, and support cases without evidence.
 
 ## Status
+
 Accepted.
 
 # ADR-056 — No paid state without sufficient confirmation
 
 ## Decision
+
 No payment can be shown as paid without sufficient internal/provider confirmation rules.
 
 ## Rationale
+
 Provider timeout, provider acceptance, backend processing, and final payment confirmation are different states. Collapsing them creates false-success risk.
 
 ## Status
+
 Accepted.
 
 # ADR-057 — Retry must be idempotent
 
 ## Decision
+
 Every future retry must use an idempotency key or equivalent duplicate-prevention mechanism.
 
 ## Rationale
+
 Retries from double tap, network timeout, or provider uncertainty must not create duplicate charges.
 
 ## Status
+
 Accepted.
 
 # ADR-058 — User-facing payment messages must reduce panic
 
 ## Decision
+
 Payment recovery messages must state whether the result is failed, pending, timeout, or duplicate-blocked and must tell the user what to do next.
 
 ## Status
+
 Accepted.
 
 # ADR-059 — Support path must expose safe troubleshooting references
 
 ## Decision
+
 Payment recovery UX must prepare safe mock references now and future `request_id`/`correlation_id` references for support without exposing sensitive data.
 
 ## Status
+
 Accepted.
 
 # ADR-060 — Balance must be derived from ledger
 
 ## Decision
+
 Visible balance must not be an arbitrary editable field. It must derive from ledger entries or a controlled derived snapshot.
 
 ## Status
+
 Accepted.
 
 # ADR-061 — Demo balance must never be confused with real money
 
 ## Decision
+
 Every simulated balance must be flagged and communicated as demo/mock.
 
 ## Status
+
 Accepted.
 
 # ADR-062 — Available, pending and held balances are separate
 
 ## Decision
+
 Available, pending, and held balance concepts must be modeled and displayed separately.
 
 ## Status
+
 Accepted.
 
 # ADR-063 — Account status changes require audit events
 
 ## Decision
+
 Every future account status change must emit an audit event.
 
 ## Status
+
 Accepted.
 
 # ADR-064 — No wallet/real balance without legal and provider model
 
 ## Decision
+
 FondixPay will not implement a real wallet or real balance without legal review, provider/custody model, ledger, audit, and reconciliation.
 
 ## Status
+
 Accepted.
 
 # ADR-065 — Simulated balance implementation is demo-only
 
 ## Decision
+
 The Phase 6B balance implementation is demo/mock only and does not represent real money.
 
 ## Status
+
 Accepted.
 
 # ADR-066 — Account balance endpoints require authentication
 
 ## Decision
+
 Account, balance, and movement endpoints must require an authenticated user and only return data for the current user.
 
 ## Status
+
 Accepted.
 
 # ADR-067 — Balance fields use integer minor units
 
 ## Decision
+
 Available, pending, held, and simulated balance fields are exposed as integer minor units with explicit currency.
 
 ## Status
+
 Accepted.
 
 # ADR-068 — Balance is not stored in Secure Store
 
 ## Decision
+
 Mobile may keep demo balance in in-memory state but must not persist balance in Secure Store.
 
 ## Status
+
 Accepted.
 
 # ADR-069 — Demo movements must display non-real-money disclaimer
 
 ## Decision
+
 Balance and movement UI must communicate that demo data is simulated and not real money.
 
 ## Status
+
 Accepted.
 
 # ADR-070 — Receipt status must be explicit
 
 ## Decision
+
 Every visible receipt projection must state whether the receipt is generated, pending, unavailable, or future-voided.
 
 ## Status
+
 Accepted.
 
 # ADR-071 — Transaction history must distinguish succeeded, pending and failed
 
 ## Decision
+
 History must not represent pending, timeout, failed, or duplicate-blocked payment attempts as paid success.
 
 ## Status
+
 Accepted.
 
 # ADR-072 — Receipt detail must include fee breakdown
 
 ## Decision
+
 Receipt and transaction detail surfaces must show service amount, fee, total, and currency from the approved breakdown source.
 
 ## Status
+
 Accepted.
 
 # ADR-073 — Mock receipts must be labeled
 
 ## Decision
+
 Mock/dev receipt surfaces must say they are not real provider confirmation.
 
 ## Status
+
 Accepted.
 
 # ADR-074 — Movements, receipts and payments must be traceable
 
 ## Decision
+
 Visible financial history must carry current or future trace links through payment, receipt, movement, request, or correlation identifiers.
 
 ## Status
+
+Accepted.
+
+## Status
+
+## ADR-075 — Card-only user payment model
+
+FondixPay supports service payments exclusively through debit and credit cards as the user-facing payment method.
+
+FondixPay will use a future approved card processor for card tokenization and user charges.
+
+FondixPay will use Prontipagos as the service payment aggregator to execute payments to service providers.
+
+Prontipagos must not be assumed to be the user-facing card processor unless confirmed by contract or API documentation.
+
+Out of scope for the current roadmap:
+
+- SPEI
+- CoDi
+- OXXO
+- cash-in
+- wallet balance as a real payment method
+- bank transfer
+- stored-value payment methods
+
+Implications:
+
+- Card tokenization is mandatory before real payments.
+- FondixPay must never store PAN or CVV.
+- PCI/security review is required before production.
+- Card decline, expired card, invalid CVV, processor timeout, 3DS/auth challenge and chargeback workflows must be designed.
+- Prontipagos integration is separate from card processing.
+
 Accepted.

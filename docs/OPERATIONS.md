@@ -191,7 +191,7 @@ Future operations requirements:
 
 - Internal beta support must understand that Phase 5E demo methods do not generate real charges.
 - Tickets about real payment methods remain out of scope until a provider and tokenization strategy are approved.
-- Support copy must distinguish “método demo” from a real card, SPEI, CoDi, OXXO, or provider-backed payment method.
+- Support copy must distinguish `Tarjeta demo` from a real tokenized card and from Prontipagos service-payment execution.
 - Pending operational risks: provider downtime handling, token lifecycle, payment method validation, and failed payment recovery.
 
 # Payment Recovery Operations
@@ -250,3 +250,17 @@ Future metrics:
 - `pending_history_count`
 - `failed_history_count`
 - `support_from_receipt_count`
+
+## Card Payment Operations
+
+Future support and operations must cover:
+
+- card decline support,
+- expired card support,
+- chargeback handling,
+- card processor outage,
+- card authorization timeout,
+- 3DS/auth challenge support when the selected processor requires it,
+- no PAN/CVV exposure in support tooling.
+
+Prontipagos outage handling remains a separate service-payment aggregator concern from the future card processor path.

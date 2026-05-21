@@ -75,7 +75,7 @@ Updated: 2026-05-20
 | Mock fee confused with production fee | SEV-2 / High | `FONDIX_FEE_MINOR` and docs mark fee as mock/dev | Require approved commercial fee model before real payments |
 | Phantom card shown in UI | SEV-1 / Production Blocker | Phase 5D relabels current method as mock/dev and documents no real method flow | Implement add/select/change method UX in Phase 5E |
 | PCI risk from card capture without tokenization | SEV-1 / Production Blocker | No real card form or storage exists | Require provider vault/tokenization before card support |
-| Non-banked users excluded by card-only strategy | SEV-2 / High | Strategy requires SPEI/OXXO/CoDi evaluation | Validate method preference with target users |
+| Card-only payment adoption friction | SEV-2 / High | Card-only decision is explicit and real card flow remains blocked | Validate card trust/onboarding copy with target users before beta |
 | Sensitive payment method data in logs | SEV-1 / Production Blocker | Docs require redaction and safe labels only | Enforce in future API/tests |
 | Payment method unavailable without fallback | SEV-2 / High | Strategy documents unavailable state | Implement fallback UX before real payments |
 | Real payment confirmed without clear method | SEV-1 / Production Blocker | Real payments remain blocked | Require selected method in future confirmation flow |
@@ -151,3 +151,20 @@ Updated: 2026-05-20
 | SEV-2 | Support lacks safe reference | Reduced | Local receipt detail shows mock reference and correlation reference when available. |
 | SEV-2 | Movements remain non-orchestrated with history | Pending | Phase 8 must align mock payment, receipt, movement, and balance events. |
 | SEV-2 | Mock states confused with provider states | Pending | Real provider confirmation mapping remains blocked until provider work. |
+
+# Hotfix Card-Only Payment Strategy Risks
+
+## Risk — Card-only payment security and PCI exposure
+
+Because FondixPay is card-only for user payments, real payment implementation introduces card security, tokenization, PCI scope, fraud, chargeback, declined authorization, expired card, invalid CVV, 3DS/auth, and processor outage risks.
+
+Severity: SEV-1 Production Blocker.
+
+Mitigation:
+- No PAN/CVV storage.
+- Use approved tokenized card processor.
+- Keep card flow mock-only until provider selection.
+- Preserve fee transparency, recovery paths, audit logs, idempotency, and backend tests.
+- Complete security review before production.
+
+SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, and bank transfer remain out of scope as user-facing payment methods in the current roadmap.

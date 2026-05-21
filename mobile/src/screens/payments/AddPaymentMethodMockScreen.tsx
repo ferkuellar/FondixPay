@@ -16,19 +16,9 @@ const options: Array<{
   description: string;
 }> = [
   {
-    type: 'demo',
-    title: 'Método demo',
-    description: 'Opción genérica para validar pagos mock/dev sin cargo real.',
-  },
-  {
-    type: 'spei_mock',
-    title: 'SPEI demo',
-    description: 'Simula una transferencia sin CLABE real ni movimiento de dinero.',
-  },
-  {
-    type: 'cash_mock',
-    title: 'Efectivo demo',
-    description: 'Simula un pago en tienda sin generar referencia real.',
+    type: 'card_mock',
+    title: 'Tarjeta demo',
+    description: 'Simula una tarjeta crédito/débito. No ingreses número real, vencimiento ni CVV.',
   },
 ];
 
@@ -49,8 +39,8 @@ export function AddPaymentMethodMockScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Agregar método demo</Text>
-          <Text style={styles.subtitle}>Elige un método simulado. No captures tarjeta, CVV, CLABE ni datos reales.</Text>
+          <Text style={styles.title}>Agregar tarjeta demo</Text>
+          <Text style={styles.subtitle}>Prueba el flujo card-only sin capturar tarjeta, CVV ni datos reales.</Text>
         </View>
         <PaymentMethodDemoNotice />
         <View style={styles.options}>

@@ -1,199 +1,115 @@
-# Payment Method Strategy
+# Card Payment Method Strategy
 
 Updated: 2026-05-20
 
 ## Executive Summary
 
-FondixPay cannot advance to real payments while the app implies that a card already exists without a real add/select/validate/manage flow. A payment method is part of user consent, security, auditability, and support. Until a provider and tokenization strategy are approved, the app may only use an explicitly labeled mock/dev method for internal validation without real money.
+FondixPay is card-only for user-facing service payments. A user pays FondixPay with a debit or credit card. FondixPay then executes the service-payment leg through Prontipagos as the service payment aggregator. Prontipagos must not be assumed to be the user-facing card processor unless an explicit future contract and API mapping confirm that role.
+
+The current implementation remains mock/dev. No real card capture, card processor, tokenization, provider vault, or real service-payment execution is enabled.
+
+## Current Decision
+
+- Supported user-facing payment method in the current roadmap: debit or credit card.
+- Supported mock/dev method: card demo.
+- Card processor: future provider, not selected.
+- Service-payment aggregator: Prontipagos, future integration.
+- Out of roadmap as user-facing payment methods: SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, and stored-value balance.
+
+## Separation Of Concerns
+
+| Leg | Responsibility |
+|---|---|
+| User -> FondixPay | Debit or credit card payment experience. |
+| FondixPay -> card processor | Future tokenization, authorization, fraud controls, card settlement, processor recovery. |
+| FondixPay -> Prontipagos | Service payment execution to billers/providers after the internal flow allows it. |
 
 ## Current Gap
 
-Current UI locations:
+FondixPay already removed the phantom-card assumption from the mock flow, but real card payment is still not implemented:
 
-- `mobile/src/screens/services/ServiceDetailScreen.tsx` showed a selected demo card and a "Nueva tarjeta" row.
-- `mobile/src/components/PaymentSummaryCard.tsx` defaulted to `Tarjeta demo **** 9021`.
+- no approved card processor,
+- no tokenization or provider vault,
+- no real add/select/remove card contract,
+- no card authorization/3DS mapping,
+- no chargeback and fraud strategy,
+- no PCI/security review for real card flow.
 
-What was missing:
+## In Scope
 
-- No add payment method flow.
-- No select/change method flow.
-- No tokenization.
-- No provider vault.
-- No validation state.
-- No fallback for non-banked users.
-- No audit events or backend model for payment methods.
+- Debit card.
+- Credit card.
+- Card demo/mock for development and internal validation.
+- Future tokenized card references.
+- Future approved card processor.
+- Card-specific recovery states.
 
-Risks:
+## Out Of Scope
 
-- UX: users may believe a real card is stored or selected.
-- Security: card capture without tokenization would create PCI and data exposure risk.
-- Operations: support cannot verify method status safely.
-- Compliance: storing PAN/CVV or implying card controls without implementation is unacceptable.
+- SPEI.
+- CoDi.
+- OXXO/store payments.
+- Cash-in and cash payments.
+- Bank transfer.
+- Wallet balance or stored-value balance as payment method.
+- Prontipagos as an assumed card processor.
 
-## User Segment Considerations
+## Card UX Requirements
 
-FondixPay targets Mexican users paying domestic services. The product should expect:
+- Start with no card when no explicit card demo exists.
+- Add card flow must be provider-backed in real implementation.
+- Select and change selected card before confirmation.
+- Show safe card label and last four digits only.
+- Remove card in a future token detach/delete flow.
+- Handle expired card.
+- Handle declined card.
+- Handle invalid CVV without storing CVV.
+- Handle processor timeout.
+- Handle 3DS/auth challenge in a future card provider phase.
+- Confirmation must show selected card, service amount, fee, total, and change-card action.
 
-- Users aged 30-65 who may prefer clear, low-risk payment instructions.
-- Partially banked or non-banked users.
-- Anxiety around entering cards into new apps.
-- Familiarity with SPEI, cash/store payments, and service-payment references.
-- Need for clear confirmation and proof after payment.
+Mock/dev copy must say:
 
-The MVP should avoid forcing card entry as the only path.
+- `Tarjeta demo`
+- `No se realizará ningún cargo real`
+- `No ingreses datos reales de tarjeta`
 
-## Payment Method Options
+## Security
 
-### Card Tokenization
+- PAN must never be stored by FondixPay.
+- CVV must never be stored by FondixPay.
+- Future card payments require processor tokenization.
+- Future card payments require provider vault or equivalent approved token custody.
+- Logs and support tools must not include full card number or CVV.
+- Mobile Secure Store must not persist PAN or CVV.
+- PCI scope and processor security controls must be reviewed before real card payments.
 
-Pros:
+## Provider Selection
 
-- Familiar for banked users.
-- Fast confirmation when provider supports it.
-- Good mobile UX if tokenized provider SDK/hosted fields are mature.
+The card processor is not selected yet. Provider selection must cover:
 
-Cons:
+- tokenization and vault model,
+- authorization and failure codes,
+- 3DS/auth challenge support when required,
+- fraud and chargeback support,
+- idempotency and webhook/status model,
+- sandbox and test strategy,
+- costs and operational support.
 
-- PCI scope if handled incorrectly.
-- User trust barrier.
-- Requires provider decision and tokenization.
-
-Risks:
-
-- Never store PAN/CVV.
-- Provider vault required.
-- Must support failure and card removal states.
-
-Recommendation:
-
-- Future option only after provider selection and security review.
-
-### SPEI
-
-Pros:
-
-- Common in Mexico.
-- Avoids card storage.
-- Can serve users without credit card.
-
-Cons:
-
-- Confirmation timing can be asynchronous.
-- Requires reconciliation and clear pending state.
-- UX must explain reference/CLABE and whether the payment is confirmed.
-
-Recommendation:
-
-- Strong candidate for future real-money MVP if provider capability and reconciliation are defined.
-
-### CoDi
-
-Pros:
-
-- Bank-backed push payment model.
-- Avoids card storage.
-
-Cons:
-
-- Adoption and user familiarity may be lower.
-- Requires exact UX guidance and provider/bank capability.
-
-Recommendation:
-
-- Evaluate later, not primary MVP assumption.
-
-### OXXO / Cash-In / Store Payment
-
-Pros:
-
-- Strong fit for non-banked users.
-- Familiar in Mexico for service payments.
-- Avoids card capture.
-
-Cons:
-
-- Confirmation can be delayed.
-- Operational reconciliation is required.
-- User must leave the app.
-
-Recommendation:
-
-- Strong candidate for non-banked segment, especially as fallback or second supported method.
-
-### Wallet / Stored Balance
-
-Pros:
-
-- Faster repeat payments.
-
-Cons:
-
-- Higher regulatory/compliance burden.
-- KYC/AML implications.
-- Balance ledger, cash-in/cash-out, and custody concerns.
-
-Recommendation:
-
-- Out of scope for current MVP.
-
-### Mock Payment Method
-
-Use:
-
-- Development.
-- Internal validation.
-- Closed beta without real money.
-
-Label:
-
-- "Método demo - pago simulado sin cargo real".
-
-Must not promise:
-
-- Real charge.
-- Provider confirmation.
-- Tokenization.
-- PCI compliance.
-
-## MVP Recommendation
-
-- Internal/dev MVP: explicit mock payment method only.
-- Closed beta without money: mock method with disclosure.
-- Future real-money beta: choose between SPEI/OXXO-like flow or tokenized card provider based on provider evaluation, target-user validation, and compliance review.
-- Card tokenization should not be the default until provider, vault, UX, security, and legal/compliance decisions are approved.
-
-## UX Flow
-
-1. No payment method: show empty state and "Agregar método de pago".
-2. Add payment method: explain method type and what data is handled.
-3. Select payment method: show safe display label only.
-4. Confirm payment method: show selected method, fee, total, and change action.
-5. Payment method unavailable: block real payment and show alternative method/retry.
-6. Change method before paying: available from confirmation.
-7. Remove method: soft delete or detach token in provider vault.
-8. Mock method in dev: clearly labeled as no real charge.
-
-## Security Rules
-
-- Do not store full PAN.
-- Do not store CVV.
-- Tokenization is mandatory for future cards.
-- Use provider vault for card data.
-- Mobile Secure Store must not store card numbers or CVV.
-- Logs must redact payment method payloads.
-- Audit events must record safe display labels and method IDs, never sensitive card data.
-- Deletion should be soft delete internally plus provider detach/delete when supported.
+Prontipagos remains the service payment aggregator. The card processor decision is separate.
 
 ## Audit Events
 
-- `payment_method.add_started`
-- `payment_method.add_completed`
-- `payment_method.add_failed`
-- `payment_method.selected`
-- `payment_method.changed`
-- `payment_method.removed`
-- `payment_method.validation_failed`
-- `payment_method.mock_selected`
+- `payment_method.card_add_started`
+- `payment_method.card_tokenized`
+- `payment_method.card_add_failed`
+- `payment_method.card_selected`
+- `payment_method.card_changed`
+- `payment_method.card_removed`
+- `payment_method.card_declined`
+- `payment_method.card_auth_failed`
+- `payment_method.card_expired`
+- `payment_method.card_mock_selected`
 
 ## Data Model Proposal
 
@@ -201,12 +117,14 @@ Must not promise:
 
 - `id`
 - `user_id`
-- `type`
+- `type = card`
+- `card_brand`
+- `last4`
+- `exp_month`
+- `exp_year`
 - `provider_name`
 - `provider_token_reference`
 - `display_label`
-- `last4` nullable
-- `brand` nullable
 - `status`
 - `is_default`
 - `is_mock`
@@ -216,94 +134,31 @@ Must not promise:
 
 ### `payment_method_events`
 
-- `id`
-- `payment_method_id`
-- `user_id`
-- `event_type`
-- `result`
-- `metadata_json`
-- `request_id`
-- `correlation_id`
-- `created_at`
+- safe event metadata only,
+- no PAN,
+- no CVV,
+- request/correlation identifiers for support and audit.
 
-### `user_payment_preferences`
+## Future API Proposal
 
-- `id`
-- `user_id`
-- `default_payment_method_id`
-- `created_at`
-- `updated_at`
+- `GET /payment-methods`
+- `POST /payment-methods/card-token`
+- `PATCH /payment-methods/{id}/default`
+- `DELETE /payment-methods/{id}`
+- `GET /payment-methods/{id}`
 
-## API Proposal
-
-### GET `/payment-methods`
-
-- Purpose: list user's safe payment methods.
-- Auth required: yes.
-- Role: `USER`.
-- Response: method IDs, type, display label, status, default flag, mock flag.
-- Audit events: optional `payment_method.list_viewed`.
-- Security: no PAN/CVV.
-
-### POST `/payment-methods`
-
-- Purpose: start or complete adding a real tokenized method in future.
-- Auth required: yes.
-- Role: `USER`.
-- Request: method type and provider token/reference, never raw PAN/CVV.
-- Audit events: `payment_method.add_started`, `payment_method.add_completed`, `payment_method.add_failed`.
-- Security: provider tokenization required.
-
-### POST `/payment-methods/mock`
-
-- Purpose: create/select dev-only mock method.
-- Auth required: yes.
-- Role: `USER`.
-- Request: optional label.
-- Audit events: `payment_method.mock_selected`.
-- Security: only development/internal validation.
-
-### PATCH `/payment-methods/{id}/default`
-
-- Purpose: set default payment method.
-- Auth required: yes.
-- Role: `USER`.
-- Audit events: `payment_method.selected` or `payment_method.changed`.
-- Security: ownership check required.
-
-### DELETE `/payment-methods/{id}`
-
-- Purpose: soft delete/detach payment method.
-- Auth required: yes.
-- Role: `USER`.
-- Audit events: `payment_method.removed`.
-- Security: provider detach/delete if real token exists.
-
-### GET `/payment-methods/{id}`
-
-- Purpose: retrieve safe method detail.
-- Auth required: yes.
-- Role: `USER`.
-- Security: ownership check and safe fields only.
-
-### POST `/payment-methods/{id}/validate`
-
-- Purpose: validate method availability before payment.
-- Auth required: yes.
-- Role: `USER`.
-- Audit events: `payment_method.validation_failed` when invalid.
-- Security: never expose provider secrets.
+`POST /payment-methods/card-token` depends on the future approved card processor. It accepts tokenization references or processor-approved handoff data, never raw card storage payloads for FondixPay persistence.
 
 ## Production Gates
 
-- Provider defined.
-- Tokenization strategy defined.
-- Legal/compliance review complete.
-- Security review complete.
-- UX add/select/change flow implemented.
-- Tests implemented.
+- Card processor selected.
+- Tokenization implemented.
+- Provider vault and detach/delete behavior designed.
+- No PAN/CVV storage verified.
+- PCI/security review complete.
+- Fraud and chargeback strategy defined.
+- Idempotency implemented.
 - Audit logs implemented.
-- No secrets in repo.
-- No raw card data.
-- User can change method before paying.
-- Error/recovery path exists.
+- Recovery paths implemented.
+- Fee transparency preserved.
+- Tests cover auth, ownership, card failure paths, and retry safety.

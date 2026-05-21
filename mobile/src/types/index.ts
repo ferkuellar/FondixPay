@@ -20,7 +20,7 @@ export type RootStackParamList = {
   Profile: undefined;
 };
 
-export type PaymentMethodType = 'demo' | 'card_mock' | 'spei_mock' | 'cash_mock';
+export type PaymentMethodType = 'card_mock';
 
 export type PaymentMethodStatus = 'active' | 'unavailable' | 'pending';
 

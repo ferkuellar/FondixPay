@@ -93,7 +93,7 @@ export function AppNavigator() {
           <Stack.Screen
             name="AddPaymentMethodMock"
             component={AddPaymentMethodMockScreen}
-            options={{ title: 'Agregar método demo' }}
+            options={{ title: 'Agregar tarjeta demo' }}
           />
           <Stack.Screen name="Account" component={AccountScreen} options={{ title: 'Cuenta demo' }} />
           <Stack.Screen name="Movements" component={MovementsScreen} options={{ title: 'Movimientos demo' }} />
