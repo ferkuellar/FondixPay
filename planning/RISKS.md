@@ -140,3 +140,14 @@ Updated: 2026-05-20
 | SEV-2 | Movements not traceable | Reduced | Demo movement seed is persisted and linked to demo account. |
 | SEV-1 | Regulatory wallet claims | Blocked | No wallet real claim or real funding rail was added. |
 | SEV-1 | Cross-user account access | Mitigated | Endpoint scope comes from current authenticated user and tests cover distinct accounts. |
+
+# Phase 7 History And Receipt Risks
+
+| Severity | Risk | Status | Notes |
+|---|---|---|---|
+| SEV-2 | History hides pending or failed payment attempts | Mitigated for mobile mock/dev | Recovery attempts now enter local history with explicit payment and receipt status. |
+| SEV-2 | Receipt implies false provider success | Reduced | Receipt detail and status badges label mock/dev certainty and receipt availability. |
+| SEV-2 | Receipt lacks fee breakdown | Mitigated | Detail keeps service amount, fee, total, currency, and method label visible. |
+| SEV-2 | Support lacks safe reference | Reduced | Local receipt detail shows mock reference and correlation reference when available. |
+| SEV-2 | Movements remain non-orchestrated with history | Pending | Phase 8 must align mock payment, receipt, movement, and balance events. |
+| SEV-2 | Mock states confused with provider states | Pending | Real provider confirmation mapping remains blocked until provider work. |

@@ -59,6 +59,9 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
           <PrimaryButton onPress={() => navigation.navigate('SupportPlaceholder', { recovery })} variant="secondary">
             NECESITO AYUDA
           </PrimaryButton>
+          <PrimaryButton onPress={() => navigation.navigate('History')} variant="secondary">
+            VER HISTORIAL
+          </PrimaryButton>
         </View>
       </View>
     </Screen>

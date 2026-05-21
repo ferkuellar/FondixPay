@@ -234,3 +234,19 @@ Future metrics:
 - Internal support must treat Phase 6B balance values as demo data only.
 - A complaint that demo balance does not match expected UX should be investigated through the demo account, snapshot, movement, and audit events, not as a real-funds incident.
 - Future metrics remain required: `balance_view_count`, `movement_view_count`, `demo_credit_count`, and `balance_error_count`.
+## Phase 7 Receipt And History Operations
+
+Support may ask for safe mock reference or correlation id from the receipt detail during internal validation. A receipt marked pending or unavailable is not proof of provider confirmation.
+
+Future runbooks required:
+- receipt unavailable,
+- pending payment,
+- failed payment,
+- user says "me cobraron".
+
+Future metrics:
+- `receipt_view_count`
+- `receipt_unavailable_count`
+- `pending_history_count`
+- `failed_history_count`
+- `support_from_receipt_count`

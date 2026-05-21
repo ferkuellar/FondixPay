@@ -206,3 +206,10 @@ Phase 5F mock recovery UI rules:
 - Mobile account data is kept in Zustand memory state and is not written to Secure Store.
 - Demo balance copy explicitly rejects real-money interpretation.
 - Balance and movement payloads contain no PAN, CVV, provider secrets, or regulated-funds claims.
+## Phase 7 Receipt And History Security
+
+- Receipt and history surfaces must not expose raw provider payloads, card data, or sensitive payment-method data.
+- Backend receipt/payment lists remain user scoped and must stay authenticated.
+- Support references in UI must be safe identifiers such as mock reference, request id, or correlation id.
+- Receipt copy must avoid regulated or provider-confirmed claims when the state is mock, pending, failed, timeout, or unavailable.
+- Future download/share flows require the same authorization and redaction checks as receipt detail.

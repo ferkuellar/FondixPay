@@ -147,3 +147,12 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Every account or movement surface must preserve the no-real-money disclaimer.
 - Loading, error, and empty states must not substitute fake real-money copy.
 - Movements may be shown as demo credits/debits, but they must not imply provider settlement or regulated custody.
+## Phase 7 Transaction History And Receipt UX
+
+- History must provide basic filters for all, paid demo, pending, and failed records.
+- Status badges must distinguish payment status from receipt status.
+- Receipt detail must keep service amount, fee, total, currency, method, date, and safe reference visible.
+- A receipt is not proof of real provider confirmation while the flow is mock/dev.
+- Pending and timeout entries must use review/pending copy, not paid-success copy.
+- Failed and duplicate-blocked entries must expose the next action without creating a confirmed receipt.
+- Empty, loading, error, and unavailable receipt states must be explicit.

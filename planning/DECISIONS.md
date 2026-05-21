@@ -463,3 +463,43 @@ Balance and movement UI must communicate that demo data is simulated and not rea
 
 ## Status
 Accepted.
+
+# ADR-070 — Receipt status must be explicit
+
+## Decision
+Every visible receipt projection must state whether the receipt is generated, pending, unavailable, or future-voided.
+
+## Status
+Accepted.
+
+# ADR-071 — Transaction history must distinguish succeeded, pending and failed
+
+## Decision
+History must not represent pending, timeout, failed, or duplicate-blocked payment attempts as paid success.
+
+## Status
+Accepted.
+
+# ADR-072 — Receipt detail must include fee breakdown
+
+## Decision
+Receipt and transaction detail surfaces must show service amount, fee, total, and currency from the approved breakdown source.
+
+## Status
+Accepted.
+
+# ADR-073 — Mock receipts must be labeled
+
+## Decision
+Mock/dev receipt surfaces must say they are not real provider confirmation.
+
+## Status
+Accepted.
+
+# ADR-074 — Movements, receipts and payments must be traceable
+
+## Decision
+Visible financial history must carry current or future trace links through payment, receipt, movement, request, or correlation identifiers.
+
+## Status
+Accepted.

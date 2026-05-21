@@ -328,3 +328,14 @@ Status: proposed/design only for Phase 6A.
 - `balance_snapshots` stores a demo seed snapshot with integer MXN minor units and explicit `is_demo` / `is_real_money` flags.
 - `movements` stores a demo seed credit linked to the demo account; production ledger projection remains pending.
 - `account_events` remains proposed; central audit events cover the current account/balance/movement baseline.
+## Phase 7 History And Receipt Projection
+
+The Phase 7 mobile projection treats visible history as a joinable view over payment facts, receipt facts, movement facts, and future ledger/audit references.
+
+| Concept | Current mock/dev source | Future trace link |
+|---|---|---|
+| Payment history item | Local mobile payment store plus persisted backend success records | `payment_id`, `correlation_id`, payment intent |
+| Receipt status | Mobile mock receipt status plus generated backend receipts | `receipt_id`, generation event |
+| Demo movement | Phase 6B `movements` table | `movement_id`, `payment_id`, `receipt_id`, ledger entry |
+
+Receipt status values are explicit: `generated`, `pending`, `unavailable`, and future `voided`. A failed or pending payment attempt must not project a confirmed receipt merely because a history row exists.

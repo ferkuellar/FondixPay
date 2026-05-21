@@ -267,3 +267,15 @@ Phase 5F is documentation-only. No runtime tests are required unless code is cha
 - Home and account surfaces show `Saldo demo` and do not claim real funds.
 - Movement UI shows demo movement data or a demo empty state.
 - Run backend compile/tests and mobile typecheck before closing the phase.
+## Phase 7 History And Receipt Validation
+
+- [ ] History distinguishes mock paid, pending/timeout, and failed/duplicate-blocked attempts.
+- [ ] Pending history does not render as success.
+- [ ] Receipt pending and unavailable states are explicit.
+- [ ] Receipt breakdown matches the payment breakdown for service amount, fee, total, and currency.
+- [ ] Receipt method label matches the confirmation flow when available.
+- [ ] Mock receipt detail is labeled as mock/dev and not provider confirmation.
+- [ ] Receipt/history paths do not expose another user's backend receipts.
+- [ ] History filters, empty state, loading state, and error state remain present.
+- [ ] `npm run typecheck` passes for mobile history and receipt detail changes.
+- [ ] Backend tests run when backend history/receipt API behavior changes.

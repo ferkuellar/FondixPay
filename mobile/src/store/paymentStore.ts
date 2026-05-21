@@ -1,6 +1,13 @@
 import { create } from 'zustand';
 
-import type { Payment, PaymentRecoveryContext, PaymentStatus, SavedService } from '../types';
+import type {
+  Payment,
+  PaymentDisplayStatus,
+  PaymentRecoveryContext,
+  PaymentStatus,
+  ReceiptStatus,
+  SavedService,
+} from '../types';
 import { calculatePaymentBreakdown } from '../utils/money';
 import { usePaymentMethodStore } from './paymentMethodStore';
 import { useServiceStore } from './serviceStore';
@@ -9,11 +16,14 @@ type PaymentState = {
   paymentAmount: number;
   payments: Payment[];
   paymentStatus: PaymentStatus;
+  historyError?: string;
+  isHistoryLoading: boolean;
   mockScenario: Exclude<PaymentStatus, 'idle' | 'processing'>;
   selectedService?: SavedService;
   createRecoveryContext: (serviceId: string, status: PaymentStatus) => PaymentRecoveryContext;
   getPayment: (paymentId: string) => Payment | undefined;
   payService: (serviceId: string) => Payment;
+  recordRecoveryAttempt: (recovery: PaymentRecoveryContext) => Payment;
   resetPayment: () => void;
   setMockScenario: (scenario: Exclude<PaymentStatus, 'idle' | 'processing'>) => void;
   selectService: (serviceId: string) => void;
@@ -23,6 +33,7 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
   paymentAmount: 0,
   payments: [],
   paymentStatus: 'idle',
+  isHistoryLoading: false,
   mockScenario: 'succeeded',
   createRecoveryContext: (serviceId, status) => {
     const service = useServiceStore.getState().getService(serviceId);
@@ -86,13 +97,47 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
       paymentMethodId: selectedPaymentMethod.id,
       paymentMethodLabel: selectedPaymentMethod.label,
       paymentMethodIsMock: selectedPaymentMethod.isMock,
-      status: 'SUCCESS',
+      status: 'succeeded',
+      receiptStatus: 'generated',
+      receiptId: `receipt_${Date.now()}`,
+      mockReference: `FP-${Date.now()}`,
       paidAt: new Date().toISOString(),
       folio: `FP-${Date.now()}`,
     };
 
     useServiceStore.getState().markServicePaid(serviceId);
     set((state) => ({ paymentStatus: 'succeeded', payments: [payment, ...state.payments] }));
+    return payment;
+  },
+  recordRecoveryAttempt: (recovery) => {
+    const receiptStatus: ReceiptStatus =
+      recovery.status === 'pending' || recovery.status === 'timeout' ? 'pending' : 'unavailable';
+    const displayStatus: PaymentDisplayStatus =
+      recovery.status === 'processing' || recovery.status === 'idle' ? 'pending' : recovery.status;
+    const payment: Payment = {
+      id: recovery.paymentId,
+      serviceName: recovery.serviceName,
+      providerName: recovery.providerName,
+      amount: recovery.amountMinor / 100,
+      amountMinor: recovery.amountMinor,
+      feeMinor: recovery.feeMinor,
+      totalMinor: recovery.totalMinor,
+      currency: recovery.currency,
+      feeLabel: 'Comisión FondixPay',
+      feeDescription: 'Comisión demo visible antes de confirmar el pago.',
+      isMock: true,
+      paymentMethodLabel: recovery.methodLabel,
+      paymentMethodIsMock: true,
+      status: displayStatus,
+      receiptStatus,
+      mockReference: recovery.paymentId,
+      correlationId: recovery.correlationId,
+      requestId: recovery.requestId,
+      paidAt: new Date().toISOString(),
+      folio: recovery.paymentId,
+    };
+
+    set((state) => ({ paymentStatus: recovery.status, payments: [payment, ...state.payments] }));
     return payment;
   },
   resetPayment: () => set({ paymentAmount: 0, paymentStatus: 'idle', selectedService: undefined }),

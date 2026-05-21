@@ -59,3 +59,14 @@ Updated: 2026-05-20
 | UX-REC-007 | SEV-2 | Duplicate tap protection | Doble intento | 5F | implemented basic/mock |
 | UX-REC-008 | SEV-2 | Receipt unavailable state | Comprobante faltante | Future receipt/support phase | pending |
 | UX-REC-009 | SEV-2 | Provider timeout mapping | Estado real del proveedor | Provider sandbox phase | pending |
+
+# Phase 7 History And Receipt Backlog Update
+
+| ID | Severidad | Hallazgo | Impacto | Fase sugerida | Estado |
+|---|---|---|---|---|---|
+| UX-HIST-001 | SEV-3 | Historial con filtros | Revisión de pagos difícil al crecer el flujo | 7 | implemented mock/dev |
+| UX-HIST-002 | SEV-2 | Comprobante con breakdown | Usuario no puede reconstruir el total | 7 | implemented |
+| UX-HIST-003 | SEV-2 | Estados pending/failed/unavailable | Falsa certeza sobre pago y recibo | 7 | implemented mobile projection |
+| UX-HIST-004 | SEV-2 | Receipt proof clarity | Comprobante mock podía parecer confirmación real | 7 | improved |
+| UX-HIST-005 | SEV-3 | Descargar/compartir comprobante | Prueba portable aún no existe | Future receipt phase | pending |
+| UX-HIST-006 | SEV-3 | Soporte desde recibo | Aclaración requiere flujo operativo | Future support phase | pending |

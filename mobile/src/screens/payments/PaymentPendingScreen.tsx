@@ -33,7 +33,7 @@ export function PaymentPendingScreen({ navigation, route }: Props) {
         </View>
         <PaymentRecoverySummary recovery={recovery} />
         <View style={styles.actions}>
-          <PrimaryButton onPress={() => navigation.replace('Home')}>VER ESTADO</PrimaryButton>
+          <PrimaryButton onPress={() => navigation.replace('History')}>VER ESTADO</PrimaryButton>
           <PrimaryButton onPress={() => navigation.navigate('SupportPlaceholder', { recovery })} variant="secondary">
             NECESITO AYUDA
           </PrimaryButton>

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import type { Payment } from '../types';
 import { colors, radius, spacing, typography } from '../theme';
 import { formatMoneyMinor } from '../utils/money';
+import { ReceiptStatusBadge } from './ReceiptStatusBadge';
 
 type Props = {
   payment: Payment;
@@ -10,6 +11,8 @@ type Props = {
 };
 
 export function ReceiptCard({ payment, receiptUnavailable }: Props) {
+  const receiptStatus = receiptUnavailable ? 'unavailable' : payment.receiptStatus;
+
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{payment.providerName}</Text>
@@ -35,9 +38,8 @@ export function ReceiptCard({ payment, receiptUnavailable }: Props) {
         </View>
       ) : null}
       <Text style={styles.folio}>Folio {payment.folio}</Text>
-      {receiptUnavailable ? (
-        <Text style={styles.unavailable}>Comprobante no disponible por ahora.</Text>
-      ) : null}
+      <ReceiptStatusBadge status={receiptStatus} />
+      {payment.isMock ? <Text style={styles.unavailable}>Comprobante mock/dev sin confirmación real de proveedor.</Text> : null}
     </View>
   );
 }

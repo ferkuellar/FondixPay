@@ -1,62 +1,55 @@
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BottomTabBar } from '../../components/BottomTabBar';
 import { EmptyState } from '../../components/EmptyState';
-import { ReceiptCard } from '../../components/ReceiptCard';
+import { ErrorState } from '../../components/ErrorState';
+import { HistoryFilterTabs } from '../../components/HistoryFilterTabs';
+import { LoadingState } from '../../components/LoadingState';
 import { Screen } from '../../components/Screen';
-import { ServiceIconBadge } from '../../components/ServiceIconBadge';
+import { TransactionHistoryCard } from '../../components/TransactionHistoryCard';
 import { usePaymentStore } from '../../store/paymentStore';
-import { colors, radius, spacing, typography } from '../../theme';
+import { spacing } from '../../theme';
+import type { RootStackParamList, TransactionHistoryFilter } from '../../types';
 
-type Filter = 'all' | 'paid' | 'pending';
+type Props = NativeStackScreenProps<RootStackParamList, 'History'>;
 
-export function HistoryScreen() {
+export function HistoryScreen({ navigation }: Props) {
+  const error = usePaymentStore((state) => state.historyError);
+  const isLoading = usePaymentStore((state) => state.isHistoryLoading);
   const payments = usePaymentStore((state) => state.payments);
-  const [filter, setFilter] = useState<Filter>('paid');
+  const [filter, setFilter] = useState<TransactionHistoryFilter>('all');
 
   const filtered = useMemo(() => {
     if (filter === 'all') return payments;
-    if (filter === 'paid') return payments.filter((payment) => payment.status === 'SUCCESS');
-    return [];
+    if (filter === 'pending') return payments.filter((payment) => payment.status === 'pending' || payment.status === 'timeout');
+    if (filter === 'failed') return payments.filter((payment) => payment.status === 'failed' || payment.status === 'duplicate_blocked');
+    return payments.filter((payment) => payment.status === 'succeeded');
   }, [filter, payments]);
 
   return (
     <Screen padded={false} style={styles.screen}>
-      <View style={styles.tabs}>
-        {(
-          [
-            ['all', 'Todos'],
-            ['paid', 'Pagados'],
-            ['pending', 'Pendientes'],
-          ] as const
-        ).map(([key, label]) => (
-          <Pressable
-            key={key}
-            onPress={() => setFilter(key)}
-            style={[styles.tab, filter === key && styles.tabActive]}
-          >
-            <Text style={[styles.tabText, filter === key && styles.tabTextActive]}>{label}</Text>
-          </Pressable>
-        ))}
-      </View>
+      <HistoryFilterTabs onSelect={setFilter} selected={filter} />
 
       <ScrollView contentContainerStyle={styles.scroll}>
-        {filtered.length === 0 ? (
+        {isLoading ? <LoadingState message="Cargando historial..." /> : null}
+        {error ? <ErrorState message={error} /> : null}
+        {!isLoading && !error && filtered.length === 0 ? (
           <EmptyState
-            message={filter === 'pending' ? 'No tienes pagos pendientes por ahora.' : 'Aquí aparecerán tus pagos.'}
-            title="Sin movimientos"
+            message={filter === 'all' ? 'Aquí aparecerán tus pagos mock, pendientes y fallidos.' : 'No hay registros para este filtro.'}
+            title="Sin historial"
           />
-        ) : (
+        ) : null}
+        {!isLoading && !error ? (
           filtered.map((payment, index) => (
-            <View key={payment.id} style={styles.row}>
-              <ServiceIconBadge category="OTHER" size={40} />
-              <View style={styles.rowBody}>
-                <ReceiptCard payment={payment} receiptUnavailable={index === 0} />
-              </View>
-            </View>
+            <TransactionHistoryCard
+              key={`${payment.id}-${index}`}
+              onPress={() => navigation.navigate('ReceiptDetail', { paymentId: payment.id })}
+              payment={payment}
+            />
           ))
-        )}
+        ) : null}
       </ScrollView>
       <BottomTabBar active="History" />
     </Screen>
@@ -64,13 +57,6 @@ export function HistoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    gap: spacing.md,
-  },
-  rowBody: {
-    flex: 1,
-  },
   screen: {
     flex: 1,
   },
@@ -78,28 +64,5 @@ const styles = StyleSheet.create({
     gap: spacing.lg,
     padding: spacing.xl,
     paddingBottom: spacing.xxxl,
-  },
-  tab: {
-    backgroundColor: colors.bgSubtle,
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
-  },
-  tabActive: {
-    backgroundColor: colors.successSoft,
-  },
-  tabText: {
-    ...typography.bodySmall,
-    color: colors.textPrimary,
-  },
-  tabTextActive: {
-    color: colors.success,
-    fontWeight: '700',
-  },
-  tabs: {
-    flexDirection: 'row',
-    gap: spacing.sm,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
   },
 });

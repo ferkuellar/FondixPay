@@ -404,3 +404,19 @@ Required fields when applicable:
 - `correlation_id`
 - `actor_id`
 - `timestamp`
+## Phase 7 History And Receipt Events
+
+The following events are required for the future backend history/receipt projection:
+
+| Event | Current status | Notes |
+|---|---|---|
+| `receipt.viewed` | future | Receipt list or summary viewed by user. |
+| `receipt.detail_viewed` | future | Detail view with safe identifiers only. |
+| `history.viewed` | future | History surface opened. |
+| `history.filtered` | future | Status filter used. |
+| `receipt.unavailable` | future | Receipt absent after an attempt or generation failure. |
+| `receipt.generated` | implemented for backend mock success | Existing receipt generation audit path. |
+| `receipt.download_requested` | future | Real download proof flow not implemented. |
+| `receipt.share_requested` | future | Real share flow not implemented. |
+
+All events must preserve actor, entity, request/correlation identifiers, safe receipt/payment references, and redacted metadata.

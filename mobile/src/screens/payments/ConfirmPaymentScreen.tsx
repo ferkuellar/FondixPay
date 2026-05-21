@@ -24,6 +24,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
   const createRecoveryContext = usePaymentStore((state) => state.createRecoveryContext);
   const mockScenario = usePaymentStore((state) => state.mockScenario);
   const payService = usePaymentStore((state) => state.payService);
+  const recordRecoveryAttempt = usePaymentStore((state) => state.recordRecoveryAttempt);
   const setMockScenario = usePaymentStore((state) => state.setMockScenario);
   const selectedPaymentMethod = usePaymentMethodStore((state) => state.getSelectedPaymentMethod());
   const [isPaying, setIsPaying] = useState(false);
@@ -66,6 +67,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
       try {
         if (mockScenario === 'failed' || mockScenario === 'duplicate_blocked') {
           const recovery = createRecoveryContext(route.params.serviceId, mockScenario);
+          recordRecoveryAttempt(recovery);
           setIsPaying(false);
           navigation.replace('PaymentFailed', { recovery });
           return;
@@ -73,6 +75,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
 
         if (mockScenario === 'pending' || mockScenario === 'timeout') {
           const recovery = createRecoveryContext(route.params.serviceId, mockScenario);
+          recordRecoveryAttempt(recovery);
           setIsPaying(false);
           navigation.replace('PaymentPending', { recovery });
           return;
@@ -84,6 +87,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
       } catch {
         setIsPaying(false);
         const recovery = createRecoveryContext(route.params.serviceId, 'failed');
+        recordRecoveryAttempt(recovery);
         navigation.replace('PaymentFailed', { recovery });
       }
     }, 700);

@@ -15,6 +15,7 @@ export type RootStackParamList = {
   PaymentPending: { recovery: PaymentRecoveryContext };
   SupportPlaceholder: { recovery: PaymentRecoveryContext };
   PaymentSuccess: { paymentId: string };
+  ReceiptDetail: { paymentId: string };
   History: undefined;
   Profile: undefined;
 };
@@ -69,6 +70,12 @@ export type PaymentRecoveryContext = {
   correlationId?: string;
 };
 
+export type PaymentDisplayStatus = 'succeeded' | 'failed' | 'pending' | 'timeout' | 'duplicate_blocked';
+
+export type ReceiptStatus = 'generated' | 'pending' | 'unavailable' | 'voided';
+
+export type TransactionHistoryFilter = 'all' | 'succeeded' | 'pending' | 'failed';
+
 export type Provider = {
   id: string;
   name: string;
@@ -105,7 +112,13 @@ export type Payment = {
   paymentMethodId?: string;
   paymentMethodLabel?: string;
   paymentMethodIsMock?: boolean;
-  status: 'SUCCESS';
+  status: PaymentDisplayStatus;
+  receiptStatus: ReceiptStatus;
+  receiptId?: string;
+  movementId?: number;
+  mockReference: string;
+  correlationId?: string;
+  requestId?: string;
   paidAt: string;
   folio: string;
 };

@@ -2,9 +2,9 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 5D - Payment Method Strategy (completed).
+Current phase: Phase 7 - Movements, Receipts & Transaction History Hardening (completed for mock/dev mobile projection).
 
-Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, mock/dev fee transparency, and documented payment method strategy. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
+Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, mock/dev fee transparency, explicit mock payment methods, recovery UX, demo balance/movements, and hardened mobile history/receipt detail semantics. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
 ## Phase Status
 
@@ -134,3 +134,13 @@ Prontipagos is not integrated. It is only a future provider/aggregator candidate
 - Prontipagos remains not integrated.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 7 — Movements, Receipts & Transaction History Hardening.
+
+# Phase 7 — Movements, Receipts & Transaction History Hardening
+
+- Current phase: Phase 7 — Movements, Receipts & Transaction History Hardening.
+- Status: implemented for mobile mock/dev history filters, recovery-attempt history projection, and receipt detail certainty copy.
+- This phase hardens history, receipts, and demo movement references without connecting real provider confirmation.
+- Real payments remain blocked.
+- Prontipagos remains not integrated.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 8 — Simulated Payments, Charges & Transfers Hardening.

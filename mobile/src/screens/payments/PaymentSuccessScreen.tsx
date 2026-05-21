@@ -52,7 +52,12 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
           </>
         ) : null}
         <View style={styles.actions}>
-          <PrimaryButton onPress={() => navigation.replace('History')} variant="secondary">
+          <PrimaryButton
+            onPress={() =>
+              payment ? navigation.replace('ReceiptDetail', { paymentId: payment.id }) : navigation.replace('History')
+            }
+            variant="secondary"
+          >
             VER COMPROBANTE
           </PrimaryButton>
           <PrimaryButton onPress={() => navigation.replace('Home')}>LISTO</PrimaryButton>

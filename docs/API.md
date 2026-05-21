@@ -439,3 +439,14 @@ The following endpoints are implemented for authenticated demo/mock use:
 `GET /account/balance` returns `available_minor`, `pending_minor`, `held_minor`, `simulated_minor`, `currency`, `is_demo=true`, `is_real_money=false`, `label`, `disclaimer`, and `as_of`.
 
 `POST /account/demo-credit`, statements, holds, and real balance operations remain future/proposed.
+## Phase 7 Payment History And Receipt Projection
+
+Phase 7 keeps runtime history hardening in the mobile mock/dev projection. The current backend `GET /payments` and `GET /receipts` endpoints remain authenticated and continue to expose persisted successful mock payment and generated receipt records.
+
+Mobile history now expects explicit display concepts:
+- payment display status: `succeeded`, `pending`, `timeout`, `failed`, `duplicate_blocked`
+- receipt status: `generated`, `pending`, `unavailable`, `voided`
+- amount breakdown: `amount_minor`, `fee_minor`, `total_minor`, `currency`
+- safe trace labels: payment id, receipt id when present, mock reference, `request_id` or `correlation_id` when available
+
+Future provider-backed history APIs must expose receipt status and must not mark `payment_pending_confirmation`, `provider_timeout`, `payment_failed`, `duplicate_payment_attempt`, or `receipt_unavailable` responses as provider-confirmed success.
