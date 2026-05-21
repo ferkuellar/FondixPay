@@ -516,3 +516,26 @@ Conceptual request:
 Safe response fields include `payment_id`, `status`, `card_status`, `service_payment_status`, `receipt_status`, amount/fee/total minor units, `currency`, mock/sandbox flags, safe card/provider references, `correlation_id`, and safe `message`.
 
 Implemented sandbox scenarios are controlled mocks. The API never accepts PAN or CVV and never returns raw provider payloads or secrets.
+
+## Phase 9 Receipt Proof APIs
+
+The following owner-scoped endpoints are implemented and require bearer auth:
+
+| Endpoint | Purpose | Notes |
+|---|---|---|
+| `GET /receipts` | List generated current-user receipts. | Existing list contract remains compatible. |
+| `GET /receipts/{receipt_id}` | Read safe receipt proof detail. | Emits `receipt.viewed`; `404` for another user. |
+| `GET /payments/{payment_id}/proof` | Read safe proof from a current-user payment, including pending/unavailable states. | Emits `proof.viewed`; `404` for another user. |
+
+Proof response fields include `payment_id`, nullable `receipt_id`, service/provider labels, masked service reference, `amount_minor`, `fee_minor`, `total_minor`, `currency`, `payment_status`, `provider_status`, `receipt_status`, `proof_status`, safe card label, safe internal/provider/correlation references, mock/sandbox flags, issued/confirmed timestamps, unavailable reason, and disclaimer.
+
+`proof_status=confirmed` requires succeeded payment plus provider-confirmed or mock-confirmed evidence. Pending, timeout, failed, and unknown provider states do not become confirmed proof.
+
+## Phase 9 In-App Notification APIs
+
+| Endpoint | Purpose | Auth | Notes |
+|---|---|---|---|
+| `GET /notifications` | List current-user in-app notifications. | required | Returns type, title, message, entity context, read state, timestamp. |
+| `PATCH /notifications/{id}/read` | Mark one current-user notification read. | required | Emits `notification.read`; `404` for another user. |
+
+Push and email delivery remain future channels. Notification bodies must stay safe and must not include PAN, CVV, raw provider payloads, or secrets.

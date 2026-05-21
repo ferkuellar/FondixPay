@@ -1,13 +1,13 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 
 import { EmptyState } from '../../components/EmptyState';
 import { PrimaryButton } from '../../components/PrimaryButton';
-import { ReceiptDetailCard } from '../../components/ReceiptDetailCard';
+import { ReceiptProofCard } from '../../components/ReceiptProofCard';
 import { Screen } from '../../components/Screen';
 import { usePaymentStore } from '../../store/paymentStore';
 import { colors, spacing, typography } from '../../theme';
-import type { RootStackParamList } from '../../types';
+import type { Payment, ReceiptProof, RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ReceiptDetail'>;
 
@@ -31,7 +31,7 @@ export function ReceiptDetailScreen({ navigation, route }: Props) {
   return (
     <Screen padded={false}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <ReceiptDetailCard payment={payment} />
+        <ReceiptProofCard proof={toLocalProof(payment)} />
         {payment.receiptStatus !== 'generated' ? (
           <View style={styles.nextStep}>
             <Text style={styles.nextTitle}>Qué hacer ahora</Text>
@@ -46,13 +46,60 @@ export function ReceiptDetailScreen({ navigation, route }: Props) {
           <PrimaryButton onPress={() => navigation.navigate('History')} variant="secondary">
             VOLVER
           </PrimaryButton>
-          <PrimaryButton disabled onPress={() => undefined} variant="secondary">
-            DESCARGAR PRÓXIMAMENTE
+          <PrimaryButton
+            disabled={payment.receiptStatus !== 'generated'}
+            onPress={() => void shareProof(payment)}
+            variant="secondary"
+          >
+            COMPARTIR COMPROBANTE MOCK
           </PrimaryButton>
         </View>
       </ScrollView>
     </Screen>
   );
+}
+
+function toLocalProof(payment: Payment): ReceiptProof {
+  const receiptPending = payment.receiptStatus === 'pending';
+  const receiptUnavailable = payment.receiptStatus === 'unavailable' || payment.receiptStatus === 'voided';
+  return {
+    id: `local-proof-${payment.id}`,
+    paymentId: payment.id,
+    receiptId: payment.receiptId,
+    serviceName: payment.serviceName,
+    serviceProviderName: payment.providerName,
+    serviceReferenceMasked: 'Referencia guardada',
+    amountMinor: payment.amountMinor,
+    feeMinor: payment.feeMinor,
+    totalMinor: payment.totalMinor,
+    currency: payment.currency,
+    paymentStatus: payment.status,
+    providerStatus: payment.status === 'succeeded' ? 'mock_succeeded' : payment.status,
+    receiptStatus: payment.receiptStatus,
+    proofStatus: receiptPending ? 'pending' : receiptUnavailable ? 'unavailable' : 'confirmed',
+    cardLabelSafe: payment.paymentMethodLabel,
+    providerReference: payment.mockReference,
+    internalReference: payment.folio,
+    correlationId: payment.correlationId,
+    isMock: true,
+    isSandbox: false,
+    issuedAt: payment.paidAt,
+    confirmedAt: payment.status === 'succeeded' ? payment.paidAt : undefined,
+    disclaimer: 'Comprobante mock/dev. No es comprobante fiscal ni confirmacion productiva.',
+  };
+}
+
+async function shareProof(payment: Payment) {
+  await Share.share({
+    message: [
+      'FondixPay - comprobante mock/dev',
+      `Servicio: ${payment.providerName} - ${payment.serviceName}`,
+      `Total: ${payment.currency} ${(payment.totalMinor / 100).toFixed(2)}`,
+      `Estado: ${payment.status}`,
+      `Referencia: ${payment.folio}`,
+      'No es comprobante fiscal ni confirmacion productiva.',
+    ].join('\n'),
+  });
 }
 
 const styles = StyleSheet.create({

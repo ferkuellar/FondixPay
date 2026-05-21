@@ -17,6 +17,7 @@ Updated: 2026-05-20
 | CP-011 | SEV-1 | Tests | Tests for no PAN/CVV | Phase 8C | implemented for sandbox contracts |
 | CP-012 | SEV-2 | Support | Admin/support card metadata view | Admin/support phase | pending |
 | CP-013 | SEV-2 | Operations | Card processor outage runbook | Phase 8C / operations | pending |
+| CP-014 | SEV-2 | Receipts | Carry safe card metadata into proof only after tokenization contract | provider receipt phase | partial safe label only |
 
 ## Boundary
 

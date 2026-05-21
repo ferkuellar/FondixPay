@@ -16,6 +16,7 @@ export type RootStackParamList = {
   SupportPlaceholder: { recovery: PaymentRecoveryContext };
   PaymentSuccess: { paymentId: string };
   ReceiptDetail: { paymentId: string };
+  Notifications: undefined;
   History: undefined;
   Profile: undefined;
 };
@@ -73,6 +74,56 @@ export type PaymentRecoveryContext = {
 export type PaymentDisplayStatus = 'succeeded' | 'failed' | 'pending' | 'timeout' | 'duplicate_blocked';
 
 export type ReceiptStatus = 'generated' | 'pending' | 'unavailable' | 'voided';
+export type ProofStatus = 'confirmed' | 'pending' | 'review' | 'unavailable';
+export type NotificationStatus = 'read' | 'unread';
+export type NotificationType =
+  | 'general'
+  | 'payment.succeeded'
+  | 'payment.pending'
+  | 'payment.failed'
+  | 'payment.timeout'
+  | 'receipt.generated'
+  | 'receipt.pending'
+  | 'receipt.unavailable';
+
+export type ReceiptProof = {
+  id: string;
+  paymentId: string;
+  receiptId?: string;
+  serviceName: string;
+  serviceProviderName: string;
+  serviceReferenceMasked: string;
+  amountMinor: number;
+  feeMinor: number;
+  totalMinor: number;
+  currency: string;
+  paymentStatus: string;
+  providerStatus: string;
+  receiptStatus: ReceiptStatus;
+  proofStatus: ProofStatus;
+  cardLabelSafe?: string;
+  cardLast4?: string;
+  providerReference?: string;
+  internalReference: string;
+  correlationId?: string;
+  isMock: boolean;
+  isSandbox: boolean;
+  issuedAt: string;
+  confirmedAt?: string;
+  disclaimer: string;
+  unavailableReason?: string;
+};
+
+export type NotificationItem = {
+  id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  entityType?: string;
+  entityId?: string;
+  status: NotificationStatus;
+  createdAt: string;
+};
 
 export type TransactionHistoryFilter = 'all' | 'succeeded' | 'pending' | 'failed';
 

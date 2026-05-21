@@ -8,6 +8,9 @@ from app.modules.payments import repository
 from app.modules.payments.schemas import PaymentCreate, PaymentRead, SandboxPaymentCreate, SandboxPaymentRead
 from app.modules.payments.orchestrator import process_sandbox_payment
 from app.modules.payments.services import pay_service
+from app.modules.audit.services import create_audit_event
+from app.modules.receipts.schemas import ReceiptProofRead
+from app.modules.receipts.services import build_payment_proof
 from app.modules.users.models import User
 
 router = APIRouter()
@@ -62,4 +65,28 @@ def create_sandbox_payment(
         correlation_id=result.intent.correlation_id,
         message=result.message,
     )
+
+
+@router.get("/{payment_id}/proof", response_model=ReceiptProofRead)
+def get_payment_proof(
+    payment_id: int,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    proof = build_payment_proof(db, payment_id, current_user.id)
+    context = get_request_context(request)
+    create_audit_event(
+        db,
+        event_type="proof.viewed",
+        actor_type="USER",
+        actor_id=current_user.id,
+        entity_type="Payment",
+        entity_id=payment_id,
+        metadata={"proof_status": proof.proof_status, "receipt_status": proof.receipt_status},
+        request_id=context.request_id,
+        correlation_id=proof.correlation_id,
+    )
+    db.commit()
+    return proof
 

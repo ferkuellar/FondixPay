@@ -19,6 +19,7 @@ import { PaymentMethodsScreen } from '../screens/payments/PaymentMethodsScreen';
 import { PaymentPendingScreen } from '../screens/payments/PaymentPendingScreen';
 import { PaymentSuccessScreen } from '../screens/payments/PaymentSuccessScreen';
 import { ReceiptDetailScreen } from '../screens/payments/ReceiptDetailScreen';
+import { NotificationsScreen } from '../screens/notifications/NotificationsScreen';
 import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { AddServiceScreen } from '../screens/services/AddServiceScreen';
 import { ServiceDetailScreen } from '../screens/services/ServiceDetailScreen';
@@ -110,6 +111,7 @@ export function AppNavigator() {
             options={{ headerBackVisible: false, title: 'Listo' }}
           />
           <Stack.Screen name="ReceiptDetail" component={ReceiptDetailScreen} options={{ title: 'Detalle' }} />
+          <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ title: 'Notificaciones' }} />
           <Stack.Screen name="History" component={HistoryScreen} options={{ title: 'Historial' }} />
           <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil' }} />
         </>

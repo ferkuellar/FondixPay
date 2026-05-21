@@ -288,6 +288,32 @@ def process_sandbox_payment(
             request_id=context.request_id,
             correlation_id=intent.correlation_id,
         )
+        receipt_event = "receipt.pending" if overall_status == "manual_review_required" else "receipt.unavailable"
+        create_audit_event(
+            db,
+            event_type=receipt_event,
+            actor_type="SYSTEM",
+            entity_type="Payment",
+            entity_id=payment.id,
+            result="pending" if receipt_event == "receipt.pending" else "failure",
+            metadata={"sandbox": True, "card_status": card_response.status},
+            request_id=context.request_id,
+            correlation_id=intent.correlation_id,
+        )
+        create_notification(
+            db,
+            user_id,
+            (
+                f"Comprobante pendiente para {user_service.alias}"
+                if overall_status == "manual_review_required"
+                else f"No se genero comprobante confirmado para {user_service.alias}"
+            ),
+            notification_type="payment.timeout" if card_response.status == "timeout" else "payment.failed",
+            title="Pago sandbox en revision" if overall_status == "manual_review_required" else "Pago sandbox no completado",
+            entity_type="Payment",
+            entity_id=payment.id,
+            correlation_id=intent.correlation_id,
+        )
         db.commit()
         db.refresh(payment)
         return SandboxPaymentResult(
@@ -408,7 +434,16 @@ def process_sandbox_payment(
             request_id=context.request_id,
             correlation_id=intent.correlation_id,
         )
-        create_notification(db, user_id, f"Pago sandbox confirmado para {user_service.alias}")
+        create_notification(
+            db,
+            user_id,
+            f"Pago sandbox confirmado para {user_service.alias}",
+            notification_type="payment.succeeded",
+            title="Comprobante sandbox disponible",
+            entity_type="Payment",
+            entity_id=payment.id,
+            correlation_id=intent.correlation_id,
+        )
         user_service.amount_due = Decimal("0.00")
         db.commit()
         db.refresh(payment)
@@ -462,6 +497,35 @@ def process_sandbox_payment(
             "service_payment_status": service_response.status,
             "error_code": service_response.error_code,
         },
+    )
+    create_audit_event(
+        db,
+        event_type="receipt.pending" if payment.status == PaymentStatus.PENDING else "receipt.unavailable",
+        actor_type="SYSTEM",
+        entity_type="Payment",
+        entity_id=payment.id,
+        result="pending" if payment.status == PaymentStatus.PENDING else "failure",
+        metadata={"sandbox": True, "service_payment_status": service_response.status},
+        request_id=context.request_id,
+        correlation_id=intent.correlation_id,
+    )
+    if payment.status == PaymentStatus.PENDING:
+        notification_type = "payment.timeout" if service_response.status == "provider_timeout" else "payment.pending"
+        notification_title = "Pago sandbox pendiente"
+        notification_message = f"Comprobante pendiente para {user_service.alias}"
+    else:
+        notification_type = "receipt.unavailable"
+        notification_title = "Comprobante no disponible"
+        notification_message = f"No se genero comprobante confirmado para {user_service.alias}"
+    create_notification(
+        db,
+        user_id,
+        notification_message,
+        notification_type=notification_type,
+        title=notification_title,
+        entity_type="Payment",
+        entity_id=payment.id,
+        correlation_id=intent.correlation_id,
     )
     db.commit()
     db.refresh(payment)

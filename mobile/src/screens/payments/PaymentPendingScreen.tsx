@@ -30,6 +30,7 @@ export function PaymentPendingScreen({ navigation, route }: Props) {
         <View style={styles.status}>
           <Text style={styles.statusLabel}>Estado mock/dev</Text>
           <Text style={styles.statusValue}>{isTimeout ? 'En verificación' : 'Pendiente de confirmación'}</Text>
+          <Text style={styles.statusHint}>Comprobante pendiente. No hay confirmacion de proveedor.</Text>
         </View>
         <PaymentRecoverySummary recovery={recovery} />
         <View style={styles.actions}>
@@ -87,6 +88,10 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.textPrimary,
     fontWeight: '700',
+  },
+  statusHint: {
+    ...typography.caption,
+    color: colors.textSecondary,
   },
   title: {
     ...typography.title,

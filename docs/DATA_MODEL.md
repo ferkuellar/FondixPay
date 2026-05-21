@@ -458,3 +458,18 @@ Rules:
 - Implemented/partial: provider response evidence uses hash fields already present on provider transactions.
 - Pending: dedicated `CardPaymentAttempt`, `ServicePaymentAttempt`, status-check, webhook-event, and reconciliation execution models.
 - Pending: admin/manual-review records beyond sandbox `payment.manual_review_required` audit events.
+
+## Phase 9 Receipt Proof Projection
+
+`ReceiptProof` is a response projection, not a fiscal record. It joins safe fields from payment, optional receipt, payment intent, user service/provider, service-payment provider transaction, and correlation metadata.
+
+| Field Group | Fields |
+|---|---|
+| Breakdown | `amount_minor`, `fee_minor`, `total_minor`, `currency` |
+| State | `payment_status`, `provider_status`, `receipt_status`, `proof_status`, `unavailable_reason` |
+| Safe support references | `payment_id`, nullable `receipt_id`, `internal_reference`, nullable `provider_reference`, nullable `correlation_id` |
+| User display | service/provider name, masked service reference, safe card label, issued/confirmed timestamps, mock/sandbox disclaimer |
+
+Receipt statuses remain `generated`, `pending`, `unavailable`, and future `voided`. Proof statuses are `confirmed`, `pending`, `review`, and `unavailable`.
+
+Notification storage now includes `type`, `title`, nullable related `entity_type`/`entity_id`, read flag, and creation time. It is still an in-app baseline; push/email delivery records remain future.

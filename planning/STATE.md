@@ -2,7 +2,7 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 8A - Card Processor Sandbox Design.
+Current phase: Phase 9 - Notifications, Receipts & Proof of Payment.
 
 Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, mock/dev fee transparency, explicit mock payment methods, recovery UX, demo balance/movements, and hardened mobile history/receipt detail semantics. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
@@ -23,8 +23,11 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Phase 5F - Payment Recovery Paths: completed for mock/dev recovery UX plus blueprint.
 - Phase 6A/6B - Account and Demo Balance: completed for design/demo scope.
 - Phase 7 - Movements, Receipts & Transaction History Hardening: completed for mock/dev mobile projection.
-- Phase 8A - Card Processor Sandbox Design: current design/documentation phase.
-- Next recommended phase: Phase 8B - Prontipagos Sandbox Integration Design.
+- Phase 8A - Card Processor Sandbox Design: completed.
+- Phase 8B - Prontipagos Sandbox Integration Design: completed.
+- Phase 8C - Sandbox Integration Implementation: completed for contractual mock backend orchestration.
+- Phase 9 - Notifications, Receipts & Proof of Payment: implemented for mock/sandbox receipt proof and in-app notifications.
+- Next recommended phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
 
 ## What Exists
 
@@ -177,3 +180,11 @@ Prontipagos is not integrated. It is the next separate sandbox design leg after 
 - Real money remains blocked.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 9 - Notifications, Receipts & Proof of Payment.
+
+# Phase 9 - Notifications, Receipts & Proof of Payment
+
+- Current phase: Phase 9 - Notifications, Receipts & Proof of Payment.
+- This phase hardens in-app notifications, receipt detail, and proof-of-payment semantics for mock/sandbox states.
+- Real payments remain blocked.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.

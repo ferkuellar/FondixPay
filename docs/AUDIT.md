@@ -506,3 +506,23 @@ Implemented for the contractual mock orchestration:
 - existing `receipt.generated`
 
 Tokenization, webhook, reconciliation, admin/manual-review UI events, and real-provider event catalogs remain pending.
+
+## Phase 9 Receipt Proof And Notification Audit
+
+Implemented baseline events:
+
+- `receipt.generated`
+- `receipt.pending`
+- `receipt.unavailable`
+- `receipt.viewed`
+- `proof.viewed`
+- `notification.created`
+- `notification.read`
+
+Documented future receipt/notification events:
+
+- `proof.shared_requested`
+- receipt artifact download events when a real download path exists
+- `notification.delivery_failed_future` for future push/email providers
+
+Metadata must keep status and support-safe identifiers only. Sharing from the current mobile local mock proof does not yet create a durable backend share event.

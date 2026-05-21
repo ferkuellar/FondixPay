@@ -21,3 +21,5 @@ Updated: 2026-05-20
 | LA-015 | SEV-2 | Admin/Audit | Implement admin/auditor read endpoints | Later admin/audit phase | Open |
 | LA-016 | SEV-2 | Security | Implement redaction/hashing for provider payloads | Phase 5E - Prontipagos Sandbox Integration Design | Partial - audit writer redacts sensitive fields; provider payload storage remains future |
 | LA-017 | SEV-2 | Providers | Implement Prontipagos adapter later | Provider sandbox phase after design gates | Partial - contractual sandbox mock adapter implemented in Phase 8C |
+| LA-018 | SEV-2 | Proof/Audit | Receipt/proof viewed and notification read events | Phase 9 | Implemented baseline |
+| LA-019 | SEV-2 | Proof/Audit | Proof share/download durable audit path | Future receipt artifact phase | Open |

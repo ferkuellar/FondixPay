@@ -21,3 +21,5 @@
 | PP-017 | HIGH | Testing | Implement tests. | 8C | implemented for contractual mocks |
 | PP-018 | HIGH | Admin | Implement admin reconciliation view. | later | pending |
 | PP-019 | HIGH | Operations | Implement support runbooks. | 8C/later | pending |
+| PP-020 | HIGH | Receipts | Confirm official provider receipt/folio confirmation rules. | provider contract | pending |
+| PP-021 | HIGH | UX | Keep proof pending until provider confirmation evidence exists. | 9/provider | implemented for mock proof |

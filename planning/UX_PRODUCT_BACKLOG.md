@@ -70,3 +70,12 @@ Updated: 2026-05-20
 | UX-HIST-004 | SEV-2 | Receipt proof clarity | Comprobante mock podía parecer confirmación real | 7 | improved |
 | UX-HIST-005 | SEV-3 | Descargar/compartir comprobante | Prueba portable aún no existe | Future receipt phase | pending |
 | UX-HIST-006 | SEV-3 | Soporte desde recibo | Aclaración requiere flujo operativo | Future support phase | pending |
+
+# Phase 9 Receipt Proof And Notification Backlog Update
+
+| ID | Severidad | Hallazgo | Impacto | Fase sugerida | Estado |
+|---|---|---|---|---|---|
+| UX-PROOF-001 | SEV-2 | Proof de recibo con estados exactos | Evita falsa confirmacion | 9 | implemented mock/sandbox |
+| UX-PROOF-002 | SEV-2 | Notificaciones in-app de estado | Usuario entiende pendiente/fallo | 9 | implemented |
+| UX-PROOF-003 | SEV-3 | Push/email | Confirmacion fuera de app | future notifications | pending |
+| UX-PROOF-004 | SEV-3 | PDF/download | Evidencia portable | future receipt phase | pending |

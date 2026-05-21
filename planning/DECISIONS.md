@@ -677,3 +677,33 @@ Status: Accepted.
 Decision: When official sandbox documentation or credentials are absent, documented contractual mocks with tests are acceptable and must not be represented as real integrations.
 
 Status: Accepted.
+
+## ADR-092 — Receipt confirmation requires valid payment/provider state
+
+Decision: FondixPay must not show confirmed proof when the payment or provider state is pending, failed, timeout, or unknown.
+
+Status: Accepted.
+
+## ADR-093 — Proof of payment must include fee breakdown and status
+
+Decision: Every proof must show service amount, fee, total, currency, state, and a support-safe reference.
+
+Status: Accepted.
+
+## ADR-094 — Mock/sandbox receipts must be labeled
+
+Decision: Mock/sandbox receipts must say they are not production confirmation or fiscal proof.
+
+Status: Accepted.
+
+## ADR-095 — Notifications must reflect exact payment state
+
+Decision: Notifications must distinguish confirmed, pending, failed, timeout, and unavailable receipt states.
+
+Status: Accepted.
+
+## ADR-096 — Support-safe references are required
+
+Decision: Receipt and payment status surfaces expose safe references such as payment id, receipt id, correlation id, and provider reference when applicable.
+
+Status: Accepted.

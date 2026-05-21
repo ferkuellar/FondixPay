@@ -46,7 +46,9 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
         <PaymentRecoverySummary recovery={recovery} />
         <View style={styles.notice}>
           <Text style={styles.noticeTitle}>Siguiente acción</Text>
-          <Text style={styles.noticeText}>Puedes reintentar de forma segura o cambiar la tarjeta demo antes de pagar.</Text>
+          <Text style={styles.noticeText}>
+            No se generó comprobante confirmado. Puedes reintentar de forma segura o cambiar la tarjeta demo antes de pagar.
+          </Text>
         </View>
         <View style={styles.actions}>
           <PrimaryButton onPress={retry}>INTENTAR DE NUEVO</PrimaryButton>

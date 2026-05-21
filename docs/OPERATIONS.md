@@ -320,3 +320,24 @@ Future metrics:
 - Card failure, pending, or timeout means Prontipagos is not called.
 - Support investigation for sandbox traces should use `correlation_id`, safe provider references, attempts, provider transactions, and audit events.
 - These sandbox states do not replace the future manual-review queue, provider status checks, reconciliation job, outage metrics, or production runbooks.
+
+## Phase 9 Receipt Proof Runbooks
+
+- User asks "where is my receipt?": inspect receipt status and safe proof references; confirm whether receipt is generated, pending, or unavailable.
+- Receipt pending: use `correlation_id` and provider status; do not tell the user the service is paid.
+- Receipt unavailable: verify payment/provider state before requesting any regeneration or retry.
+- User says payment was charged but no receipt: treat as review case; collect proof/payment/correlation/provider references without PAN/CVV.
+- Failed payment: state that no confirmed proof exists for the failed attempt.
+- Proof shared with support: use only safe references from proof to locate audit/payment/provider evidence.
+- Future notification delivery failure: keep in-app state truthful and record provider delivery failure when push/email exists.
+
+Future metrics:
+
+- `receipt_generated_count`
+- `receipt_pending_count`
+- `receipt_unavailable_count`
+- `proof_view_count`
+- `proof_share_count`
+- `notification_created_count`
+- `notification_read_rate`
+- `support_from_receipt_count`

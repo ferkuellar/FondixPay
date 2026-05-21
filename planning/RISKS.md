@@ -218,3 +218,17 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | SEV-1 | Real credentials missing | Blocks real integration | Provision secrets only after contract review. |
 | SEV-1 | Webhooks missing | Pending | Implement signed provider events when contracts exist. |
 | SEV-1 | Reconciliation missing | Pending | Implement reports/status reconciliation and review records. |
+
+# Phase 9 Notifications Receipt Proof Risks
+
+| Severity | Risk | Status After 9 | Next Action |
+|---|---|---|---|
+| SEV-1 | False confirmed receipt | Mitigated in proof mapping | Preserve provider confirmation gate in real adapters. |
+| SEV-1 | Pending shown as success | Mitigated | Keep notification and mobile status copy exact. |
+| SEV-1 | Timeout shown as success | Mitigated | Resolve through status/review, never inferred success. |
+| SEV-2 | User has no proof after payment state | Reduced | Proof surface and pending/unavailable states exist. |
+| SEV-2 | Support lacks reference | Reduced | Proof includes payment, receipt, correlation, and safe provider references. |
+| SEV-2 | Proof omits fee breakdown | Mitigated | Proof exposes amount, fee, total, and currency. |
+| SEV-1 | Sensitive card data in proof | Mitigated for current path | Keep only safe method labels/last4 when approved. |
+| SEV-2 | Misleading notification content | Reduced | Typed in-app notifications distinguish state. |
+| SEV-1 | Mock/sandbox confused with production | Reduced | Proof and mobile disclaimer remain explicit. |

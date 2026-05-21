@@ -20,8 +20,8 @@ Current practical position:
 - Phase 5C: completed as fee transparency baseline.
 - Phase 5D: completed as card payment method strategy.
 - Phase 5E: completed as card payment UX mock implementation.
-- Current phase: Phase 8A - Card Processor Sandbox Design.
-- Recommended next phase: Phase 8B - Prontipagos Sandbox Integration Design.
+- Current phase: Phase 9 - Notifications, Receipts & Proof of Payment.
+- Recommended next phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
 
 Before any real payment provider implementation, the project must preserve ledger/audit, idempotency, fee transparency, card payment method strategy, payment recovery paths, card processor sandbox design, Prontipagos sandbox design, support/receipt proof, and provider-selection gates. Real payments remain blocked.
 

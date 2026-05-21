@@ -341,3 +341,18 @@ Backend coverage added:
 - Duplicate sandbox idempotency reuses existing provider attempts.
 - `POST /payments/sandbox` still requires auth.
 - Card contracts omit PAN/CVV.
+
+## Phase 9 Receipt Proof And Notification Validation
+
+- [x] Confirmed receipt/proof requires confirmed success evidence.
+- [x] Pending receipt is not shown as confirmed.
+- [x] Timeout is not success.
+- [x] Failed payment has no confirmed proof.
+- [x] Proof includes amount, fee, total, and currency.
+- [x] Proof includes payment/provider/receipt/proof state.
+- [x] Proof includes safe support references.
+- [x] Proof response and mobile proof surface label mock/sandbox behavior.
+- [x] Proof and notifications do not expose PAN/CVV.
+- [x] Notification list/read endpoints require auth and current-user scope.
+- [x] Backend compile/tests pass.
+- [x] Mobile typecheck passes.

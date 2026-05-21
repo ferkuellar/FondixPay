@@ -139,7 +139,16 @@ def pay_service(
         request_id=context.request_id,
         correlation_id=intent.correlation_id,
     )
-    create_notification(db, user_id, f"Ya quedo pagado {user_service.alias}")
+    create_notification(
+        db,
+        user_id,
+        f"Ya quedo pagado {user_service.alias}",
+        notification_type="payment.succeeded",
+        title="Pago mock confirmado",
+        entity_type="Payment",
+        entity_id=payment.id,
+        correlation_id=intent.correlation_id,
+    )
     user_service.amount_due = Decimal("0.00")
     db.commit()
     db.refresh(payment)

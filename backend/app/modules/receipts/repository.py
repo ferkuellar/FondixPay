@@ -20,3 +20,12 @@ def list_for_user(db: Session, user_id: int) -> list[Receipt]:
         .order_by(Receipt.id.desc())
         .all()
     )
+
+
+def get_for_user(db: Session, receipt_id: int, user_id: int) -> Receipt | None:
+    return (
+        db.query(Receipt)
+        .join(Receipt.payment)
+        .filter(Receipt.id == receipt_id, Payment.user_id == user_id)
+        .one_or_none()
+    )

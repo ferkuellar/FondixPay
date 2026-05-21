@@ -258,3 +258,13 @@ Phase 5F mock recovery UI rules:
 - Sandbox card contracts accept token references only and tests verify no PAN/CVV fields.
 - Sandbox provider response evidence is stored through safe references and hashes, not raw payloads.
 - Production remains blocked until official contracts, secret management, webhook/status security, reconciliation, PCI review, and manual-review operations exist.
+
+## Phase 9 Receipt Proof Security
+
+- Receipt proof exposes fee breakdown, status, and support-safe identifiers only.
+- Safe card metadata is limited to safe label and future approved brand/last4; PAN and CVV stay out of proof.
+- Service references are masked in backend proof.
+- Provider raw payloads and secrets are not returned.
+- Mobile sharing uses only mock proof text without sensitive payment credentials.
+- Notification content must not include PAN, CVV, OTP, access token, provider secret, or raw provider payload.
+- Receipt, payment proof, and notification reads are authenticated and current-user scoped.

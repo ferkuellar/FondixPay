@@ -188,3 +188,13 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Amount mismatch UX must require a fresh confirmation before another attempt.
 - Receipt unavailable UX must not imply provider confirmation.
 - Unknown or pending provider status must warn `No intentes pagar de nuevo` until a safe next action exists.
+
+## Phase 9 Receipt Proof And Notification UX
+
+- Treat receipt detail as proof with status, not as a fiscal claim.
+- Status badges must keep payment, provider/service, and receipt certainty distinct.
+- Proof detail keeps fee breakdown, safe card label, issued time, masked service reference, and safe support references visible.
+- Mock/sandbox disclaimer must be visible on proof surfaces and shared text.
+- Sharing/copy UX must exclude sensitive data and avoid legal/fiscal wording.
+- In-app notifications must distinguish confirmed, pending, timeout, failed, generated receipt, pending receipt, and unavailable receipt states.
+- Pending and unavailable proof surfaces must lead with next action and must not use provider-paid language.
