@@ -278,3 +278,27 @@ Completed for mock/dev mobile UX.
 
 ## Next
 Phase 5F — Payment Recovery Paths.
+
+# Phase 6A — Account & Balance Model Design
+
+Status: current/completed as design.
+Objective: define account, demo balance, available/pending/held separation, ledger-derived movements, and real-balance gates without implementing wallet or money movement.
+Deliverables: `docs/ACCOUNT_AND_BALANCE_MODEL.md`, proposed data/API/audit model, backlog for Phase 6B.
+Acceptance: demo vs real balance semantics are explicit and production remains blocked.
+
+# Phase 6B — Simulated Balance Implementation
+
+Status: planned.
+Objective: implement demo balance and ledger-derived/mock movements with explicit non-real-money labeling.
+
+# Phase 6C — Movements UI From Ledger
+
+Status: planned.
+Objective: expose movement list and statement UX from approved ledger/payment projections.
+
+# Phase 6D — Account Status & Restrictions
+
+Status: planned.
+Objective: implement status, restriction, audit, and support behavior for accounts.
+
+Real wallet and real balance remain moved to a future regulated phase after legal/provider/custody decisions.

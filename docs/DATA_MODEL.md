@@ -262,3 +262,62 @@ Rules:
 - Do not store CVV.
 - Token references must be provider-generated.
 - Mock payment methods must not be used for real money.
+
+## Account and Balance Proposed Model
+
+Status: proposed/design only for Phase 6A.
+
+### `accounts`
+- `id`
+- `user_id`
+- `account_type`
+- `status`
+- `currency`
+- `is_demo`
+- `created_at`
+- `updated_at`
+- `closed_at` nullable
+
+### `balance_snapshots`
+- `id`
+- `account_id`
+- `available_minor`
+- `pending_minor`
+- `held_minor`
+- `simulated_minor`
+- `currency`
+- `source`
+- `is_real_money`
+- `is_demo`
+- `as_of`
+- `created_at`
+
+### `movements`
+- `id`
+- `account_id`
+- `ledger_entry_id` nullable
+- `payment_intent_id` nullable
+- `receipt_id` nullable
+- `movement_type`
+- `direction`
+- `amount_minor`
+- `currency`
+- `status`
+- `description`
+- `created_at`
+
+### `account_events`
+- `id`
+- `account_id`
+- `event_type`
+- `actor_id` nullable
+- `metadata_json` nullable
+- `request_id` nullable
+- `correlation_id` nullable
+- `created_at`
+
+### Rules
+- Balance snapshot is derived/cacheable, not the financial source of truth.
+- Ledger entries remain source of financial truth.
+- Demo balance must not mix with real provider settlement.
+- Amounts use integer minor units and explicit currency.

@@ -114,3 +114,17 @@ Updated: 2026-05-20
 | SEV-1 | False success for pending state | Reduced | Pending/timeout route to PaymentPending, not PaymentSuccess. |
 | SEV-2 | Support without real context | Pending | Support placeholder only shows safe mock references until backend/support workflows exist. |
 | SEV-2 | Provider outage/reconciliation/reversal behavior | Pending | Requires real provider mapping and operations work. |
+
+# Phase 6A Account and Balance Risks
+
+| Severity | Risk | Status | Notes |
+|---|---|---|---|
+| SEV-1 | Simulated balance confused with real money | Design mitigated | Required demo labels and no-real-money rules documented. |
+| SEV-1 | Editable/inconsistent balance field | Design mitigated | Balance must derive from ledger/snapshot rules. |
+| SEV-2 | Available incorrectly includes pending | Design mitigated | Available, pending, held are separated by ADR-062. |
+| SEV-2 | Held/pending semantics not visible | Design mitigated | UX and validation rules added. |
+| SEV-1 | Regulatory risk from wallet claims | Open | Real wallet remains blocked pending legal/provider model. |
+| SEV-2 | User claims non-real funds | Open | Demo UX and terms need validation before 6B. |
+| SEV-2 | Movements not traceable | Open | Phase 6B must map movements to ledger/payment facts. |
+| SEV-2 | Account state changes not audited | Open | Audit contract defined; implementation pending. |
+| SEV-2 | Balance mismatch | Open | Calculation tests and investigation runbooks pending. |

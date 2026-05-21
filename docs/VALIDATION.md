@@ -243,3 +243,19 @@ Phase 5F is documentation-only. No runtime tests are required unless code is cha
 - Selected method remains visible in recovery context.
 - User can exit recovery flow without being trapped.
 - `npm run typecheck` passes after mobile changes.
+
+## Account and Balance Validation
+
+- Balance is derived from ledger entries or controlled snapshot rules.
+- Available does not include pending.
+- Held cannot be spent.
+- Failed payment does not change available.
+- Reversed activity compensates prior balance effects.
+- Demo balance is clearly labeled.
+- No floats are used for money.
+- Currency is explicit.
+- User can only read own account and balance.
+- Account status changes emit audit events.
+- Displayed balance equals backend response in future implementation.
+- Mobile shows “Saldo demo” when demo balance is used.
+- Future calculation engine has deterministic tests.

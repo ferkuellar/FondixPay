@@ -408,3 +408,20 @@ Future backend error/status concepts must distinguish:
 - `receipt_unavailable`
 
 Clients must not map `provider_timeout` or `payment_pending_confirmation` to success.
+
+# Future Account and Balance APIs
+
+Phase 6A proposes these endpoints only:
+
+| Endpoint | Purpose | Auth | Future Role | Status |
+|---|---|---|---|---|
+| `GET /account` | Own account metadata | yes | USER owner | proposed |
+| `GET /account/balance` | Own derived balance/snapshot | yes | USER owner | proposed |
+| `GET /account/movements` | Own visible movements | yes | USER owner | proposed |
+| `GET /account/statements` | Statement periods/export metadata | yes | USER owner | proposed |
+| `GET /account/status` | Account restriction/status | yes | USER owner | proposed |
+| `POST /account/demo-credit` | Future dev-only demo credit | yes | INTERNAL/DEV | proposed |
+| `POST /account/hold` | Future internal hold | yes | SYSTEM/FINANCE | proposed |
+| `POST /account/release-hold` | Future internal hold release | yes | SYSTEM/FINANCE | proposed |
+
+Account/balance responses must label demo balance and must not claim real money unless approved production gates exist.

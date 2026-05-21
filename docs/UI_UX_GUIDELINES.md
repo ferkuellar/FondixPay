@@ -131,3 +131,13 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Support entry must use safe references and must not promise real chat when unavailable.
 - Recovery screens must preserve amount, fee, total, and selected method breakdown.
 - User messages must avoid provider jargon and show the next action.
+
+## Account and Balance UX
+
+- Demo balance must use labels such as “Saldo demo” and “No representa dinero real”.
+- Do not show real-money balance copy without approved backend/legal/provider backing.
+- Pending and held amounts must be separated from available display.
+- Movement lists must explain direction, amount, state, and related payment context.
+- Provide empty state when no movements or demo balance exist.
+- Provide error state when balance cannot load.
+- Do not claim custody, regulation, or protected funds unless approved and true.

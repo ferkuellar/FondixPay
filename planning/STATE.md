@@ -113,3 +113,14 @@ Prontipagos is not integrated. It is only a future provider/aggregator candidate
 - Prontipagos remains not integrated.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 6A — Account & Balance Model Design before any simulated balance implementation.
+
+# Phase 6A — Account & Balance Model Design
+
+- Current phase: Phase 6A — Account & Balance Model Design.
+- Status: completed as architecture and documentation design only.
+- This phase defines product account, demo balance, available/pending/held separation, ledger-derived movements, and future account APIs.
+- No wallet real, saldo real, mobile balance UI, funding rail, withdrawal rail, bank integration, or Prontipagos integration was implemented.
+- Commercial production remains blocked.
+- Real payments remain blocked.
+- Real wallet remains blocked.
+- Next recommended phase: Phase 6B — Simulated Balance Implementation.

@@ -213,3 +213,19 @@ Future metrics:
 - `receipt_unavailable_count`
 
 Phase 5F only adds mock/dev recovery UX and a support placeholder; it does not create a real support queue.
+
+# Account and Balance Operations
+
+Future operations must cover:
+- Balance discrepancy handling.
+- Movement investigation from ledger/payment references.
+- Account restriction flow.
+- Suspicious balance change review.
+- Runbook for “mi saldo no coincide”.
+
+Future metrics:
+- `balance_view_count`
+- `movement_count`
+- `account_restricted_count`
+- `balance_discrepancy_count`
+- `demo_balance_usage_count`

@@ -370,3 +370,32 @@ Phase 5F mobile mock implementation status:
 - `receipt.unavailable`: future durable backend event.
 
 The current mobile scenario selector and support placeholder do not count as persistent audit events.
+
+## Phase 6A Account and Balance Events
+
+Future events:
+- `account.created`
+- `account.status_changed`
+- `account.restricted`
+- `account.suspended`
+- `account.closed`
+- `balance.viewed`
+- `balance.snapshot_created`
+- `movement.created`
+- `demo_balance.credit_added`
+- `demo_balance.debit_added`
+- `hold.created`
+- `hold.released`
+- `hold.expired`
+- `adjustment.created`
+
+Required fields when applicable:
+- `account_id`
+- `user_id`
+- `amount_minor`
+- `currency`
+- `before` and `after` for status changes
+- `request_id`
+- `correlation_id`
+- `actor_id`
+- `timestamp`

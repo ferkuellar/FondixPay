@@ -190,3 +190,13 @@ Phase 5F mock recovery UI rules:
 - Safe support references may be shown; secrets and payment credentials may not.
 - Pending/unknown status must not be relabeled as success.
 - Retry safety is represented in mock UX only; provider-grade idempotency remains required before real money.
+
+# Account and Balance Security
+
+- Account, balance, movement, and statement endpoints require authenticated user-scoped access.
+- Demo balances must not be described as real funds.
+- No regulated, custody, or protection claim is allowed before legal/provider approval.
+- Demo and future real balance records must remain separated by explicit flags/source.
+- Account status changes and balance-affecting demo actions require audit events.
+- Admin/auditor balance access requires least privilege and safe read policies.
+- Logs must not leak other-user balance snapshots or sensitive payment/provider data.

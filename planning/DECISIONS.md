@@ -383,3 +383,43 @@ Payment recovery UX must prepare safe mock references now and future `request_id
 
 ## Status
 Accepted.
+
+# ADR-060 — Balance must be derived from ledger
+
+## Decision
+Visible balance must not be an arbitrary editable field. It must derive from ledger entries or a controlled derived snapshot.
+
+## Status
+Accepted.
+
+# ADR-061 — Demo balance must never be confused with real money
+
+## Decision
+Every simulated balance must be flagged and communicated as demo/mock.
+
+## Status
+Accepted.
+
+# ADR-062 — Available, pending and held balances are separate
+
+## Decision
+Available, pending, and held balance concepts must be modeled and displayed separately.
+
+## Status
+Accepted.
+
+# ADR-063 — Account status changes require audit events
+
+## Decision
+Every future account status change must emit an audit event.
+
+## Status
+Accepted.
+
+# ADR-064 — No wallet/real balance without legal and provider model
+
+## Decision
+FondixPay will not implement a real wallet or real balance without legal review, provider/custody model, ledger, audit, and reconciliation.
+
+## Status
+Accepted.
