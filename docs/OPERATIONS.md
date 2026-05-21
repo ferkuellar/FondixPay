@@ -289,3 +289,27 @@ Future metrics:
 - `card_duplicate_blocked_count`
 - `card_chargeback_count`
 - `card_processor_error_rate`
+
+## Prontipagos Operations
+
+Future runbooks:
+
+- provider outage,
+- timeout,
+- invalid reference,
+- amount mismatch,
+- pending transaction,
+- receipt unavailable,
+- duplicate provider transaction,
+- reconciliation mismatch,
+- manual review.
+
+Future metrics:
+
+- `prontipagos_payment_success_rate`
+- `prontipagos_payment_failure_rate`
+- `prontipagos_timeout_rate`
+- `prontipagos_pending_count`
+- `prontipagos_duplicate_blocked_count`
+- `prontipagos_reconciliation_mismatch_count`
+- `prontipagos_receipt_unavailable_count`

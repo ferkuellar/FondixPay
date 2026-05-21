@@ -303,3 +303,17 @@ Phase 5F is documentation-only. No runtime tests are required unless code is cha
 - [ ] User-scoped card methods required.
 - [ ] Card processor separate from Prontipagos.
 - [ ] Production blocked.
+
+## Prontipagos Sandbox Validation
+
+- [ ] No Prontipagos call if card charge failed.
+- [ ] Prontipagos called only after approved card charge success.
+- [ ] Reference validation success/failure documented.
+- [ ] Amount lookup success/failure documented.
+- [ ] Payment execution success/pending/failed/timeout documented.
+- [ ] Idempotency prevents duplicate service payment.
+- [ ] Provider timeout does not equal success.
+- [ ] Receipt only generated after confirmation rules.
+- [ ] Audit events documented.
+- [ ] Provider payloads redacted/hashed.
+- [ ] Reconciliation mismatch detected.

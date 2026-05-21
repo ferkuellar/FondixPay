@@ -179,3 +179,12 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - 3DS/auth challenge remains future.
 - Do not make false security, PCI, or provider claims.
 - Use `No se realizo cargo` copy when the mapped state proves no charge was made.
+
+## Prontipagos Service Payment UX Requirements
+
+- Mobile copy must describe service-payment status without technical Prontipagos jargon.
+- Pending provider confirmation must say the payment is being verified, not paid.
+- Invalid reference UX must ask the user to correct or revalidate the reference.
+- Amount mismatch UX must require a fresh confirmation before another attempt.
+- Receipt unavailable UX must not imply provider confirmation.
+- Unknown or pending provider status must warn `No intentes pagar de nuevo` until a safe next action exists.

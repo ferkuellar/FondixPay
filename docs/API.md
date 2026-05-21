@@ -480,3 +480,19 @@ Status: future/proposed for Phase 8A. These endpoints do not exist yet.
 | `GET /card/charges/{id}` | Read safe charge status. | yes | owner; support/finance later | n/a | No raw provider payload. |
 | `POST /card/webhooks/{provider}` | Receive processor event. | provider signature | provider/system | event id/replay required | Signature verification, replay protection, redaction. |
 | `GET /admin/card/reconciliation` | Review card reconciliation summaries. | yes | `FINANCE`, `ADMIN`, `AUDITOR` | n/a | RBAC and audit required. |
+
+## Future Prontipagos / Service Payment APIs
+
+Status: future/proposed. These endpoints do not exist in the current mock/dev backend.
+
+| Endpoint | Purpose | Auth / Role | Idempotency | Security Notes |
+|---|---|---|---|---|
+| `POST /service-payments/intents` | Prepare service-payment execution context. | authenticated owner | future create key | Preserve amount snapshot and approved card prerequisite evidence. |
+| `POST /service-payments/{id}/execute` | Execute Prontipagos payment. | owner/system | required | Do not call when card charge failed, pending, timeout, or unknown. |
+| `GET /service-payments/{id}/status` | Read normalized service-payment status. | owner | n/a | Return safe status and receipt/support references only. |
+| `POST /service-payments/{id}/retry` | Request safe retry/status recovery. | owner/system | required | Timeout must not create a blind duplicate execution. |
+| `GET /service-providers/catalog` | Read normalized service catalog. | policy to finalize | n/a | No provider secrets. |
+| `POST /service-providers/{id}/validate-reference` | Validate reference. | owner | bounded | Audit safe reference-validation outcome. |
+| `POST /service-providers/{id}/lookup-amount` | Lookup provider amount. | owner | bounded | Detect amount mismatch before execution. |
+| `GET /admin/prontipagos/reconciliation` | Review reconciliation records. | finance/admin future | n/a | RBAC and redaction required. |
+| `POST /admin/prontipagos/reconciliation/run` | Run reconciliation job. | finance/admin/system future | job key future | Audit run and mismatches. |

@@ -185,3 +185,21 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | SEV-1 | Webhook spoofing | Signature/replay strategy documented | Implement verification before trusting events. |
 | SEV-2 | Card processor outage | Operations gap documented | Build outage runbook and metrics. |
 | SEV-1 | Reconciliation mismatch card vs Prontipagos | Separate reconciliation legs defined | Build daily reconciliation and SEV-1 mismatch policy. |
+
+# Phase 8B Prontipagos Sandbox Risks
+
+| Severity | Risk | Current Mitigation | Next Action |
+|---|---|---|---|
+| SEV-1 | Prontipagos API not confirmed | Design uses `TO_CONFIRM` contracts only | Obtain sandbox docs and credentials. |
+| SEV-1 | Provider timeout ambiguity | Timeout is not success | Implement status/review path before retry. |
+| SEV-2 | Invalid reference | Validation flow documented | Confirm validation API and UX. |
+| SEV-1 | Amount mismatch | Amount lookup and mismatch states documented | Confirm amount rules and comparison tests. |
+| SEV-1 | Duplicate provider payment | Service-payment idempotency required | Implement duplicate blocking and evidence lookup. |
+| SEV-1 | Card charge success but service payment failure | Recovery/reconciliation path documented | Implement orchestrator and manual review. |
+| SEV-1 | Service payment success but card charge missing | Marked SEV-1 impossible state | Enforce card prerequisite and reconcile. |
+| SEV-1 | Provider reconciliation mismatch | Future reconciliation model documented | Add report/status reconciliation. |
+| SEV-2 | Receipt unavailable | Receipt confirmation gate documented | Build recovery/support runbook. |
+| SEV-2 | Provider outage | Operations runbooks planned | Add metrics and outage policy. |
+| SEV-1 | Secrets leakage | Env/secret-manager policy documented | Keep credentials out of repo/logs. |
+| SEV-1 | Raw provider payload exposure | Hash/redaction policy documented | Add sanitizer/tests. |
+| SEV-1 | Manual review missing | Production gate blocks launch | Build queue/admin workflow. |

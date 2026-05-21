@@ -459,3 +459,29 @@ Status: future/proposed for Phase 8A unless a later implementation report marks 
 - `card.processor_error`
 
 These events must carry safe processor references, request/correlation IDs, idempotency context where relevant, and redacted metadata only.
+
+## Prontipagos Sandbox Audit Events
+
+Status: future/proposed for Phase 8B.
+
+- `prontipagos.catalog_sync_started`
+- `prontipagos.catalog_sync_completed`
+- `prontipagos.reference_validation_requested`
+- `prontipagos.reference_validation_succeeded`
+- `prontipagos.reference_validation_failed`
+- `prontipagos.amount_lookup_requested`
+- `prontipagos.amount_lookup_succeeded`
+- `prontipagos.amount_lookup_failed`
+- `prontipagos.payment_execution_requested`
+- `prontipagos.payment_execution_submitted`
+- `prontipagos.payment_execution_succeeded`
+- `prontipagos.payment_execution_pending`
+- `prontipagos.payment_execution_failed`
+- `prontipagos.payment_execution_timeout`
+- `prontipagos.duplicate_blocked`
+- `prontipagos.status_checked`
+- `prontipagos.reconciliation_started`
+- `prontipagos.reconciliation_completed`
+- `prontipagos.reconciliation_mismatch`
+
+Metadata must stay redacted and retain safe provider references, payload hashes, request IDs, correlation IDs, and idempotency context.

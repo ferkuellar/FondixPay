@@ -239,3 +239,14 @@ Phase 5F mock recovery UI rules:
 - Admin/support panels must never show PAN/CVV and must use least privilege.
 - Mobile Secure Store must not persist PAN, CVV, raw processor credentials, or raw card payloads.
 - Production remains blocked until processor selection, PCI/security review, tokenization, idempotency, audit, recovery, reconciliation, and sandbox validation are accepted.
+
+## Prontipagos Integration Security
+
+- Prontipagos secrets must use environment-specific secret management and never enter source control.
+- Provider authentication mechanism must be confirmed before implementation.
+- Payment execution needs bounded timeout and retry limits.
+- Ambiguous timeout or unknown provider outcome must not be relabeled as success.
+- Logs, audit records, and provider error surfaces must be redacted and user safe.
+- Request/response payload evidence should be hashed or redacted by default.
+- Future webhooks require signature/replay verification if Prontipagos supports them.
+- Reconciliation/admin access must use RBAC and least privilege.

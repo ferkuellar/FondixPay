@@ -185,3 +185,23 @@ Mobile mock/dev recovery now exposes:
 - `duplicate_blocked`: routes to PaymentFailed with duplicate-safe copy.
 
 Mock retry returns to confirmation and uses the selected method flow again. Pending/timeout are never shown as success. Provider-grade retries, provider status polling, receipt recovery, and reconciliation remain future backend/provider work.
+
+## Phase 8B Card To Service Payment States
+
+Future provider orchestration must represent:
+
+- `card_charge_succeeded`
+- `service_payment_not_started`
+- `service_payment_submitted`
+- `service_payment_pending`
+- `service_payment_confirmed`
+- `service_payment_failed`
+- `service_payment_timeout`
+- `manual_review_required`
+
+Required rules:
+
+- `card_charge_failed` does not transition to `service_payment_submitted`.
+- Pending, timeout, or unknown card state does not transition to service execution.
+- `service_payment_timeout` is not success.
+- Ambiguous Prontipagos outcomes transition to `manual_review_required` or a status-check path before any retry.

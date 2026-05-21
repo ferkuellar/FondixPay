@@ -617,3 +617,33 @@ Status: Accepted.
 Decision: Any card integration must be exercised in sandbox for success, decline, timeout, duplicate, expired-card, and auth-challenge paths before production.
 
 Status: Accepted.
+
+## ADR-082 — Prontipagos is the service payment aggregator
+
+Decision: FondixPay will use Prontipagos to execute service payments, separate from the future card processor.
+
+Status: Accepted.
+
+## ADR-083 — Service payment execution requires successful card charge
+
+Decision: FondixPay must not execute a Prontipagos service payment when the card charge or authorization failed, is pending, timed out, or is unknown.
+
+Status: Accepted.
+
+## ADR-084 — Provider timeout is not success
+
+Decision: Timeout or unknown Prontipagos outcome is pending/review evidence, not paid success.
+
+Status: Accepted.
+
+## ADR-085 — Provider references must be stored separately
+
+Decision: Prontipagos references must remain separate from internal IDs for reconciliation, support, and audit.
+
+Status: Accepted.
+
+## ADR-086 — Prontipagos integration requires reconciliation and manual review
+
+Decision: Prontipagos cannot move to production without reconciliation and manual review/admin support paths.
+
+Status: Accepted.

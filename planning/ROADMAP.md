@@ -195,7 +195,7 @@ Out of scope: unrestricted admin access and full admin console implementation.
 
 ## Phase 8A - Card Processor Sandbox Design
 
-Status: current.
+Status: completed as documentation/design.
 Objective: design the card processor sandbox leg for tokenization and card charge/auth without production integration.
 Deliverables: sandbox design, evaluation matrix, API/data/audit/security/operations/UX contracts, card backlog, sprint handoff.
 Acceptance: card processor and Prontipagos remain separate; no PAN/CVV storage path is approved; production remains blocked.
@@ -203,7 +203,7 @@ Out of scope: provider adapter, real charges, real secrets, Prontipagos integrat
 
 ## Phase 8B - Prontipagos Sandbox Integration Design
 
-Status: recommended next.
+Status: current/completed as documentation/design.
 Objective: design the service-payment aggregator leg after approved card charge/auth state.
 Deliverables: reference validation, service payment execution, provider status/error mapping, receipts, reconciliation, and recovery design for Prontipagos.
 Acceptance: card processor charge state and Prontipagos service state remain separately traceable.

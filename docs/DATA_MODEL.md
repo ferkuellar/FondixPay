@@ -411,3 +411,42 @@ Rules:
 - No CVV.
 - Processor tokens and safe display metadata only.
 - Card processor reconciliation is separate from future Prontipagos service-payment reconciliation.
+
+## Prontipagos Sandbox Proposed Model
+
+Status: future/proposed. No migration or runtime model is added in Phase 8B.
+
+### `ServicePaymentAttempt`
+
+- `id`
+- `payment_intent_id`
+- `user_service_id`
+- `service_provider_id`
+- `provider_name`
+- `provider_operation`
+- `service_reference`
+- `amount_minor`
+- `currency`
+- `status`
+- `idempotency_key`
+- `provider_reference` nullable
+- `provider_status` nullable
+- `error_code` nullable
+- `error_message_safe` nullable
+- `request_payload_hash` nullable
+- `response_payload_hash` nullable
+- `correlation_id`
+- `created_at`
+- `updated_at`
+
+### Additional Future Entities
+
+- `ProviderTransaction`: safe Prontipagos reference, mapped status, amount/currency, response hash, confirmation time.
+- `ProviderStatusCheck`: status-query evidence for ambiguous/pending attempts.
+- `ServiceCatalogSync`: catalog sync lifecycle and safe counts/errors.
+- `ReconciliationRecord`: internal/provider mismatch, evidence, and manual-review state.
+
+Rules:
+
+- Do not store provider secrets.
+- Store full provider payloads only if later approved with redaction and retention controls; default to safe hashes.

@@ -349,3 +349,10 @@ Before production:
 - security review completed.
 
 Commercial production remains blocked after Phase 8A.
+
+## Interaction with Prontipagos
+
+- Card charge success or approved authorization is the prerequisite for Prontipagos service-payment execution.
+- If card processing fails, is pending, times out, or remains unknown, Prontipagos is not called.
+- If the card leg succeeds but Prontipagos fails, times out, or remains ambiguous, FondixPay enters recovery/manual review rather than claiming paid success.
+- Card and Prontipagos flows require separate reconciliation evidence and future support/admin tooling.
