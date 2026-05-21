@@ -12,13 +12,12 @@
 | PP-008 | HIGH | Status | Confirm transaction status API. | 8C | pending |
 | PP-009 | HIGH | Recovery | Confirm webhooks or polling. | 8C | pending |
 | PP-010 | HIGH | Reconciliation | Confirm reconciliation reports. | 8C | pending |
-| PP-011 | HIGH | Backend | Implement Prontipagos client. | 8C | pending |
-| PP-012 | HIGH | Backend | Implement adapter. | 8C | pending |
-| PP-013 | MEDIUM | Testing | Implement mocks. | 8C | pending |
-| PP-014 | HIGH | Errors | Implement error mapping. | 8C | pending |
-| PP-015 | CRITICAL | Payments | Implement idempotency. | 8C | pending |
-| PP-016 | HIGH | Audit | Implement audit events. | 8C | pending |
-| PP-017 | HIGH | Testing | Implement tests. | 8C | pending |
+| PP-011 | HIGH | Backend | Implement Prontipagos client. | 8C | contractual mock client implemented; real client pending |
+| PP-012 | HIGH | Backend | Implement adapter. | 8C | contractual mock adapter implemented |
+| PP-013 | MEDIUM | Testing | Implement mocks. | 8C | implemented |
+| PP-014 | HIGH | Errors | Implement error mapping. | 8C | partial mock mapping implemented |
+| PP-015 | CRITICAL | Payments | Implement idempotency. | 8C | partial sandbox intent idempotency implemented |
+| PP-016 | HIGH | Audit | Implement audit events. | 8C | partial sandbox events implemented |
+| PP-017 | HIGH | Testing | Implement tests. | 8C | implemented for contractual mocks |
 | PP-018 | HIGH | Admin | Implement admin reconciliation view. | later | pending |
 | PP-019 | HIGH | Operations | Implement support runbooks. | 8C/later | pending |
-

@@ -211,7 +211,7 @@ Out of scope: live production traffic.
 
 ## Phase 8C - Sandbox Integration Implementation
 
-Status: future.
+Status: completed for contractual mock backend slice.
 Objective: implement approved sandbox adapters and tests after 8A/8B design and provider decisions.
 Deliverables: tokenized card sandbox integration, Prontipagos sandbox implementation if approved, webhook/status handling, tests, and reconciliation hooks.
 Acceptance: non-production sandbox flows are auditable, idempotent, redacted, and testable.

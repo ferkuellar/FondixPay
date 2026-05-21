@@ -317,3 +317,27 @@ Phase 5F is documentation-only. No runtime tests are required unless code is cha
 - [ ] Audit events documented.
 - [ ] Provider payloads redacted/hashed.
 - [ ] Reconciliation mismatch detected.
+
+## Phase 8C Sandbox Integration Validation
+
+Commands:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest
+
+cd ../mobile
+npm run typecheck
+```
+
+Backend coverage added:
+
+- Card sandbox mock adapter status mapping.
+- Prontipagos sandbox mock adapter status mapping.
+- Card success triggers Prontipagos mock execution.
+- Card declined, pending, and timeout do not call Prontipagos.
+- Prontipagos pending/timeout/failure are not success and do not generate receipt.
+- Duplicate sandbox idempotency reuses existing provider attempts.
+- `POST /payments/sandbox` still requires auth.
+- Card contracts omit PAN/CVV.

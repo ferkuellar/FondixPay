@@ -356,3 +356,12 @@ Commercial production remains blocked after Phase 8A.
 - If card processing fails, is pending, times out, or remains unknown, Prontipagos is not called.
 - If the card leg succeeds but Prontipagos fails, times out, or remains ambiguous, FondixPay enters recovery/manual review rather than claiming paid success.
 - Card and Prontipagos flows require separate reconciliation evidence and future support/admin tooling.
+
+## Phase 8C Implementation Status
+
+- Implemented as a contractual mock backend adapter under `backend/app/modules/providers/card_processor/`.
+- Current mock charge scenarios: success, declined, pending, timeout, failed, duplicate blocked, and future auth-required.
+- `POST /payments/sandbox` uses the card adapter before any Prontipagos sandbox mock execution.
+- Config names are present as `.env.example` placeholders only.
+- Backend tests verify no PAN/CVV contract fields and verify card decline/pending/timeout do not reach Prontipagos.
+- Real processor selection, tokenization UI/SDK, official sandbox docs, webhook verification, reconciliation, and PCI review remain pending.

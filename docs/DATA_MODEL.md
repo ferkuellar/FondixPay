@@ -450,3 +450,11 @@ Rules:
 
 - Do not store provider secrets.
 - Store full provider payloads only if later approved with redaction and retention controls; default to safe hashes.
+
+## Phase 8C Sandbox Data Status
+
+- Implemented/partial: existing `PaymentIntent`, `PaymentAttempt`, and `ProviderTransaction` models store card mock charge and Prontipagos mock service-payment attempts.
+- Implemented/partial: receipt is generated only when the Prontipagos mock response is confirmed.
+- Implemented/partial: provider response evidence uses hash fields already present on provider transactions.
+- Pending: dedicated `CardPaymentAttempt`, `ServicePaymentAttempt`, status-check, webhook-event, and reconciliation execution models.
+- Pending: admin/manual-review records beyond sandbox `payment.manual_review_required` audit events.

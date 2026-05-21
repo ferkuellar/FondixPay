@@ -27,6 +27,19 @@ class Settings(BaseSettings):
     app_env: AppEnv = "development"
     cors_origins: str = "http://localhost:19006,http://localhost:8081"
     fondix_fee_minor: int = 750
+    card_processor_provider: str = "mock"
+    card_processor_env: str = "sandbox"
+    card_processor_api_base_url: str = ""
+    card_processor_public_key: str = ""
+    card_processor_secret_key: str = ""
+    card_processor_webhook_secret: str = ""
+    card_processor_timeout_seconds: int = 15
+    prontipagos_env: str = "sandbox"
+    prontipagos_api_base_url: str = ""
+    prontipagos_client_id: str = ""
+    prontipagos_client_secret: str = ""
+    prontipagos_timeout_seconds: int = 15
+    prontipagos_enable_sandbox_mock: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

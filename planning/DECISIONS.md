@@ -647,3 +647,33 @@ Status: Accepted.
 Decision: Prontipagos cannot move to production without reconciliation and manual review/admin support paths.
 
 Status: Accepted.
+
+## ADR-087 — Sandbox adapters before real provider integrations
+
+Decision: FondixPay will implement sandbox/mock contractual adapters before any productive card processor or Prontipagos integration.
+
+Status: Accepted.
+
+## ADR-088 — Prontipagos execution is gated by card charge success
+
+Decision: Service-payment execution through Prontipagos can run only when the controlled internal card charge/auth state is successful.
+
+Status: Accepted.
+
+## ADR-089 — Provider integrations must be idempotent
+
+Decision: Card charge and Prontipagos service-payment execution must use idempotency keys to prevent duplicate charge or duplicate service payment.
+
+Status: Accepted.
+
+## ADR-090 — Ambiguous provider results require recovery/manual review
+
+Decision: Timeout, pending, or unknown card-processor or Prontipagos outcomes must not be marked success and must remain pending/recovery/manual-review states.
+
+Status: Accepted.
+
+## ADR-091 — Contractual mocks are acceptable until official sandbox docs/credentials exist
+
+Decision: When official sandbox documentation or credentials are absent, documented contractual mocks with tests are acceptable and must not be represented as real integrations.
+
+Status: Accepted.

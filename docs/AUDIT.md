@@ -485,3 +485,24 @@ Status: future/proposed for Phase 8B.
 - `prontipagos.reconciliation_mismatch`
 
 Metadata must stay redacted and retain safe provider references, payload hashes, request IDs, correlation IDs, and idempotency context.
+
+## Phase 8C Sandbox Audit Status
+
+Implemented for the contractual mock orchestration:
+
+- `card.charge_submitted`
+- `card.charge_authorized`
+- `card.charge_declined`
+- `card.charge_timeout`
+- `card.charge_duplicate_blocked`
+- `card.charge_failed`
+- `prontipagos.payment_execution_submitted`
+- `prontipagos.payment_execution_succeeded`
+- `prontipagos.payment_execution_pending`
+- `prontipagos.payment_execution_failed`
+- `prontipagos.payment_execution_timeout`
+- `prontipagos.duplicate_blocked`
+- `payment.manual_review_required`
+- existing `receipt.generated`
+
+Tokenization, webhook, reconciliation, admin/manual-review UI events, and real-provider event catalogs remain pending.

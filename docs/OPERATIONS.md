@@ -313,3 +313,10 @@ Future metrics:
 - `prontipagos_duplicate_blocked_count`
 - `prontipagos_reconciliation_mismatch_count`
 - `prontipagos_receipt_unavailable_count`
+
+## Phase 8C Sandbox Operations
+
+- Card success plus Prontipagos mock failure, pending, or timeout maps to `manual_review_required`.
+- Card failure, pending, or timeout means Prontipagos is not called.
+- Support investigation for sandbox traces should use `correlation_id`, safe provider references, attempts, provider transactions, and audit events.
+- These sandbox states do not replace the future manual-review queue, provider status checks, reconciliation job, outage metrics, or production runbooks.

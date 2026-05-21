@@ -286,3 +286,11 @@ Future sandbox tests:
 - Recovery UX and support runbooks ready.
 - No secrets committed.
 
+## Phase 8C Implementation Status
+
+- Implemented as a contractual mock backend adapter under `backend/app/modules/providers/prontipagos/`.
+- Current mock execution scenarios: success, pending, invalid reference, amount mismatch, timeout, provider unavailable, duplicate blocked, and failed.
+- `POST /payments/sandbox` calls the mock Prontipagos adapter only after sandbox card success.
+- Provider payload traces store hashes through existing `ProviderTransaction` fields.
+- Backend tests cover success, pending, timeout, failure, idempotency, and the card gate.
+- Official Prontipagos sandbox docs, credentials, auth, real status/error codes, receipt rules, webhooks/polling, and reconciliation reports remain to confirm.

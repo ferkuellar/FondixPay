@@ -496,3 +496,23 @@ Status: future/proposed. These endpoints do not exist in the current mock/dev ba
 | `POST /service-providers/{id}/lookup-amount` | Lookup provider amount. | owner | bounded | Detect amount mismatch before execution. |
 | `GET /admin/prontipagos/reconciliation` | Review reconciliation records. | finance/admin future | n/a | RBAC and redaction required. |
 | `POST /admin/prontipagos/reconciliation/run` | Run reconciliation job. | finance/admin/system future | job key future | Audit run and mismatches. |
+
+## Phase 8C Sandbox Payment API
+
+`POST /payments/sandbox` is implemented for authenticated backend sandbox/mock validation. It does not replace the existing `POST /payments` mock/dev endpoint and does not call real providers.
+
+Conceptual request:
+
+```json
+{
+  "user_service_id": 1,
+  "mock_card_token": "pm_mock_card_demo",
+  "idempotency_key": "client-sandbox-key",
+  "card_scenario": "success",
+  "prontipagos_scenario": "success"
+}
+```
+
+Safe response fields include `payment_id`, `status`, `card_status`, `service_payment_status`, `receipt_status`, amount/fee/total minor units, `currency`, mock/sandbox flags, safe card/provider references, `correlation_id`, and safe `message`.
+
+Implemented sandbox scenarios are controlled mocks. The API never accepts PAN or CVV and never returns raw provider payloads or secrets.

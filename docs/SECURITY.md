@@ -250,3 +250,11 @@ Phase 5F mock recovery UI rules:
 - Request/response payload evidence should be hashed or redacted by default.
 - Future webhooks require signature/replay verification if Prontipagos supports them.
 - Reconciliation/admin access must use RBAC and least privilege.
+
+## Phase 8C Sandbox Provider Security
+
+- Phase 8C uses mocks only; no real provider credentials or production URLs are required.
+- `.env.example` contains placeholders for card processor and Prontipagos sandbox configuration.
+- Sandbox card contracts accept token references only and tests verify no PAN/CVV fields.
+- Sandbox provider response evidence is stored through safe references and hashes, not raw payloads.
+- Production remains blocked until official contracts, secret management, webhook/status security, reconciliation, PCI review, and manual-review operations exist.

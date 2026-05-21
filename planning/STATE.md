@@ -168,3 +168,12 @@ Prontipagos is not integrated. It is the next separate sandbox design leg after 
 - Real payments remain blocked.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 8C - Sandbox Integration Implementation.
+
+# Phase 8C - Sandbox Integration Implementation
+
+- Current phase: Phase 8C - Sandbox Integration Implementation.
+- This phase implements sandbox/mock contractual adapters for the card processor leg and Prontipagos leg.
+- Prontipagos execution is gated by sandbox card success in backend tests.
+- Real money remains blocked.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 9 - Notifications, Receipts & Proof of Payment.

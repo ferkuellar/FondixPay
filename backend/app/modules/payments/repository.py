@@ -26,3 +26,9 @@ def mark_success(db: Session, payment: Payment, external_reference: str) -> Paym
     db.refresh(payment)
     return payment
 
+
+def mark_status(db: Session, payment: Payment, status: PaymentStatus) -> Payment:
+    payment.status = status
+    db.flush()
+    return payment
+

@@ -203,3 +203,18 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | SEV-1 | Secrets leakage | Env/secret-manager policy documented | Keep credentials out of repo/logs. |
 | SEV-1 | Raw provider payload exposure | Hash/redaction policy documented | Add sanitizer/tests. |
 | SEV-1 | Manual review missing | Production gate blocks launch | Build queue/admin workflow. |
+
+# Phase 8C Sandbox Integration Implementation Risks
+
+| Severity | Risk | Status After 8C | Next Action |
+|---|---|---|---|
+| SEV-1 | Card processor not selected | Pending | Select provider and review tokenization contract. |
+| SEV-1 | Prontipagos API not confirmed | Pending | Obtain official sandbox docs and credentials. |
+| SEV-1 | Card success plus Prontipagos failure | Partially mitigated | Sandbox path enters manual review; build operations queue. |
+| SEV-1 | Card failed but Prontipagos called | Mitigated in sandbox tests | Preserve gate in real adapter. |
+| SEV-1 | Duplicate card/service execution | Partially mitigated | Sandbox idempotency tested; bind real provider keys later. |
+| SEV-2 | Provider timeout ambiguity | Partially mitigated | Sandbox maps pending/manual review; add status checks/webhooks. |
+| SEV-1 | Manual review missing | Production blocker | Build CRM/admin review path. |
+| SEV-1 | Real credentials missing | Blocks real integration | Provision secrets only after contract review. |
+| SEV-1 | Webhooks missing | Pending | Implement signed provider events when contracts exist. |
+| SEV-1 | Reconciliation missing | Pending | Implement reports/status reconciliation and review records. |

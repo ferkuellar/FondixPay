@@ -205,3 +205,11 @@ Required rules:
 - Pending, timeout, or unknown card state does not transition to service execution.
 - `service_payment_timeout` is not success.
 - Ambiguous Prontipagos outcomes transition to `manual_review_required` or a status-check path before any retry.
+
+## Phase 8C Sandbox State Alignment
+
+- Sandbox card `succeeded` continues to Prontipagos mock execution.
+- Sandbox card `declined` or `failed` marks the sandbox payment failed and service payment `not_started`.
+- Sandbox card `pending`, `timeout`, or auth-required remains manual-review/pending and service payment `not_started`.
+- Prontipagos mock `provider_confirmed` can generate receipt and success.
+- Prontipagos mock `provider_pending`, `provider_timeout`, `provider_failed`, `provider_rejected`, or duplicate-blocked remains recovery/manual review and does not generate confirmed receipt.

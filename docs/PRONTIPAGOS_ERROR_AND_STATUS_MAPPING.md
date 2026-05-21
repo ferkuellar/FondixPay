@@ -2,6 +2,8 @@
 
 Phase 8B uses placeholders until Prontipagos contract/API documentation confirms real statuses and error codes.
 
+Phase 8C implements mock-contractual mappings for success, pending, timeout, invalid reference, provider unavailable, failure, and duplicate blocked. `TO_CONFIRM_*` remains the real-provider namespace until Prontipagos documentation is approved.
+
 ## Provider Status Mapping
 
 | Prontipagos Status | Internal Status | User Status | Receipt Status | Retry | Support |
@@ -25,4 +27,3 @@ Phase 8B uses placeholders until Prontipagos contract/API documentation confirms
 | `TO_CONFIRM_AMOUNT_MISMATCH` | Provider amount differs from internal quote | `provider_failed` | El monto cambio. Confirma de nuevo antes de pagar. | after refresh | `prontipagos.amount_lookup_failed` | HIGH |
 | `TO_CONFIRM_AUTH_FAILED` | Provider authentication/config failure | `provider_failed` | El pago no esta disponible por ahora. | no | `prontipagos.payment_execution_failed` | CRITICAL |
 | `TO_CONFIRM_UNKNOWN_ERROR` | Unmapped provider failure | `provider_unknown` | Estamos revisando el estado del pago. | no blind retry | `prontipagos.payment_execution_failed` | HIGH |
-

@@ -20,4 +20,4 @@ Updated: 2026-05-20
 | LA-014 | SEV-1 | Tests | Implement tests for audit events | Phase 5B - Ledger & Audit Implementation | Implemented |
 | LA-015 | SEV-2 | Admin/Audit | Implement admin/auditor read endpoints | Later admin/audit phase | Open |
 | LA-016 | SEV-2 | Security | Implement redaction/hashing for provider payloads | Phase 5E - Prontipagos Sandbox Integration Design | Partial - audit writer redacts sensitive fields; provider payload storage remains future |
-| LA-017 | SEV-2 | Providers | Implement Prontipagos adapter later | Provider sandbox phase after design gates | Open |
+| LA-017 | SEV-2 | Providers | Implement Prontipagos adapter later | Provider sandbox phase after design gates | Partial - contractual sandbox mock adapter implemented in Phase 8C |
