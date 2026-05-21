@@ -587,3 +587,33 @@ Implications:
 - Prontipagos integration is separate from card processing.
 
 Accepted.
+
+## ADR-077 — Card processor is separate from Prontipagos
+
+Decision: FondixPay will use a card processor to tokenize/charge the user's debit or credit card and Prontipagos to execute the service-payment leg. They are separate integrations.
+
+Status: Accepted.
+
+## ADR-078 — Tokenization required for real card payments
+
+Decision: FondixPay will not store PAN or CVV. Every real card payment requires tokenization through an approved processor flow.
+
+Status: Accepted.
+
+## ADR-079 — Hosted fields or mobile SDK tokenization preferred
+
+Decision: FondixPay will prefer hosted fields, hosted checkout, mobile SDK tokenization, or an equivalent approved provider-controlled capture path to reduce PCI scope.
+
+Status: Accepted.
+
+## ADR-080 — Card charge must complete before service execution
+
+Decision: Service-payment execution through Prontipagos must not start until the card charge or authorization has an approved state under the card processor strategy.
+
+Status: Accepted.
+
+## ADR-081 — Card processor sandbox before production
+
+Decision: Any card integration must be exercised in sandbox for success, decline, timeout, duplicate, expired-card, and auth-challenge paths before production.
+
+Status: Accepted.

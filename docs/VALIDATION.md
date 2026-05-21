@@ -289,3 +289,17 @@ Phase 5F is documentation-only. No runtime tests are required unless code is cha
 - [ ] PAN and CVV are not stored.
 - [ ] Card-only model is documented in roadmap, strategy, domain, security, and backlog.
 - [ ] Real card payments remain blocked until card processor selection and tokenization are approved.
+
+## Card Processor Sandbox Validation
+
+- [ ] No PAN/CVV stored.
+- [ ] Tokenization flow documented.
+- [ ] Charge idempotency documented.
+- [ ] Declined card recovery documented.
+- [ ] Expired card recovery documented.
+- [ ] Timeout recovery documented.
+- [ ] Processor webhook signature future documented.
+- [ ] Audit events documented.
+- [ ] User-scoped card methods required.
+- [ ] Card processor separate from Prontipagos.
+- [ ] Production blocked.

@@ -20,9 +20,10 @@ Current practical position:
 - Phase 5C: completed as fee transparency baseline.
 - Phase 5D: completed as card payment method strategy.
 - Phase 5E: completed as card payment UX mock implementation.
-- Recommended next phase after current receipt/history hardening: Phase 8 - Simulated Payments, Charges & Transfers Hardening.
+- Current phase: Phase 8A - Card Processor Sandbox Design.
+- Recommended next phase: Phase 8B - Prontipagos Sandbox Integration Design.
 
-Before any real payment provider work, the project must implement ledger/audit, idempotency, fee transparency, card payment method strategy, payment recovery paths, Prontipagos sandbox design, support/receipt proof, and card processor selection. Real payments remain blocked.
+Before any real payment provider implementation, the project must preserve ledger/audit, idempotency, fee transparency, card payment method strategy, payment recovery paths, card processor sandbox design, Prontipagos sandbox design, support/receipt proof, and provider-selection gates. Real payments remain blocked.
 
 ## Immediate Recommended Path
 
@@ -31,12 +32,12 @@ Before any real payment provider work, the project must implement ledger/audit, 
 3. Phase 5D - Card Payment Method Strategy.
 4. Phase 5E - Card Payment UX Mock Implementation.
 5. Phase 5F - Payment Recovery Paths.
-6. Phase 5G - Prontipagos Sandbox Integration Design.
-7. Phase 5 - User Services Domain Hardening.
-8. Phase 6 - Payments Mock Hardening.
-9. Phase 9 - Card Processor Selection.
+6. Phase 8A - Card Processor Sandbox Design.
+7. Phase 8B - Prontipagos Sandbox Integration Design.
+8. Phase 8C - Sandbox Integration Implementation.
+9. Phase 5 - User Services Domain Hardening.
 
-Phase 10 real payment integration must not start before Phases 4A, 4B, 4C, 5A, 5B, 5C, 5D, 5E, 5F, 6, and 9 are accepted.
+Real payment integration must not start before card processor selection, Phase 8A/8B design gates, sandbox implementation acceptance, PCI/security review, and the existing auth/ledger/audit/recovery gates are accepted.
 
 ## Phase 0 - Product Definition
 
@@ -191,6 +192,30 @@ Objective: define administrative foundation before building admin UI.
 Deliverables: support/admin role scope, permission matrix, support use cases, finance/audit use cases, API plan, screen inventory.
 Acceptance: admin/support/finance/auditor actions are role-defined and auditable on paper before implementation.
 Out of scope: unrestricted admin access and full admin console implementation.
+
+## Phase 8A - Card Processor Sandbox Design
+
+Status: current.
+Objective: design the card processor sandbox leg for tokenization and card charge/auth without production integration.
+Deliverables: sandbox design, evaluation matrix, API/data/audit/security/operations/UX contracts, card backlog, sprint handoff.
+Acceptance: card processor and Prontipagos remain separate; no PAN/CVV storage path is approved; production remains blocked.
+Out of scope: provider adapter, real charges, real secrets, Prontipagos integration.
+
+## Phase 8B - Prontipagos Sandbox Integration Design
+
+Status: recommended next.
+Objective: design the service-payment aggregator leg after approved card charge/auth state.
+Deliverables: reference validation, service payment execution, provider status/error mapping, receipts, reconciliation, and recovery design for Prontipagos.
+Acceptance: card processor charge state and Prontipagos service state remain separately traceable.
+Out of scope: live production traffic.
+
+## Phase 8C - Sandbox Integration Implementation
+
+Status: future.
+Objective: implement approved sandbox adapters and tests after 8A/8B design and provider decisions.
+Deliverables: tokenized card sandbox integration, Prontipagos sandbox implementation if approved, webhook/status handling, tests, and reconciliation hooks.
+Acceptance: non-production sandbox flows are auditable, idempotent, redacted, and testable.
+Out of scope: commercial production launch.
 
 ## Phase 9 - Card Processor Selection
 

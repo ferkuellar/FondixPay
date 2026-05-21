@@ -168,3 +168,20 @@ Mitigation:
 - Complete security review before production.
 
 SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, and bank transfer remain out of scope as user-facing payment methods in the current roadmap.
+
+# Phase 8A Card Processor Sandbox Risks
+
+| Severity | Risk | Current Mitigation | Next Action |
+|---|---|---|---|
+| SEV-1 | Card processor not selected | Real card work remains blocked | Evaluate candidates with evidence-backed matrix. |
+| SEV-1 | PCI exposure from card capture | Prefer tokenized provider-controlled capture | Select hosted/SDK tokenization path. |
+| SEV-1 | PAN/CVV accidental storage | Existing docs prohibit sensitive storage | Add implementation tests and log redaction checks. |
+| SEV-1 | Card charge success but service payment failure | Card and Prontipagos legs separated | Design Prontipagos recovery/reconciliation in Phase 8B. |
+| SEV-1 | Service payment success but card charge failure | Service execution gate documented | Enforce approved card state before service submission. |
+| SEV-2 | Processor timeout ambiguity | Pending/recovery semantics documented | Add sandbox status lookup/webhook strategy. |
+| SEV-1 | Duplicate charge | Idempotency required | Bind card attempts and processor key to intent/operation. |
+| SEV-2 | Chargeback/dispute workflow missing | Production blocked | Document support/finance workflow before launch. |
+| SEV-2 | 3DS/auth challenge failure | Future auth-required state documented | Validate selected processor UX and callback model. |
+| SEV-1 | Webhook spoofing | Signature/replay strategy documented | Implement verification before trusting events. |
+| SEV-2 | Card processor outage | Operations gap documented | Build outage runbook and metrics. |
+| SEV-1 | Reconciliation mismatch card vs Prontipagos | Separate reconciliation legs defined | Build daily reconciliation and SEV-1 mismatch policy. |

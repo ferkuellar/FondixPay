@@ -226,3 +226,16 @@ Phase 5F mock recovery UI rules:
 - Recovery must handle declined card, expired card, invalid CVV, card auth failure, and processor timeout without exposing raw processor payloads.
 - Real card payments remain blocked until provider selection, security review, auditability, idempotency, recovery, tests, and fee transparency gates are accepted.
 - SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, and stored balance are out of scope as user-facing payment methods.
+
+## Card Processor Security
+
+- Card-only remains the user-facing payment model.
+- PAN and CVV must not enter FondixPay backend by default and must never be persisted.
+- Real card flows require approved tokenization.
+- Prefer hosted fields, hosted checkout, mobile SDK tokenization, or equivalent processor-controlled secure UI to minimize PCI scope.
+- Processor public/secret/webhook credentials must use environment-specific secret management.
+- Future card webhooks require signature verification, replay protection, redaction, and idempotent processing.
+- Logs, audit events, provider payload summaries, and support tickets must remain safe/redacted.
+- Admin/support panels must never show PAN/CVV and must use least privilege.
+- Mobile Secure Store must not persist PAN, CVV, raw processor credentials, or raw card payloads.
+- Production remains blocked until processor selection, PCI/security review, tokenization, idempotency, audit, recovery, reconciliation, and sandbox validation are accepted.

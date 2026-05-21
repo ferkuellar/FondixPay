@@ -2,7 +2,7 @@
 
 Updated: 2026-05-20
 
-Current phase: Phase 7 - Movements, Receipts & Transaction History Hardening (completed for mock/dev mobile projection).
+Current phase: Phase 8A - Card Processor Sandbox Design.
 
 Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, mock/dev fee transparency, explicit mock payment methods, recovery UX, demo balance/movements, and hardened mobile history/receipt detail semantics. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
@@ -19,7 +19,12 @@ Status: MVP mock/dev mobile app with a shared visual design system, auth/session
 - Phase 5B - Ledger & Audit Implementation: completed; implements audit events, ledger models, payment intents/attempts, request IDs, state transitions, mock idempotency, Alembic migration, and backend tests.
 - Phase 5C - Payment Trust & Fee Transparency: completed; implements mock/dev fee model, payment breakdown, total CTA, receipt breakdown, trust microcopy, and backend fee tests.
 - Phase 5D - Payment Method Strategy: completed; documents method strategy, removes phantom-card copy, and creates payment method backlog.
-- Next phase: Phase 5E - Payment Method UX Mock Implementation.
+- Phase 5E - Payment Method UX Mock Implementation: completed for mock/dev mobile UX.
+- Phase 5F - Payment Recovery Paths: completed for mock/dev recovery UX plus blueprint.
+- Phase 6A/6B - Account and Demo Balance: completed for design/demo scope.
+- Phase 7 - Movements, Receipts & Transaction History Hardening: completed for mock/dev mobile projection.
+- Phase 8A - Card Processor Sandbox Design: current design/documentation phase.
+- Next recommended phase: Phase 8B - Prontipagos Sandbox Integration Design.
 
 ## What Exists
 
@@ -92,7 +97,7 @@ Commercial production with real money is blocked by remaining UX/Product critica
 
 Internal validation without real money remains allowed.
 
-Prontipagos is not integrated. It is only a future provider/aggregator candidate and requires provider transaction mapping before sandbox work.
+Prontipagos is not integrated. It is the next separate sandbox design leg after the card processor sandbox design. Phase 8A does not integrate it.
 # Phase 5E — Payment Method UX Mock Implementation
 
 - Current phase: Phase 5E — Payment Method UX Mock Implementation.
@@ -143,4 +148,14 @@ Prontipagos is not integrated. It is only a future provider/aggregator candidate
 - Real payments remain blocked.
 - Prontipagos remains not integrated.
 - Commercial production remains blocked.
-- Next recommended phase: Phase 8 — Simulated Payments, Charges & Transfers Hardening.
+- Next recommended phase: Phase 8A - Card Processor Sandbox Design.
+
+# Phase 8A - Card Processor Sandbox Design
+
+- Current phase: Phase 8A - Card Processor Sandbox Design.
+- This phase designs the sandbox integration for the future card processor that tokenizes and charges/authenticates user debit/credit cards.
+- No card processor is selected yet.
+- Prontipagos remains separate and is not integrated in this phase.
+- Real payments remain blocked.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 8B - Prontipagos Sandbox Integration Design.

@@ -436,3 +436,26 @@ Current roadmap payment-method audit events are card-focused:
 - `payment_method.card_expired`
 
 Events must use safe card references only. Do not emit PAN or CVV in audit metadata.
+
+## Card Processor Sandbox Audit Events
+
+Status: future/proposed for Phase 8A unless a later implementation report marks an event implemented.
+
+- `card.tokenization_started`
+- `card.tokenization_succeeded`
+- `card.tokenization_failed`
+- `card.payment_method_added`
+- `card.payment_method_selected`
+- `card.charge_created`
+- `card.charge_submitted`
+- `card.charge_authorized`
+- `card.charge_captured`
+- `card.charge_declined`
+- `card.charge_failed`
+- `card.charge_timeout`
+- `card.charge_duplicate_blocked`
+- `card.charge_refund_requested_future`
+- `card.webhook_received_future`
+- `card.processor_error`
+
+These events must carry safe processor references, request/correlation IDs, idempotency context where relevant, and redacted metadata only.

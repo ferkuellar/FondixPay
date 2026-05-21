@@ -464,3 +464,19 @@ The payment-method roadmap is card-only. Future card endpoints remain proposed u
 | `GET /payment-methods/{id}` | Read safe card detail. | No raw provider payload or sensitive card fields. |
 
 SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, and stored balance do not have user-facing payment-method APIs in the current roadmap.
+
+## Future Card Processor APIs
+
+Status: future/proposed for Phase 8A. These endpoints do not exist yet.
+
+| Endpoint | Purpose | Auth | Future Role | Idempotency | Audit / Security Notes |
+|---|---|---|---|---|---|
+| `POST /card/tokenization-session` | Create processor tokenization handoff/session. | yes | `USER` | provider/session key if stateful | Public/session material only; never return secret keys. |
+| `POST /card/payment-methods` | Attach tokenized card reference. | yes | `USER` | recommended for attach | Reject PAN/CVV; emit card payment method audit. |
+| `GET /card/payment-methods` | List own safe card metadata. | yes | `USER` | n/a | Owner-scoped brand/last4/expiry/status only. |
+| `PATCH /card/payment-methods/{id}/default` | Select default card. | yes | `USER` | duplicate-safe | Ownership and selection audit required. |
+| `DELETE /card/payment-methods/{id}` | Soft delete/detach card reference. | yes | `USER` | duplicate-safe | Provider detach policy required. |
+| `POST /card/charges` | Future card charge/auth sandbox submission. | yes | `USER` | required | Card attempt, processor idempotency, audit, safe error mapping. |
+| `GET /card/charges/{id}` | Read safe charge status. | yes | owner; support/finance later | n/a | No raw provider payload. |
+| `POST /card/webhooks/{provider}` | Receive processor event. | provider signature | provider/system | event id/replay required | Signature verification, replay protection, redaction. |
+| `GET /admin/card/reconciliation` | Review card reconciliation summaries. | yes | `FINANCE`, `ADMIN`, `AUDITOR` | n/a | RBAC and audit required. |

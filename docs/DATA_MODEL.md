@@ -361,3 +361,53 @@ Receipt status values are explicit: `generated`, `pending`, `unavailable`, and f
 | `deleted_at` | Soft delete/detach lifecycle. |
 
 No active user-facing payment-method types are planned for SPEI, CoDi, OXXO/store payment, cash-in, bank transfer, wallet balance, stored balance, or cash.
+
+## Card Processor Sandbox Proposed Model
+
+Status: future/proposed for Phase 8A design. No migration or runtime model is added in this phase.
+
+### `CardPaymentMethod`
+
+- `id`
+- `user_id`
+- `provider_name`
+- `provider_customer_id` nullable
+- `provider_payment_method_token`
+- `brand`
+- `last4`
+- `exp_month`
+- `exp_year`
+- `status`
+- `is_default`
+- `is_mock`
+- `created_at`
+- `tokenized_at`
+- `deleted_at`
+
+### `CardPaymentAttempt`
+
+- `id`
+- `payment_intent_id`
+- `card_payment_method_id`
+- `amount_minor`
+- `currency`
+- `status`
+- `idempotency_key`
+- `provider_transaction_id` nullable
+- `error_code` nullable
+- `error_message_safe` nullable
+- `created_at`
+- `updated_at`
+
+### Additional Future Entities
+
+- `CardProcessorTransaction`
+- `CardProcessorEvent`
+- `CardChargeReconciliationRecord`
+
+Rules:
+
+- No PAN.
+- No CVV.
+- Processor tokens and safe display metadata only.
+- Card processor reconciliation is separate from future Prontipagos service-payment reconciliation.

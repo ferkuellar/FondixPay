@@ -264,3 +264,28 @@ Future support and operations must cover:
 - no PAN/CVV exposure in support tooling.
 
 Prontipagos outage handling remains a separate service-payment aggregator concern from the future card processor path.
+
+## Card Payment Operations - Phase 8A Runbooks
+
+Future runbooks:
+
+- card declined,
+- insufficient funds,
+- expired card,
+- invalid CVV,
+- processor timeout,
+- processor outage,
+- chargeback received,
+- duplicate charge suspected,
+- card charge succeeded but Prontipagos failed,
+- Prontipagos succeeded but card charge not captured, which should not happen.
+
+Future metrics:
+
+- `card_charge_success_rate`
+- `card_charge_decline_rate`
+- `card_charge_timeout_rate`
+- `card_tokenization_failure_rate`
+- `card_duplicate_blocked_count`
+- `card_chargeback_count`
+- `card_processor_error_rate`

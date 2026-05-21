@@ -166,3 +166,16 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Mock add-card copy must say `Tarjeta demo no genera cargos reales`.
 - Confirmation must show selected card, demo last four digits when available, fee, final total, and change-card action.
 - Future real card UX must cover declined, expired, invalid CVV, processor timeout, and auth/3DS challenge states.
+
+## Card Sandbox UX Requirements
+
+- Keep `Tarjeta demo` until a real provider tokenization path is approved.
+- Mock UX must not ask for real PAN, CVV, or card credentials.
+- Future add-card UX must enter provider tokenized UI/SDK or equivalent approved secure flow.
+- `ConfirmPayment` must show the selected card and amount breakdown.
+- Declined card UX must state next action without raw processor jargon.
+- Expired card UX must recommend another card.
+- Invalid CVV messaging is future processor-driven and must stay user-safe.
+- 3DS/auth challenge remains future.
+- Do not make false security, PCI, or provider claims.
+- Use `No se realizo cargo` copy when the mapped state proves no charge was made.

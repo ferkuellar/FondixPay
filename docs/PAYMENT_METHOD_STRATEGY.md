@@ -16,6 +16,14 @@ The current implementation remains mock/dev. No real card capture, card processo
 - Service-payment aggregator: Prontipagos, future integration.
 - Out of roadmap as user-facing payment methods: SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, and stored-value balance.
 
+## Phase 8A Sandbox Design Alignment
+
+- The current phase designs the card processor sandbox leg only.
+- Real cards require approved processor tokenization before any real-money work.
+- `Tarjeta demo` remains mock/dev until provider selection and sandbox implementation are approved.
+- SPEI, CoDi, OXXO/store payment, cash-in, cash, bank transfer, wallet balance, and stored balance remain out of scope as user-facing payment methods.
+- Prontipagos remains separate from the card processor and is not integrated in this phase.
+
 ## Separation Of Concerns
 
 | Leg | Responsibility |
