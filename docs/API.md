@@ -531,6 +531,12 @@ Proof response fields include `payment_id`, nullable `receipt_id`, service/provi
 
 `proof_status=confirmed` requires succeeded payment plus provider-confirmed or mock-confirmed evidence. Pending, timeout, failed, and unknown provider states do not become confirmed proof.
 
+Mobile demo-card note:
+
+- The current `ConfirmPayment` tarjeta demo UX still uses the local mobile mock payment store for Phase 5E/5F scenarios.
+- That local success path opens `ReceiptDetail` with a local mock proof projection and does not call `/payments/{payment_id}/proof` because its `paymentId` is not a backend payment id.
+- Backend proof endpoints remain the source for authenticated persisted backend mock/sandbox payments.
+
 ## Phase 9 In-App Notification APIs
 
 | Endpoint | Purpose | Auth | Notes |

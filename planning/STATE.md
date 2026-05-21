@@ -186,6 +186,7 @@ Prontipagos is not integrated. It is the next separate sandbox design leg after 
 
 - Current phase: Phase 9 - Notifications, Receipts & Proof of Payment.
 - This phase hardens in-app notifications, receipt detail, and proof-of-payment semantics for mock/sandbox states.
+- Receipt-flow bugfix note: demo-card mobile success keeps its local mock proof path and now keeps the `Ver comprobante` access visible from a scrollable success surface with explicit mock/dev status copy.
 - Real payments remain blocked.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.

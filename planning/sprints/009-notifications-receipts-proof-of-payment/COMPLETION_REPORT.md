@@ -74,6 +74,10 @@ Phase 9 adds a safe mock/sandbox receipt proof projection, structured in-app not
 
 - Push/email channels, PDF/download artifact, official provider receipt rules, reconciliation, and support/admin workflows.
 
+## Receipt Flow Bugfix Follow-Up
+
+The demo-card mobile confirmation path remains a local mock flow rather than a backend `/payments/sandbox` call. A follow-up bugfix made the local success screen scrollable and added an explicit mock proof-ready block so the existing `VER COMPROBANTE` action remains reachable on compact screens before opening `ReceiptDetail`.
+
 ## Production Blockers
 
 Commercial production remains blocked by provider selection/contracts, real tokenization, PCI/security review, real Prontipagos contracts/status rules, reconciliation/manual review, RBAC/admin support tooling, and remaining auth/operations gates.

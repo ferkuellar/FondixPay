@@ -198,3 +198,4 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Sharing/copy UX must exclude sensitive data and avoid legal/fiscal wording.
 - In-app notifications must distinguish confirmed, pending, timeout, failed, generated receipt, pending receipt, and unavailable receipt states.
 - Pending and unavailable proof surfaces must lead with next action and must not use provider-paid language.
+- Demo-card success must keep the receipt CTA reachable on compact screens; success copy should say the proof is mock/dev before the user opens detail.

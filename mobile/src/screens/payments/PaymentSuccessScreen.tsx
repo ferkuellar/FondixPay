@@ -1,7 +1,8 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { PrimaryButton } from '../../components/PrimaryButton';
+import { ReceiptStatusBadge } from '../../components/ReceiptStatusBadge';
 import { Screen } from '../../components/Screen';
 import { SuccessIllustration } from '../../components/SuccessIllustration';
 import { usePaymentStore } from '../../store/paymentStore';
@@ -15,8 +16,9 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
   const payment = usePaymentStore((state) => state.getPayment(route.params.paymentId));
 
   return (
-    <Screen>
-      <View style={styles.container}>
+    <Screen padded={false}>
+      <ScrollView contentContainerStyle={styles.scroll}>
+        <View style={styles.container}>
         <SuccessIllustration />
         <Text style={styles.title}>¡Ya quedó pagado!</Text>
         <Text style={styles.body}>
@@ -49,6 +51,18 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
             ) : null}
             <Text style={styles.refLabel}>Número de referencia</Text>
             <Text style={styles.refValue}>{payment.folio}</Text>
+            <View style={styles.proofBox}>
+              <View style={styles.proofHeader}>
+                <View style={styles.proofCopy}>
+                  <Text style={styles.proofTitle}>Comprobante mock listo</Text>
+                  <Text style={styles.proofBody}>
+                    Consulta el detalle con estado, desglose y referencias seguras de este pago demo.
+                  </Text>
+                </View>
+                <ReceiptStatusBadge status={payment.receiptStatus} />
+              </View>
+              <Text style={styles.mockCopy}>Mock/dev. No es comprobante fiscal ni confirmación productiva.</Text>
+            </View>
           </>
         ) : null}
         <View style={styles.actions}>
@@ -62,7 +76,8 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
           </PrimaryButton>
           <PrimaryButton onPress={() => navigation.replace('Home')}>LISTO</PrimaryButton>
         </View>
-      </View>
+        </View>
+      </ScrollView>
     </Screen>
   );
 }
@@ -70,7 +85,7 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
 const styles = StyleSheet.create({
   actions: {
     gap: spacing.md,
-    marginTop: spacing.xxxl,
+    marginTop: spacing.xl,
     width: '100%',
   },
   body: {
@@ -89,8 +104,7 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
+    width: '100%',
   },
   refLabel: {
     ...typography.caption,
@@ -123,6 +137,35 @@ const styles = StyleSheet.create({
     ...typography.caption,
     color: colors.textSecondary,
   },
+  proofBody: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  proofBox: {
+    backgroundColor: colors.warningSoft,
+    borderColor: colors.warning,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: spacing.sm,
+    marginTop: spacing.lg,
+    padding: spacing.md,
+    width: '100%',
+  },
+  proofCopy: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  proofHeader: {
+    alignItems: 'flex-start',
+    flexDirection: 'row',
+    gap: spacing.sm,
+    justifyContent: 'space-between',
+  },
+  proofTitle: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '700',
+  },
   refValue: {
     ...typography.heading,
     color: colors.textPrimary,
@@ -133,6 +176,13 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     marginTop: spacing.xl,
     textAlign: 'center',
+  },
+  scroll: {
+    alignItems: 'center',
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: spacing.xl,
+    paddingVertical: spacing.xl,
   },
   totalLabel: {
     ...typography.body,

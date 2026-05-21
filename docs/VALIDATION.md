@@ -357,6 +357,12 @@ Backend coverage added:
 - [x] Backend compile/tests pass.
 - [x] Mobile typecheck passes.
 
+Receipt-flow regression check:
+
+- [ ] Demo-card success keeps the `Ver comprobante` CTA visible/reachable on compact screens.
+- [ ] Demo-card success opens `ReceiptDetail` for the local mock proof and shows mock/dev disclaimer.
+- [ ] Pending and failed demo-card scenarios keep confirmed proof unavailable.
+
 ## CRM Admin Validation
 
 - [ ] `SUPPORT` cannot view PAN/CVV, secrets, card tokens, or raw provider payloads.
