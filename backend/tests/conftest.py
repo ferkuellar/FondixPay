@@ -12,6 +12,7 @@ from app.core.database import Base, get_db
 from app.core.security import create_access_token
 from app.main import app
 from app.modules.accounts.models import Account, BalanceSnapshot, Movement
+from app.modules.admin.models import ManualReviewCase, ManualReviewEvent, SupportTicket, SupportTicketNote
 from app.modules.audit.models import AuditEvent
 from app.modules.ledger.models import (
     LedgerAccount,
@@ -62,9 +63,9 @@ def client(db_session: Session) -> Generator[TestClient, None, None]:
 
 
 @pytest.fixture()
-def create_user(db_session: Session) -> Callable[[str | None], User]:
-    def _create_user(phone: str | None = None) -> User:
-        user = User(phone=phone or f"55{uuid4().int % 10**8:08d}")
+def create_user(db_session: Session) -> Callable[[str | None, str], User]:
+    def _create_user(phone: str | None = None, role: str = "USER") -> User:
+        user = User(phone=phone or f"55{uuid4().int % 10**8:08d}", role=role)
         db_session.add(user)
         db_session.commit()
         db_session.refresh(user)
@@ -74,7 +75,7 @@ def create_user(db_session: Session) -> Callable[[str | None], User]:
 
 
 @pytest.fixture()
-def auth_headers(create_user: Callable[[str | None], User]) -> Callable[[User | None], dict[str, str]]:
+def auth_headers(create_user: Callable[[str | None, str], User]) -> Callable[[User | None], dict[str, str]]:
     def _auth_headers(user: User | None = None) -> dict[str, str]:
         current_user = user or create_user(None)
         token = create_access_token(str(current_user.id))

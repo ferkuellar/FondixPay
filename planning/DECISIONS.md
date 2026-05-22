@@ -737,3 +737,33 @@ Status: Accepted.
 Decision: Ambiguous conditions such as card success plus provider failure, provider timeout, receipt unavailable, or reconciliation mismatch must enter manual review.
 
 Status: Accepted.
+
+## ADR-102 — Admin APIs require explicit RBAC
+
+Decision: Every `/admin/*` endpoint requires authentication and an explicit server-side permission check.
+
+Status: Accepted.
+
+## ADR-103 — Admin responses must be redacted by role
+
+Decision: Admin responses are redacted by role and never expose PAN, CVV, secrets, sensitive card tokens, or raw provider payloads.
+
+Status: Accepted.
+
+## ADR-104 — Admin read operations are audited
+
+Decision: Sensitive admin reads such as user, payment, receipt, audit-event, dashboard, and reconciliation views emit audit events when the audit writer exists.
+
+Status: Accepted.
+
+## ADR-105 — CRM backend starts read-mostly
+
+Decision: The first CRM backend implementation is read-mostly; support tickets and controlled manual-review updates are the limited operational writes.
+
+Status: Accepted.
+
+## ADR-106 — Manual review cases are required for ambiguous payment states
+
+Decision: Ambiguous payment conditions must be representable as manual-review cases with safe references and an event trail.
+
+Status: Accepted.

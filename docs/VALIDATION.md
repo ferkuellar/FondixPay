@@ -377,3 +377,24 @@ Receipt-flow regression check:
 - [ ] User/payment/receipt/reference search respects permissions and pagination.
 
 Phase 10A is documentation/design only. Runtime validation becomes mandatory in Phase 10B when admin backend code is added.
+## CRM Admin Backend Validation
+
+Phase 10B validation commands:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest
+```
+
+Checklist:
+
+- `/admin/*` rejects missing auth and a normal `USER` token.
+- Every implemented admin route maps to a runtime permission.
+- `SUPPORT` cannot read audit events or reconciliation placeholders.
+- `FINANCE` can read reconciliation placeholders and update manual review.
+- `AUDITOR` remains read-only.
+- Admin responses do not expose PAN, CVV, token, secret, or raw payload fields.
+- Support ticket and manual-review writes generate current admin audit events.
+- Reconciliation returns `not_implemented` instead of fabricated data.
+- Frontend/mobile typecheck is not required when mobile code is untouched.

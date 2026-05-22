@@ -381,3 +381,15 @@ CRM metrics:
 - `prontipagos_reconciliation_mismatch_count`
 - `audit_log_view_count`
 - `export_request_count`
+## CRM Admin Backend Operations
+
+Phase 10B provides backend-only operational APIs. The CRM frontend is still pending.
+
+- Support can search safe user/payment/receipt context, create a support ticket, update its status, and add internal notes.
+- Finance can inspect payment and receipt evidence, open/update manual review cases, and see reconciliation placeholders.
+- Manual review cases represent ambiguous evidence such as provider timeout, receipt unavailable, duplicate suspicion, amount mismatch, and card-success/service-failure combinations.
+- Support investigations should pivot by `payment_id`, `receipt_id`, and `correlation_id`; provider-reference visibility remains role limited.
+- Card and Prontipagos reconciliation responses currently say `not_implemented`; they are not reconciliation proof.
+- Audit queries are restricted to audit/admin roles and return redacted metadata.
+
+Current operational metrics can be derived from dashboard counters for users, payments, generated receipts, open tickets, and open manual-review cases. Real reconciliation mismatch metrics remain Phase 10D work.

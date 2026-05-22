@@ -281,3 +281,14 @@ Phase 5F mock recovery UI rules:
 - Admin auth, search, export, and mutation paths need rate limiting and future lockout/backoff.
 - Future IP/device controls should be evaluated for privileged roles.
 - Ledger and audit views remain read-only from CRM; manual review preserves append-only evidence and audit trail.
+## CRM Admin Panel Security Runtime
+
+Phase 10B adds backend `/admin/*` dependencies that require bearer authentication, an admin role, and one explicit runtime permission. A valid normal `USER` token is insufficient.
+
+- Role checks are server-side from the persisted user role; the client cannot grant admin access.
+- Admin responses pass through redaction helpers and safe schemas.
+- PAN, CVV, card tokens, secrets, passwords, and raw provider payloads are never exposed by implemented admin responses.
+- `SUPPORT` receives masked phone and limited provider references.
+- Admin read/write operations reuse the existing audit writer for current sensitive routes.
+- Reconciliation endpoints are safe placeholders and do not fabricate provider evidence.
+- Session hardening, dedicated admin auth, MFA, export controls, lockout/rate-limit policy, and future IP/device trust remain production blockers.

@@ -546,30 +546,30 @@ Mobile demo-card note:
 
 Push and email delivery remain future channels. Notification bodies must stay safe and must not include PAN, CVV, raw provider payloads, or secrets.
 
-## Future CRM Admin APIs
+## Implemented CRM Admin APIs
 
-Status: future/proposed for Phase 10B+. None of these endpoints exist in Phase 10A.
+Status: Phase 10B backend implementation. These routes require bearer auth plus the explicit runtime permission listed below. They return redacted operational fields only.
 
 | Endpoint | Purpose | Role | Permission | Sensitive response rule | Audit |
 |---|---|---|---|---|---|
-| `GET /admin/dashboard` | Operational KPI summary | CRM roles | `view_dashboard` | aggregates only | future admin view event |
-| `GET /admin/users` | Search users | `SUPPORT+` | `view_user` | masked identity | future search audit |
-| `GET /admin/users/{id}` | User detail | `SUPPORT+` | `view_user` | minimum necessary role view | `admin.user_viewed` |
-| `GET /admin/payments` | Search payments | `SUPPORT+` | `view_payment` | mapped payment/provider fields only | future search audit |
-| `GET /admin/payments/{id}` | Payment detail | `SUPPORT+` | `view_payment` | no raw provider payload/card secret | `admin.payment_viewed` |
-| `GET /admin/receipts` | Search receipts | `SUPPORT+` | `view_receipt` | proof-safe fields | future search audit |
-| `GET /admin/receipts/{id}` | Receipt detail | `SUPPORT+` | `view_receipt` | proof-safe fields | `admin.receipt_viewed` |
-| `GET /admin/ledger` | Ledger read view | finance/audit | `view_ledger` | read-only | `admin.ledger_viewed` |
-| `GET /admin/audit-events` | Audit event read | audit/admin policy | `view_audit_logs` | redacted metadata | `admin.audit_log_viewed` |
-| `GET /admin/reconciliation/card` | Card reconciliation | finance/audit | `view_reconciliation` | safe processor refs | `admin.reconciliation_viewed` |
-| `GET /admin/reconciliation/prontipagos` | Prontipagos reconciliation | finance/audit | `view_reconciliation` | safe provider refs | `admin.reconciliation_viewed` |
-| `GET /admin/manual-review` | Manual review queue | ops roles | queue read/open policy | safe evidence | future queue-view audit |
-| `GET /admin/manual-review/{id}` | Manual review detail | ops roles | queue read/open policy | safe evidence | future detail audit |
-| `PATCH /admin/manual-review/{id}` | Assign/update review | finance/admin | `resolve_manual_review` | safe resolution notes | assign/resolve audit |
-| `GET /admin/support/tickets` | Ticket list | support/admin | ticket read policy | safe notes | future list audit |
-| `POST /admin/support/tickets` | Create ticket | support/admin | `create_support_ticket` | safe note body | `admin.ticket_created` |
-| `PATCH /admin/support/tickets/{id}` | Update ticket | support/admin | `update_support_ticket` | safe status/notes | `admin.ticket_updated` |
-| `GET /admin/catalog/service-providers` | Catalog admin read | admin | catalog read/manage policy | catalog only | future catalog view audit |
-| `PATCH /admin/catalog/service-providers/{id}` | Catalog update | admin | `manage_catalog` | no secrets | future catalog change audit |
+| `GET /admin/dashboard` | Operational KPI summary | CRM roles | `admin.dashboard.view` | aggregates only | `admin.dashboard_viewed` |
+| `GET /admin/users` | Search users by safe query | CRM roles | `admin.users.list` | identity masked for non-admin roles | `admin.users_list_viewed` |
+| `GET /admin/users/{id}` | User detail | CRM roles | `admin.users.view` | minimum necessary role view | `admin.user_viewed` |
+| `GET /admin/payments` | Payment list/filter | CRM roles | `admin.payments.list` | mapped payment/provider fields only | `admin.payments_list_viewed` |
+| `GET /admin/payments/{id}` | Payment detail | CRM roles | `admin.payments.view` | no raw provider payload/card secret | `admin.payment_viewed` |
+| `GET /admin/receipts` | Receipt list/filter | CRM roles | `admin.receipts.list` | proof-safe fields | `admin.receipts_list_viewed` |
+| `GET /admin/receipts/{id}` | Receipt detail | CRM roles | `admin.receipts.view` | proof-safe fields | `admin.receipt_viewed` |
+| `GET /admin/audit-events` | Audit event list/filter | `ADMIN`, `AUDITOR`, `SUPER_ADMIN` | `admin.audit.list` | redacted metadata | `admin.audit_events_viewed` |
+| `GET /admin/reconciliation/card` | Card reconciliation placeholder | finance/audit/admin | `admin.reconciliation.card.view` | `status=not_implemented` | `admin.reconciliation_viewed` |
+| `GET /admin/reconciliation/prontipagos` | Prontipagos reconciliation placeholder | finance/audit/admin | `admin.reconciliation.prontipagos.view` | `status=not_implemented` | `admin.reconciliation_viewed` |
+| `GET /admin/manual-review` | Manual review queue | permitted CRM roles | `admin.manual_review.list` | safe references | none on list |
+| `GET /admin/manual-review/{id}` | Manual review detail | permitted CRM roles | `admin.manual_review.view` | safe references | none on detail |
+| `POST /admin/manual-review` | Create review case | finance/admin | `admin.manual_review.update` | safe references | `admin.manual_review_created` |
+| `PATCH /admin/manual-review/{id}` | Assign/update review | finance/admin | `admin.manual_review.update` | safe resolution | `admin.manual_review_updated` |
+| `GET /admin/support/tickets` | Ticket list | permitted CRM roles | `admin.support_tickets.list` | safe notes only | none on list |
+| `GET /admin/support/tickets/{id}` | Ticket detail | permitted CRM roles | `admin.support_tickets.list` | safe notes only | none on detail |
+| `POST /admin/support/tickets` | Create ticket | support/admin | `admin.support_tickets.create` | safe body | `admin.ticket_created` |
+| `PATCH /admin/support/tickets/{id}` | Update ticket | support/admin | `admin.support_tickets.update` | safe fields | `admin.ticket_updated` |
+| `POST /admin/support/tickets/{id}/notes` | Add ticket note | support/admin | `admin.support_tickets.update` | safe note body | `admin.ticket_note_added` |
 
-Every future list endpoint requires filters and pagination. Export is denied unless an endpoint and permission explicitly allow controlled export.
+`/admin/users`, `/admin/payments`, `/admin/receipts`, `/admin/audit-events`, `/admin/manual-review`, and `/admin/support/tickets` expose bounded `limit`/`offset` pagination. Payment list supports status, user, provider-reference, and correlation filters. Reconciliation endpoints are placeholders, not production reconciliation evidence. Ledger and catalog admin APIs remain future. Export is denied unless a later endpoint and permission explicitly allow it.

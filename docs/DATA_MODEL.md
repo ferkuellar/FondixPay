@@ -542,3 +542,26 @@ Rules:
 - Manual review and support notes must be safe/redacted.
 - Admin audit and role models must not grant frontend-only authorization.
 - Ledger entries remain append-only and are not destructively editable from CRM.
+## CRM/Admin Implemented Backend Model
+
+Phase 10B implements a minimal CRM backend model on top of the existing user-auth foundation.
+
+### User role extension
+
+`User.role` persists one runtime role string. Default application users remain `USER`; CRM roles are `SUPPORT`, `FINANCE`, `ADMIN`, `AUDITOR`, and `SUPER_ADMIN`. Runtime permissions are code-defined in the admin module for this phase.
+
+### SupportTicket
+
+Implemented fields: `id`, nullable `user_id`, nullable `payment_id`, nullable `receipt_id`, `status`, `priority`, `category`, `subject`, nullable `description`, nullable `assigned_to`, `created_by`, `created_at`, `updated_at`.
+
+`SupportTicketNote` stores `ticket_id`, `author_id`, safe note text, `is_internal`, and timestamp. Notes must not hold PAN/CVV/secrets/provider raw payloads.
+
+### ManualReviewCase
+
+Implemented fields: `id`, `case_type`, `status`, `severity`, nullable `user_id`, nullable `payment_id`, nullable `receipt_id`, nullable safe card/provider references, nullable `correlation_id`, nullable `assigned_to`, nullable `resolution`, timestamps.
+
+`ManualReviewEvent` stores per-case actor/event metadata for created and updated transitions. This complements the global audit writer.
+
+### Still proposed
+
+Dedicated `Permission`/`RolePermission` tables, reconciliation case persistence, admin session records, export approvals, and full frontend-facing CRM view models remain proposed after Phase 10B.

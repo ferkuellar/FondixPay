@@ -1,6 +1,6 @@
 # Permissions
 
-Current state: preliminary matrix. RBAC is pending implementation unless verified in a later technical hardening phase.
+Current state: the user-facing owner-scope model remains active and Phase 10B adds server-side RBAC for implemented `/admin/*` backend routes.
 
 | Role | Intended Access |
 | --- | --- |
@@ -22,10 +22,9 @@ Current state: preliminary matrix. RBAC is pending implementation unless verifie
 
 ## Pending
 
-- Backend RBAC implementation.
-- Route-level permission map.
-- Ownership tests.
-- Audit logging for privileged actions.
+- Dedicated hardened admin authentication and MFA.
+- Export permissions and controls.
+- CRM frontend route visibility.
 
 ## CRM Admin Panel Permissions
 
@@ -52,6 +51,23 @@ Phase 10A defines the CRM/Admin contract before runtime implementation. No admin
 | Support Tickets | `create_support_ticket`, `update_support_ticket` |
 | Catalog/Config | `manage_catalog`, `manage_roles`, `manage_config` |
 | Export | `export_data` |
+
+### Phase 10B Runtime Permission Map
+
+| Runtime permission | SUPPORT | FINANCE | ADMIN | AUDITOR | SUPER_ADMIN |
+|---|---|---|---|---|---|
+| `admin.dashboard.view` | yes | yes | yes | yes | yes |
+| `admin.users.list`, `admin.users.view` | yes | yes | yes | yes | yes |
+| `admin.payments.list`, `admin.payments.view` | yes | yes | yes | yes | yes |
+| `admin.receipts.list`, `admin.receipts.view` | yes | yes | yes | yes | yes |
+| `admin.audit.list` | no | no | yes | yes | yes |
+| `admin.reconciliation.card.view`, `admin.reconciliation.prontipagos.view` | no | yes | yes | yes | yes |
+| `admin.manual_review.list`, `admin.manual_review.view` | yes | yes | yes | yes | yes |
+| `admin.manual_review.update` | no | yes | yes | no | yes |
+| `admin.support_tickets.list` | yes | yes | yes | yes | yes |
+| `admin.support_tickets.create`, `admin.support_tickets.update` | yes | no | yes | no | yes |
+
+Every implemented admin endpoint binds one runtime permission through the FastAPI dependency layer. A normal `USER` role receives `403` even with a valid bearer token.
 
 ### Allowed And Prohibited Actions
 

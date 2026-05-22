@@ -566,3 +566,22 @@ Required fields for future CRM admin events:
 - `created_at`
 
 Admin audit metadata must stay redacted. A privileged read is still an action worth auditing when it exposes user, payment, receipt, ledger, reconciliation, audit, config, or export context.
+## CRM/Admin Backend Audit Events
+
+Phase 10B uses the existing audit writer for implemented privileged CRM routes.
+
+| Event | Current trigger |
+|---|---|
+| `admin.dashboard_viewed` | Dashboard summary read |
+| `admin.users_list_viewed` | Redacted admin user search/list |
+| `admin.user_viewed` | User detail read |
+| `admin.payments_list_viewed` | Redacted payment search/list |
+| `admin.payment_viewed` | Payment detail read |
+| `admin.receipts_list_viewed` | Redacted receipt search/list |
+| `admin.receipt_viewed` | Receipt detail read |
+| `admin.audit_events_viewed` | Audit-event list read |
+| `admin.reconciliation_viewed` | Card or Prontipagos placeholder read |
+| `admin.ticket_created`, `admin.ticket_updated`, `admin.ticket_note_added` | Support ticket writes |
+| `admin.manual_review_created`, `admin.manual_review_updated` | Manual-review writes |
+
+Admin event metadata keeps `role` and `permission` plus safe route context. Existing redaction removes sensitive token, PAN, CVV, password, secret, and raw-provider key families before metadata persists. Future ledger, catalog, exports, role/configuration updates, and hardened admin sessions still require their dedicated admin events.

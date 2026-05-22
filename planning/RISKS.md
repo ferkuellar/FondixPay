@@ -249,3 +249,17 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | SEV-2 | Export abuse | Export controls designed | Require permission, audit, and policy gating. |
 | SEV-1 | Admin account compromise | Future MFA/session controls defined | Implement admin auth hardening. |
 | SEV-1 | Ledger destructive edits from admin | Read-only CRM ledger rule | Never expose destructive ledger mutation endpoints. |
+
+# Phase 10B CRM Admin Backend Risks
+
+| Severity | Risk | Status After 10B | Next Action |
+|---|---|---|---|
+| SEV-1 | Admin endpoint without auth | Mitigated for implemented `/admin/*` routes | Preserve dependency tests for every new route. |
+| SEV-1 | No admin RBAC | Partially mitigated | Roles and permissions exist; harden admin auth/session model before production. |
+| SEV-1 | Incorrect role permissions | Reduced | RBAC tests cover USER deny, SUPPORT limits, FINANCE reconciliation, AUDITOR no writes. |
+| SEV-1 | Admin overexposure | Reduced | Role redaction and sensitive-key stripping added; frontend and exports still need verification. |
+| SEV-1 | PAN/CVV exposure | Mitigated for current admin response model | Keep sensitive-field regression checks. |
+| SEV-2 | No support tickets | Mitigated for backend minimum | Build CRM frontend and support runbooks around ticket lifecycle. |
+| SEV-1 | No manual review queue | Mitigated for backend minimum | Add queue operations and evidence UX. |
+| SEV-1 / SEV-2 | No admin audit logs | Reduced | Implemented sensitive admin view/write events; expand coverage with future endpoints. |
+| SEV-1 | No reconciliation visibility | Partially mitigated | Placeholders exist only; real card and Prontipagos reconciliation remain blockers. |
