@@ -199,3 +199,14 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - In-app notifications must distinguish confirmed, pending, timeout, failed, generated receipt, pending receipt, and unavailable receipt states.
 - Pending and unavailable proof surfaces must lead with next action and must not use provider-paid language.
 - Demo-card success must keep the receipt CTA reachable on compact screens; success copy should say the proof is mock/dev before the user opens detail.
+
+## CRM Admin UI Patterns
+
+- CRM Admin is a separate web operations tool, not a marketing surface and not part of the mobile payment UX.
+- Prefer compact tables, detail rows, safe reference blocks, restrained stat cards, explicit filters, and status badges.
+- Sidebar/topbar navigation follows permission-aware rendering; hidden navigation does not imply frontend authorization.
+- Support views stay limited and evidence-first.
+- `AUDITOR` surfaces remain read-only.
+- Card and Prontipagos reconciliation screens must visibly say placeholder/not implemented until real provider reconciliation exists.
+- Redacted values should look intentionally limited and never invite PAN/CVV/token/secret input.
+- Every page needs loading, empty, error, and permission-denied behavior.

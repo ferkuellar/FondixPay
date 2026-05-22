@@ -393,3 +393,12 @@ Phase 10B provides backend-only operational APIs. The CRM frontend is still pend
 - Audit queries are restricted to audit/admin roles and return redacted metadata.
 
 Current operational metrics can be derived from dashboard counters for users, payments, generated receipts, open tickets, and open manual-review cases. Real reconciliation mismatch metrics remain Phase 10D work.
+
+## CRM Admin Frontend Operations
+
+- Start in Dashboard for aggregate mock/sandbox counters.
+- Use Users, Payments, and Receipts for safe evidence lookup by the available backend filters and detail references.
+- Use Tickets for controlled support status and internal notes; notes must stay free of PAN/CVV/tokens/secrets.
+- Use Manual Review for ambiguous payment states that require finance/admin operation.
+- Treat card and Prontipagos reconciliation screens as placeholders until Phase 10D/provider work.
+- Audit Logs are read-only and visible only for permissioned roles.

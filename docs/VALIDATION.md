@@ -398,3 +398,25 @@ Checklist:
 - Support ticket and manual-review writes generate current admin audit events.
 - Reconciliation returns `not_implemented` instead of fabricated data.
 - Frontend/mobile typecheck is not required when mobile code is untouched.
+
+## CRM Admin Frontend Validation
+
+Commands:
+
+```powershell
+cd admin
+npm install
+npm run typecheck
+npm run build
+```
+
+Checklist:
+
+- Separate admin app starts from `admin/`.
+- Login/access screen labels dev auth and backend authority.
+- Sidebar navigation follows the configured frontend role permissions.
+- Dashboard, users, payments, receipts, tickets, manual review, reconciliation placeholders, and audit pages show loading/error/empty states.
+- Ticket and manual-review writes require confirmation and backend permission.
+- Reconciliation pages say not implemented when backend returns placeholder.
+- UI does not render PAN, CVV, token, secret, or raw provider payload fields.
+- Mobile typecheck is not required when mobile runtime is untouched.

@@ -573,3 +573,9 @@ Status: Phase 10B backend implementation. These routes require bearer auth plus 
 | `POST /admin/support/tickets/{id}/notes` | Add ticket note | support/admin | `admin.support_tickets.update` | safe note body | `admin.ticket_note_added` |
 
 `/admin/users`, `/admin/payments`, `/admin/receipts`, `/admin/audit-events`, `/admin/manual-review`, and `/admin/support/tickets` expose bounded `limit`/`offset` pagination. Payment list supports status, user, provider-reference, and correlation filters. Reconciliation endpoints are placeholders, not production reconciliation evidence. Ledger and catalog admin APIs remain future. Export is denied unless a later endpoint and permission explicitly allow it.
+
+## Phase 10C Admin Frontend Consumption
+
+The separate `admin/` React/Vite frontend consumes the implemented `/admin/*` endpoints above through `VITE_API_BASE_URL`. The UI marks card and Prontipagos reconciliation responses as placeholders and does not fabricate production rows.
+
+The current admin access screen accepts an existing backend bearer token. Because dedicated admin auth claims/session hardening are still pending, development role rendering is explicitly controlled by `VITE_ENABLE_ADMIN_DEV_AUTH` and `VITE_ADMIN_DEV_ROLE`; backend permission checks remain authoritative for every request.

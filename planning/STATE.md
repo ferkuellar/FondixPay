@@ -205,3 +205,11 @@ Prontipagos is not integrated. It is the next separate sandbox design leg after 
 - Frontend CRM remains pending.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 10C - CRM Admin Panel Frontend Implementation.
+
+# Phase 10C - CRM Admin Panel Frontend Implementation
+
+- Current phase: Phase 10C - CRM Admin Panel Frontend Implementation.
+- This phase implements the initial separate web CRM Admin frontend over the Phase 10B backend admin APIs and placeholders.
+- Backend admin APIs are an explicit dependency and backend authorization remains the source of truth.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 10D - Support, Reconciliation & Manual Review Workflows.

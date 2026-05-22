@@ -20,6 +20,7 @@ Documentos principales:
 
 ```txt
 fondix-pay/
+  admin/
   mobile/
   backend/
   docs/
@@ -60,6 +61,18 @@ npm run mobile:start
 npm run mobile:doctor
 npm run mobile:typecheck
 ```
+
+## CRM Admin
+
+La consola web interna vive en `admin/` y consume los endpoints backend `/admin/*` de Fase 10B.
+
+```powershell
+cd admin
+npm install
+npm run dev
+```
+
+El acceso admin actual usa token backend existente y un rol de desarrollo frontend claramente marcado cuando `VITE_ENABLE_ADMIN_DEV_AUTH=true`. No sustituye autenticacion admin endurecida ni habilita produccion.
 
 ## Docker
 

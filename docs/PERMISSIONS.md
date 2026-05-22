@@ -69,6 +69,10 @@ Phase 10A defines the CRM/Admin contract before runtime implementation. No admin
 
 Every implemented admin endpoint binds one runtime permission through the FastAPI dependency layer. A normal `USER` role receives `403` even with a valid bearer token.
 
+### Phase 10C Frontend Navigation
+
+The `admin/` frontend uses the same runtime permission names to hide module navigation, detail routes, ticket writes, manual-review writes, reconciliation pages, and audit logs. This is a UX guard only: every click still depends on backend `/admin/*` authorization, and frontend dev-role rendering must never be treated as a permission grant.
+
 ### Allowed And Prohibited Actions
 
 - `SUPPORT` can use limited user/payment/receipt views and support tickets; it cannot mutate ledger or resolve financial review.

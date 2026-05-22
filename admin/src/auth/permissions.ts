@@ -1,0 +1,92 @@
+import type { AdminRole, Permission } from "../types/admin";
+
+export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
+  SUPPORT: [
+    "admin.dashboard.view",
+    "admin.users.list",
+    "admin.users.view",
+    "admin.payments.list",
+    "admin.payments.view",
+    "admin.receipts.list",
+    "admin.receipts.view",
+    "admin.manual_review.list",
+    "admin.manual_review.view",
+    "admin.support_tickets.list",
+    "admin.support_tickets.create",
+    "admin.support_tickets.update",
+  ],
+  FINANCE: [
+    "admin.dashboard.view",
+    "admin.users.list",
+    "admin.users.view",
+    "admin.payments.list",
+    "admin.payments.view",
+    "admin.receipts.list",
+    "admin.receipts.view",
+    "admin.reconciliation.card.view",
+    "admin.reconciliation.prontipagos.view",
+    "admin.manual_review.list",
+    "admin.manual_review.view",
+    "admin.manual_review.update",
+    "admin.support_tickets.list",
+  ],
+  ADMIN: [
+    "admin.dashboard.view",
+    "admin.users.list",
+    "admin.users.view",
+    "admin.payments.list",
+    "admin.payments.view",
+    "admin.receipts.list",
+    "admin.receipts.view",
+    "admin.audit.list",
+    "admin.reconciliation.card.view",
+    "admin.reconciliation.prontipagos.view",
+    "admin.manual_review.list",
+    "admin.manual_review.view",
+    "admin.manual_review.update",
+    "admin.support_tickets.list",
+    "admin.support_tickets.create",
+    "admin.support_tickets.update",
+  ],
+  AUDITOR: [
+    "admin.dashboard.view",
+    "admin.users.list",
+    "admin.users.view",
+    "admin.payments.list",
+    "admin.payments.view",
+    "admin.receipts.list",
+    "admin.receipts.view",
+    "admin.audit.list",
+    "admin.reconciliation.card.view",
+    "admin.reconciliation.prontipagos.view",
+    "admin.manual_review.list",
+    "admin.manual_review.view",
+    "admin.support_tickets.list",
+  ],
+  SUPER_ADMIN: [
+    "admin.dashboard.view",
+    "admin.users.list",
+    "admin.users.view",
+    "admin.payments.list",
+    "admin.payments.view",
+    "admin.receipts.list",
+    "admin.receipts.view",
+    "admin.audit.list",
+    "admin.reconciliation.card.view",
+    "admin.reconciliation.prontipagos.view",
+    "admin.manual_review.list",
+    "admin.manual_review.view",
+    "admin.manual_review.update",
+    "admin.support_tickets.list",
+    "admin.support_tickets.create",
+    "admin.support_tickets.update",
+  ],
+};
+
+export function getPermissions(role: AdminRole | null): Permission[] {
+  return role ? ROLE_PERMISSIONS[role] : [];
+}
+
+export function isAdminRole(value: string | null | undefined): value is AdminRole {
+  return Boolean(value && value in ROLE_PERMISSIONS);
+}

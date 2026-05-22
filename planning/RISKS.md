@@ -263,3 +263,17 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | SEV-1 | No manual review queue | Mitigated for backend minimum | Add queue operations and evidence UX. |
 | SEV-1 / SEV-2 | No admin audit logs | Reduced | Implemented sensitive admin view/write events; expand coverage with future endpoints. |
 | SEV-1 | No reconciliation visibility | Partially mitigated | Placeholders exist only; real card and Prontipagos reconciliation remain blockers. |
+
+# Phase 10C CRM Admin Frontend Risks
+
+| Severity | Risk | Status After 10C | Next Action |
+|---|---|---|---|
+| SEV-1 | Admin frontend exposes sensitive data | Reduced | UI uses safe schemas, redaction display, and sensitive-key audit metadata block. |
+| SEV-1 | UI permission mismatch | Reduced | Role navigation/rendering mirrors Phase 10B permissions; backend stays authority. |
+| SEV-1 | Admin action without backend authorization | Mitigated | Frontend uses protected `/admin/*`; backend rejects invalid token/permission. |
+| SEV-1 | Support role overexposure | Reduced | Support navigation excludes audit and reconciliation; backend data remains masked. |
+| SEV-2 | Audit logs not visible | Reduced | Audit list page exists for authorized roles. |
+| SEV-1 | Manual review not usable | Reduced | Queue/detail/update UI exists for authorized backend roles. |
+| SEV-1 | Reconciliation placeholder misunderstood as real | Reduced | UI states placeholder and provider dependency explicitly. |
+| SEV-1 | Frontend not connected to backend admin APIs | Reduced | Shared API client consumes Phase 10B endpoints. |
+| SEV-2 | No frontend tests/typecheck | Partially mitigated | Typecheck/build are required; browser/runtime test automation remains future. |

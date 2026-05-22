@@ -767,3 +767,27 @@ Status: Accepted.
 Decision: Ambiguous payment conditions must be representable as manual-review cases with safe references and an event trail.
 
 Status: Accepted.
+
+## ADR-107 — CRM Admin Panel frontend is a separate web app
+
+Decision: The CRM Admin Panel frontend is implemented as a separate internal web app and does not replace the Expo mobile client.
+
+Status: Accepted.
+
+## ADR-108 — Admin frontend must enforce permission-aware rendering
+
+Decision: Admin navigation, views, and writable controls render only for frontend permissions aligned to backend RBAC, while backend authorization remains authoritative.
+
+Status: Accepted.
+
+## ADR-109 — Admin frontend must never render sensitive payment data
+
+Decision: The admin frontend must not render PAN, CVV, secrets, sensitive tokens, or raw provider payloads.
+
+Status: Accepted.
+
+## ADR-110 — CRM frontend starts read-mostly
+
+Decision: The first CRM frontend is read-mostly and limits writes to backend-supported support ticket and manual-review operations.
+
+Status: Accepted.

@@ -292,3 +292,12 @@ Phase 10B adds backend `/admin/*` dependencies that require bearer authenticatio
 - Admin read/write operations reuse the existing audit writer for current sensitive routes.
 - Reconciliation endpoints are safe placeholders and do not fabricate provider evidence.
 - Session hardening, dedicated admin auth, MFA, export controls, lockout/rate-limit policy, and future IP/device trust remain production blockers.
+
+## CRM Admin Frontend Security
+
+- The `admin/` web app is separate from mobile and consumes only redacted backend admin contracts.
+- Frontend permission rendering hides unavailable modules/actions but never replaces backend authorization.
+- Development role simulation requires `VITE_ENABLE_ADMIN_DEV_AUTH=true` and is documented as development-only.
+- The current access screen stores the pasted bearer token in session storage for this initial internal app; dedicated hardened admin session/auth remains pending.
+- Audit metadata rendering blocks unexpected sensitive key names such as PAN, CVV, secret, token, and raw payload keys.
+- UI copy and reconciliation pages keep mock/sandbox and not-implemented status explicit.
