@@ -477,7 +477,10 @@ Phase 10D.1 has no runtime code changes. Backend/mobile/admin tests are not requ
 Static validation checklist:
 
 - `landing/index.html` exists.
+- `landing/assets/coverage-data.js` exists when official public coverage is published.
 - Landing assets resolve from `landing/assets/` and `landing/fonts/`.
+- Coverage UI renders the approved state/service data from `FONDIXPAY_Cobertura_Por_Estado.xlsx`.
+- Public coverage data excludes internal utility, margins, user data, transaction data, PAN/CVV, tokens, secrets, and provider payloads.
 - No mobile runtime files changed.
 - No backend runtime files changed.
 - No CRM/Admin runtime files changed.

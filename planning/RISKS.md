@@ -329,5 +329,6 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | Unconfirmed support or social channels published | SEV-2 | reduced | Public channels use `[PENDING_SUPPORT_CHANNEL]` until confirmed. |
 | App store URLs published before approval | SEV-2 | reduced | Download links use `[PENDING_APP_STORE_URL]` and `[PENDING_PLAY_STORE_URL]`. |
 | Privacy/terms URLs missing before launch | SEV-2 | open | Placeholders remain until legal/privacy pages are approved. |
-| External map/CDN dependency breaks public landing | SEV-3 | open | Review CDN usage before production publication or replace with local/static map. |
+| External map/CDN dependency breaks public landing | SEV-3 | mitigated | Coverage now renders from local static `coverage-data.js` without external map/CDN dependency. |
+| Public coverage exposes internal commercial fields | SEV-1 | mitigated | Landing publishes only state/service/area/coverage type and excludes utility, margins, charges, user data, tokens, and provider payloads. |
 | Accidental mobile/backend/admin modification | SEV-1 | mitigated | Phase 10X changes are limited to landing/docs/planning. |

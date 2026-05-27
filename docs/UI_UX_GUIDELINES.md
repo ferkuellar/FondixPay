@@ -232,6 +232,9 @@ Future WhatsApp UX must be opt-in, explicit, and revocable.
 - Public CTAs must point to launch, interest, or future download placeholders until official app store URLs exist.
 - Avoid "Paga ahora", login, account, balance, receipt, CRM, admin, or transaction CTAs.
 - State clearly when the platform is preparing launch and payments are not yet live.
-- Do not imply confirmed nationwide coverage unless provider/catalog availability is approved.
+- The approved public coverage file may be shown as official landing coverage once it is sourced from `FONDIXPAY_Cobertura_Por_Estado.xlsx` and product confirms Prontipagos consultation.
+- Public coverage UI may show state, service name, area, and coverage type only.
+- Public coverage UI must not show internal utility, margin, provider payloads, payment status, user data, PAN/CVV, tokens, or secrets.
+- Confirmed landing coverage must still avoid implying that payments are live before controlled launch.
 - Do not imply official WhatsApp support or receipt delivery until runtime and consent are implemented.
 - Do not use unsupported claims such as "fintech regulada", "100% seguro", "PCI compliant", or "tokenización segura".

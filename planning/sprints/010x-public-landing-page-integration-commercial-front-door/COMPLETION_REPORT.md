@@ -36,12 +36,14 @@ landing/
 - `landing/README.md`
 - `landing/.env.example`
 - `landing/vercel.json`
+- `landing/assets/coverage-data.js`
 - `docs/PUBLIC_LANDING_PAGE.md`
 - Sprint 10X files under `planning/sprints/010x-public-landing-page-integration-commercial-front-door/`
 
 ## Files Modified
 
 - `landing/index.html`
+- `landing/README.md`
 - `planning/STATE.md`
 - `planning/DECISIONS.md`
 - `planning/RISKS.md`
@@ -66,6 +68,9 @@ landing/
 - Replaced unconfirmed URLs with required placeholders.
 - Added Vercel static hosting metadata and security headers.
 - Removed the ZIP's public chat/runtime assistant and converted reviews/map claims into launch-pending public status placeholders.
+- Added official public coverage by state from `FONDIXPAY_Cobertura_Por_Estado.xlsx`, approved and consulted with Prontipagos for landing use.
+- Replaced the pending coverage placeholder with a state selector and service list rendered from local static data.
+- Excluded internal utility, margins, charges, user data, transaction data, PAN/CVV, tokens, secrets, and provider payloads from the public coverage file.
 
 ## Core Runtime Confirmation
 
@@ -80,11 +85,16 @@ landing/
 ## Validation Executed
 
 - Inspected ZIP inventory.
+- Parsed `FONDIXPAY_Cobertura_Por_Estado.xlsx` sheet `Simulador por Estado`.
+- Generated public coverage data: 32 states, 89 unique services, 38 national services.
 - Copied static web assets into `landing/`.
 - Scanned landing for prohibited claims and sensitive keywords.
-- Served `landing/` locally on `http://127.0.0.1:4185` and verified with Playwright navigation.
+- Verified `landing/assets/coverage-data.js` contains coverage fields only and not financial utility/margin fields.
+- Served `landing/` locally on `http://127.0.0.1:4186` and verified with Playwright navigation.
 - Confirmed page title: `FondixPay - App para pago de servicios`.
 - Confirmed first viewport states launch is in preparation and real payments are not enabled.
+- Confirmed coverage viewport renders `Cobertura oficial por estado, consultada con Prontipagos`, 89 services, 38 national services, 32 states, and state selector options.
+- Captured a Playwright viewport screenshot during validation and removed the temporary artifact before handoff.
 - Confirmed no npm build is required because the landing is static HTML.
 
 ## Placeholders Pending

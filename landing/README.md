@@ -7,6 +7,7 @@ It is a static landing page copied from the delivered Claude Design system ZIP a
 ## Scope
 
 - Public brand and product presentation.
+- Official public coverage by state from `FONDIXPAY_Cobertura_Por_Estado.xlsx`, approved and consulted with Prontipagos for landing use.
 - Future mobile app download placeholders.
 - Public launch/waitlist copy placeholders.
 - Vercel-compatible static hosting.
@@ -20,6 +21,22 @@ It is a static landing page copied from the delivered Claude Design system ZIP a
 - No CRM/Admin access.
 - No ledger, receipts, reconciliation, Prontipagos, or card processor logic.
 - No secrets or private environment variables.
+
+## Coverage Data
+
+The landing loads `assets/coverage-data.js`.
+
+That file is generated from the approved workbook `FONDIXPAY_Cobertura_Por_Estado.xlsx` and publishes only:
+
+- state name and code,
+- service counts,
+- service area,
+- service name,
+- coverage type.
+
+It intentionally excludes internal utility, margins, charges, user data, transaction data, PAN/CVV, tokens, secrets, and provider payloads.
+
+The coverage section is informational. It does not enable real payments and does not call Prontipagos or the backend.
 
 ## Local Preview
 
@@ -65,6 +82,7 @@ Suggested Vercel settings:
 - Confirm app store URLs.
 - Confirm privacy notice and terms URLs.
 - Confirm official public support/contact channel.
+- Confirm `assets/coverage-data.js` still matches the latest approved public coverage source.
 - Review all claims for legal, security, and product accuracy.
 - Confirm no payment/login/admin/backend links are exposed.
 - Confirm no secrets exist in this folder.

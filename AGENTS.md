@@ -45,3 +45,10 @@ The current flow supports phone login, development OTP `123456`, adding CFE/Telm
 ## Durable Decisions
 
 All durable decisions must be recorded in `planning/DECISIONS.md`. All current state must be recorded in `planning/STATE.md`. Risks belong in `planning/RISKS.md`. Open questions belong in `planning/QUESTIONS.md`. Relevant files belong in `planning/FILE_INVENTORY.md`.
+
+
+## Controlled Iterative Agent Loop
+
+Agents may use the Controlled Iterative Agent Loop only for bounded, testable, auditable tasks such as documentation fixes, lint/typecheck cleanup, small refactors, and test generation.
+
+This technique does not override AXON-AI rules, phase scope, security controls, human approvals, or roadmap governance.

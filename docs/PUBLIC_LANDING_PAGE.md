@@ -49,6 +49,7 @@ landing/
   index.html
   colors_and_type.css
   assets/
+    coverage-data.js
   fonts/
   .env.example
   vercel.json
@@ -64,8 +65,37 @@ Technical adjustments are limited to:
 - unsupported claim removal,
 - pending URL placeholders,
 - copy alignment with mock/dev product status.
+- official public coverage data wiring from `FONDIXPAY_Cobertura_Por_Estado.xlsx`.
 
 The source README/SKILL files from the ZIP are not published in `landing/` because they contain internal design-system guidance and source copy that may not match the current launch constraints.
+
+## Public Coverage Source
+
+The landing includes official public coverage by state from `FONDIXPAY_Cobertura_Por_Estado.xlsx`, confirmed by the product owner as original coverage approved and consulted with Prontipagos.
+
+The generated public file is `landing/assets/coverage-data.js`.
+
+Public fields included:
+
+- state name and state code,
+- total services by state,
+- national service count,
+- state-specific service count,
+- service area,
+- service name,
+- coverage type.
+
+Fields intentionally excluded from the public landing:
+
+- internal utility/margin,
+- provider payloads,
+- user data,
+- transaction data,
+- PAN/CVV,
+- tokens,
+- secrets.
+
+This coverage is public commercial information only. It does not enable real payments, does not call Prontipagos, and does not replace the future coverage-aware service catalog inside the transactional app.
 
 ## Required Placeholders
 
@@ -114,6 +144,8 @@ Prohibited until approved:
 
 - Static page loads from `landing/index.html`.
 - Asset paths are local and resolve.
+- Coverage data loads from `landing/assets/coverage-data.js`.
+- Public coverage excludes internal utility, charges, user data, tokens, and provider payloads.
 - No links point to unconfirmed final channels.
 - Required placeholders are visible in source/config.
 - No payment, login, CRM, or backend action exists.
