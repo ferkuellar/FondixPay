@@ -694,6 +694,27 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
   .coverage-service-head p { margin: 4px 0 0; color: #4E6788; font-size: 13px; }
   .coverage-source { display: inline-flex; align-items: center; border-radius: 99px; padding: 7px 12px;
                      background: rgba(34,197,94,.10); color: #15803D; font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .coverage-map-stage { position: relative; width: 100%; min-height: 420px; padding: 0 18px; }
+  .sp { cursor: pointer; stroke: #fff; stroke-width: .6; transition: opacity .15s; }
+  .sp:hover { opacity: .78; }
+  #tt { position: absolute; background: #FFFFFF; border: 1px solid #D8E8FF;
+        border-radius: 14px; padding: 12px 15px 13px; font-size: 11px; pointer-events: none; display: none; z-index: 10;
+        min-width: 210px; max-width: 230px; line-height: 1.2; box-shadow: 0 16px 34px rgba(21,101,232,.16); }
+  .map-tt-name { color: #0A1628; font-size: 16px; font-weight: 800; line-height: 1.05; margin-bottom: 5px; }
+  .map-tt-main { display: flex; align-items: baseline; gap: 8px; color: #1565E8; }
+  .map-tt-total { font-family: 'Azeret Mono', monospace; font-size: 27px; font-weight: 900; letter-spacing: -.04em; }
+  .map-tt-label { font-family: 'Azeret Mono', monospace; font-size: 18px; font-weight: 900; letter-spacing: -.04em; }
+  .map-tt-meta { font-family: 'Azeret Mono', monospace; font-size: 12px; font-weight: 700; color: #7A95B8; margin-top: 1px; }
+  .map-tt-rule { height: 6px; border-radius: 999px; background: #E9F3FF; margin-top: 8px; overflow: hidden; }
+  .map-tt-rule span { display: block; width: var(--coverage-width, 0%); height: 100%; border-radius: inherit; background: linear-gradient(90deg,#5CB8FF,#1565E8); opacity: .38; }
+  #detail { background: var(--color-background-secondary); border-radius: 12px; padding: 17px 20px; margin: 14px 18px 20px;
+            font-size: 15px; line-height: 1.55; display: none; }
+  .svc-pill { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 20px; margin: 3px 4px 3px 0; font-weight: 600; }
+  .leg-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 10px 18px 6px;
+             font-size: 13px; color: var(--color-text-secondary); }
+  .swatch { display: inline-block; width: 18px; height: 13px; border-radius: 3px; vertical-align: middle; margin-right: 5px; }
+  #loading-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+                 font-size: 13px; color: var(--color-text-secondary); }
 
   /* Area color sets — match brand category palette */
   .cov-tag-ENERGÍA { background: rgba(245,158,11,.12); color: #B45309; }
@@ -721,6 +742,8 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     .coverage-browser { grid-template-columns: 1fr; padding: 14px; }
     .coverage-summary { grid-template-columns: 1fr 1fr 1fr; }
     .coverage-service-head { flex-direction: column; }
+    .coverage-map-stage { padding: 0 8px; min-height: 360px; }
+    #detail { margin: 12px 12px 14px; }
   }
 
   footer { background: #F4F8FF; border-top: 1px solid #E2EAF4; }
@@ -1086,55 +1109,29 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
   <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;margin-bottom:36px;">
     <div>
       <p class="section-eyebrow">Cobertura</p>
-      <h2 class="section-title" style="margin-bottom:14px;">Cobertura oficial por estado, <span style="background:linear-gradient(135deg,#5CB8FF,#1565E8);-webkit-background-clip:text;background-clip:text;color:transparent;">consultada con Prontipagos</span>.</h2>
-      <p class="section-sub" style="margin-bottom:0;">Consulta los servicios aprobados por estado para la landing pública. Esta vista es informativa: los pagos reales siguen sujetos al lanzamiento controlado de FondixPay.</p>
+      <h2 class="section-title" style="margin-bottom:14px;">Disponible en los <span style="background:linear-gradient(135deg,#5CB8FF,#1565E8);-webkit-background-clip:text;background-clip:text;color:transparent;">32 estados</span> de México.</h2>
+      <p class="section-sub" style="margin-bottom:0;">Tu estado activa automáticamente los servicios locales de tu región — agua municipal, predial, gas regional. Pasa el cursor sobre el mapa para ver el detalle.</p>
     </div>
     <div class="cov-stats">
-      <div class="cov-stat"><div class="v" id="coverage-total-services">89</div><div class="l">servicios</div></div>
+      <div class="cov-stat"><div class="v" id="coverage-total-services">200+</div><div class="l">servicios totales</div></div>
       <div class="cov-stat"><div class="v" id="coverage-national-services">38</div><div class="l">nacionales</div></div>
-      <div class="cov-stat"><div class="v" id="coverage-state-count">32</div><div class="l">estados</div></div>
+      <div class="cov-stat"><div class="v" id="coverage-state-count">162</div><div class="l">locales</div></div>
     </div>
   </div>
 
   <div class="cov-card">
-    <div class="cov-card-head">
-      <div>
-        <div class="cov-card-title">Cobertura por estado</div>
-        <div class="cov-card-sub">Fuente: FONDIXPAY_Cobertura_Por_Estado.xlsx · cobertura original aprobada</div>
-      </div>
-      <div class="cov-hint"><span class="cov-hint-icon">✦</span> Cobertura oficial para landing</div>
-    </div>
-
     <div id="cov-map-wrap">
-      <div class="coverage-browser">
-        <div class="coverage-picker">
-          <label for="coverage-state-select">Selecciona un estado</label>
-          <select id="coverage-state-select" aria-label="Selecciona un estado para consultar cobertura"></select>
-          <div class="coverage-summary" id="coverage-summary">
-            <div><b>—</b><span>Total</span></div>
-            <div><b>—</b><span>Nacional</span></div>
-            <div><b>—</b><span>Propio</span></div>
-          </div>
-          <p class="coverage-policy">La información publicada solo incluye cobertura y nombres de servicios. No expone cargos, utilidad interna, datos de usuarios ni información transaccional.</p>
-        </div>
-        <div class="coverage-services" id="coverage-services">
-          <div id="cov-load">Cargando cobertura oficial…</div>
-        </div>
+      <div class="coverage-map-stage">
+        <svg id="mxmap" width="100%" viewBox="0 0 680 440" style="display:block;"></svg>
+        <div id="loading-msg">Cargando mapa...</div>
+        <div id="tt"></div>
       </div>
-    </div>
 
-    <div class="cov-legend">
-      <span class="cov-legend-lbl">Áreas:</span>
-      <span class="cov-leg-item"><span class="cov-leg-sw" style="background:var(--cat-energia);"></span>Energía</span>
-      <span class="cov-leg-item"><span class="cov-leg-sw" style="background:var(--cat-agua);"></span>Agua</span>
-      <span class="cov-leg-item"><span class="cov-leg-sw" style="background:var(--cat-gas);"></span>Gas</span>
-      <span class="cov-leg-item"><span class="cov-leg-sw" style="background:var(--cat-telefonia);"></span>Telecoms / TAE</span>
-      <span class="cov-leg-item"><span class="cov-leg-sw" style="background:var(--cat-gobierno);"></span>Gobierno</span>
-      <span class="cov-leg-item"><span class="cov-leg-sw" style="background:var(--cat-streaming);"></span>Streaming</span>
-    </div>
+      <div class="leg-row" id="legend-row">
+        <span style="font-weight:500;color:var(--color-text-primary);">Servicios locales/regionales:</span>
+      </div>
 
-    <div class="cov-detail" id="cov-detail">
-      <p style="color:#7A95B8;font-size:14px;margin:0;">Cobertura oficial para landing. No habilita pagos reales ni sustituye el catálogo operativo futuro dentro de la app.</p>
+      <div id="detail"></div>
     </div>
   </div>
 </section>
@@ -1464,98 +1461,237 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 </footer>
 
 <!-- Public support chat is intentionally not implemented in Phase 10X. -->
-<script src="assets/coverage-data.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
 <script>
 (() => {
-  const data = window.FONDIX_COVERAGE;
-  const select = document.getElementById("coverage-state-select");
-  const summary = document.getElementById("coverage-summary");
-  const servicesEl = document.getElementById("coverage-services");
-  const totalServices = document.getElementById("coverage-total-services");
-  const nationalServices = document.getElementById("coverage-national-services");
-  const stateCount = document.getElementById("coverage-state-count");
+  const NATIONAL = 38;
 
-  if (!data || !Array.isArray(data.states) || !select || !summary || !servicesEl) {
-    if (servicesEl) servicesEl.innerHTML = '<p class="cov-no-local">No fue posible cargar la cobertura oficial.</p>';
-    return;
-  }
-
-  if (totalServices) totalServices.textContent = String(data.uniqueServiceCount || "—");
-  if (nationalServices) nationalServices.textContent = String(data.nationalServiceCount || "—");
-  if (stateCount) stateCount.textContent = String(data.stateCount || data.states.length || "—");
-
-  const areaOrder = ["ENERGÍA", "AGUA", "GAS", "TELECOMS", "TAE", "GOBIERNO", "STREAMING"];
-  const normalizeAreaClass = (area) => String(area || "OTROS").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Z0-9]/gi, "").toUpperCase();
-  const areaLabel = (area) => String(area || "OTROS");
-  const serviceSort = (a, b) => {
-    const areaA = areaOrder.indexOf(a.area);
-    const areaB = areaOrder.indexOf(b.area);
-    const rankA = areaA === -1 ? 99 : areaA;
-    const rankB = areaB === -1 ? 99 : areaB;
-    if (rankA !== rankB) return rankA - rankB;
-    return a.name.localeCompare(b.name, "es");
+  const stateNames = {
+    AGS:"Aguascalientes",BCN:"Baja California",BCS:"Baja California Sur",
+    CAM:"Campeche",CHP:"Chiapas",CHH:"Chihuahua",CMX:"Ciudad de México",
+    COA:"Coahuila",COL:"Colima",DGO:"Durango",GTO:"Guanajuato",
+    GRO:"Guerrero",HGO:"Hidalgo",JAL:"Jalisco",MEX:"Estado de México",
+    MCH:"Michoacán",MOR:"Morelos",NAY:"Nayarit",NLE:"Nuevo León",
+    OAX:"Oaxaca",PUE:"Puebla",QRO:"Querétaro",ROO:"Quintana Roo",
+    SLP:"San Luis Potosí",SIN:"Sinaloa",SON:"Sonora",TAB:"Tabasco",
+    TAM:"Tamaulipas",TLX:"Tlaxcala",VER:"Veracruz",YUC:"Yucatán",ZAC:"Zacatecas"
   };
 
-  const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#39;"
-  }[char]));
+  const normalize = s => s.toLowerCase()
+    .replace(/[áà]/g,"a").replace(/[éè]/g,"e").replace(/[íì]/g,"i")
+    .replace(/[óò]/g,"o").replace(/[úù]/g,"u").replace(/ñ/g,"n").trim();
 
-  data.states.forEach((state) => {
-    const option = document.createElement("option");
-    option.value = state.code;
-    option.textContent = `${state.name} (${state.code})`;
-    select.appendChild(option);
-  });
+  const nameMap = {
+    "aguascalientes":"AGS","baja california":"BCN","baja california sur":"BCS",
+    "campeche":"CAM","chiapas":"CHP","chihuahua":"CHH",
+    "ciudad de mexico":"CMX","distrito federal":"CMX","ciudad de méxico":"CMX",
+    "coahuila":"COA","coahuila de zaragoza":"COA","colima":"COL","durango":"DGO",
+    "guanajuato":"GTO","guerrero":"GRO","hidalgo":"HGO","jalisco":"JAL",
+    "mexico":"MEX","estado de mexico":"MEX","michoacan":"MCH","michoacan de ocampo":"MCH",
+    "morelos":"MOR","nayarit":"NAY","nuevo leon":"NLE","oaxaca":"OAX","puebla":"PUE",
+    "queretaro":"QRO","quintana roo":"ROO","san luis potosi":"SLP",
+    "sinaloa":"SIN","sonora":"SON","tabasco":"TAB","tamaulipas":"TAM",
+    "tlaxcala":"TLX","veracruz":"VER","veracruz de ignacio de la llave":"VER",
+    "yucatan":"YUC","zacatecas":"ZAC"
+  };
 
-  function renderState(code) {
-    const state = data.states.find((item) => item.code === code) || data.states[0];
-    const grouped = {};
-    [...state.services].sort(serviceSort).forEach((service) => {
-      const area = areaLabel(service.area);
-      grouped[area] = grouped[area] || [];
-      grouped[area].push(service);
-    });
-
-    summary.innerHTML = `
-      <div><b>${state.total}</b><span>Total</span></div>
-      <div><b>${state.national}</b><span>Nacional</span></div>
-      <div><b>${state.local}</b><span>Propio</span></div>
-    `;
-
-    const groupsHtml = Object.entries(grouped).map(([area, services]) => {
-      const cls = normalizeAreaClass(area);
-      const pills = services.map((service) => (
-        `<span class="cov-pill cov-pill-${cls}">${escapeHtml(service.name)}</span>`
-      )).join("");
-      return `
-        <div class="cov-area">
-          <span class="cov-area-tag cov-tag-${cls}">${escapeHtml(area)} · ${services.length}</span>
-          <div class="cov-pills">${pills}</div>
-        </div>
-      `;
-    }).join("");
-
-    servicesEl.innerHTML = `
-      <div class="coverage-service-head">
-        <div>
-          <h3>${escapeHtml(state.name)}</h3>
-          <p>${state.total} servicios disponibles: ${state.national} nacionales + ${state.local} propios del estado.</p>
-        </div>
-        <span class="coverage-source">Prontipagos consultado</span>
-      </div>
-      <div class="cov-national">
-        Cobertura oficial de landing tomada de <b>${escapeHtml(data.source)}</b>. No representa habilitación productiva de pagos reales.
-      </div>
-      ${groupsHtml || '<p class="cov-no-local">Sin servicios publicados para este estado.</p>'}
-    `;
+  function getCode(props) {
+    const keys = ["name","Name","NAME","state_name","NOMBRE","NOM_ENT","admin"];
+    for(const k of keys) {
+      if(props[k]) {
+        const n = normalize(props[k]);
+        if(nameMap[n]) return nameMap[n];
+      }
+    }
+    return null;
   }
 
-  select.addEventListener("change", () => renderState(select.value));
-  renderState(select.value || data.states[0].code);
+  const svcs = [
+    {n:"IZZI",a:"TELECOMS",st:["CMX","MEX","MOR","PUE","HGO","VER","OAX","CHP","TAB","CAM","YUC","ROO","GRO","COL","JAL","NAY"]},
+    {n:"Megacable",a:"TELECOMS",st:["JAL","GTO","AGS","COL","MCH","QRO","MEX","CMX","SIN","SON","NAY","DGO","ZAC","SLP","HGO"]},
+    {n:"Totalplay",a:"TELECOMS",st:["CMX","MEX","NLE","JAL","GTO","PUE","QRO","AGS","COA","CHH","TAM","SLP","HGO","MOR"]},
+    {n:"Axtel",a:"TELECOMS",st:["CHH","COA","NLE","TAM","DGO","SON","SIN","ZAC","SLP","AGS","GTO","QRO","CMX","MEX","HGO","JAL"]},
+    {n:"Maxcom",a:"TELECOMS",st:["CMX","MEX"]},
+    {n:"Cablemas",a:"TELECOMS",st:["JAL","GTO","MCH","AGS","COL","NAY","QRO","CMX","MEX"]},
+    {n:"Cablevision",a:"TELECOMS",st:["CMX","MEX"]},
+    {n:"Multimedios",a:"TELECOMS",st:["NLE","TAM","COA","CHH","DGO","ZAC"]},
+    {n:"Telnor",a:"TELECOMS",st:["BCN","BCS","SON"]},
+    {n:"Gas del Noreste",a:"GAS",st:["NLE","COA","TAM","CHH","DGO","ZAC","SLP","AGS"]},
+    {n:"Ecogas",a:"GAS",st:["NLE","COA","TAM","CHH","DGO","SLP","ZAC"]},
+    {n:"Agua Chihuahua",a:"AGUA",st:["CHH"]},
+    {n:"Agua CDMX",a:"AGUA",st:["CMX"]},
+    {n:"Agua Monterrey",a:"AGUA",st:["NLE"]},
+    {n:"Agua Guadalajara",a:"AGUA",st:["JAL"]},
+    {n:"Agua Puebla",a:"AGUA",st:["PUE"]},
+    {n:"Agua Querétaro",a:"AGUA",st:["QRO"]},
+    {n:"Agua Saltillo",a:"AGUA",st:["COA"]},
+    {n:"Agua Tijuana",a:"AGUA",st:["BCN"]},
+    {n:"Agua Cancún",a:"AGUA",st:["ROO"]},
+    {n:"Agua Acapulco",a:"AGUA",st:["GRO"]},
+    {n:"Agua Celaya",a:"AGUA",st:["GTO"]},
+    {n:"Agua Irapuato",a:"AGUA",st:["GTO"]},
+    {n:"Agua Salamanca",a:"AGUA",st:["GTO"]},
+    {n:"Agua SLP",a:"AGUA",st:["SLP"]},
+    {n:"Agua Torreón",a:"AGUA",st:["COA"]},
+    {n:"Agua Nvo Laredo",a:"AGUA",st:["TAM"]},
+    {n:"Agua Vallarta",a:"AGUA",st:["JAL"]},
+    {n:"Agua Durango",a:"AGUA",st:["DGO"]},
+    {n:"Agua Aguascalientes",a:"AGUA",st:["AGS"]},
+    {n:"Agua Campeche",a:"AGUA",st:["CAM"]},
+    {n:"Agua Progreso",a:"AGUA",st:["YUC"]},
+    {n:"Agua Hidalgo",a:"AGUA",st:["HGO"]},
+    {n:"Tesorería CHH",a:"GOBIERNO",st:["CHH"]},
+    {n:"Tesorería ZAC",a:"GOBIERNO",st:["ZAC"]},
+    {n:"Finanzas GTO",a:"GOBIERNO",st:["GTO"]},
+    {n:"Finanzas JAL",a:"GOBIERNO",st:["JAL"]},
+    {n:"Finanzas MEX",a:"GOBIERNO",st:["MEX"]},
+    {n:"Finanzas QRO",a:"GOBIERNO",st:["QRO"]},
+    {n:"Finanzas MCH",a:"GOBIERNO",st:["MCH"]},
+    {n:"Finanzas COA",a:"GOBIERNO",st:["COA"]},
+    {n:"Finanzas TLX",a:"GOBIERNO",st:["TLX"]},
+    {n:"Finanzas TAM",a:"GOBIERNO",st:["TAM"]},
+    {n:"Finanzas OAX",a:"GOBIERNO",st:["OAX"]},
+    {n:"Finanzas HGO",a:"GOBIERNO",st:["HGO"]},
+    {n:"Finanzas TAB",a:"GOBIERNO",st:["TAB"]},
+    {n:"Predial Celaya",a:"GOBIERNO",st:["GTO"]},
+    {n:"Predial Tijuana",a:"GOBIERNO",st:["BCN"]},
+    {n:"Mun. León",a:"GOBIERNO",st:["GTO"]},
+    {n:"Mun. Querétaro",a:"GOBIERNO",st:["QRO"]},
+    {n:"Mun. Reynosa",a:"GOBIERNO",st:["TAM"]},
+  ];
+
+  const extras = {};
+  const extraDetail = {};
+  for(const svc of svcs) {
+    for(const st of svc.st) {
+      extras[st] = (extras[st]||0)+1;
+      if(!extraDetail[st]) extraDetail[st] = [];
+      extraDetail[st].push({n:svc.n, a:svc.a});
+    }
+  }
+
+  const maxE = Math.max(...Object.values(extras));
+  const colors = ["#E6F1FB","#B5D4F4","#6EA8DC","#378ADD","#185FA5","#0C447C","#042C53"];
+  const colorScale = d3.scaleQuantize().domain([0, maxE]).range(colors);
+
+  const areaStyle = {
+    TELECOMS:{bg:"#EEEDFE",fg:"#3C3489"},
+    GAS:{bg:"#FAEEDA",fg:"#633806"},
+    AGUA:{bg:"#E6F1FB",fg:"#0C447C"},
+    GOBIERNO:{bg:"#FAECE7",fg:"#712B13"},
+  };
+
+  const svg = d3.select("#mxmap");
+  const projection = d3.geoMercator();
+  const pathGen = d3.geoPath(projection);
+  const tt = document.getElementById("tt");
+  const detail = document.getElementById("detail");
+
+  fetch("https://cdn.jsdelivr.net/npm/datamaps@0.5.10/src/js/data/mex.topo.json")
+    .then(r => r.json())
+    .then(topo => {
+      document.getElementById("loading-msg").style.display = "none";
+      const objKey = Object.keys(topo.objects)[0];
+      const features = topojson.feature(topo, topo.objects[objKey]).features;
+
+      projection.fitExtent([[20,10],[660,430]], {type:"FeatureCollection", features});
+
+      svg.selectAll(".sp")
+        .data(features)
+        .join("path")
+        .attr("class","sp")
+        .attr("d", pathGen)
+        .attr("fill", d => {
+          const code = getCode(d.properties);
+          return colorScale(extras[code]||0);
+        })
+        .on("mousemove", function(evt, d) {
+          const code = getCode(d.properties);
+          const name = stateNames[code] || d.properties.name || d.properties.Name || "";
+          const ex = extras[code]||0;
+          const total = NATIONAL + ex;
+          const coveragePct = maxE > 0 ? Math.max(8, Math.round((ex / maxE) * 100)) : 0;
+          tt.innerHTML = `<div class="map-tt-name">${name}</div>
+            <div class="map-tt-main">
+              <span class="map-tt-total">${total}</span>
+              <span class="map-tt-label">servicios</span>
+            </div>
+            <div class="map-tt-meta">${NATIONAL} nacionales · ${ex} locales</div>
+            <div class="map-tt-rule"><span style="--coverage-width:${coveragePct}%"></span></div>`;
+          tt.style.display = "block";
+          const stage = evt.currentTarget.closest(".coverage-map-stage");
+          const bounds = stage.getBoundingClientRect();
+          const pad = 10;
+          const ttWidth = tt.offsetWidth || 220;
+          const ttHeight = tt.offsetHeight || 92;
+          let left = evt.offsetX + 16;
+          let top = evt.offsetY - ttHeight - 14;
+          if (left + ttWidth > bounds.width - pad) left = evt.offsetX - ttWidth - 16;
+          if (left < pad) left = pad;
+          if (top < pad) top = evt.offsetY + 16;
+          if (top + ttHeight > bounds.height - pad) top = bounds.height - ttHeight - pad;
+          tt.style.left = `${left}px`;
+          tt.style.top = `${top}px`;
+        })
+        .on("mouseleave", () => { tt.style.display = "none"; })
+        .on("click", (evt, d) => {
+          const code = getCode(d.properties);
+          if(!code) return;
+          const name = stateNames[code] || "";
+          const ex = extras[code]||0;
+          const total = NATIONAL + ex;
+          const byArea = {};
+          for(const s of (extraDetail[code]||[])) {
+            if(!byArea[s.a]) byArea[s.a]=[];
+            byArea[s.a].push(s.n);
+          }
+          let html = `<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+            <div style="width:16px;height:16px;border-radius:4px;background:${colorScale(ex)};border:0.5px solid #ccc;flex-shrink:0;"></div>
+            <div>
+              <span style="font-size:15px;font-weight:500;">${name}</span>
+              <span style="font-size:12px;color:var(--color-text-secondary);margin-left:8px;">${total} servicios totales</span>
+            </div>
+          </div>
+          <div style="background:var(--color-background-primary);border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;">
+            <span style="color:var(--color-text-secondary);">Nacionales (todos los estados): </span>
+            <strong>${NATIONAL}</strong>
+            <span style="color:var(--color-text-secondary);font-size:11px;"> - CFE, Telmex, Telcel, Netflix, Spotify, Gas LP, Sky, TAE, INFONAVIT...</span>
+          </div>`;
+
+          if(ex > 0) {
+            html += `<div style="font-size:12px;font-weight:500;margin-bottom:6px;">Servicios locales / regionales exclusivos (${ex}):</div>`;
+            for(const [area, names] of Object.entries(byArea)) {
+              const {bg, fg} = areaStyle[area]||{bg:"#eee",fg:"#333"};
+              html += `<div style="margin-bottom:8px;">
+                <span style="display:inline-block;background:${bg};color:${fg};font-size:10px;padding:2px 8px;border-radius:20px;font-weight:500;margin-bottom:4px;">${area}</span><br>`;
+              for(const n of names) {
+                html += `<span class="svc-pill" style="background:${bg};color:${fg};">${n}</span>`;
+              }
+              html += "</div>";
+            }
+          } else {
+            html += `<div style="font-size:12px;color:var(--color-text-secondary);padding:6px 0;">Solo servicios nacionales. No hay agua, gobierno local, ni telecomunicaciones regionales disponibles aún en el catálogo.</div>`;
+          }
+          detail.style.display = "block";
+          detail.innerHTML = html;
+          svg.selectAll(".sp").attr("stroke-width", f => getCode(f.properties)===code ? 2 : 0.6)
+            .attr("stroke", f => getCode(f.properties)===code ? "#1E3A5F" : "#fff");
+        });
+
+      const legRow = document.getElementById("legend-row");
+      const thresholds = [0,...colorScale.thresholds()];
+      legRow.innerHTML = '<span style="font-weight:500;color:var(--color-text-primary);font-size:12px;">Servicios locales:</span> ' +
+        colors.map((c,i) => {
+          const lo = thresholds[i]!==undefined ? Math.ceil(thresholds[i]) : 0;
+          const hi = thresholds[i+1]!==undefined ? Math.floor(thresholds[i+1]-0.01) : maxE;
+          const label = i===0 ? "Solo nacionales" : `+${lo}-${hi} extra`;
+          return `<span><span class="swatch" style="background:${c};"></span>${label}</span>`;
+        }).join(" ");
+    })
+    .catch(() => {
+      document.getElementById("loading-msg").textContent = "Error al cargar el mapa. Verifica tu conexión.";
+    });
 })();
 </script>
 </body>
