@@ -238,3 +238,32 @@ Future WhatsApp UX must be opt-in, explicit, and revocable.
 - Confirmed landing coverage must still avoid implying that payments are live before controlled launch.
 - Do not imply official WhatsApp support or receipt delivery until runtime and consent are implemented.
 - Do not use unsupported claims such as "fintech regulada", "100% seguro", "PCI compliant", or "tokenización segura".
+## Coverage-Aware Service Catalog UX
+
+### Mobile
+
+- Mobile should show only services with `payable_in_mobile=true` for MVP.
+- Unavailable, unknown, provider-pending, maintenance, and deprecated services must not reach `ConfirmPayment`.
+- If a future product decision allows `coming_soon`, the CTA must be disabled and clear.
+- User-facing copy should be plain:
+  - `Servicio no disponible por ahora`
+  - `Estamos preparando este servicio`
+  - `No podemos validar esta referencia todavia`
+- Do not expose provider jargon, Prontipagos codes, raw errors, or operational states to the user.
+- Empty states should help users understand that more services will be enabled as coverage is confirmed.
+
+### Landing / Public Coverage
+
+- The coverage map can show reference/commercial coverage.
+- The map must not imply that every listed service is currently payable.
+- Use disclaimers such as:
+  - `Cobertura referencial sujeta a disponibilidad del proveedor.`
+  - `Servicios disponibles para pago se habilitaran conforme a validacion operativa.`
+- Do not show direct `Paga ahora` CTAs for services that are not production-enabled.
+
+### CRM/Admin
+
+- Admin can see all statuses, including `provider_pending`, `unknown`, and `temporarily_disabled`.
+- Support-facing views should provide safe explanation language.
+- Admin/finance views can show provider mapping only according to RBAC.
+- Coverage changes must be visible with audit history.

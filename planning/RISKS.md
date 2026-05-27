@@ -332,3 +332,17 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | External map/CDN dependency breaks public landing | SEV-3 | mitigated | Coverage now renders from local static `coverage-data.js` without external map/CDN dependency. |
 | Public coverage exposes internal commercial fields | SEV-1 | mitigated | Landing publishes only state/service/area/coverage type and excludes utility, margins, charges, user data, tokens, and provider payloads. |
 | Accidental mobile/backend/admin modification | SEV-1 | mitigated | Phase 10X changes are limited to landing/docs/planning. |
+## Phase 10E - Coverage-Aware Service Catalog Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Unconfirmed service shown as payable | SEV-1 | open | Mobile must require `payable_in_mobile=true` backed by confirmed provider capability. |
+| Coverage map interpreted as payment availability | SEV-1 | open | Landing disclaimers and docs state the map is reference/commercial only. |
+| Provider catalog mismatch | SEV-1 | open | Future sync must detect mismatches and create catalog/manual review events. |
+| Unavailable service payment attempt | SEV-1 | open | Payment flow must reject non-payable services before confirmation. |
+| Stale coverage data | SEV-2 | open | Catalog sources need versioning, imported_at, and review workflow. |
+| Excel/map discrepancy | SEV-2 | open | Phase 10F must report discrepancies before import. |
+| Hardcoded services diverge from provider catalog | SEV-1 | open | Replace hardcoded mobile/map data with validated catalog source. |
+| Wrong provider service code | SEV-1 | open | Provider mapping requires admin review and audit trail. |
+| No audit trail for coverage changes | SEV-1 | open | ADR-129 requires audit events for coverage and visibility changes. |
+| User frustration from unavailable services | SEV-2 | open | MVP hides unavailable services and uses clear unavailable copy. |

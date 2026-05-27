@@ -669,3 +669,31 @@ The public landing page does not expose or consume backend API endpoints. It mus
 - user account endpoints.
 
 Future public waitlist or contact capture would require a separate approved API contract, privacy review, rate limiting, spam controls, and no sensitive financial data.
+## Future Coverage-Aware Service Catalog APIs
+
+Status: proposed/future. These endpoints are not implemented in Phase 10E.
+
+### Public / Mobile APIs
+
+| Endpoint | Purpose | Status | Notes |
+|---|---|---|---|
+| `GET /service-catalog` | Return mobile-safe service catalog items. | proposed | Must only include payable or approved visible services according to product rules. |
+| `GET /service-catalog/{id}` | Return mobile-safe service detail. | proposed | Must not expose provider codes or internal notes. |
+| `GET /service-categories` | Return categories for service discovery. | proposed | Used by mobile and future landing catalog filters. |
+| `GET /coverage-map` | Return public coverage map data. | proposed | Commercial/reference data only, not payment authority. |
+| `GET /coverage-map/states/{state_code}` | Return public state coverage summary. | proposed | Must include disclaimer metadata. |
+
+### Admin APIs
+
+| Endpoint | Purpose | Status | Notes |
+|---|---|---|---|
+| `GET /admin/service-catalog` | Admin view of all services and statuses. | proposed | Requires admin auth/RBAC. |
+| `PATCH /admin/service-catalog/{id}` | Update visibility/status metadata. | proposed | Requires explicit permission and audit event. |
+| `POST /admin/service-catalog/sync` | Start future provider catalog sync. | proposed | Placeholder until Prontipagos integration is contractual. |
+| `GET /admin/service-catalog/syncs` | View sync history. | proposed | Read-only for audit/finance/admin roles. |
+
+Rules:
+
+- No unconfirmed service can be returned as payable.
+- Public APIs must not expose provider credentials, raw payloads, or admin notes.
+- Admin APIs must require authentication, explicit permissions, redaction, and audit logging.

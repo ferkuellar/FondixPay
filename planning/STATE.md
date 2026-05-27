@@ -246,3 +246,30 @@ WhatsApp receipt delivery has been approved as a future non-blocking notificatio
 - `mobile/`, `backend/`, and `admin/` runtime modules remain unchanged by this phase.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 10E - Coverage-Aware Service Catalog Design, or Phase AWS-1 - Terraform Foundation if infrastructure is prioritized.
+## Current Phase - Phase 10E - Coverage-Aware Service Catalog Design
+
+FondixPay is currently in Phase 10E: Coverage-Aware Service Catalog Design.
+
+This phase designs how services, categories, state coverage, visibility, provider capability, mobile payment eligibility, landing coverage, and CRM/Admin visibility should work before real provider-backed payments.
+
+Current findings:
+
+- The requested repo path `assets/coverage-map.html` is not present in this workspace.
+- The matching coverage map asset was found in the external design-system folder and analyzed as a commercial/reference artifact.
+- The approved Excel workbook `FONDIXPAY_Cobertura_Por_Estado.xlsx` was analyzed as coverage reference data.
+- Existing backend service providers are mock/manual and not coverage-aware.
+- Existing mobile saved services include hardcoded demo services and do not yet enforce state-aware coverage.
+- No runtime implementation was added in Phase 10E.
+
+Operating status:
+
+- Public landing coverage is reference/commercial only.
+- Mobile payable catalog must be stricter than landing coverage.
+- No unconfirmed service should be marked payable.
+- No Prontipagos real integration was added.
+- No payment flow was changed.
+- Production commercial launch remains blocked.
+
+Next recommended phase:
+
+Phase 10F - Coverage-Aware Service Catalog Implementation.

@@ -492,3 +492,21 @@ Static validation checklist:
 - Landing copy does not publish unsupported security, regulatory, PCI, tokenization, SPEI, CoDi, or WhatsApp delivery claims.
 
 Runtime tests for backend/mobile/admin are not required when Phase 10X changes are limited to static landing and documentation.
+## Phase 10E - Coverage-Aware Service Catalog Validation
+
+Checklist for future implementation:
+
+- Mobile shows only `payable_in_mobile=true` services.
+- Landing map does not imply that all displayed services are payable.
+- Unavailable services cannot enter payment confirmation.
+- Admin can see coverage status for all services.
+- Coverage changes create audit events.
+- Provider mapping is required before payment execution.
+- Reference validation capability is defined before payment.
+- Amount lookup capability is defined before payment.
+- Receipt capability is defined before payment.
+- No unconfirmed service is shown as payable.
+- Map/Excel discrepancies are documented before import.
+- CFE, Telmex, Telcel, and other national services are not marked `available` unless confirmed.
+- Provider codes and capability details are hidden from public/mobile responses.
+- Tests cover unavailable, provider-pending, maintenance, and available states.

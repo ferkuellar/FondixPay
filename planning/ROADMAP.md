@@ -401,3 +401,16 @@ Objective: implement status, restriction, audit, and support behavior for accoun
 Real wallet and real balance remain moved to a future regulated phase after legal/provider/custody decisions.
 
 Wallet/account/simulated balance work in the current roadmap is demo/account-model work only. It is not a user-facing payment method and does not replace debit or credit card.
+## Phase 10E - Coverage-Aware Service Catalog Design
+
+Status: current design phase.
+
+Purpose:
+Design the coverage-aware service catalog that separates public coverage display from mobile payment eligibility. This phase uses the coverage map and approved Excel as references, but does not implement runtime catalog behavior.
+
+## Phase 10F - Coverage-Aware Service Catalog Implementation
+
+Status: recommended next catalog phase.
+
+Purpose:
+Implement service catalog models, coverage-by-state rules, provider capability records, admin visibility, mobile payable filtering, and future landing map data source governance.

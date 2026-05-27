@@ -674,3 +674,36 @@ Forbidden metadata:
 - raw provider errors
 
 Phase 10D.1 documents these events only; it does not emit runtime WhatsApp events.
+## Coverage-Aware Service Catalog Audit Events
+
+Future events:
+
+| Event | When |
+|---|---|
+| `service_catalog.viewed` | Catalog is viewed by admin or future catalog API audit scope. |
+| `service_catalog.item_enabled` | A service is enabled for visibility or payment. |
+| `service_catalog.item_disabled` | A service is disabled or removed from payment eligibility. |
+| `service_catalog.coverage_changed` | State/service coverage status changes. |
+| `service_catalog.sync_started` | Provider catalog sync starts. |
+| `service_catalog.sync_completed` | Provider catalog sync completes. |
+| `service_catalog.sync_failed` | Provider catalog sync fails. |
+| `service_catalog.provider_mapping_changed` | Provider code/capability mapping changes. |
+| `service_catalog.visibility_changed` | Landing/mobile/admin visibility changes. |
+| `coverage_map.viewed` | Public coverage map is viewed if analytics/audit scope is later approved. |
+| `coverage_map.state_selected` | User selects a state on coverage map if analytics/audit scope is later approved. |
+
+Required fields for admin catalog changes:
+
+- `actor_id`
+- `role`
+- `permission`
+- `entity_type`
+- `entity_id`
+- `before_status`
+- `after_status`
+- `before_visibility`
+- `after_visibility`
+- `reason`
+- `request_id`
+- `correlation_id`
+- `created_at`

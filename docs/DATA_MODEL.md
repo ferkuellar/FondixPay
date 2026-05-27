@@ -701,3 +701,104 @@ Rules:
 - Full phone numbers are not stored in delivery logs.
 - Suggested idempotency key: `receipt_id + channel + template_name + recipient_hash`.
 - WhatsApp delivery does not replace internal receipt/proof, ledger, or audit records.
+## Coverage-Aware Service Catalog Proposed Model
+
+Status: proposed for Phase 10F. Not implemented in runtime during Phase 10E.
+
+### ServiceCategory
+
+- `id`
+- `code`
+- `name`
+- `display_order`
+- `created_at`
+
+### ServiceCatalogItem
+
+- `id`
+- `category_id`
+- `display_name`
+- `slug`
+- `icon_key`
+- `description`
+- `is_national`
+- `coverage_status`
+- `visible_on_landing`
+- `visible_on_mobile`
+- `payable_in_mobile`
+- `visible_on_admin`
+- `show_in_coverage_map`
+- `is_mock`
+- `sort_order`
+- `created_at`
+- `updated_at`
+
+### ServiceCoverageByState
+
+- `id`
+- `service_catalog_item_id`
+- `state_code`
+- `state_name`
+- `coverage_status`
+- `source`
+- `notes`
+- `created_at`
+- `updated_at`
+
+### ProviderServiceCapability
+
+- `id`
+- `service_catalog_item_id`
+- `provider_name`
+- `provider_service_code`
+- `supports_reference_validation`
+- `supports_amount_lookup`
+- `supports_payment_execution`
+- `supports_receipt`
+- `min_amount_minor`
+- `max_amount_minor`
+- `currency`
+- `status`
+- `notes`
+- `created_at`
+- `updated_at`
+
+### CoverageMapSource
+
+- `id`
+- `source_name`
+- `source_type`
+- `file_path`
+- `version`
+- `imported_at`
+- `notes`
+
+### ServiceCatalogSync
+
+- `id`
+- `provider_name`
+- `status`
+- `started_at`
+- `completed_at`
+- `created_by`
+- `summary_json`
+- `error_message_safe`
+
+### ServiceAvailabilityEvent
+
+- `id`
+- `service_catalog_item_id`
+- `event_type`
+- `before_status`
+- `after_status`
+- `actor_id`
+- `reason`
+- `created_at`
+
+### Model Rules
+
+- `payable_in_mobile=true` requires `coverage_status=available` and confirmed provider capability.
+- National coverage does not imply payable status.
+- Landing visibility does not imply mobile payment eligibility.
+- Provider codes and sync metadata are admin-only.
+- Coverage changes require audit events.

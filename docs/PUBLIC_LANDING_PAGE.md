@@ -158,3 +158,18 @@ Prohibited until approved:
 - App store/support/legal URLs may be published before confirmation.
 - Vercel may be misused for sensitive runtime.
 - Landing may drift into payment or account flows if boundaries are not enforced.
+## Coverage Map And Catalog Boundary
+
+The public coverage map is allowed as a commercial/reference layer for the landing page. It is not a payment availability guarantee and must not decide which services are payable in the mobile app.
+
+Rules:
+
+- The map can show public coverage by state and category.
+- The map must include disclaimer language when coverage is broader than payable mobile catalog.
+- The map must not expose transactional backend, CRM, admin data, provider credentials, raw provider payloads, or user data.
+- Future map data should come from the validated coverage-aware service catalog.
+- Mobile payable services must remain stricter than public coverage display.
+
+Required disclaimer:
+
+`Cobertura referencial sujeta a disponibilidad del proveedor. Servicios disponibles para pago se habilitaran conforme a validacion operativa.`

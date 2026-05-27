@@ -547,3 +547,72 @@ Future metrics:
 - `public_landing_cta_click_count`
 - `public_landing_waitlist_interest_count`
 - `public_landing_broken_link_count`
+## Coverage-Aware Service Catalog Operations
+
+### Runbook - Service Unavailable
+
+1. Search service in CRM/Admin catalog.
+2. Confirm `coverage_status`, `payable_in_mobile`, and provider capability.
+3. If status is not `available`, explain that the service is not enabled for payment yet.
+4. Do not suggest manual payment or unsupported channels.
+5. If the service should be available, escalate to provider/catalog operations.
+
+### Runbook - Provider Catalog Mismatch
+
+1. Compare FondixPay catalog item with provider catalog reference.
+2. Check provider service code, state coverage, and capability flags.
+3. Temporarily disable mobile payable status if mismatch affects payment execution.
+4. Create manual review or catalog review item.
+5. Record audit event and operational notes.
+
+### Runbook - Disable Service
+
+1. Confirm incident or provider notice.
+2. Set `coverage_status=temporarily_disabled` or `maintenance`.
+3. Set `payable_in_mobile=false`.
+4. Keep landing visibility only if disclaimer remains accurate.
+5. Notify support with approved copy.
+6. Audit the change.
+
+### Runbook - Enable New Service
+
+1. Confirm provider mapping.
+2. Confirm reference validation.
+3. Confirm amount lookup.
+4. Confirm payment execution.
+5. Confirm receipt capability.
+6. Confirm fee model.
+7. Run availability tests.
+8. Enable mobile visibility and payable status only after approval.
+9. Audit the change.
+
+### Runbook - Map Discrepancy
+
+1. Compare landing map state/service list with catalog source.
+2. If map is broader than payable catalog, keep disclaimer visible.
+3. If map is factually wrong, update reference data after approval.
+4. Do not change mobile payable status from map data alone.
+
+### Runbook - User Asks Why Service Is Unavailable
+
+Use safe copy:
+
+`Ese servicio aun no esta habilitado para pago en FondixPay. Lo activaremos cuando la cobertura y la validacion operativa del proveedor esten confirmadas.`
+
+### Runbook - Future Prontipagos Catalog Sync Failure
+
+1. Keep last known safe catalog state.
+2. Do not auto-enable new services.
+3. Do not auto-disable services unless there is a confirmed high-risk mismatch.
+4. Create catalog sync incident.
+5. Audit failure.
+
+### Future Metrics
+
+- `service_catalog_view_count`
+- `coverage_map_state_click_count`
+- `unavailable_service_attempt_count`
+- `catalog_sync_success_count`
+- `catalog_sync_failure_count`
+- `service_disabled_count`
+- `provider_mapping_mismatch_count`

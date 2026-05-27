@@ -935,3 +935,42 @@ Decision: The public landing must not import, modify, or couple itself to the mo
 Rationale: Commercial front-door work must not destabilize the transactional core or imply production readiness.
 
 Status: Accepted.
+## ADR-125 - Service catalog must be coverage-aware
+
+Decision:
+FondixPay must only show services as payable when coverage and transactional capability are confirmed.
+
+Rationale:
+The public coverage map and Excel coverage reference can describe commercial availability, but mobile payment eligibility requires provider mapping, reference validation, amount lookup, payment execution, receipt capability, fee rules, and operations support.
+
+## ADR-126 - MVP hides unavailable services by default
+
+Decision:
+For MVP, unavailable, unconfirmed, provider-pending, unknown, maintenance, and deprecated services are not shown as payable in the mobile app.
+
+Rationale:
+Hiding unavailable services avoids user frustration and prevents payments from entering flows that cannot be executed or supported safely.
+
+## ADR-127 - Coverage map is commercial/reference layer, not payment authority
+
+Decision:
+The coverage map can be used in the public landing page as a commercial/reference layer, but it does not define by itself which services are payable.
+
+Rationale:
+The map is hardcoded/reference data and does not include provider capability, Prontipagos validation, operational readiness, or receipt rules.
+
+## ADR-128 - Provider capability is required before payment execution
+
+Decision:
+A service cannot enter the payment flow unless provider capability is confirmed for the required operations: reference validation, amount lookup, payment execution, and receipt handling as applicable.
+
+Rationale:
+Coverage without transactional capability can create ambiguous or failed payments and support burden.
+
+## ADR-129 - Coverage changes require audit trail
+
+Decision:
+Changes to coverage, visibility, payable status, or provider mapping must generate audit events.
+
+Rationale:
+Catalog changes directly affect what users can attempt to pay and must be traceable for operations, support, and compliance readiness.

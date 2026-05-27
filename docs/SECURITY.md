@@ -355,3 +355,13 @@ Security rules:
 - Vercel is approved only for this static landing, not for backend financial or admin runtime.
 
 The landing may include public placeholders for future app store, terms, privacy, support, and landing URLs. Those placeholders must not be replaced until official channels are approved.
+## Coverage-Aware Service Catalog Security
+
+- Public catalog and coverage endpoints must not expose secrets, provider credentials, raw provider payloads, internal margins, PAN, CVV, card tokens, or private URLs.
+- Provider service codes and capability details are admin-only and require RBAC.
+- Coverage changes must require explicit permissions and audit events.
+- Provider mapping changes must be protected from SUPPORT-level roles unless explicitly approved.
+- Landing coverage data is public/commercial reference and must be sanitized before publication.
+- Prontipagos credentials and provider API keys must stay in secret management, never in catalog records or frontend bundles.
+- Raw provider catalog sync payloads must be stored only if there is a redaction and retention policy; otherwise store normalized safe fields only.
+- A compromised public landing page must not grant access to mobile payment APIs, admin APIs, CRM, ledger, receipts, provider payloads, or secrets.
