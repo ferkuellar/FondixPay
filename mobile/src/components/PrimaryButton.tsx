@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
-import { ActivityIndicator, Pressable, StyleSheet, Text } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, shadows, spacing, typography } from '../theme';
+import { colors, radius, shadows, spacing, typography, useAppTheme } from '../theme';
 
-type Variant = 'primary' | 'secondary' | 'success' | 'danger';
-type Size = 'lg' | 'md';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'success' | 'danger';
+type Size = 'lg' | 'md' | 'sm';
 
 type Props = {
   children: ReactNode;
@@ -24,6 +24,9 @@ export function PrimaryButton({
   size = 'lg',
 }: Props) {
   const isDisabled = disabled || loading;
+  const { theme } = useAppTheme();
+  const isPrimary = variant === 'primary' || variant === 'success';
+  const buttonColor = variant === 'danger' ? theme.error : variant === 'success' ? theme.success : theme.primary;
 
   return (
     <Pressable
@@ -34,16 +37,31 @@ export function PrimaryButton({
       style={({ pressed }) => [
         styles.base,
         size === 'md' && styles.md,
-        styles[variant],
+        size === 'sm' && styles.sm,
+        variant === 'secondary' && { backgroundColor: theme.surface, borderColor: theme.borderHi, borderWidth: 1.5 },
+        variant === 'ghost' && { backgroundColor: 'transparent' },
+        variant === 'danger' && { backgroundColor: buttonColor },
+        isPrimary && { backgroundColor: buttonColor },
         pressed && !isDisabled && styles.pressed,
-        isDisabled && styles.disabled,
-        variant === 'primary' && !isDisabled && shadows.button,
+        isDisabled && { backgroundColor: theme.disabledBg, opacity: 1 },
+        isPrimary && !isDisabled && shadows.button,
       ]}
     >
       {loading ? (
-        <ActivityIndicator color={variant === 'secondary' ? colors.primary : '#FFFFFF'} />
+        <View style={styles.loadingRow}>
+          <ActivityIndicator color={variant === 'secondary' ? theme.primary : '#FFFFFF'} />
+          <Text style={[styles.label, variant === 'secondary' && { color: theme.primary }]}>Procesando...</Text>
+        </View>
       ) : (
-        <Text style={[styles.label, variant === 'secondary' && styles.secondaryLabel]}>{children}</Text>
+        <Text
+          style={[
+            styles.label,
+            (variant === 'secondary' || variant === 'ghost') && { color: theme.primary },
+            isDisabled && { color: theme.disabledFg },
+          ]}
+        >
+          {children}
+        </Text>
       )}
     </Pressable>
   );
@@ -52,39 +70,29 @@ export function PrimaryButton({
 const styles = StyleSheet.create({
   base: {
     alignItems: 'center',
-    borderRadius: radius.md,
+    borderRadius: radius.lg,
     justifyContent: 'center',
-    minHeight: 52,
+    minHeight: 56,
     paddingHorizontal: spacing.xl,
-  },
-  danger: {
-    backgroundColor: colors.danger,
-  },
-  disabled: {
-    opacity: 0.45,
   },
   label: {
     ...typography.button,
     color: '#FFFFFF',
   },
+  loadingRow: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
   md: {
-    minHeight: 44,
+    minHeight: 48,
   },
   pressed: {
     opacity: 0.9,
   },
-  primary: {
-    backgroundColor: colors.primary,
-  },
-  secondary: {
-    backgroundColor: colors.bg,
-    borderColor: colors.primary,
-    borderWidth: 1.5,
-  },
-  secondaryLabel: {
-    color: colors.primary,
-  },
-  success: {
-    backgroundColor: colors.success,
+  sm: {
+    borderRadius: radius.md,
+    minHeight: 40,
+    paddingHorizontal: spacing.lg,
   },
 });

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, spacing, typography } from '../theme';
+import { radius, spacing, typography, useAppTheme } from '../theme';
 import type { TransactionHistoryFilter } from '../types';
 
 type Props = {
@@ -12,10 +12,12 @@ const filters: Array<[TransactionHistoryFilter, string]> = [
   ['all', 'Todos'],
   ['succeeded', 'Pagados'],
   ['pending', 'Pendientes'],
-  ['failed', 'Fallidos'],
+  ['failed', 'En revisión'],
 ];
 
 export function HistoryFilterTabs({ selected, onSelect }: Props) {
+  const { theme } = useAppTheme();
+
   return (
     <View style={styles.tabs}>
       {filters.map(([filter, label]) => (
@@ -24,9 +26,13 @@ export function HistoryFilterTabs({ selected, onSelect }: Props) {
           accessibilityState={{ selected: filter === selected }}
           key={filter}
           onPress={() => onSelect(filter)}
-          style={[styles.tab, filter === selected && styles.tabActive]}
+          style={[
+            styles.tab,
+            { backgroundColor: theme.surface, borderColor: theme.border },
+            filter === selected && { backgroundColor: `${theme.primary}18`, borderColor: theme.primary },
+          ]}
         >
-          <Text style={[styles.tabText, filter === selected && styles.tabTextActive]}>{label}</Text>
+          <Text style={[styles.tabText, { color: filter === selected ? theme.primary : theme.fg2 }]}>{label}</Text>
         </Pressable>
       ))}
     </View>
@@ -35,21 +41,14 @@ export function HistoryFilterTabs({ selected, onSelect }: Props) {
 
 const styles = StyleSheet.create({
   tab: {
-    backgroundColor: colors.bgSubtle,
+    borderWidth: 1,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
   },
-  tabActive: {
-    backgroundColor: colors.primarySoft,
-  },
   tabText: {
     ...typography.caption,
-    color: colors.textSecondary,
     fontWeight: '600',
-  },
-  tabTextActive: {
-    color: colors.primary,
   },
   tabs: {
     flexDirection: 'row',

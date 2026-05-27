@@ -5,8 +5,9 @@ import { StyleSheet, Text, View } from 'react-native';
 import { PaymentRecoverySummary } from '../../components/PaymentRecoverySummary';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
+import { AlertCard } from '../../components/AlertCard';
 import { usePaymentStore } from '../../store/paymentStore';
-import { colors, radius, spacing, typography } from '../../theme';
+import { radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PaymentFailed'>;
@@ -25,6 +26,7 @@ function failureMessage(reason: Props['route']['params']['recovery']['reason']) 
 }
 
 export function PaymentFailedScreen({ navigation, route }: Props) {
+  const { theme } = useAppTheme();
   const recovery = route.params.recovery;
   const setMockScenario = usePaymentStore((state) => state.setMockScenario);
 
@@ -37,26 +39,25 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View style={styles.hero}>
-          <View style={styles.icon}>
-            <Feather color={colors.danger} name="x-circle" size={28} />
+          <View style={[styles.icon, { backgroundColor: `${theme.error}18` }]}>
+            <Feather color={theme.error} name="x-circle" size={34} />
           </View>
-          <Text style={styles.title}>El pago no se completó</Text>
-          <Text style={styles.body}>{failureMessage(recovery.reason)} No se realizó ningún cargo real.</Text>
+          <Text style={[styles.title, { color: theme.fg }]}>No pudimos hacer tu pago</Text>
+          <Text style={[styles.body, { color: theme.fg2 }]}>{failureMessage(recovery.reason)}</Text>
         </View>
         <PaymentRecoverySummary recovery={recovery} />
-        <View style={styles.notice}>
-          <Text style={styles.noticeTitle}>Siguiente acción</Text>
-          <Text style={styles.noticeText}>
-            No se generó comprobante confirmado. Puedes reintentar de forma segura o cambiar la tarjeta demo antes de pagar.
-          </Text>
-        </View>
+        <AlertCard
+          tone="info"
+          title="No se cobró nada"
+          message="No se movió dinero de tu cuenta. Puedes intentar de nuevo sin riesgo."
+        />
         <View style={styles.actions}>
           <PrimaryButton onPress={retry}>INTENTAR DE NUEVO</PrimaryButton>
           <PrimaryButton
             onPress={() => navigation.navigate('PaymentMethods', { serviceId: recovery.serviceId })}
             variant="secondary"
           >
-            CAMBIAR MÉTODO
+            Usar otro método de pago
           </PrimaryButton>
           <PrimaryButton onPress={() => navigation.navigate('SupportPlaceholder', { recovery })} variant="secondary">
             NECESITO AYUDA
@@ -76,7 +77,6 @@ const styles = StyleSheet.create({
   },
   body: {
     ...typography.body,
-    color: colors.textSecondary,
     textAlign: 'center',
   },
   container: {
@@ -89,15 +89,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignItems: 'center',
-    backgroundColor: colors.dangerSoft,
     borderRadius: 28,
     height: 56,
     justifyContent: 'center',
     width: 56,
   },
   notice: {
-    backgroundColor: colors.bgSubtle,
-    borderColor: colors.border,
     borderRadius: radius.md,
     borderWidth: 1,
     gap: spacing.xs,
@@ -105,16 +102,13 @@ const styles = StyleSheet.create({
   },
   noticeText: {
     ...typography.caption,
-    color: colors.textSecondary,
   },
   noticeTitle: {
     ...typography.body,
-    color: colors.textPrimary,
     fontWeight: '700',
   },
   title: {
     ...typography.title,
-    color: colors.textPrimary,
     textAlign: 'center',
   },
 });

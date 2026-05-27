@@ -5,12 +5,14 @@ import { StyleSheet, Text, View } from 'react-native';
 import { PaymentRecoverySummary } from '../../components/PaymentRecoverySummary';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
-import { colors, radius, spacing, typography } from '../../theme';
+import { AlertCard } from '../../components/AlertCard';
+import { radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PaymentPending'>;
 
 export function PaymentPendingScreen({ navigation, route }: Props) {
+  const { theme } = useAppTheme();
   const recovery = route.params.recovery;
   const isTimeout = recovery.status === 'timeout';
 
@@ -18,23 +20,21 @@ export function PaymentPendingScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View style={styles.hero}>
-          <View style={styles.icon}>
-            <Feather color={colors.warning} name="clock" size={28} />
+          <View style={[styles.icon, { backgroundColor: `${theme.processing}18` }]}>
+            <Feather color={theme.processing} name="loader" size={34} />
           </View>
-          <Text style={styles.title}>{isTimeout ? 'Estamos verificando tu pago' : 'Pago en proceso'}</Text>
-          <Text style={styles.body}>
-            Tu pago está pendiente de confirmación. Aún no podemos confirmar el resultado. No intentes pagar de nuevo
-            por ahora.
-          </Text>
+          <Text style={[styles.title, { color: theme.fg }]}>Estamos confirmando tu pago</Text>
+          <Text style={[styles.body, { color: theme.fg2 }]}>Aún no podemos confirmar el resultado. No hagas otro pago por ahora.</Text>
         </View>
-        <View style={styles.status}>
-          <Text style={styles.statusLabel}>Estado mock/dev</Text>
-          <Text style={styles.statusValue}>{isTimeout ? 'En verificación' : 'Pendiente de confirmación'}</Text>
-          <Text style={styles.statusHint}>Comprobante pendiente. No hay confirmacion de proveedor.</Text>
+        <View style={[styles.status, { backgroundColor: `${theme.processing}18`, borderColor: `${theme.processing}55` }]}>
+          <Text style={[styles.statusLabel, { color: theme.fg2 }]}>Estado</Text>
+          <Text style={[styles.statusValue, { color: theme.fg }]}>{isTimeout ? 'En verificación' : 'Pendiente de confirmación'}</Text>
+          <Text style={[styles.statusHint, { color: theme.fg2 }]}>Comprobante pendiente hasta que el proveedor confirme.</Text>
         </View>
+        <AlertCard tone="warning" title="No hagas otro pago por ahora" message="Te avisaremos cuando tengamos una confirmación segura." />
         <PaymentRecoverySummary recovery={recovery} />
         <View style={styles.actions}>
-          <PrimaryButton onPress={() => navigation.replace('History')}>VER ESTADO</PrimaryButton>
+          <PrimaryButton onPress={() => navigation.replace('History')}>Avísame cuando se confirme</PrimaryButton>
           <PrimaryButton onPress={() => navigation.navigate('SupportPlaceholder', { recovery })} variant="secondary">
             NECESITO AYUDA
           </PrimaryButton>
@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
   },
   body: {
     ...typography.body,
-    color: colors.textSecondary,
     textAlign: 'center',
   },
   container: {
@@ -66,15 +65,12 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignItems: 'center',
-    backgroundColor: colors.warningSoft,
     borderRadius: 28,
     height: 56,
     justifyContent: 'center',
     width: 56,
   },
   status: {
-    backgroundColor: colors.warningSoft,
-    borderColor: colors.warning,
     borderRadius: radius.md,
     borderWidth: 1,
     gap: spacing.xs,
@@ -82,20 +78,16 @@ const styles = StyleSheet.create({
   },
   statusLabel: {
     ...typography.caption,
-    color: colors.textSecondary,
   },
   statusValue: {
     ...typography.body,
-    color: colors.textPrimary,
     fontWeight: '700',
   },
   statusHint: {
     ...typography.caption,
-    color: colors.textSecondary,
   },
   title: {
     ...typography.title,
-    color: colors.textPrimary,
     textAlign: 'center',
   },
 });

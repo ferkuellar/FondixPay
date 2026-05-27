@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import { colors, radius, spacing, typography } from '../theme';
+import { radius, spacing, typography, useAppTheme } from '../theme';
 
 type Props = {
   value: string;
@@ -15,13 +15,16 @@ function formatPhone(digits: string) {
 }
 
 export function PhoneInput({ value }: Props) {
+  const { theme } = useAppTheme();
+
   return (
-    <View style={styles.container}>
-      <View style={styles.prefix}>
-        <Text style={styles.prefixText}>+52</Text>
+    <View style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.borderHi }]}>
+      <View style={[styles.prefix, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
+        <Text style={[styles.country, { color: theme.fg2 }]}>MX</Text>
+        <Text style={[styles.prefixText, { color: theme.fg }]}>+52</Text>
       </View>
-      <Text style={styles.value}>{formatPhone(value) || ' '}</Text>
-      <Feather color={colors.primary} name="phone" size={20} />
+      <Text style={[styles.value, { color: theme.fg }]}>{formatPhone(value) || '55 1234 5678'}</Text>
+      <Feather color={theme.primary} name="phone" size={20} />
     </View>
   );
 }
@@ -29,29 +32,31 @@ export function PhoneInput({ value }: Props) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    backgroundColor: colors.bg,
-    borderColor: colors.border,
-    borderRadius: radius.md,
-    borderWidth: 1,
+    borderRadius: radius.lg,
+    borderWidth: 1.5,
     flexDirection: 'row',
     minHeight: 56,
     paddingHorizontal: spacing.lg,
   },
   prefix: {
-    borderRightColor: colors.border,
-    borderRightWidth: 1,
+    alignItems: 'center',
+    borderRadius: radius.md,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: spacing.xs,
     marginRight: spacing.md,
-    paddingRight: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  country: {
+    ...typography.micro,
   },
   prefixText: {
-    ...typography.body,
-    color: colors.textPrimary,
+    ...typography.mono,
     fontWeight: '600',
   },
   value: {
-    ...typography.body,
-    color: colors.textPrimary,
+    ...typography.amountSmall,
     flex: 1,
-    fontSize: 18,
   },
 });

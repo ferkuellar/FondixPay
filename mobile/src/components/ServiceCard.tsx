@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { SavedService } from '../types';
-import { colors, radius, shadows, spacing, typography } from '../theme';
+import { radius, shadows, spacing, typography, useAppTheme } from '../theme';
 import { ServiceIconBadge } from './ServiceIconBadge';
 import { StatusBadge, type StatusBadgeVariant } from './StatusBadge';
 
@@ -20,27 +20,28 @@ function badgeForService(service: SavedService): { variant: StatusBadgeVariant; 
 }
 
 export function ServiceCard({ service, onPress, onPay }: Props) {
+  const { theme } = useAppTheme();
   const badge = badgeForService(service);
   const canPay = service.amountDue > 0;
 
   return (
-    <View style={[styles.card, shadows.card]}>
+    <View style={[styles.card, shadows.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <Pressable onPress={onPress} style={styles.main}>
         <ServiceIconBadge category={service.provider.category} />
         <View style={styles.body}>
-          <Text style={styles.title}>
+          <Text style={[styles.title, { color: theme.fg }]}>
             {service.alias} ({service.provider.displayName})
           </Text>
           <StatusBadge label={badge.label} variant={badge.variant} />
         </View>
       </Pressable>
       <View style={styles.actions}>
-        <Text style={[styles.amount, !canPay && styles.amountPaid]}>${service.amountDue.toFixed(0)}</Text>
+        <Text style={[styles.amount, { color: canPay ? theme.error : theme.success }]}>${service.amountDue.toFixed(0)}</Text>
         <Pressable
           accessibilityRole="button"
           disabled={!canPay}
           onPress={onPay}
-          style={[styles.payButton, !canPay && styles.payButtonDisabled]}
+          style={[styles.payButton, { backgroundColor: canPay ? theme.primary : theme.disabledBg }, !canPay && styles.payButtonDisabled]}
         >
           <Text style={styles.payButtonText}>{canPay ? 'PAGAR' : 'LISTO'}</Text>
         </Pressable>
@@ -56,11 +57,8 @@ const styles = StyleSheet.create({
   },
   amount: {
     ...typography.heading,
-    color: colors.danger,
+    ...typography.amountSmall,
     fontSize: 18,
-  },
-  amountPaid: {
-    color: colors.success,
   },
   body: {
     flex: 1,
@@ -68,8 +66,6 @@ const styles = StyleSheet.create({
   },
   card: {
     alignItems: 'center',
-    backgroundColor: colors.bg,
-    borderColor: colors.border,
     borderRadius: radius.lg,
     borderWidth: 1,
     flexDirection: 'row',
@@ -83,7 +79,6 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   payButton: {
-    backgroundColor: colors.primary,
     borderRadius: radius.pill,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
@@ -99,7 +94,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...typography.body,
-    color: colors.textPrimary,
     fontWeight: '700',
   },
 });

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 
-import { colors, spacing, typography } from '../theme';
+import { spacing, typography, useAppTheme } from '../theme';
 import { formatMoneyMajor } from '../utils/money';
 
 type Props = {
@@ -9,24 +9,23 @@ type Props = {
 };
 
 export function AmountDisplay({ amount, label = 'Total a pagar' }: Props) {
+  const { theme } = useAppTheme();
+
   return (
     <View style={styles.wrap}>
-      <Text style={styles.label}>{label}</Text>
-      <Text style={styles.amount}>{formatMoneyMajor(amount)}</Text>
+      <Text style={[styles.label, { color: theme.fg2 }]}>{label}</Text>
+      <Text style={[styles.amount, { color: theme.fg }]}>{formatMoneyMajor(amount)}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   amount: {
-    ...typography.display,
-    color: colors.success,
-    fontSize: 32,
+    ...typography.amount,
     marginTop: spacing.xs,
   },
   label: {
-    ...typography.bodySmall,
-    color: colors.textSecondary,
+    ...typography.micro,
     textAlign: 'center',
   },
   wrap: {

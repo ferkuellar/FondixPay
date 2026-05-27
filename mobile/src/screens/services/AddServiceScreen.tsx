@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { BottomTabBar } from '../../components/BottomTabBar';
+import { AlertCard } from '../../components/AlertCard';
 import { ErrorState } from '../../components/ErrorState';
 import { LoadingState } from '../../components/LoadingState';
 import { PrimaryButton } from '../../components/PrimaryButton';
@@ -13,12 +14,13 @@ import { TextInput } from '../../components/TextInput';
 import { useServiceCatalogStore } from '../../store/serviceCatalogStore';
 import { useServiceStore } from '../../store/serviceStore';
 import type { Provider, RootStackParamList, ServiceCatalogItem } from '../../types';
-import { colors, radius, spacing, typography } from '../../theme';
+import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddService'>;
 type Step = 'list' | 'number' | 'confirm';
 
 export function AddServiceScreen({ navigation }: Props) {
+  const { theme } = useAppTheme();
   const error = useServiceCatalogStore((state) => state.error);
   const fetchServices = useServiceCatalogStore((state) => state.fetchServices);
   const isLoading = useServiceCatalogStore((state) => state.isLoading);
@@ -83,23 +85,27 @@ export function AddServiceScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         {step === 'list' ? (
           <>
-            <Text style={styles.title}>¿Qué servicio quieres pagar?</Text>
+            <Text style={[styles.title, { color: theme.fg }]}>Agregar servicio</Text>
+            <TextInput placeholder="Buscar CFE, agua, internet..." />
+            <Text style={[styles.subtitle, { color: theme.fg2 }]}>
+              Proveedores soportados en esta versión: CFE, agua, internet, recargas y gas.
+            </Text>
             <View style={styles.list}>
               {services.length === 0 ? (
-                <View style={styles.emptyCard}>
-                  <Text style={styles.emptyTitle}>Aún no tenemos servicios disponibles para tu ubicación.</Text>
-                  <Text style={styles.emptyText}>
+                <View style={[styles.emptyCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                  <Text style={[styles.emptyTitle, { color: theme.fg }]}>Aún no tenemos servicios disponibles para tu ubicación.</Text>
+                  <Text style={[styles.emptyText, { color: theme.fg2 }]}>
                     Estamos habilitando servicios conforme se confirme la cobertura operativa del proveedor.
                   </Text>
                 </View>
               ) : null}
               {services.map((service) => (
-                <Pressable key={service.id} onPress={() => selectService(service)} style={styles.listItem}>
+                <Pressable key={service.id} onPress={() => selectService(service)} style={[styles.listItem, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                   <ServiceIconBadge category={service.category} />
-                  <Text style={styles.listLabel}>
+                  <Text style={[styles.listLabel, { color: theme.fg }]}>
                     {labelForCategory(service.category)} ({service.displayName})
                   </Text>
-                  <Feather color={colors.textMuted} name="chevron-right" size={20} />
+                  <Feather color={theme.fg3} name="chevron-right" size={20} />
                 </Pressable>
               ))}
             </View>
@@ -110,8 +116,8 @@ export function AddServiceScreen({ navigation }: Props) {
           <>
             <View style={styles.center}>
               <ServiceIconBadge category={selectedService.category} size={72} />
-              <Text style={styles.title}>{labelForCategory(selectedService.category)} ({selectedService.displayName})</Text>
-              <Text style={styles.subtitle}>Ingresa tu número de servicio</Text>
+              <Text style={[styles.title, { color: theme.fg }]}>{labelForCategory(selectedService.category)} ({selectedService.displayName})</Text>
+              <Text style={[styles.subtitle, { color: theme.fg2 }]}>Ingresa tu número de servicio</Text>
             </View>
             <TextInput
               keyboardType="number-pad"
@@ -119,7 +125,7 @@ export function AddServiceScreen({ navigation }: Props) {
               placeholder="876 090 21 234"
               value={reference}
             />
-            <Text style={styles.helper}>¿Dónde lo encuentro?</Text>
+            <Text style={[styles.helper, { color: theme.primary }]}>¿Dónde encuentro este número? Ver ejemplo del recibo →</Text>
             <TextInput onChangeText={setAlias} placeholder="Alias (opcional, ej. Casa)" value={alias} />
             {validating ? <LoadingState message="Validando número..." /> : null}
             <PrimaryButton disabled={reference.length < 4 || validating} loading={validating} onPress={goToConfirm}>
@@ -135,23 +141,26 @@ export function AddServiceScreen({ navigation }: Props) {
           <>
             <View style={styles.center}>
               <ServiceIconBadge category={selectedService.category} size={72} />
-              <Text style={styles.detected}>{selectedService.displayName} detectado ✓</Text>
+              <AlertCard tone="success" title="Servicio encontrado" message="Verifica que coincida exactamente con tu recibo." />
             </View>
-            <View style={styles.confirmCard}>
-              <Text style={styles.confirmLabel}>Nombre</Text>
-              <Text style={styles.confirmValue}>Usuario demo</Text>
-              <Text style={styles.confirmLabel}>Dirección</Text>
-              <Text style={styles.confirmValue}>Col. Centro, Chihuahua</Text>
-              <Text style={styles.confirmLabel}>Número de servicio</Text>
-              <Text style={styles.confirmValue}>{reference}</Text>
+            <View style={[styles.confirmCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+              <Text style={[styles.confirmLabel, { color: theme.fg2 }]}>Titular</Text>
+              <Text style={[styles.confirmValue, { color: theme.fg }]}>Usuario demo</Text>
+              <Text style={[styles.confirmLabel, { color: theme.fg2 }]}>Dirección</Text>
+              <Text style={[styles.confirmValue, { color: theme.fg }]}>Col. Centro, Chihuahua</Text>
+              <Text style={[styles.confirmLabel, { color: theme.fg2 }]}>Número de servicio</Text>
+              <Text style={[styles.confirmValue, { color: theme.fg }]}>{reference}</Text>
+              <Text style={[styles.confirmLabel, { color: theme.fg2 }]}>Tarifa</Text>
+              <Text style={[styles.confirmValue, { color: theme.fg }]}>1A · Doméstica</Text>
             </View>
             {showSavedTip ? (
               <View style={styles.tipCard}>
-                <Feather color={colors.textSecondary} name="info" size={18} />
-                <Text style={styles.tipText}>Tu servicio quedará guardado para que no tengas que escribirlo nuevamente.</Text>
+                <Feather color={theme.info} name="info" size={18} />
+                <Text style={[styles.tipText, { color: theme.fg2 }]}>Tu servicio quedará guardado para que no tengas que escribirlo nuevamente.</Text>
               </View>
             ) : null}
-            <PrimaryButton onPress={save}>GUARDAR SERVICIO</PrimaryButton>
+            <PrimaryButton onPress={save}>Guardar y pagar</PrimaryButton>
+            <PrimaryButton onPress={() => setStep('number')} variant="ghost">No es mi servicio</PrimaryButton>
           </>
         ) : null}
 

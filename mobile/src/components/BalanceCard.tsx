@@ -1,7 +1,7 @@
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 import type { Balance } from '../types';
-import { colors, radius, shadows, spacing, typography } from '../theme';
+import { radius, shadows, spacing, typography, useAppTheme } from '../theme';
 import { formatMoneyMinor } from '../utils/money';
 
 type Props = {
@@ -11,31 +11,34 @@ type Props = {
 };
 
 export function BalanceCard({ balance, error, loading }: Props) {
+  const { theme } = useAppTheme();
+
   return (
-    <View style={[styles.card, shadows.card]}>
-      <Text style={styles.eyebrow}>Saldo demo</Text>
-      {loading ? <ActivityIndicator color={colors.primary} /> : null}
-      {!loading && error ? <Text style={styles.error}>{error}</Text> : null}
+    <View style={[styles.card, shadows.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+      <Text style={[styles.eyebrow, { color: theme.primary }]}>Saldo demo</Text>
+      {loading ? <ActivityIndicator color={theme.primary} /> : null}
+      {!loading && error ? <Text style={[styles.error, { color: theme.error }]}>{error}</Text> : null}
       {!loading && !error && balance ? (
         <>
-          <Text style={styles.amount}>{formatMoneyMinor(balance.availableMinor, balance.currency)}</Text>
-          <Text style={styles.disclaimer}>{balance.disclaimer}</Text>
+          <Text style={[styles.amount, { color: theme.fg }]}>{formatMoneyMinor(balance.availableMinor, balance.currency)}</Text>
+          <Text style={[styles.disclaimer, { color: theme.fg2 }]}>{balance.disclaimer}</Text>
           <View style={styles.breakdown}>
             <BalanceLine label="Pendiente" value={formatMoneyMinor(balance.pendingMinor, balance.currency)} />
             <BalanceLine label="Retenido" value={formatMoneyMinor(balance.heldMinor, balance.currency)} />
           </View>
         </>
       ) : null}
-      {!loading && !error && !balance ? <Text style={styles.disclaimer}>Cargando cuenta demo...</Text> : null}
+      {!loading && !error && !balance ? <Text style={[styles.disclaimer, { color: theme.fg2 }]}>Cargando cuenta demo...</Text> : null}
     </View>
   );
 }
 
 function BalanceLine({ label, value }: { label: string; value: string }) {
+  const { theme } = useAppTheme();
   return (
     <View style={styles.line}>
-      <Text style={styles.lineLabel}>{label}</Text>
-      <Text style={styles.lineValue}>{value}</Text>
+      <Text style={[styles.lineLabel, { color: theme.fg2 }]}>{label}</Text>
+      <Text style={[styles.lineValue, { color: theme.fg }]}>{value}</Text>
     </View>
   );
 }
@@ -43,15 +46,12 @@ function BalanceLine({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   amount: {
     ...typography.title,
-    color: colors.textPrimary,
-    fontSize: 28,
+    ...typography.amountSmall,
   },
   breakdown: {
     gap: spacing.xs,
   },
   card: {
-    backgroundColor: colors.bg,
-    borderColor: colors.border,
     borderRadius: radius.lg,
     borderWidth: 1,
     gap: spacing.sm,
@@ -59,15 +59,12 @@ const styles = StyleSheet.create({
   },
   disclaimer: {
     ...typography.bodySmall,
-    color: colors.textSecondary,
   },
   error: {
     ...typography.bodySmall,
-    color: colors.danger,
   },
   eyebrow: {
     ...typography.caption,
-    color: colors.primary,
     fontWeight: '700',
   },
   line: {
@@ -76,11 +73,9 @@ const styles = StyleSheet.create({
   },
   lineLabel: {
     ...typography.bodySmall,
-    color: colors.textSecondary,
   },
   lineValue: {
     ...typography.bodySmall,
-    color: colors.textPrimary,
     fontWeight: '700',
   },
 });

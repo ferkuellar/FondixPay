@@ -1,10 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, spacing, typography } from '../theme';
+import { radius, spacing, typography, useAppTheme } from '../theme';
 import type { Payment, PaymentDisplayStatus } from '../types';
 import { formatDateTime } from '../utils/date';
 import { formatMoneyMinor } from '../utils/money';
 import { ReceiptStatusBadge } from './ReceiptStatusBadge';
+import { StatusBadge } from './StatusBadge';
 
 type Props = {
   payment: Payment;
@@ -20,37 +21,33 @@ const statusLabels: Record<PaymentDisplayStatus, string> = {
 };
 
 export function TransactionHistoryCard({ payment, onPress }: Props) {
+  const { theme } = useAppTheme();
+  const badgeVariant = payment.status === 'succeeded' ? 'paid' : payment.status === 'pending' || payment.status === 'timeout' ? 'processing' : 'review';
+
   return (
-    <Pressable accessibilityRole="button" onPress={onPress} style={styles.card}>
+    <Pressable accessibilityRole="button" onPress={onPress} style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
       <View style={styles.header}>
         <View style={styles.copy}>
-          <Text style={styles.provider}>{payment.providerName}</Text>
-          <Text style={styles.service}>{payment.serviceName}</Text>
+          <Text style={[styles.provider, { color: theme.fg }]}>{payment.providerName}</Text>
+          <Text style={[styles.service, { color: theme.fg2 }]}>{payment.serviceName}</Text>
         </View>
-        <Text style={[styles.status, payment.status === 'succeeded' ? styles.success : styles.attention]}>
-          {statusLabels[payment.status]}
-        </Text>
+        <StatusBadge label={statusLabels[payment.status]} variant={badgeVariant} />
       </View>
-      <View style={styles.totalLine}>
-        <Text style={styles.totalLabel}>Total</Text>
-        <Text style={styles.total}>{formatMoneyMinor(payment.totalMinor, payment.currency)}</Text>
+      <View style={[styles.totalLine, { borderTopColor: theme.divider }]}>
+        <Text style={[styles.totalLabel, { color: theme.fg2 }]}>Total</Text>
+        <Text style={[styles.total, { color: theme.fg }]}>{formatMoneyMinor(payment.totalMinor, payment.currency)}</Text>
       </View>
       <View style={styles.meta}>
         <ReceiptStatusBadge status={payment.receiptStatus} />
-        {payment.isMock ? <Text style={styles.mock}>Mock/dev sin confirmación real de proveedor</Text> : null}
-        <Text style={styles.date}>{formatDateTime(payment.paidAt)}</Text>
+        {payment.isMock ? <Text style={[styles.mock, { color: theme.fg2 }]}>Mock/dev sin confirmación real de proveedor</Text> : null}
+        <Text style={[styles.date, { color: theme.fg3 }]}>{formatDateTime(payment.paidAt)}</Text>
       </View>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  attention: {
-    color: colors.warning,
-  },
   card: {
-    backgroundColor: colors.bg,
-    borderColor: colors.border,
     borderRadius: radius.lg,
     borderWidth: 1,
     gap: spacing.md,
@@ -62,7 +59,6 @@ const styles = StyleSheet.create({
   },
   date: {
     ...typography.caption,
-    color: colors.textMuted,
   },
   header: {
     alignItems: 'flex-start',
@@ -75,37 +71,22 @@ const styles = StyleSheet.create({
   },
   mock: {
     ...typography.caption,
-    color: colors.textSecondary,
   },
   provider: {
     ...typography.heading,
-    color: colors.textPrimary,
     fontSize: 18,
   },
   service: {
     ...typography.bodySmall,
-    color: colors.textSecondary,
-  },
-  status: {
-    ...typography.caption,
-    flexShrink: 1,
-    fontWeight: '700',
-    textAlign: 'right',
-  },
-  success: {
-    color: colors.success,
   },
   total: {
-    ...typography.heading,
-    color: colors.textPrimary,
+    ...typography.amountSmall,
   },
   totalLabel: {
     ...typography.caption,
-    color: colors.textSecondary,
   },
   totalLine: {
     alignItems: 'center',
-    borderTopColor: colors.border,
     borderTopWidth: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',

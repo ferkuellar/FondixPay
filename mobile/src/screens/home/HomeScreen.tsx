@@ -5,18 +5,20 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { BalanceCard } from '../../components/BalanceCard';
 import { BottomTabBar } from '../../components/BottomTabBar';
 import { EmptyState } from '../../components/EmptyState';
+import { AmountCard } from '../../components/AmountCard';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { ServiceCard } from '../../components/ServiceCard';
 import { useAccountStore } from '../../store/accountStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
-import { colors, radius, shadows, spacing, typography } from '../../theme';
+import { spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export function HomeScreen({ navigation }: Props) {
+  const { theme } = useAppTheme();
   const services = useServiceStore((state) => state.services);
   const balance = useAccountStore((state) => state.balance);
   const accountError = useAccountStore((state) => state.error);
@@ -39,17 +41,28 @@ export function HomeScreen({ navigation }: Props) {
     <Screen padded={false} style={styles.screen}>
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.header}>
-          <Text style={styles.greeting}>Hola, {userName} 👋</Text>
+          <Text style={[styles.greeting, { color: theme.fg }]}>Hola, {userName}</Text>
+          <Text style={[styles.headerCopy, { color: theme.fg2 }]}>Estos son tus servicios por pagar.</Text>
         </View>
 
         <View style={styles.balanceSection}>
+          <AmountCard
+            amountMinor={Math.round(totalDue * 100)}
+            label="Total por pagar este mes"
+            footer="Tus montos se muestran antes de confirmar cualquier pago."
+          />
+          <View style={styles.quickActions}>
+            <PrimaryButton onPress={() => navigation.navigate('AddService')} size="md">
+              Pagar ahora
+            </PrimaryButton>
+            <PrimaryButton onPress={() => navigation.navigate('Notifications')} size="md" variant="secondary">
+              Avisos
+            </PrimaryButton>
+          </View>
           <BalanceCard balance={balance} error={accountError} loading={accountLoading} />
-          <PrimaryButton onPress={() => navigation.navigate('Account')} size="md" variant="secondary">
-            VER CUENTA DEMO
-          </PrimaryButton>
         </View>
 
-        <Text style={styles.sectionTitle}>Pagos pendientes</Text>
+        <Text style={[styles.sectionTitle, { color: theme.fg }]}>Por pagar</Text>
 
         {services.length === 0 ? (
           <EmptyState
@@ -69,16 +82,6 @@ export function HomeScreen({ navigation }: Props) {
             ))}
           </View>
         )}
-
-        {services.length > 0 ? (
-          <View style={[styles.summaryCard, shadows.card]}>
-            <View>
-              <Text style={styles.summaryLabel}>Total a pagar este mes</Text>
-              <Text style={styles.summaryAmount}>${totalDue.toFixed(0)}</Text>
-            </View>
-            <Text style={styles.summaryEmoji}>👛</Text>
-          </View>
-        ) : null}
       </ScrollView>
       <BottomTabBar active="Home" />
     </Screen>
@@ -88,8 +91,11 @@ export function HomeScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   greeting: {
     ...typography.title,
-    color: colors.textPrimary,
     fontSize: 24,
+  },
+  headerCopy: {
+    ...typography.body,
+    marginTop: spacing.xs,
   },
   header: {
     marginTop: spacing.md,
@@ -113,29 +119,11 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...typography.heading,
-    color: colors.textPrimary,
     fontSize: 18,
     paddingHorizontal: spacing.xl,
   },
-  summaryAmount: {
-    ...typography.title,
-    color: colors.textPrimary,
-    marginTop: spacing.xs,
-  },
-  summaryCard: {
-    alignItems: 'center',
-    backgroundColor: colors.bgSubtle,
-    borderRadius: radius.lg,
+  quickActions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: spacing.xl,
-    padding: spacing.xl,
-  },
-  summaryEmoji: {
-    fontSize: 40,
-  },
-  summaryLabel: {
-    ...typography.bodySmall,
-    color: colors.textSecondary,
+    gap: spacing.md,
   },
 });

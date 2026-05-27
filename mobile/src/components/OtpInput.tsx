@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
-import { colors, radius, spacing, typography } from '../theme';
+import { radius, spacing, typography, useAppTheme } from '../theme';
 
 const LENGTH = 6;
 
@@ -12,6 +12,7 @@ type Props = {
 };
 
 export function OtpInput({ value, onChange, error }: Props) {
+  const { theme } = useAppTheme();
   const inputRef = useRef<TextInput>(null);
   const digits = value.padEnd(LENGTH, ' ').slice(0, LENGTH).split('');
   const activeIndex = Math.min(value.length, LENGTH - 1);
@@ -38,11 +39,12 @@ export function OtpInput({ value, onChange, error }: Props) {
           key={index}
           style={[
             styles.box,
-            index === activeIndex && styles.boxActive,
-            error && styles.boxError,
+            { backgroundColor: theme.surface, borderColor: theme.border },
+            index === activeIndex && { borderColor: theme.primary },
+            error && { borderColor: theme.error },
           ]}
         >
-          <Text style={styles.digit}>{digit.trim()}</Text>
+          <Text style={[styles.digit, { color: theme.fg }]}>{digit.trim()}</Text>
         </View>
       ))}
     </Pressable>
@@ -52,8 +54,6 @@ export function OtpInput({ value, onChange, error }: Props) {
 const styles = StyleSheet.create({
   box: {
     alignItems: 'center',
-    backgroundColor: colors.bg,
-    borderColor: colors.border,
     borderRadius: radius.md,
     borderWidth: 1.5,
     flex: 1,
@@ -61,15 +61,8 @@ const styles = StyleSheet.create({
     maxWidth: 48,
     minHeight: 56,
   },
-  boxActive: {
-    borderColor: colors.primary,
-  },
-  boxError: {
-    borderColor: colors.danger,
-  },
   digit: {
-    ...typography.heading,
-    color: colors.textPrimary,
+    ...typography.amountSmall,
   },
   hidden: {
     height: 0,

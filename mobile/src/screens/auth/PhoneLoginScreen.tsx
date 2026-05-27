@@ -7,12 +7,13 @@ import { PhoneInput } from '../../components/PhoneInput';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { useAuthStore } from '../../store/authStore';
-import { colors, spacing, typography } from '../../theme';
+import { radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'PhoneLogin'>;
 
 export function PhoneLoginScreen({ navigation }: Props) {
+  const { theme } = useAppTheme();
   const [phone, setPhone] = useState('');
   const cleanPhone = phone.replace(/\D/g, '').slice(0, 10);
   const error = useAuthStore((state) => state.error);
@@ -43,11 +44,18 @@ export function PhoneLoginScreen({ navigation }: Props) {
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
         <View style={styles.centered}>
           <View style={styles.content}>
-            <Text style={styles.title}>Ingresa tu número de celular</Text>
+            <Text style={[styles.title, { color: theme.fg }]}>Tu número de celular</Text>
+            <Text style={[styles.subtitle, { color: theme.fg2 }]}>Te enviaremos un código por SMS para entrar. Es gratis.</Text>
             <PhoneInput value={cleanPhone} />
-            <Text style={styles.hint}>Te enviaremos un código de verificación</Text>
-            {otpDev ? <Text style={styles.devHint}>Código de prueba: {otpDev}</Text> : null}
-            {error ? <Text style={styles.error}>{error}</Text> : null}
+            <Text style={[styles.hint, { color: theme.fg3 }]}>Solo lo usaremos para identificarte.</Text>
+            <View style={[styles.securityCard, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
+              <Text style={[styles.securityTitle, { color: theme.info }]}>Tu información está segura</Text>
+              <Text style={[styles.securityCopy, { color: theme.fg2 }]}>
+                FONDIX PAY no comparte tu número. Cumplimos con la Ley Federal de Protección de Datos Personales.
+              </Text>
+            </View>
+            {otpDev ? <Text style={[styles.devHint, { color: theme.fg3 }]}>Código de prueba: {otpDev}</Text> : null}
+            {error ? <Text style={[styles.error, { color: theme.error }]}>{error}</Text> : null}
             <PrimaryButton disabled={cleanPhone.length < 10} loading={isLoading} onPress={continueToOtp}>
               CONTINUAR
             </PrimaryButton>
@@ -62,7 +70,7 @@ export function PhoneLoginScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   centered: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     paddingBottom: spacing.xl,
   },
   content: {
@@ -73,10 +81,8 @@ const styles = StyleSheet.create({
   },
   devHint: {
     ...typography.bodySmall,
-    color: colors.textMuted,
   },
   error: {
-    color: colors.danger,
     ...typography.bodySmall,
   },
   flex: {
@@ -84,15 +90,31 @@ const styles = StyleSheet.create({
   },
   hint: {
     ...typography.bodySmall,
-    color: colors.textSecondary,
     textAlign: 'center',
+  },
+  securityCard: {
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    gap: spacing.xs,
+    marginTop: spacing.sm,
+    padding: spacing.lg,
+  },
+  securityCopy: {
+    ...typography.caption,
+  },
+  securityTitle: {
+    ...typography.caption,
+    fontWeight: '800',
   },
   screen: {
     flex: 1,
   },
+  subtitle: {
+    ...typography.body,
+    textAlign: 'center',
+  },
   title: {
     ...typography.heading,
-    color: colors.textPrimary,
     textAlign: 'center',
   },
 });

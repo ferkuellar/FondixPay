@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { colors, spacing } from '../theme';
+import { spacing, useAppTheme } from '../theme';
 
 type Props = {
   children: ReactNode;
@@ -11,9 +11,11 @@ type Props = {
 };
 
 export function Screen({ children, style, padded = true }: Props) {
+  const { theme, mode } = useAppTheme();
+
   return (
-    <SafeAreaView style={styles.safe}>
-      <StatusBar style="dark" />
+    <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg }]}>
+      <StatusBar style={mode === 'night' ? 'light' : 'dark'} />
       <View style={[styles.content, padded && styles.padded, style]}>{children}</View>
     </SafeAreaView>
   );
@@ -28,7 +30,6 @@ const styles = StyleSheet.create({
     paddingTop: spacing.lg,
   },
   safe: {
-    backgroundColor: colors.bg,
     flex: 1,
   },
 });

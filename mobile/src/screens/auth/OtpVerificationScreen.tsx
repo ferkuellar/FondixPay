@@ -6,7 +6,7 @@ import { OtpInput } from '../../components/OtpInput';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { useAuthStore } from '../../store/authStore';
-import { colors, spacing, typography } from '../../theme';
+import { radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'OtpVerification'>;
@@ -19,6 +19,7 @@ function formatPhoneDisplay(phone: string) {
 }
 
 export function OtpVerificationScreen({ route }: Props) {
+  const { theme } = useAppTheme();
   const [otp, setOtp] = useState('');
   const [secondsLeft, setSecondsLeft] = useState(25);
   const error = useAuthStore((state) => state.error);
@@ -44,20 +45,26 @@ export function OtpVerificationScreen({ route }: Props) {
     <Screen>
       <View style={styles.centered}>
         <View style={styles.container}>
-          <Text style={styles.title}>Código de verificación</Text>
-          <Text style={styles.body}>
+          <Text style={[styles.title, { color: theme.fg }]}>Código de verificación</Text>
+          <Text style={[styles.body, { color: theme.fg2 }]}>
             Enviamos un código a{'\n'}
             {formatPhoneDisplay(route.params.phone)}
           </Text>
-          {otpDev ? <Text style={styles.devHint}>Código de prueba: {otpDev}</Text> : null}
+          {otpDev ? <Text style={[styles.devHint, { color: theme.fg3 }]}>Código de prueba: {otpDev}</Text> : null}
           <OtpInput error={Boolean(error)} onChange={setOtp} value={otp} />
-          {error ? <Text style={styles.error}>{error}</Text> : null}
-          <Text style={styles.resendPrompt}>¿No recibiste el código?</Text>
+          {error ? (
+            <View style={[styles.errorCard, { backgroundColor: `${theme.error}18`, borderColor: `${theme.error}55` }]}>
+              <Text style={[styles.error, { color: theme.error }]}>
+                Código incorrecto. Revisa los 6 dígitos. Te quedan 2 intentos.
+              </Text>
+            </View>
+          ) : null}
+          <Text style={[styles.resendPrompt, { color: theme.fg2 }]}>¿No recibiste el código?</Text>
           <Text style={styles.resend}>
             {secondsLeft > 0 ? (
-              <Text style={styles.resendMuted}>Reenviar código en 00:{String(secondsLeft).padStart(2, '0')}</Text>
+              <Text style={[styles.resendMuted, { color: theme.fg3 }]}>Reenviar código en 00:{String(secondsLeft).padStart(2, '0')}</Text>
             ) : (
-              <Text style={styles.resendAction}>Reenviar código</Text>
+              <Text style={[styles.resendAction, { color: theme.primary }]}>Reenviar código</Text>
             )}
           </Text>
           <View style={styles.actions}>
@@ -77,7 +84,6 @@ const styles = StyleSheet.create({
   },
   body: {
     ...typography.body,
-    color: colors.textSecondary,
     textAlign: 'center',
   },
   centered: {
@@ -90,33 +96,30 @@ const styles = StyleSheet.create({
   },
   devHint: {
     ...typography.bodySmall,
-    color: colors.textMuted,
     textAlign: 'center',
   },
   error: {
-    color: colors.danger,
-    textAlign: 'center',
     ...typography.bodySmall,
+  },
+  errorCard: {
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    padding: spacing.md,
   },
   resend: {
     textAlign: 'center',
   },
   resendAction: {
-    color: colors.primary,
     fontWeight: '700',
   },
-  resendMuted: {
-    color: colors.textMuted,
-  },
+  resendMuted: {},
   resendPrompt: {
     ...typography.bodySmall,
-    color: colors.textSecondary,
     marginTop: spacing.md,
     textAlign: 'center',
   },
   title: {
     ...typography.heading,
-    color: colors.textPrimary,
     textAlign: 'center',
   },
 });

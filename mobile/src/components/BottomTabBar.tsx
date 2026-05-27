@@ -4,7 +4,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 import type { RootStackParamList } from '../types';
-import { colors, spacing, typography } from '../theme';
+import { radius, spacing, typography, useAppTheme } from '../theme';
 
 export type TabKey = 'Home' | 'AddService' | 'History' | 'Profile';
 
@@ -16,9 +16,9 @@ type TabItem = {
 
 const TABS: TabItem[] = [
   { key: 'Home', label: 'Inicio', icon: 'home' },
-  { key: 'AddService', label: 'Servicios', icon: 'layers' },
+  { key: 'AddService', label: 'Pagar', icon: 'credit-card' },
   { key: 'History', label: 'Historial', icon: 'clock' },
-  { key: 'Profile', label: 'Perfil', icon: 'user' },
+  { key: 'Profile', label: 'Cuenta', icon: 'user' },
 ];
 
 type Props = {
@@ -27,9 +27,10 @@ type Props = {
 
 export function BottomTabBar({ active }: Props) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { theme } = useAppTheme();
 
   return (
-    <View style={styles.bar}>
+    <View style={[styles.bar, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
       {TABS.map((tab) => {
         const isActive = tab.key === active;
         return (
@@ -40,8 +41,10 @@ export function BottomTabBar({ active }: Props) {
             onPress={() => navigation.navigate(tab.key)}
             style={styles.tab}
           >
-            <Feather color={isActive ? colors.primary : colors.textMuted} name={tab.icon} size={22} />
-            <Text style={[styles.label, isActive && styles.labelActive]}>{tab.label}</Text>
+            <View style={[styles.iconWrap, isActive && { backgroundColor: `${theme.primary}18` }]}>
+              <Feather color={isActive ? theme.primary : theme.fg3} name={tab.icon} size={21} />
+            </View>
+            <Text style={[styles.label, { color: isActive ? theme.primary : theme.fg3 }]}>{tab.label}</Text>
           </Pressable>
         );
       })}
@@ -51,25 +54,26 @@ export function BottomTabBar({ active }: Props) {
 
 const styles = StyleSheet.create({
   bar: {
-    backgroundColor: colors.bg,
-    borderTopColor: colors.border,
     borderTopWidth: 1,
     flexDirection: 'row',
     paddingBottom: spacing.sm,
     paddingTop: spacing.sm,
   },
+  iconWrap: {
+    alignItems: 'center',
+    borderRadius: radius.pill,
+    height: 32,
+    justifyContent: 'center',
+    width: 44,
+  },
   label: {
     ...typography.caption,
-    color: colors.textMuted,
     marginTop: spacing.xs,
-  },
-  labelActive: {
-    color: colors.primary,
-    fontWeight: '600',
   },
   tab: {
     alignItems: 'center',
     flex: 1,
+    minHeight: 56,
     paddingVertical: spacing.xs,
   },
 });

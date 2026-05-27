@@ -25,7 +25,7 @@ import { AddServiceScreen } from '../screens/services/AddServiceScreen';
 import { ServiceDetailScreen } from '../screens/services/ServiceDetailScreen';
 import { SupportPlaceholderScreen } from '../screens/support/SupportPlaceholderScreen';
 import { useAuthStore } from '../store/authStore';
-import { colors } from '../theme';
+import { useAppTheme } from '../theme';
 import type { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,6 +42,7 @@ function HeaderLogo() {
 }
 
 export function AppNavigator() {
+  const { theme } = useAppTheme();
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const isRestoring = useAuthStore((state) => state.isRestoring);
   const showAccountWelcome = useAuthStore((state) => state.showAccountWelcome);
@@ -65,10 +66,11 @@ export function AppNavigator() {
     <Stack.Navigator
       initialRouteName={isAuthenticated ? authenticatedInitial : 'Onboarding'}
       screenOptions={{
-        contentStyle: { backgroundColor: colors.bg },
+        contentStyle: { backgroundColor: theme.bg },
+        headerStyle: { backgroundColor: theme.bg },
         headerShadowVisible: false,
-        headerTitleStyle: { color: colors.textPrimary, fontWeight: '700' },
-        headerTintColor: colors.primary,
+        headerTitleStyle: { color: theme.fg, fontWeight: '700' },
+        headerTintColor: theme.primary,
       }}
     >
       {isAuthenticated ? (
