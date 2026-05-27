@@ -863,3 +863,43 @@ Rationale: Payment operations need a durable investigation trail before any futu
 Decision: The CRM Admin Panel remains read-mostly, with controlled writes only for support tickets, ticket notes, manual review cases, and manual review events.
 
 Rationale: The admin surface must not edit ledger entries, payment amounts, card outcomes, provider confirmations, or production configuration in this phase.
+
+## ADR-116 - WhatsApp receipt channel is approved as future non-blocking notification
+
+Decision: WhatsApp is approved as a future post-payment receipt notification channel, but only as a non-blocking channel that does not replace internal receipt/proof/audit/ledger evidence.
+
+Rationale: WhatsApp can improve user access to receipts, but delivery reliability must not affect financial truth or payment state.
+
+Status: Accepted for future architecture; no runtime behavior in Phase 10D.1.
+
+## ADR-117 - WhatsApp consent must be explicit and granular
+
+Decision: Users must explicitly opt in to WhatsApp notifications by channel and notification type. No WhatsApp notification toggle may be pre-enabled.
+
+Rationale: Consent for receipts, failed-payment messages, reminders, monthly summaries, and OTP are different privacy decisions.
+
+Status: Accepted.
+
+## ADR-118 - WhatsApp failure must never block payment or receipt generation
+
+Decision: A WhatsApp delivery failure must not block or alter payment state, receipt generation, proof-of-payment state, ledger state, or audit evidence.
+
+Rationale: Notification delivery is operationally secondary to payment and receipt source-of-truth records.
+
+Status: Accepted.
+
+## ADR-119 - WhatsApp delivery logs are append-only and idempotent
+
+Decision: Future WhatsApp delivery records must be append-only and idempotent using a key such as `receipt_id + channel + template_name + recipient_hash`.
+
+Rationale: Duplicate receipt sends create user confusion and support risk; mutable delivery history weakens investigations.
+
+Status: Accepted.
+
+## ADR-120 - WhatsApp MVP is limited to successful payment receipt
+
+Decision: The future WhatsApp MVP is limited to `fondix_pago_exitoso`. Failed payment, due reminder, monthly summary, and OTP templates remain future phases.
+
+Rationale: Successful receipt delivery is the lowest-risk first channel use because it follows existing receipt/proof evidence.
+
+Status: Accepted.

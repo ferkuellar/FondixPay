@@ -451,3 +451,23 @@ Checklist:
 - Responses do not include PAN/CVV/token/secret/raw_payload.
 - Admin frontend typecheck/build pass.
 - Mobile typecheck is not required when mobile runtime is untouched.
+
+## Phase 10D.1 - WhatsApp Receipt Channel Validation
+
+Documentation/design checklist:
+
+- Explicit WhatsApp consent is required.
+- WhatsApp toggles are not pre-enabled.
+- Consent is granular by notification type.
+- Full phone numbers are not logged.
+- Recipient hash is used for delivery evidence.
+- Idempotency prevents duplicate receipt sends.
+- WhatsApp failure does not block payment.
+- WhatsApp failure does not alter internal receipt/proof.
+- Internal receipt/proof remains source of truth.
+- Safe receipt payload excludes PAN, CVV, card tokens, secrets, raw provider payloads, raw provider errors, and excessive personal data.
+- Audit events are defined for consent, delivery request, success, failure, status update, duplicate block, and future webhook.
+- Provider errors are sanitized.
+- Provider secrets remain outside the repo.
+
+Phase 10D.1 has no runtime code changes. Backend/mobile/admin tests are not required unless a later implementation changes runtime behavior.

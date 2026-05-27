@@ -630,3 +630,47 @@ Required audit fields remain:
 - `created_at`
 
 Audit metadata is redacted. Audit logs must not contain PAN, CVV, card tokens, secrets, or raw provider payloads.
+
+## Phase 10D.1 - WhatsApp Receipt Channel Audit Events
+
+Future WhatsApp audit events:
+
+- `notification.preference_viewed`
+- `notification.preference_updated`
+- `whatsapp.consent_granted`
+- `whatsapp.consent_revoked`
+- `whatsapp.receipt_send_requested`
+- `whatsapp.receipt_send_succeeded`
+- `whatsapp.receipt_send_failed`
+- `whatsapp.delivery_status_updated`
+- `whatsapp.duplicate_blocked`
+- `whatsapp.webhook_received_future`
+
+Required safe metadata:
+
+- `user_id`
+- `channel`
+- `notification_type`
+- `template_name`
+- `entity_type`
+- `entity_id`
+- `recipient_hash`
+- `idempotency_key`
+- `provider_name` when selected
+- `provider_message_id` when safe
+- `error_code` when safe
+- `error_message_safe` only
+- `request_id`
+- `correlation_id` when related to a payment/receipt flow
+
+Forbidden metadata:
+
+- full phone number
+- PAN
+- CVV
+- card tokens
+- provider secrets
+- raw provider payloads
+- raw provider errors
+
+Phase 10D.1 documents these events only; it does not emit runtime WhatsApp events.

@@ -303,3 +303,17 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | FINANCE destructive actions | SEV-1 | mitigated by scope | FINANCE can view reconciliation and update manual review, but cannot edit ledger or financial amounts. |
 | Provider references exposed to wrong role | SEV-1 | mitigated by redaction | Backend redaction and frontend RedactedValue keep provider references role-limited. |
 | No operational runbook | SEV-2 | mitigated | Phase 10D runbooks added for missing receipt, provider timeout, duplicate suspicion, and charged/not-paid claims. |
+
+## Phase 10D.1 - WhatsApp Receipt Channel Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| WhatsApp sent without explicit consent | SEV-1 | open | Future consent must be explicit, granular, timestamped, and never pre-enabled. |
+| Duplicate receipt delivery | SEV-2 | open | Future delivery uses idempotency key `receipt_id + channel + template_name + recipient_hash`. |
+| WhatsApp failure blocks payment | SEV-1 | mitigated by design | WhatsApp delivery is non-blocking and cannot alter payment, receipt, ledger, or proof state. |
+| Full phone number logged | SEV-1 | open | Future logs use recipient hash and masked display only. |
+| Sensitive payload in message | SEV-1 | open | Safe payload excludes PAN, CVV, tokens, secrets, raw provider payloads, and raw provider errors. |
+| User treats WhatsApp as only proof of payment | SEV-2 | open | Copy and docs state internal receipt/proof/audit remain source of truth. |
+| WhatsApp provider not selected | SEV-2 | open | Provider selection and security review are future gates before runtime. |
+| Template rejected by provider | SEV-2 | open | Template approval is a future backlog item and production gate. |
+| Future webhook spoofing | SEV-1 | open | Webhook signature/replay verification required before accepting provider webhooks. |

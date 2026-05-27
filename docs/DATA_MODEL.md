@@ -653,3 +653,51 @@ The current model is a safe placeholder, not real reconciliation:
 ### AdminSearch
 
 `/admin/search` returns redacted operational references for user, payment, receipt, ticket, manual review, correlation, and provider reference lookups. It is an investigation projection, not a financial source of truth.
+
+## Phase 10D.1 - WhatsApp Notification Proposed Model
+
+Status: proposed only. No migration or runtime model is added in Phase 10D.1.
+
+### NotificationPreference
+
+- `id`
+- `user_id`
+- `channel`
+- `notification_type`
+- `enabled`
+- `consented_at`
+- `revoked_at`
+- `source`
+
+Rules:
+
+- `channel=whatsapp` is future-only until provider and consent implementation exist.
+- Consent is granular by notification type.
+- No toggle may be pre-enabled.
+- Phone-login consent does not imply WhatsApp notification consent.
+
+### NotificationDelivery
+
+- `id`
+- `user_id`
+- `channel`
+- `notification_type`
+- `template_name`
+- `entity_type`
+- `entity_id`
+- `recipient_hash`
+- `status`
+- `idempotency_key`
+- `provider_name` nullable
+- `provider_message_id` nullable
+- `error_code` nullable
+- `error_message_safe` nullable
+- `created_at`
+- `updated_at`
+
+Rules:
+
+- Delivery records are append-only from an operational evidence perspective.
+- Full phone numbers are not stored in delivery logs.
+- Suggested idempotency key: `receipt_id + channel + template_name + recipient_hash`.
+- WhatsApp delivery does not replace internal receipt/proof, ledger, or audit records.

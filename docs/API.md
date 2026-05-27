@@ -639,3 +639,17 @@ Both return a separated placeholder structure:
 ```
 
 These endpoints are not real reconciliation and must not be presented as production operations.
+
+## Future WhatsApp Receipt Channel APIs
+
+Status: future/proposed only. No WhatsApp runtime endpoints are implemented in Phase 10D.1.
+
+| Endpoint | Purpose | Auth | Status | Notes |
+|---|---|---|---|---|
+| `GET /notification-preferences` | Read current user's notification preferences | required | future/proposed | Must return granular channel/type preferences. |
+| `PATCH /notification-preferences` | Update consent/preferences | required | future/proposed | No pre-enabled WhatsApp toggles; emits consent/audit events. |
+| `POST /notifications/whatsapp/receipts/{receipt_id}/send` | Request future WhatsApp receipt send | required | future/proposed | Requires explicit consent, receipt ownership, idempotency, and safe payload. |
+| `GET /notifications/deliveries` | List safe delivery attempts | required | future/proposed | Must not expose full phone numbers or raw provider errors. |
+| `POST /notifications/whatsapp/webhooks/{provider}` | Receive provider delivery webhook | provider signed | future/proposed | Requires signature/replay verification before runtime. |
+
+Future MVP is limited to template `fondix_pago_exitoso`. WhatsApp failure must return a safe delivery status and must not change payment, receipt, ledger, or proof state.

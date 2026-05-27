@@ -329,3 +329,19 @@ Before commercial production:
 - RBAC: enforced by backend permissions and reflected in the admin frontend navigation/actions.
 - Audit: admin workflow events are emitted through the existing audit writer; manual review also has a case event log.
 - Production: still blocked. No real provider reconciliation, no money movement, no destructive ledger edits, no production card/Prontipagos integration, and no PAN/CVV exposure.
+
+## Future WhatsApp Receipt Delivery Visibility
+
+The CRM Admin Panel should eventually show WhatsApp receipt delivery status as notification evidence only.
+
+Future CRM behavior:
+
+- Show receipt notification attempts linked to `receipt_id`, `payment_id`, and `correlation_id`.
+- Show delivery status, template name, and safe provider message id when permitted.
+- Never show full phone numbers.
+- Never show raw provider payloads or raw provider errors.
+- SUPPORT may see limited delivery status for user assistance.
+- Retry must require a future explicit permission and idempotency check.
+- WhatsApp delivery failure must not change payment, receipt, proof, or ledger status.
+
+This is future architecture only. Phase 10D.1 does not add CRM runtime behavior.

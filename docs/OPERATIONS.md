@@ -455,3 +455,68 @@ Current operational metrics can be derived from dashboard counters for users, pa
 - `reconciliation_prontipagos_view_count`
 - `admin_search_count`
 - `manual_review_closed_without_resolution_count` must remain zero
+
+## Phase 10D.1 - WhatsApp Receipt Channel Operations
+
+WhatsApp delivery is future-only and non-blocking. Support must always treat the internal receipt/proof as the source of truth.
+
+### Runbook - WhatsApp Delivery Failed
+
+1. Verify internal receipt/proof status first.
+2. Check future delivery record by `receipt_id` and idempotency key.
+3. Confirm user consent is still active.
+4. Record safe failure reason only.
+5. Retry only if idempotency allows.
+6. Do not change payment or receipt state.
+
+### Runbook - Duplicate Delivery Suspected
+
+1. Search by `receipt_id`, `template_name`, and `recipient_hash`.
+2. Verify whether duplicate was blocked by idempotency.
+3. If duplicate was sent, create support/manual-review note with safe references.
+4. Do not expose full phone or raw provider payloads.
+
+### Runbook - User Revokes Consent
+
+1. Update future notification preference to disabled.
+2. Record `whatsapp.consent_revoked`.
+3. Stop future sends for that channel/type.
+4. Preserve historical delivery logs as append-only evidence.
+
+### Runbook - Provider Outage
+
+1. Stop automatic retries if outage threshold is reached.
+2. Keep payments and receipts independent from delivery.
+3. Surface safe degraded status in CRM.
+4. Resume sends only after provider recovery and idempotency checks.
+
+### Runbook - Template Rejected
+
+1. Disable sends for the rejected template.
+2. Record safe template rejection reason.
+3. Do not fall back to free-form receipt messages without approval.
+4. Re-submit template through provider approval process.
+
+### Runbook - User Says Receipt Not Received
+
+1. Confirm receipt exists in-app/internal proof.
+2. Confirm WhatsApp consent.
+3. Check delivery status by safe references.
+4. Re-send only if policy and idempotency allow.
+5. Offer in-app receipt as the authoritative proof.
+
+### CRM Support View Future
+
+- Show delivery status and template name.
+- Show masked phone or recipient hash only.
+- Show safe provider message id if allowed.
+- Hide raw provider payloads and full phone number.
+- Allow retry only with a future explicit permission.
+
+Future metrics:
+
+- `whatsapp_receipt_send_success_rate`
+- `whatsapp_receipt_send_failure_rate`
+- `whatsapp_duplicate_blocked_count`
+- `whatsapp_consent_rate`
+- `whatsapp_revocation_rate`

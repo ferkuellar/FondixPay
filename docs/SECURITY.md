@@ -317,3 +317,22 @@ The support, manual review, reconciliation, and search workflows preserve the CR
 - Admin action audit metadata is redacted.
 
 Production remains blocked until real admin auth hardening, MFA/session controls, production reconciliation, fraud/chargeback readiness, and operational monitoring are completed.
+
+## Phase 10D.1 - WhatsApp Receipt Channel Security
+
+WhatsApp is future-only in Phase 10D.1. No runtime provider integration, secrets, templates, sends, or webhooks are implemented.
+
+Security requirements for future implementation:
+
+- WhatsApp consent must be explicit and granular.
+- No WhatsApp toggle may be pre-enabled.
+- Full phone numbers must not be logged in delivery records, audit events, CRM views, or provider evidence.
+- Use recipient hash and masked display where needed.
+- Message payloads must not include PAN, CVV, card tokens, secrets, raw provider payloads, OTP codes, or raw provider errors.
+- Provider secrets must live in environment-specific secret management, not in the repo.
+- Future webhooks must verify provider signatures and protect against replay/spoofing.
+- Delivery must be idempotent to block duplicate receipt messages.
+- Provider errors must be sanitized before user, CRM, log, or audit display.
+- WhatsApp failure must not block or alter payment, receipt, proof, ledger, or audit state.
+
+The internal receipt/proof remains the source of truth. WhatsApp is a convenience delivery channel only.

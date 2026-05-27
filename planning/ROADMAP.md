@@ -256,6 +256,53 @@ Status: planned.
 Objective: complete operational workflows, queues, runbooks, and provider-leg reconciliation views before commercial production.
 Out of scope: destructive ledger editing and unsupported provider assumptions.
 
+## Phase 10D.1 - WhatsApp Receipt Channel Alignment
+
+Status: completed as documentation and architecture alignment.
+Objective: document WhatsApp as a future non-blocking post-payment receipt channel.
+Deliverables: WhatsApp channel architecture, consent model, proposed preferences/delivery logs, safe payload rules, idempotency, audit events, operations runbooks, validation checklist, and backlog.
+Acceptance: no runtime provider integration exists; WhatsApp failure is non-blocking; explicit granular consent is mandatory.
+Out of scope: WhatsApp provider integration, real messages, credentials, payment-flow changes, receipt-generation changes, CRM runtime changes, and WhatsApp OTP.
+
+## Phase 10X - Public Landing Page Integration & Commercial Front Door
+
+Status: planned.
+Objective: integrate the public commercial front door without enabling real payments or production financial claims.
+Out of scope: payment production launch.
+
+## Phase 10E - Coverage-Aware Service Catalog Design
+
+Status: planned.
+Objective: design service coverage rules by geography/provider availability so unavailable services are hidden or explained.
+Out of scope: hardcoding service coverage in mobile.
+
+## Phase 10F - Coverage-Aware Service Catalog Implementation
+
+Status: planned.
+Objective: implement backend-driven service coverage behavior after design approval.
+Out of scope: changing provider/payment execution contracts.
+
+## Phase AWS-1 - Terraform Foundation
+
+Status: planned.
+Objective: define infrastructure-as-code foundation.
+
+## Phase AWS-2 - Dev/Staging Deployment
+
+Status: planned.
+Objective: deploy controlled non-production environments.
+
+## Phase AWS-3 - CI/CD Pipeline
+
+Status: planned.
+Objective: automate validation and deployments with auditable gates.
+
+## Phase 10G - WhatsApp Payment Receipt MVP Implementation
+
+Status: planned after infrastructure, secrets, audit logs, provider selection, and deployment discipline.
+Objective: implement the first WhatsApp receipt template, limited to `fondix_pago_exitoso`.
+Out of scope: reminders, failed-payment notices, monthly summaries, and OTP.
+
 ## Phase 11 - Commercial Readiness Gate Review
 
 Status: planned after CRM/Admin operational design and implementation phases.

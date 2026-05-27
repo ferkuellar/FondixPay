@@ -210,3 +210,16 @@ Before real providers exist, FondixPay must use an explicit mock/dev payment met
 - Card and Prontipagos reconciliation screens must visibly say placeholder/not implemented until real provider reconciliation exists.
 - Redacted values should look intentionally limited and never invite PAN/CVV/token/secret input.
 - Every page needs loading, empty, error, and permission-denied behavior.
+
+## WhatsApp Receipt Channel UX
+
+Future WhatsApp UX must be opt-in, explicit, and revocable.
+
+- Onboarding consent screen is future and must not pre-enable WhatsApp.
+- Notification preferences must separate receipt, failed payment, due reminder, monthly summary, and OTP categories.
+- Receipt opt-in language should say WhatsApp is an optional delivery channel, not the only proof.
+- Use clear copy such as: "Enviar comprobantes por WhatsApp" and "Puedes desactivarlo cuando quieras".
+- Avoid dark patterns, bundled consent, or hidden revocation.
+- The in-app receipt remains the authoritative proof surface.
+- WhatsApp receipt copy must avoid fiscal/legal claims unless a future approved fiscal product exists.
+- If delivery fails, UI should say the receipt is still available in the app and avoid raw provider errors.
