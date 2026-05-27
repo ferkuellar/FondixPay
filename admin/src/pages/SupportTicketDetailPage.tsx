@@ -16,6 +16,7 @@ export function SupportTicketDetailPage({ id }: { id: string }) {
   const { data, error, loading, reload } = useAdminResource(() => api.ticket(id), [api, id]);
   const [status, setStatus] = useState<SupportTicket["status"]>("pending");
   const [priority, setPriority] = useState<SupportTicket["priority"]>("medium");
+  const [resolutionNote, setResolutionNote] = useState("");
   const [note, setNote] = useState("");
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -23,7 +24,8 @@ export function SupportTicketDetailPage({ id }: { id: string }) {
     event.preventDefault();
     if (!window.confirm("Actualizar este ticket?")) return;
     try {
-      await api.updateTicket(id, { status, priority });
+      await api.updateTicket(id, { status, priority, resolution_note: resolutionNote || undefined });
+      setResolutionNote("");
       setFormError(null);
       reload();
     } catch (updateError) {
@@ -63,8 +65,11 @@ export function SupportTicketDetailPage({ id }: { id: string }) {
           <DetailRow label="user_id" value={data.user_id ?? "No asociado"} />
           <DetailRow label="payment_id" value={data.payment_id ?? "No asociado"} />
           <DetailRow label="receipt_id" value={data.receipt_id ?? "No asociado"} />
+          <DetailRow label="manual_review_case_id" value={data.manual_review_case_id ?? "No asociado"} />
+          <DetailRow label="Correlation ID" value={data.correlation_id ?? "No disponible"} />
           <DetailRow label="Descripcion" value={data.description ?? "Sin descripcion"} />
           <DetailRow label="Actualizado" value={formatDate(data.updated_at)} />
+          <DetailRow label="Cerrado" value={data.closed_at ? formatDate(data.closed_at) : "No cerrado"} />
         </dl>
       </article>
       {hasPermission("admin.support_tickets.update") ? (
@@ -76,6 +81,8 @@ export function SupportTicketDetailPage({ id }: { id: string }) {
               <select value={status} onChange={(event) => setStatus(event.target.value as SupportTicket["status"])}>
                 <option value="open">open</option>
                 <option value="pending">pending</option>
+                <option value="waiting_user">waiting_user</option>
+                <option value="waiting_internal">waiting_internal</option>
                 <option value="resolved">resolved</option>
                 <option value="closed">closed</option>
               </select>
@@ -88,6 +95,15 @@ export function SupportTicketDetailPage({ id }: { id: string }) {
                 <option value="high">high</option>
                 <option value="urgent">urgent</option>
               </select>
+            </label>
+            <label>
+              Resolucion requerida para resolved/closed
+              <textarea
+                value={resolutionNote}
+                onChange={(event) => setResolutionNote(event.target.value)}
+                rows={3}
+                required={status === "resolved" || status === "closed"}
+              />
             </label>
             <button className="button" type="submit">Guardar</button>
           </form>

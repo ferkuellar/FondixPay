@@ -579,3 +579,63 @@ Status: Phase 10B backend implementation. These routes require bearer auth plus 
 The separate `admin/` React/Vite frontend consumes the implemented `/admin/*` endpoints above through `VITE_API_BASE_URL`. The UI marks card and Prontipagos reconciliation responses as placeholders and does not fabricate production rows.
 
 The current admin access screen accepts an existing backend bearer token. Because dedicated admin auth claims/session hardening are still pending, development role rendering is explicitly controlled by `VITE_ENABLE_ADMIN_DEV_AUTH` and `VITE_ADMIN_DEV_ROLE`; backend permission checks remain authoritative for every request.
+## Phase 10D - CRM Operational Workflows
+
+Implemented admin workflow endpoints remain internal, authenticated, RBAC-protected, and redacted by role. They do not move money, do not integrate real card or Prontipagos providers, and do not expose PAN/CVV/tokens/secrets/raw provider payloads.
+
+### Support Tickets
+
+- `GET /admin/support/tickets` - list tickets.
+- `GET /admin/support/tickets/{ticket_id}` - view a ticket.
+- `POST /admin/support/tickets` - create a ticket with optional `user_id`, `payment_id`, `receipt_id`, `manual_review_case_id`, and `correlation_id`.
+- `PATCH /admin/support/tickets/{ticket_id}` - update status, priority, assignment, links, or resolution note.
+- `POST /admin/support/tickets/{ticket_id}/notes` - add a safe internal note.
+
+Ticket status values: `open`, `pending`, `waiting_user`, `waiting_internal`, `resolved`, `closed`.
+
+Rule: `resolved` and `closed` require `resolution_note`; the backend rejects closure without it.
+
+### Manual Review
+
+- `GET /admin/manual-review` - list manual review cases.
+- `GET /admin/manual-review/{case_id}` - view a manual review case.
+- `POST /admin/manual-review` - create a case with `case_type`, `summary`, severity, optional references, and optional support ticket link.
+- `PATCH /admin/manual-review/{case_id}` - update status, severity, assignment, resolution, or note.
+
+Manual review status values: `open`, `assigned`, `investigating`, `waiting_provider`, `waiting_user`, `resolved`, `escalated`, `closed`.
+
+Rule: `resolved` and `closed` require `resolution`; the backend rejects closure without it. This does not mutate payments, receipts, ledger, or provider state.
+
+### Search / Investigation
+
+- `GET /admin/search?q={value}&type={optional}` - searches operational references.
+
+Supported `type` values: `user`, `payment`, `receipt`, `ticket`, `manual_review`, `correlation`, `provider_reference`.
+
+Search responses are redacted by role. Provider references are limited for SUPPORT and never include raw provider payloads.
+
+### Reconciliation Placeholders
+
+- `GET /admin/reconciliation/card`
+- `GET /admin/reconciliation/prontipagos`
+
+Both return a separated placeholder structure:
+
+```json
+{
+  "provider_type": "card_processor",
+  "status": "not_implemented",
+  "summary": {
+    "total_count": 0,
+    "matched_count": 0,
+    "mismatch_count": 0,
+    "pending_count": 0,
+    "manual_review_count": 0
+  },
+  "items": [],
+  "message": "Reconciliation is planned for a later phase.",
+  "production_ready": false
+}
+```
+
+These endpoints are not real reconciliation and must not be presented as production operations.

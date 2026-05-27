@@ -301,3 +301,19 @@ Phase 10B adds backend `/admin/*` dependencies that require bearer authenticatio
 - The current access screen stores the pasted bearer token in session storage for this initial internal app; dedicated hardened admin session/auth remains pending.
 - Audit metadata rendering blocks unexpected sensitive key names such as PAN, CVV, secret, token, and raw payload keys.
 - UI copy and reconciliation pages keep mock/sandbox and not-implemented status explicit.
+## Phase 10D - CRM Workflow Security
+
+The support, manual review, reconciliation, and search workflows preserve the CRM security model:
+
+- Backend RBAC remains the source of truth for every `/admin/*` endpoint.
+- Frontend permission-aware rendering hides unavailable workflows but does not replace backend authorization.
+- SUPPORT cannot view full reconciliation or resolve financial manual review cases.
+- AUDITOR is read-only.
+- Tickets and manual review notes must not include PAN, CVV, card tokens, secrets, or raw provider payloads.
+- Provider references are role-redacted.
+- Reconciliation endpoints are placeholders and return `production_ready=false`.
+- Manual review never mutates ledger entries, payment amounts, card status, provider confirmations, or receipt confirmation state.
+- Closing tickets/manual review requires resolution text for traceability.
+- Admin action audit metadata is redacted.
+
+Production remains blocked until real admin auth hardening, MFA/session controls, production reconciliation, fraud/chargeback readiness, and operational monitoring are completed.

@@ -58,3 +58,24 @@ No estan dentro del roadmap actual como metodo de pago del usuario:
 - Demo account/balance: mock UX/testing capability only, not a real payment method.
 - Future ledger: accounting foundation before real money movement.
 - Future audit log: immutable trace for sensitive and financial events.
+
+## Coverage-Aware Service Catalog
+
+FONDIXPAY must show users only the services available for their selected state.
+
+### Business Rule
+
+- National services are available to all users.
+- State/regional services are available only when coverage exists for the user's selected state.
+- Services without coverage for the user's selected state are hidden in the mobile app.
+- The user must be able to manually change their selected state.
+- GPS may assist, but it is not mandatory and does not override manual selection.
+- The mobile app must not contain hardcoded service coverage rules.
+
+### User-facing behavior
+
+If a service is unavailable in the user's selected state, it is not rendered in the service catalog.
+
+### Support behavior
+
+Support should be able to determine whether a missing service is unavailable because of state coverage rules.

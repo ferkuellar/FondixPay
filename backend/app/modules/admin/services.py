@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import HTTPException, Request, status
@@ -9,6 +10,8 @@ from app.modules.admin import repository
 from app.modules.admin.models import ManualReviewCase, ManualReviewEvent, SupportTicket, SupportTicketNote
 from app.modules.admin.redaction import redact_sensitive_dict
 from app.modules.admin.schemas import (
+    AdminSearchResponse,
+    AdminSearchResult,
     AdminPaymentDetail,
     AdminReceiptDetail,
     AdminUserDetail,
@@ -104,9 +107,27 @@ def create_ticket(db: Session, payload: SupportTicketCreate, actor: User) -> Sup
     return repository.create_support_ticket(db, ticket)
 
 
-def update_ticket(db: Session, ticket: SupportTicket, payload: SupportTicketUpdate) -> SupportTicket:
-    for field, value in payload.model_dump(exclude_unset=True).items():
+def update_ticket(db: Session, ticket: SupportTicket, payload: SupportTicketUpdate, actor: User) -> SupportTicket:
+    changes = payload.model_dump(exclude_unset=True)
+    resolution_note = changes.pop("resolution_note", None)
+    if changes.get("status") in {"resolved", "closed"} and not _has_resolution_text(resolution_note):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Ticket resolution_note is required before resolved or closed.",
+        )
+    for field, value in changes.items():
         setattr(ticket, field, value)
+    if ticket.status == "closed":
+        ticket.closed_at = datetime.now(timezone.utc)
+    elif "status" in changes:
+        ticket.closed_at = None
+    if _has_resolution_text(resolution_note):
+        add_ticket_note(
+            db,
+            ticket,
+            SupportTicketNoteCreate(note=f"Resolucion: {resolution_note}", is_internal=True),
+            actor,
+        )
     db.flush()
     return ticket
 
@@ -122,7 +143,14 @@ def create_manual_review_case(db: Session, payload: ManualReviewCaseCreate, acto
     case = repository.create_manual_review_case(db, ManualReviewCase(**payload.model_dump()))
     repository.add_manual_review_event(
         db,
-        ManualReviewEvent(case_id=case.id, actor_id=actor.id, event_type="created", metadata_json={}),
+        ManualReviewEvent(
+            case_id=case.id,
+            actor_id=actor.id,
+            event_type="case_created",
+            after_status=case.status,
+            note=case.summary,
+            metadata_json={},
+        ),
     )
     return case
 
@@ -134,11 +162,32 @@ def update_manual_review_case(
     actor: User,
 ) -> ManualReviewCase:
     changes = payload.model_dump(exclude_unset=True)
+    before_status = case.status
+    note = changes.pop("note", None)
+    next_status = changes.get("status", case.status)
+    if next_status in {"resolved", "closed"} and not _has_resolution_text(changes.get("resolution") or case.resolution):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Manual review resolution is required before resolved or closed.",
+        )
     for field, value in changes.items():
         setattr(case, field, value)
+    if case.status == "closed":
+        case.closed_at = datetime.now(timezone.utc)
+    elif "status" in changes:
+        case.closed_at = None
+    event_type = _manual_review_event_type(before_status, case.status, note)
     repository.add_manual_review_event(
         db,
-        ManualReviewEvent(case_id=case.id, actor_id=actor.id, event_type="updated", metadata_json=changes),
+        ManualReviewEvent(
+            case_id=case.id,
+            actor_id=actor.id,
+            event_type=event_type,
+            before_status=before_status,
+            after_status=case.status,
+            note=note,
+            metadata_json=redact_sensitive_dict(changes),
+        ),
     )
     db.flush()
     return case
@@ -178,6 +227,97 @@ def audit_admin_action(
     )
 
 
+def search_operational_references(db: Session, q: str, search_type: str | None, role: str) -> AdminSearchResponse:
+    query = q.strip()
+    limit = 10
+    results: list[AdminSearchResult] = []
+    if search_type in {None, "user"}:
+        results.extend(
+            AdminSearchResult(entity_type="user", entity_id=user.id, label=f"Usuario {user.id}", status=user.role)
+            for user in repository.search_users(db, query, limit)
+        )
+    if search_type in {None, "payment", "provider_reference"}:
+        from app.modules.admin.redaction import redact_provider_reference
+
+        results.extend(
+            AdminSearchResult(
+                entity_type="payment" if search_type != "provider_reference" else "provider_reference",
+                entity_id=payment.id,
+                label=f"Pago {payment.id}",
+                status=payment.status.value,
+                provider_reference=redact_provider_reference(role, payment.external_reference),
+            )
+            for payment in repository.search_payments(db, query, limit)
+        )
+    if search_type in {None, "receipt"}:
+        results.extend(
+            AdminSearchResult(entity_type="receipt", entity_id=receipt.id, label=f"Recibo {receipt.id}", status=receipt.folio)
+            for receipt in repository.search_receipts(db, query, limit)
+        )
+    if search_type in {None, "ticket"}:
+        results.extend(
+            AdminSearchResult(
+                entity_type="ticket",
+                entity_id=ticket.id,
+                label=ticket.subject,
+                status=ticket.status,
+                correlation_id=ticket.correlation_id,
+            )
+            for ticket in repository.search_support_tickets(db, query, limit)
+        )
+    if search_type in {None, "manual_review", "correlation", "provider_reference"}:
+        from app.modules.admin.redaction import redact_provider_reference
+
+        results.extend(
+            AdminSearchResult(
+                entity_type="manual_review",
+                entity_id=case.id,
+                label=case.case_type,
+                status=case.status,
+                correlation_id=case.correlation_id,
+                provider_reference=redact_provider_reference(role, case.provider_reference),
+            )
+            for case in repository.search_manual_review_cases(db, query, limit)
+        )
+    if search_type in {None, "correlation"}:
+        results.extend(
+            AdminSearchResult(
+                entity_type="correlation",
+                entity_id=intent.payment_id or intent.id,
+                label="Payment correlation",
+                status=intent.status,
+                correlation_id=intent.correlation_id,
+            )
+            for intent in repository.search_correlated_payment_intents(db, query, limit)
+        )
+    return AdminSearchResponse(query=query, type=search_type, results=results[:25])
+
+
+def detect_manual_review_reason(
+    *,
+    card_status: str | None,
+    provider_status: str | None,
+    receipt_status: str | None = None,
+    duplicate_suspected: bool = False,
+    amount_mismatch: bool = False,
+) -> str | None:
+    if card_status in {"succeeded", "authorized", "captured"} and provider_status in {"provider_failed", "provider_rejected"}:
+        return "card_success_prontipagos_failed"
+    if card_status in {"succeeded", "authorized", "captured"} and provider_status == "provider_pending":
+        return "card_success_prontipagos_pending"
+    if provider_status == "provider_timeout":
+        return "prontipagos_timeout"
+    if receipt_status == "unavailable" and provider_status in {"provider_confirmed", "mock_confirmed"}:
+        return "receipt_unavailable"
+    if duplicate_suspected:
+        return "duplicate_attempt"
+    if amount_mismatch:
+        return "amount_mismatch"
+    if provider_status in {"provider_unknown", "unknown"}:
+        return "provider_status_unknown"
+    return None
+
+
 def _payment_count(db: Session, payment_status: PaymentStatus) -> int:
     return db.query(func.count(Payment.id)).filter(Payment.status == payment_status).scalar() or 0
 
@@ -208,3 +348,23 @@ def _proof_payment_status(payment_status: PaymentStatus) -> str:
     if payment_status == PaymentStatus.PROCESSING:
         return "processing"
     return payment_status.value.lower()
+
+
+def _has_resolution_text(value: str | None) -> bool:
+    return bool(value and value.strip())
+
+
+def _manual_review_event_type(before_status: str, after_status: str, note: str | None) -> str:
+    if before_status != after_status:
+        if after_status == "assigned":
+            return "case_assigned"
+        if after_status == "escalated":
+            return "escalated"
+        if after_status == "resolved":
+            return "resolved"
+        if after_status == "closed":
+            return "closed"
+        return "status_changed"
+    if _has_resolution_text(note):
+        return "note_added"
+    return "updated"

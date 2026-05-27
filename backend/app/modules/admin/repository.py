@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.modules.admin.models import ManualReviewCase, ManualReviewEvent, SupportTicket, SupportTicketNote
 from app.modules.audit.models import AuditEvent
+from app.modules.ledger.models import PaymentIntent
 from app.modules.payments.models import Payment
 from app.modules.receipts.models import Receipt
 from app.modules.users.models import User
@@ -39,8 +40,6 @@ def list_payments(
     if provider_reference:
         query = query.filter(Payment.external_reference.contains(provider_reference))
     if correlation_id:
-        from app.modules.ledger.models import PaymentIntent
-
         query = query.join(PaymentIntent, PaymentIntent.payment_id == Payment.id).filter(
             PaymentIntent.correlation_id == correlation_id
         )
@@ -134,3 +133,58 @@ def add_manual_review_event(db: Session, event: ManualReviewEvent) -> ManualRevi
     db.add(event)
     db.flush()
     return event
+
+
+def search_users(db: Session, q: str, limit: int) -> list[User]:
+    query = db.query(User)
+    if q.isdigit():
+        query = query.filter(or_(User.id == int(q), User.phone.contains(q)))
+    else:
+        query = query.filter(or_(User.phone.contains(q), User.name.contains(q)))
+    return query.order_by(User.id.desc()).limit(limit).all()
+
+
+def search_payments(db: Session, q: str, limit: int) -> list[Payment]:
+    query = db.query(Payment)
+    if q.isdigit():
+        query = query.filter(Payment.id == int(q))
+    else:
+        query = query.filter(Payment.external_reference.contains(q))
+    return query.order_by(Payment.id.desc()).limit(limit).all()
+
+
+def search_receipts(db: Session, q: str, limit: int) -> list[Receipt]:
+    query = db.query(Receipt)
+    if q.isdigit():
+        query = query.filter(Receipt.id == int(q))
+    else:
+        query = query.filter(Receipt.folio.contains(q))
+    return query.order_by(Receipt.id.desc()).limit(limit).all()
+
+
+def search_support_tickets(db: Session, q: str, limit: int) -> list[SupportTicket]:
+    query = db.query(SupportTicket)
+    if q.isdigit():
+        query = query.filter(SupportTicket.id == int(q))
+    else:
+        query = query.filter(or_(SupportTicket.correlation_id == q, SupportTicket.subject.contains(q)))
+    return query.order_by(SupportTicket.id.desc()).limit(limit).all()
+
+
+def search_manual_review_cases(db: Session, q: str, limit: int) -> list[ManualReviewCase]:
+    query = db.query(ManualReviewCase)
+    if q.isdigit():
+        query = query.filter(ManualReviewCase.id == int(q))
+    else:
+        query = query.filter(
+            or_(
+                ManualReviewCase.correlation_id == q,
+                ManualReviewCase.provider_reference.contains(q),
+                ManualReviewCase.case_type.contains(q),
+            )
+        )
+    return query.order_by(ManualReviewCase.id.desc()).limit(limit).all()
+
+
+def search_correlated_payment_intents(db: Session, q: str, limit: int) -> list[PaymentIntent]:
+    return db.query(PaymentIntent).filter(PaymentIntent.correlation_id == q).order_by(PaymentIntent.id.desc()).limit(limit).all()

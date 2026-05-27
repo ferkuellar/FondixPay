@@ -16,6 +16,7 @@ from app.modules.admin.schemas import (
     AdminPaymentListItem,
     AdminReceiptDetail,
     AdminReceiptListItem,
+    AdminSearchResponse,
     AdminUserDetail,
     AdminUserListItem,
     DashboardSummary,
@@ -203,6 +204,26 @@ def list_audit_events(
     return result
 
 
+@router.get("/search", response_model=AdminSearchResponse)
+def search_admin_references(
+    request: Request,
+    q: str = Query(min_length=1, max_length=160),
+    search_type: str | None = Query(default=None, alias="type"),
+    current_user: User = Depends(require_admin_permission("admin.search.view")),
+    db: Session = Depends(get_db),
+) -> AdminSearchResponse:
+    result = services.search_operational_references(db, q, search_type, current_user.role)
+    _audit(
+        db,
+        request,
+        current_user,
+        "admin.search_executed",
+        "admin.search.view",
+        metadata={"type": search_type or "all", "result_count": len(result.results)},
+    )
+    return result
+
+
 @router.get("/reconciliation/card", response_model=ReconciliationSummaryPlaceholder)
 def get_card_reconciliation(
     request: Request,
@@ -213,12 +234,12 @@ def get_card_reconciliation(
         db,
         request,
         current_user,
-        "admin.reconciliation_viewed",
+        "admin.reconciliation_card_viewed",
         "admin.reconciliation.card.view",
         "Reconciliation",
         "card",
     )
-    return _reconciliation_placeholder("card")
+    return _reconciliation_placeholder("card_processor")
 
 
 @router.get("/reconciliation/prontipagos", response_model=ReconciliationSummaryPlaceholder)
@@ -231,7 +252,7 @@ def get_prontipagos_reconciliation(
         db,
         request,
         current_user,
-        "admin.reconciliation_viewed",
+        "admin.reconciliation_prontipagos_viewed",
         "admin.reconciliation.prontipagos.view",
         "Reconciliation",
         "prontipagos",
@@ -293,12 +314,22 @@ def update_manual_review(
     db: Session = Depends(get_db),
 ) -> ManualReviewCaseRead:
     case = services.get_or_404(repository.get_manual_review_case(db, case_id), "Caso no encontrado")
+    previous_status = case.status
     case = services.update_manual_review_case(db, case, payload, current_user)
+    event_type = "admin.manual_review_note_added" if payload.note else "admin.manual_review_updated"
+    if previous_status != case.status:
+        event_type = "admin.manual_review_status_changed"
+        if case.assigned_to is not None and case.status == "assigned":
+            event_type = "admin.manual_review_assigned"
+        if case.status == "resolved":
+            event_type = "admin.manual_review_resolved"
+        if case.status == "closed":
+            event_type = "admin.manual_review_closed"
     _audit(
         db,
         request,
         current_user,
-        "admin.manual_review_updated",
+        event_type,
         "admin.manual_review.update",
         "ManualReviewCase",
         case.id,
@@ -343,7 +374,7 @@ def create_ticket(
         db,
         request,
         current_user,
-        "admin.ticket_created",
+        "admin.support_ticket_created",
         "admin.support_tickets.create",
         "SupportTicket",
         ticket.id,
@@ -360,12 +391,16 @@ def update_ticket(
     db: Session = Depends(get_db),
 ) -> SupportTicketRead:
     ticket = services.get_or_404(repository.get_support_ticket(db, ticket_id), "Ticket no encontrado")
-    ticket = services.update_ticket(db, ticket, payload)
+    previous_status = ticket.status
+    ticket = services.update_ticket(db, ticket, payload, current_user)
+    event_type = "admin.support_ticket_updated"
+    if previous_status != ticket.status and ticket.status == "closed":
+        event_type = "admin.support_ticket_closed"
     _audit(
         db,
         request,
         current_user,
-        "admin.ticket_updated",
+        event_type,
         "admin.support_tickets.update",
         "SupportTicket",
         ticket.id,
@@ -388,7 +423,7 @@ def add_ticket_note(
         db,
         request,
         current_user,
-        "admin.ticket_note_added",
+        "admin.support_ticket_note_added",
         "admin.support_tickets.update",
         "SupportTicket",
         ticket.id,
@@ -422,9 +457,18 @@ def _audit(
     db.commit()
 
 
-def _reconciliation_placeholder(provider: str) -> ReconciliationSummaryPlaceholder:
+def _reconciliation_placeholder(provider_type: str) -> ReconciliationSummaryPlaceholder:
     return ReconciliationSummaryPlaceholder(
         status="not_implemented",
-        provider=provider,
+        provider_type=provider_type,
+        summary={
+            "total_count": 0,
+            "matched_count": 0,
+            "mismatch_count": 0,
+            "pending_count": 0,
+            "manual_review_count": 0,
+        },
+        items=[],
         message="Reconciliation is planned for a later phase.",
+        production_ready=False,
     )

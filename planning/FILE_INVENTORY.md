@@ -34,3 +34,17 @@ Updated: 2026-05-19
 | `mobile/src/theme/colors.ts` | Mobile color tokens | Existing | No | Align with `fondix.png` in Phase 3 |
 | `docs/architecture.md` | Existing architecture notes | Updated | No | Expanded into AXON-AI architecture doc |
 | `fondix.png` | Visual reference | Not found | No | Add under repo or `references/` before Phase 3 if available |
+
+
+# File Inventory Update — Coverage-Aware Service Catalog
+
+| Item | Type | Source | Purpose | Current Use | Future Use | Sensitive? | Status | Notes |
+|---|---|---|---|---|---|---|---|---|
+| Coverage-Aware Service Catalog | Product Feature | Business requirement / coverage matrix reference | Show only services available in the user's selected state | Inventory only during Phase 10D | Backend catalog, mobile filtering, support visibility | No | Planned | MVP rule: unavailable services are hidden, not disabled |
+| State Coverage Matrix | Business Data Reference | Initial coverage workbook / client coverage rules | Define which services are available per Mexican state | Reference only; not used directly by app | Seed/import source for normalized DB tables | Low/Medium | Pending normalization | Do not ship Excel logic in mobile app |
+| services table | Database Entity | Backend DB | Store bill-payment services | Planned | Used by service catalog API and Prontipagos mapping | No | Planned | Must include active flag, category, provider code, fee metadata |
+| service_coverage table | Database Entity | Backend DB | Map services to supported states | Planned | Used by API filtering | No | Planned | Unique constraint: service_id + state_code |
+| user_profile.state_code | User Data | Mobile onboarding/profile | Store user-selected state | Planned | Drives visible service catalog | Yes | Planned | Manual state selection takes priority over GPS |
+| GET /api/services/available | API Endpoint | Backend | Return only services available to the user state | Planned | Mobile catalog source | No | Planned | If state is missing, return national services only |
+| PATCH /api/me/location-state | API Endpoint | Backend | Save/change user selected state | Planned | Mobile profile/location setting | Yes | Planned | Must audit user state changes |
+| Support Service Coverage View | Support Console Feature | Admin/support console | Let support see if a service is available in a user's state | Candidate for Phase 10D | Helps answer “why can’t I see/pay this service?” | Yes | Candidate | Read-only visibility only during 10D |

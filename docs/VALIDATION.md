@@ -420,3 +420,34 @@ Checklist:
 - Reconciliation pages say not implemented when backend returns placeholder.
 - UI does not render PAN, CVV, token, secret, or raw provider payload fields.
 - Mobile typecheck is not required when mobile runtime is untouched.
+## Phase 10D - CRM Workflow Validation
+
+Backend:
+
+- `cd backend`
+- `python -m compileall app`
+- `python -m pytest`
+
+Admin frontend:
+
+- `cd admin`
+- `npm run typecheck`
+- `npm run build`
+
+Checklist:
+
+- SUPPORT can create and update support tickets.
+- SUPPORT cannot view full reconciliation.
+- SUPPORT cannot resolve financial manual review cases.
+- FINANCE can view card and Prontipagos reconciliation placeholders.
+- FINANCE can update manual review cases.
+- AUDITOR can read audit logs but cannot write tickets/manual review.
+- Ticket cannot move to `resolved` or `closed` without `resolution_note`.
+- Manual review cannot move to `resolved` or `closed` without `resolution`.
+- Manual review event log records before/after status and note.
+- Card reconciliation and Prontipagos reconciliation return separate `provider_type` values.
+- Reconciliation responses include `production_ready=false`.
+- `/admin/search` requires auth and admin permission.
+- Responses do not include PAN/CVV/token/secret/raw_payload.
+- Admin frontend typecheck/build pass.
+- Mobile typecheck is not required when mobile runtime is untouched.

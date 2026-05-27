@@ -13,6 +13,12 @@ class SupportTicket(Base):
     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     payment_id: Mapped[int | None] = mapped_column(ForeignKey("payments.id"), nullable=True, index=True)
     receipt_id: Mapped[int | None] = mapped_column(ForeignKey("receipts.id"), nullable=True, index=True)
+    manual_review_case_id: Mapped[int | None] = mapped_column(
+        ForeignKey("manual_review_cases.id", name="fk_support_tickets_manual_review_case_id", use_alter=True),
+        nullable=True,
+        index=True,
+    )
+    correlation_id: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
     status: Mapped[str] = mapped_column(String(40), default="open", index=True)
     priority: Mapped[str] = mapped_column(String(40), default="medium", index=True)
     category: Mapped[str] = mapped_column(String(80), default="other", index=True)
@@ -26,6 +32,7 @@ class SupportTicket(Base):
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
     )
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     notes = relationship("SupportTicketNote", back_populates="ticket", cascade="all, delete-orphan")
 
@@ -53,10 +60,16 @@ class ManualReviewCase(Base):
     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     payment_id: Mapped[int | None] = mapped_column(ForeignKey("payments.id"), nullable=True, index=True)
     receipt_id: Mapped[int | None] = mapped_column(ForeignKey("receipts.id"), nullable=True, index=True)
+    support_ticket_id: Mapped[int | None] = mapped_column(
+        ForeignKey("support_tickets.id", name="fk_manual_review_cases_support_ticket_id", use_alter=True),
+        nullable=True,
+        index=True,
+    )
     card_reference: Mapped[str | None] = mapped_column(String(160), nullable=True)
     provider_reference: Mapped[str | None] = mapped_column(String(160), nullable=True)
     correlation_id: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
     assigned_to: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
+    summary: Mapped[str] = mapped_column(Text, default="")
     resolution: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(
@@ -64,6 +77,7 @@ class ManualReviewCase(Base):
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
     )
+    closed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     events = relationship("ManualReviewEvent", back_populates="case", cascade="all, delete-orphan")
 
@@ -75,6 +89,9 @@ class ManualReviewEvent(Base):
     case_id: Mapped[int] = mapped_column(ForeignKey("manual_review_cases.id"), index=True)
     actor_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     event_type: Mapped[str] = mapped_column(String(120))
+    before_status: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    after_status: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
     metadata_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
 

@@ -3,11 +3,14 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-SupportTicketStatus = Literal["open", "pending", "resolved", "closed"]
+SupportTicketStatus = Literal["open", "pending", "waiting_user", "waiting_internal", "resolved", "closed"]
 SupportTicketPriority = Literal["low", "medium", "high", "urgent"]
 SupportTicketCategory = Literal[
     "payment_failed",
+    "payment_pending",
     "receipt_missing",
+    "prontipagos_issue",
+    "duplicate_charge_claim",
     "pending_payment",
     "account_access",
     "card_issue",
@@ -25,13 +28,18 @@ ManualReviewStatus = Literal[
 ]
 ManualReviewCaseType = Literal[
     "card_success_prontipagos_failed",
+    "card_success_prontipagos_pending",
+    "prontipagos_timeout",
     "prontipagos_pending",
     "receipt_unavailable",
     "duplicate_attempt",
+    "duplicate_charge_claim",
     "amount_mismatch",
     "chargeback_suspected",
     "user_claims_not_paid",
     "provider_timeout",
+    "provider_status_unknown",
+    "reconciliation_mismatch",
     "other",
 ]
 
@@ -131,6 +139,8 @@ class SupportTicketCreate(BaseModel):
     user_id: int | None = None
     payment_id: int | None = None
     receipt_id: int | None = None
+    manual_review_case_id: int | None = None
+    correlation_id: str | None = Field(default=None, max_length=120)
     priority: SupportTicketPriority = "medium"
     category: SupportTicketCategory = "other"
     subject: str = Field(min_length=3, max_length=180)
@@ -144,6 +154,9 @@ class SupportTicketUpdate(BaseModel):
     subject: str | None = Field(default=None, min_length=3, max_length=180)
     description: str | None = Field(default=None, max_length=4000)
     assigned_to: int | None = None
+    manual_review_case_id: int | None = None
+    correlation_id: str | None = Field(default=None, max_length=120)
+    resolution_note: str | None = Field(default=None, max_length=4000)
 
 
 class SupportTicketNoteCreate(BaseModel):
@@ -166,6 +179,8 @@ class SupportTicketRead(BaseModel):
     user_id: int | None = None
     payment_id: int | None = None
     receipt_id: int | None = None
+    manual_review_case_id: int | None = None
+    correlation_id: str | None = None
     status: str
     priority: str
     category: str
@@ -175,6 +190,7 @@ class SupportTicketRead(BaseModel):
     created_by: int
     created_at: datetime
     updated_at: datetime
+    closed_at: datetime | None = None
     notes: list[SupportTicketNoteRead] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}
@@ -186,10 +202,12 @@ class ManualReviewCaseCreate(BaseModel):
     user_id: int | None = None
     payment_id: int | None = None
     receipt_id: int | None = None
+    support_ticket_id: int | None = None
     card_reference: str | None = Field(default=None, max_length=160)
     provider_reference: str | None = Field(default=None, max_length=160)
     correlation_id: str | None = Field(default=None, max_length=120)
     assigned_to: int | None = None
+    summary: str = Field(min_length=3, max_length=4000)
 
 
 class ManualReviewCaseUpdate(BaseModel):
@@ -197,6 +215,7 @@ class ManualReviewCaseUpdate(BaseModel):
     severity: Literal["low", "medium", "high", "urgent"] | None = None
     assigned_to: int | None = None
     resolution: str | None = Field(default=None, max_length=4000)
+    note: str | None = Field(default=None, max_length=4000)
 
 
 class ManualReviewCaseRead(BaseModel):
@@ -207,16 +226,45 @@ class ManualReviewCaseRead(BaseModel):
     user_id: int | None = None
     payment_id: int | None = None
     receipt_id: int | None = None
+    support_ticket_id: int | None = None
     card_reference: str | None = None
     provider_reference: str | None = None
     correlation_id: str | None = None
     assigned_to: int | None = None
+    summary: str
     resolution: str | None = None
     created_at: datetime
     updated_at: datetime
+    closed_at: datetime | None = None
+
+
+class ReconciliationSummaryCounts(BaseModel):
+    total_count: int = 0
+    matched_count: int = 0
+    mismatch_count: int = 0
+    pending_count: int = 0
+    manual_review_count: int = 0
 
 
 class ReconciliationSummaryPlaceholder(BaseModel):
-    status: Literal["not_implemented"]
-    provider: Literal["card", "prontipagos"]
+    provider_type: Literal["card_processor", "prontipagos"]
+    status: Literal["not_implemented", "ready_for_sandbox", "partial"]
+    summary: ReconciliationSummaryCounts
+    items: list[dict] = Field(default_factory=list)
     message: str
+    production_ready: bool = False
+
+
+class AdminSearchResult(BaseModel):
+    entity_type: Literal["user", "payment", "receipt", "ticket", "manual_review", "correlation", "provider_reference"]
+    entity_id: int | str
+    label: str
+    status: str | None = None
+    correlation_id: str | None = None
+    provider_reference: str | None = None
+
+
+class AdminSearchResponse(BaseModel):
+    query: str
+    type: str | None = None
+    results: list[AdminSearchResult] = Field(default_factory=list)

@@ -1,6 +1,7 @@
 import type {
   AdminPayment,
   AdminReceipt,
+  AdminSearchResponse,
   AdminUser,
   AuditEvent,
   DashboardSummary,
@@ -78,17 +79,19 @@ export function createAdminClient(getToken: TokenProvider) {
     receipt: (id: string) => request<AdminReceipt>(`/admin/receipts/${id}`),
     auditEvents: (params: { event_type?: string; actor_id?: string; entity_id?: string; correlation_id?: string }) =>
       request<AuditEvent[]>(`/admin/audit-events${query(params)}`),
+    search: (params: { q: string; type?: string }) =>
+      request<AdminSearchResponse>(`/admin/search${query(params)}`),
     cardReconciliation: () => request<ReconciliationSummary>("/admin/reconciliation/card"),
     prontipagosReconciliation: () => request<ReconciliationSummary>("/admin/reconciliation/prontipagos"),
     manualReview: () => request<ManualReviewCase[]>("/admin/manual-review"),
     manualReviewCase: (id: string) => request<ManualReviewCase>(`/admin/manual-review/${id}`),
-    updateManualReviewCase: (id: string, payload: Partial<ManualReviewCase>) =>
+    updateManualReviewCase: (id: string, payload: Partial<ManualReviewCase> & { note?: string }) =>
       request<ManualReviewCase>(`/admin/manual-review/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
     tickets: () => request<SupportTicket[]>("/admin/support/tickets"),
     ticket: (id: string) => request<SupportTicket>(`/admin/support/tickets/${id}`),
     createTicket: (payload: Partial<SupportTicket>) =>
       request<SupportTicket>("/admin/support/tickets", { method: "POST", body: JSON.stringify(payload) }),
-    updateTicket: (id: string, payload: Partial<SupportTicket>) =>
+    updateTicket: (id: string, payload: Partial<SupportTicket> & { resolution_note?: string }) =>
       request<SupportTicket>(`/admin/support/tickets/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
     addTicketNote: (id: string, payload: { note: string; is_internal: boolean }) =>
       request<SupportTicket>(`/admin/support/tickets/${id}/notes`, { method: "POST", body: JSON.stringify(payload) }),

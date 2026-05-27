@@ -213,3 +213,15 @@ Prontipagos is not integrated. It is the next separate sandbox design leg after 
 - Backend admin APIs are an explicit dependency and backend authorization remains the source of truth.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 10D - Support, Reconciliation & Manual Review Workflows.
+
+# Phase 10D - Support, Reconciliation & Manual Review Workflows
+
+- Current phase: Phase 10D - Support, Reconciliation & Manual Review Workflows.
+- This phase hardens CRM operational workflows for support tickets, manual review, safe investigation search, and separated card/Prontipagos reconciliation placeholders.
+- Backend/admin frontend workflows remain sandbox/mock operational tooling only; no real providers, no money movement, no destructive ledger edits, and no production reconciliation were implemented.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 11 - Audit, Fraud & Chargeback Readiness.
+
+## WhatsApp Receipt Channel Alignment
+
+WhatsApp receipt delivery has been approved as a future non-blocking notification channel. Current status is documentation and architecture alignment only. No runtime behavior has been implemented.

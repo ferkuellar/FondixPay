@@ -277,3 +277,29 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | SEV-1 | Reconciliation placeholder misunderstood as real | Reduced | UI states placeholder and provider dependency explicitly. |
 | SEV-1 | Frontend not connected to backend admin APIs | Reduced | Shared API client consumes Phase 10B endpoints. |
 | SEV-2 | No frontend tests/typecheck | Partially mitigated | Typecheck/build are required; browser/runtime test automation remains future. |
+
+## Risk — Coverage catalog mismatch
+
+| Risk | Likelihood | Impact | Mitigation | Status |
+|---|---:|---:|---|---|
+| Service coverage shown in the mobile app may not match actual Prontipagos availability. | Medium | High | Validate coverage rules against Prontipagos service catalog before production release. Add support visibility to check service/state availability. | Open |
+| Mobile app may accidentally hardcode service coverage. | Medium | High | Enforce backend-only catalog source. Add regression test to ensure services come from API response. | Open |
+| User may need to pay a service for another state. | High | Medium | Allow manual state change. Manual state selection overrides GPS. | Open |
+| Support agents may not know why a user cannot see a service. | High | Medium | Add read-only service coverage lookup in support console or support workflow documentation. | Open |
+| WhatsApp coupling to payments | Medium | High | WhatsApp delivery must remain non-blocking and must never affect payment success, reconciliation, or Prontipagos execution. | Open |
+## Phase 10D - CRM Support, Reconciliation & Manual Review Workflow Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Manual review missing or unusable | SEV-1 | mitigated for sandbox/admin baseline | Manual review cases, status updates, resolution requirement, and event log are implemented. |
+| Support workflow incomplete | SEV-2 | mitigated for minimum operations | Tickets can link to user/payment/receipt/manual review/correlation, accept notes, and require resolution to close. |
+| Reconciliation ambiguity | SEV-1 | mitigated by separation | Card processor and Prontipagos reconciliation endpoints/pages remain separate placeholders with `production_ready=false`. |
+| Card success plus Prontipagos failure unresolved | SEV-1 | partially mitigated | Manual review case type and detection helper exist; real provider integration remains pending. |
+| Receipt unavailable unresolved | SEV-1 | partially mitigated | Manual review case type, support ticket category, and operations runbook exist. |
+| Duplicate suspected unresolved | SEV-1 | partially mitigated | Duplicate attempt/claim case types and support category exist; fraud/chargeback readiness remains pending. |
+| Amount mismatch unresolved | SEV-1 | partially mitigated | Amount mismatch case type and detection helper exist; real reconciliation remains pending. |
+| Admin closes case without audit | SEV-1 | mitigated | Tickets/manual review require resolution for close/resolved and emit admin/manual review events. |
+| SUPPORT over-permissioned | SEV-1 | mitigated by RBAC tests | SUPPORT cannot view reconciliation or resolve manual review financial flows. |
+| FINANCE destructive actions | SEV-1 | mitigated by scope | FINANCE can view reconciliation and update manual review, but cannot edit ledger or financial amounts. |
+| Provider references exposed to wrong role | SEV-1 | mitigated by redaction | Backend redaction and frontend RedactedValue keep provider references role-limited. |
+| No operational runbook | SEV-2 | mitigated | Phase 10D runbooks added for missing receipt, provider timeout, duplicate suspicion, and charged/not-paid claims. |

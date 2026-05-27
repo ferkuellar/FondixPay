@@ -14,6 +14,7 @@ export type Permission =
   | "admin.manual_review.list"
   | "admin.manual_review.view"
   | "admin.manual_review.update"
+  | "admin.search.view"
   | "admin.support_tickets.list"
   | "admin.support_tickets.create"
   | "admin.support_tickets.update";
@@ -105,15 +106,27 @@ export type SupportTicket = {
   user_id?: number | null;
   payment_id?: number | null;
   receipt_id?: number | null;
-  status: "open" | "pending" | "resolved" | "closed";
+  manual_review_case_id?: number | null;
+  correlation_id?: string | null;
+  status: "open" | "pending" | "waiting_user" | "waiting_internal" | "resolved" | "closed";
   priority: "low" | "medium" | "high" | "urgent";
-  category: "payment_failed" | "receipt_missing" | "pending_payment" | "account_access" | "card_issue" | "other";
+  category:
+    | "payment_failed"
+    | "payment_pending"
+    | "receipt_missing"
+    | "prontipagos_issue"
+    | "duplicate_charge_claim"
+    | "pending_payment"
+    | "account_access"
+    | "card_issue"
+    | "other";
   subject: string;
   description?: string | null;
   assigned_to?: number | null;
   created_by: number;
   created_at: string;
   updated_at: string;
+  closed_at?: string | null;
   notes: SupportTicketNote[];
 };
 
@@ -121,13 +134,18 @@ export type ManualReviewCase = {
   id: number;
   case_type:
     | "card_success_prontipagos_failed"
+    | "card_success_prontipagos_pending"
+    | "prontipagos_timeout"
     | "prontipagos_pending"
     | "receipt_unavailable"
     | "duplicate_attempt"
+    | "duplicate_charge_claim"
     | "amount_mismatch"
     | "chargeback_suspected"
     | "user_claims_not_paid"
     | "provider_timeout"
+    | "provider_status_unknown"
+    | "reconciliation_mismatch"
     | "other";
   status:
     | "open"
@@ -142,13 +160,16 @@ export type ManualReviewCase = {
   user_id?: number | null;
   payment_id?: number | null;
   receipt_id?: number | null;
+  support_ticket_id?: number | null;
   card_reference?: string | null;
   provider_reference?: string | null;
   correlation_id?: string | null;
   assigned_to?: number | null;
+  summary: string;
   resolution?: string | null;
   created_at: string;
   updated_at: string;
+  closed_at?: string | null;
 };
 
 export type AuditEvent = {
@@ -166,7 +187,31 @@ export type AuditEvent = {
 };
 
 export type ReconciliationSummary = {
-  status: "not_implemented";
-  provider: "card" | "prontipagos";
+  provider_type: "card_processor" | "prontipagos";
+  status: "not_implemented" | "ready_for_sandbox" | "partial";
+  summary: {
+    total_count: number;
+    matched_count: number;
+    mismatch_count: number;
+    pending_count: number;
+    manual_review_count: number;
+  };
+  items: Record<string, unknown>[];
   message: string;
+  production_ready: boolean;
+};
+
+export type AdminSearchResult = {
+  entity_type: "user" | "payment" | "receipt" | "ticket" | "manual_review" | "correlation" | "provider_reference";
+  entity_id: number | string;
+  label: string;
+  status?: string | null;
+  correlation_id?: string | null;
+  provider_reference?: string | null;
+};
+
+export type AdminSearchResponse = {
+  query: string;
+  type?: string | null;
+  results: AdminSearchResult[];
 };

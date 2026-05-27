@@ -320,3 +320,12 @@ Before commercial production:
 - No PAN/CVV exposure.
 - Permission tests cover admin APIs.
 - Operations runbooks are ready.
+## Phase 10D Implementation Status
+
+- Support workflows: implemented for minimum internal operations with entity links, correlation references, notes, assignment, close timestamps, and required resolution notes.
+- Manual review workflows: implemented for minimum operations with case types, summary, status transitions, event log, close timestamps, notes, and required resolution before resolved/closed.
+- Reconciliation: card processor and Prontipagos remain separated placeholders with zero-count summary, empty items, and `production_ready=false`.
+- Search/investigation: partially implemented via `/admin/search` for IDs, correlation IDs, provider references, tickets, manual review, payments, receipts, and users.
+- RBAC: enforced by backend permissions and reflected in the admin frontend navigation/actions.
+- Audit: admin workflow events are emitted through the existing audit writer; manual review also has a case event log.
+- Production: still blocked. No real provider reconciliation, no money movement, no destructive ledger edits, no production card/Prontipagos integration, and no PAN/CVV exposure.

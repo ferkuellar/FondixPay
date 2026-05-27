@@ -88,3 +88,27 @@ The `admin/` frontend uses the same runtime permission names to hide module navi
 - Phone/email are masked by default.
 - Provider references are limited for `SUPPORT` and available only where permissioned.
 - Audit metadata is redacted and role-dependent.
+## Phase 10D - CRM Workflow Permissions
+
+All `/admin/*` workflow endpoints require authentication and explicit permission checks.
+
+| Workflow | SUPPORT | FINANCE | ADMIN | AUDITOR | SUPER_ADMIN |
+|---|---|---|---|---|---|
+| Support ticket list/view | yes | yes | yes | yes | yes |
+| Support ticket create/update/note | yes | no | yes | no | yes |
+| Support ticket close | yes, with resolution | no | yes, with resolution | no | yes, with resolution |
+| Manual review list/view | limited read | yes | yes | read-only | yes |
+| Manual review create/update | no | yes | yes | no | yes |
+| Manual review close/resolve | no | yes, with resolution | yes, with resolution | no | yes, with resolution |
+| Card reconciliation | no | yes | yes | yes | yes |
+| Prontipagos reconciliation | no | yes | yes | yes | yes |
+| Operational search | yes, redacted | yes | yes | yes, read-only | yes |
+
+Rules:
+
+- SUPPORT cannot view full reconciliation.
+- SUPPORT cannot resolve financial manual review cases.
+- AUDITOR is read-only.
+- FINANCE cannot mutate ledger, payment amounts, provider confirmations, or receipts.
+- SUPER_ADMIN still cannot see PAN/CVV/secrets/tokens/raw payloads.
+- No admin workflow endpoint may exist without a permission entry.

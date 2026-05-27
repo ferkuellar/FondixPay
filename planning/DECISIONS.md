@@ -791,3 +791,75 @@ Status: Accepted.
 Decision: The first CRM frontend is read-mostly and limits writes to backend-supported support ticket and manual-review operations.
 
 Status: Accepted.
+
+## Decision — MVP service coverage behavior
+
+| Date | Decision | Reason | Impact |
+|---|---|---|---|
+| 2026-05-22 | FONDIXPAY MVP will hide services that are not available in the user's selected state. | Reduces UX noise, avoids failed payment attempts, and keeps the first mobile catalog simple. | Mobile app must request services from backend by state. Unavailable services must not be rendered in the user-facing catalog. |
+| 2026-05-22 | Coverage rules must not be hardcoded in the mobile app or shipped as Excel logic. | Coverage will change over time and must be operationally maintainable. | Coverage must live in backend/database tables and be exposed through API. |
+| 2026-05-22 | Manual state selection has priority over GPS. | Users may pay services for another state and GPS can be inaccurate or denied. | Mobile app must allow user-selected state and persist it in profile. |
+
+## WhatsApp receipt channel approved as future non-blocking notification channel
+
+FONDIXPAY approves WhatsApp as a future post-payment notification channel for payment receipts.
+
+The approved visual/product target includes:
+
+- `fondix_otp_login`
+- `fondix_pago_exitoso`
+- `fondix_recordatorio_vencimiento`
+- `fondix_pago_fallido`
+- `fondix_resumen_mensual`
+- onboarding consent screen
+
+Implementation sequencing:
+
+- Immediate: documentation and architecture alignment only.
+- MVP implementation: `fondix_pago_exitoso` only.
+- Future notification expansion: reminders, failed payment notices, and monthly summary.
+- Future authentication option: WhatsApp OTP login.
+
+Rules:
+
+- WhatsApp failure must never block payment.
+- Consent must be explicit and granular.
+- No toggles may be pre-enabled.
+- Notification logs must be append-only.
+- Full phone numbers must never be logged.
+- Notification delivery must be idempotent.
+- Raw provider/payment errors must never be shown to users.
+- Payment receipts must remain available in-app even if WhatsApp delivery fails.
+
+Status:
+
+Approved as future architecture. Not active runtime behavior yet.
+## ADR-111 - Ambiguous payment states require manual review workflow
+
+Decision: Ambiguous payment states such as `card_success_prontipagos_failed`, provider timeout, unavailable receipt, duplicate suspicion, provider unknown, and amount mismatch must be handled through manual review.
+
+Rationale: Operators must not resolve uncertain financial/provider states by intuition or destructive edits.
+
+## ADR-112 - Support tickets must link to operational entities
+
+Decision: Support tickets may link to `user_id`, `payment_id`, `receipt_id`, `manual_review_case_id`, and `correlation_id` when available.
+
+Rationale: Support needs traceable references without exposing sensitive card/provider payload data.
+
+## ADR-113 - Reconciliation views are separated by provider type
+
+Decision: Card processor reconciliation and Prontipagos reconciliation remain separate admin workflows and response models.
+
+Rationale: Card charge state and service payment state are different operational legs with different failure modes.
+
+## ADR-114 - Manual review resolution requires audit trail
+
+Decision: Manual review status changes and closure require event history with actor, before/after status, note/resolution context, and admin audit events.
+
+Rationale: Payment operations need a durable investigation trail before any future production gate.
+
+## ADR-115 - CRM operations are read-mostly until production controls mature
+
+Decision: The CRM Admin Panel remains read-mostly, with controlled writes only for support tickets, ticket notes, manual review cases, and manual review events.
+
+Rationale: The admin surface must not edit ledger entries, payment amounts, card outcomes, provider confirmations, or production configuration in this phase.

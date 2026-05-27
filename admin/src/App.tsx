@@ -15,6 +15,7 @@ import { PaymentsPage } from "./pages/PaymentsPage";
 import { ProntipagosReconciliationPage } from "./pages/ProntipagosReconciliationPage";
 import { ReceiptDetailPage } from "./pages/ReceiptDetailPage";
 import { ReceiptsPage } from "./pages/ReceiptsPage";
+import { SearchPage } from "./pages/SearchPage";
 import { SupportTicketDetailPage } from "./pages/SupportTicketDetailPage";
 import { SupportTicketsPage } from "./pages/SupportTicketsPage";
 import { UserDetailPage } from "./pages/UserDetailPage";
@@ -58,6 +59,7 @@ export function App() {
       {paymentId ? <RequirePermission permission="admin.payments.view"><PaymentDetailPage id={paymentId} /></RequirePermission> : null}
       {path === "/receipts" ? <RequirePermission permission="admin.receipts.list"><ReceiptsPage /></RequirePermission> : null}
       {receiptId ? <RequirePermission permission="admin.receipts.view"><ReceiptDetailPage id={receiptId} /></RequirePermission> : null}
+      {path === "/search" ? <RequirePermission permission="admin.search.view"><SearchPage /></RequirePermission> : null}
       {path === "/tickets" ? <RequirePermission permission="admin.support_tickets.list"><SupportTicketsPage /></RequirePermission> : null}
       {ticketId ? <RequirePermission permission="admin.support_tickets.list"><SupportTicketDetailPage id={ticketId} /></RequirePermission> : null}
       {path === "/manual-review" ? <RequirePermission permission="admin.manual_review.list"><ManualReviewPage /></RequirePermission> : null}
@@ -70,6 +72,7 @@ export function App() {
         "/users",
         "/payments",
         "/receipts",
+        "/search",
         "/tickets",
         "/manual-review",
         "/reconciliation/card",

@@ -585,3 +585,48 @@ Phase 10B uses the existing audit writer for implemented privileged CRM routes.
 | `admin.manual_review_created`, `admin.manual_review_updated` | Manual-review writes |
 
 Admin event metadata keeps `role` and `permission` plus safe route context. Existing redaction removes sensitive token, PAN, CVV, password, secret, and raw-provider key families before metadata persists. Future ledger, catalog, exports, role/configuration updates, and hardened admin sessions still require their dedicated admin events.
+## Phase 10D - CRM Operational Audit Events
+
+Implemented admin workflow events:
+
+- `admin.support_ticket_created`
+- `admin.support_ticket_updated`
+- `admin.support_ticket_closed`
+- `admin.support_ticket_note_added`
+- `admin.manual_review_created`
+- `admin.manual_review_assigned`
+- `admin.manual_review_status_changed`
+- `admin.manual_review_note_added`
+- `admin.manual_review_resolved`
+- `admin.manual_review_closed`
+- `admin.reconciliation_card_viewed`
+- `admin.reconciliation_prontipagos_viewed`
+- `admin.search_executed`
+
+Manual review also stores an internal case event log with:
+
+- `case_created`
+- `case_assigned`
+- `status_changed`
+- `note_added`
+- `escalated`
+- `resolved`
+- `closed`
+
+Required audit fields remain:
+
+- `actor_type`
+- `actor_id`
+- `role`
+- `permission`
+- `entity_type`
+- `entity_id`
+- `action/event_type`
+- `result`
+- `request_id`
+- `correlation_id` when available
+- `ip_address`
+- `user_agent`
+- `created_at`
+
+Audit metadata is redacted. Audit logs must not contain PAN, CVV, card tokens, secrets, or raw provider payloads.

@@ -565,3 +565,91 @@ Implemented fields: `id`, `case_type`, `status`, `severity`, nullable `user_id`,
 ### Still proposed
 
 Dedicated `Permission`/`RolePermission` tables, reconciliation case persistence, admin session records, export approvals, and full frontend-facing CRM view models remain proposed after Phase 10B.
+## Phase 10D - CRM Operational Workflow Model
+
+Implemented/extended internal admin models:
+
+### SupportTicket
+
+- `id`
+- `user_id` nullable
+- `payment_id` nullable
+- `receipt_id` nullable
+- `manual_review_case_id` nullable
+- `correlation_id` nullable
+- `category`
+- `priority`
+- `status`
+- `subject`
+- `description` nullable
+- `assigned_to` nullable
+- `created_by`
+- `created_at`
+- `updated_at`
+- `closed_at` nullable
+
+Supported statuses: `open`, `pending`, `waiting_user`, `waiting_internal`, `resolved`, `closed`.
+
+Supported categories: `payment_failed`, `payment_pending`, `receipt_missing`, `card_issue`, `prontipagos_issue`, `duplicate_charge_claim`, `account_access`, `other`.
+
+### SupportTicketNote
+
+- `id`
+- `ticket_id`
+- `author_id`
+- `note`
+- `is_internal`
+- `created_at`
+
+Notes must not contain PAN/CVV/tokens/secrets/raw provider payloads.
+
+### ManualReviewCase
+
+- `id`
+- `case_type`
+- `severity`
+- `status`
+- `user_id` nullable
+- `payment_id` nullable
+- `receipt_id` nullable
+- `support_ticket_id` nullable
+- `card_reference` nullable
+- `provider_reference` nullable
+- `correlation_id` nullable
+- `assigned_to` nullable
+- `summary`
+- `resolution` nullable
+- `created_at`
+- `updated_at`
+- `closed_at` nullable
+
+Supported case types include `card_success_prontipagos_failed`, `card_success_prontipagos_pending`, `prontipagos_timeout`, `receipt_unavailable`, `duplicate_attempt`, `duplicate_charge_claim`, `amount_mismatch`, `chargeback_suspected`, `user_claims_not_paid`, `provider_status_unknown`, `reconciliation_mismatch`, and `other`.
+
+### ManualReviewEvent
+
+- `id`
+- `case_id`
+- `actor_id`
+- `event_type`
+- `before_status` nullable
+- `after_status` nullable
+- `note` nullable
+- `metadata_json` nullable and redacted
+- `created_at`
+
+Events track `case_created`, `case_assigned`, `status_changed`, `note_added`, `escalated`, `resolved`, and `closed`.
+
+### ReconciliationSummary
+
+The current model is a safe placeholder, not real reconciliation:
+
+- `provider_type`: `card_processor` or `prontipagos`
+- `status`: `not_implemented`, `ready_for_sandbox`, or `partial`
+- `summary`: zero/default counts for total/matched/mismatch/pending/manual_review
+- `items`: currently empty
+- `message`
+- `production_ready`: always `false` in this phase
+
+### AdminSearch
+
+`/admin/search` returns redacted operational references for user, payment, receipt, ticket, manual review, correlation, and provider reference lookups. It is an investigation projection, not a financial source of truth.

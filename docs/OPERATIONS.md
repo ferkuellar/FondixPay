@@ -402,3 +402,56 @@ Current operational metrics can be derived from dashboard counters for users, pa
 - Use Manual Review for ambiguous payment states that require finance/admin operation.
 - Treat card and Prontipagos reconciliation screens as placeholders until Phase 10D/provider work.
 - Audit Logs are read-only and visible only for permissioned roles.
+## Phase 10D - CRM Admin Operations
+
+### Support Runbook - Missing Receipt
+
+1. Search by `receipt_id`, `payment_id`, or `correlation_id` in `/admin/search`.
+2. Review payment status and provider/service payment status.
+3. Review receipt/proof status.
+4. If receipt is unavailable after a confirmed sandbox/provider state, open or link a manual review case with `receipt_unavailable`.
+5. Create or update a support ticket with safe references only.
+6. Communicate a safe state to the user: pending/unavailable/under review. Do not claim fiscal or production confirmation.
+
+### Manual Review Runbook - Card Success + Prontipagos Failure
+
+1. Verify card leg status and service payment leg status separately.
+2. Do not mark the payment as successful from CRM.
+3. Create manual review case `card_success_prontipagos_failed`.
+4. Link `payment_id`, `correlation_id`, provider reference if allowed, and support ticket if present.
+5. Assign to FINANCE/ADMIN.
+6. Document resolution before moving to `resolved` or `closed`.
+
+### Reconciliation Runbook - Provider Timeout
+
+1. Treat provider timeout as ambiguous, not success.
+2. Search by `correlation_id` and provider reference.
+3. Open manual review `prontipagos_timeout` or `provider_status_unknown`.
+4. Leave reconciliation as placeholder until real provider reports exist.
+
+### Reconciliation Runbook - Duplicate Suspected
+
+1. Search by user, payment, receipt, and correlation references.
+2. Create manual review `duplicate_attempt` or `duplicate_charge_claim`.
+3. Attach support ticket if the user contacted support.
+4. Do not issue refunds, chargebacks, or ledger edits in this phase.
+
+### Support Runbook - User Claims Charged But Not Paid
+
+1. Search by phone/user/payment/correlation reference.
+2. Review payment, receipt, and provider status.
+3. Create a support ticket with category `duplicate_charge_claim`, `payment_pending`, or `prontipagos_issue`.
+4. Open manual review when card and provider states disagree.
+5. Escalate to FINANCE when reconciliation is needed.
+6. Close only with resolution notes.
+
+### Operational Metrics
+
+- `support_ticket_created_count`
+- `support_ticket_closed_count`
+- `manual_review_created_count`
+- `manual_review_resolution_time`
+- `reconciliation_card_view_count`
+- `reconciliation_prontipagos_view_count`
+- `admin_search_count`
+- `manual_review_closed_without_resolution_count` must remain zero
