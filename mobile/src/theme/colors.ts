@@ -36,12 +36,20 @@ export type ServiceCategoryKey = 'ELECTRICITY' | 'INTERNET' | 'PHONE' | 'GAS' | 
 export function serviceColorForCategory(category: string) {
   const map: Record<string, string> = {
     ELECTRICITY: colors.service.luz,
+    electricity: colors.service.luz,
     INTERNET: colors.service.internet,
+    internet: colors.service.internet,
+    telecom: colors.service.internet,
     PHONE: colors.service.celular,
+    mobile_topup_or_bill: colors.service.celular,
     GAS: colors.service.gas,
+    gas: colors.service.gas,
     WATER: colors.service.agua,
+    water: colors.service.agua,
     TV: colors.service.internet,
+    government: colors.textSecondary,
     OTHER: colors.textSecondary,
+    other: colors.textSecondary,
   };
   return map[category] ?? colors.primary;
 }

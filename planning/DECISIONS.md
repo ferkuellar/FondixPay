@@ -974,3 +974,43 @@ Changes to coverage, visibility, payable status, or provider mapping must genera
 
 Rationale:
 Catalog changes directly affect what users can attempt to pay and must be traceable for operations, support, and compliance readiness.
+
+## ADR-130 - Mobile catalog only exposes payable services
+
+Decision:
+The mobile app must only show selectable/payable services returned by the coverage-aware `/service-catalog` endpoint.
+
+Rationale:
+Mobile discovery must not expose services that are only reference coverage, provider-pending, unknown, or unconfirmed.
+
+Status: Accepted.
+
+## ADR-131 - Seeded coverage data is not provider confirmation
+
+Decision:
+Coverage data seeded from Excel, map assets, or local fixtures does not constitute Prontipagos operational confirmation.
+
+Rationale:
+Reference coverage can support landing/admin visibility, but real payment eligibility requires provider capability and operational validation.
+
+Status: Accepted.
+
+## ADR-132 - Admin catalog visibility includes non-payable services
+
+Decision:
+CRM/Admin can see non-payable, pending, disabled, and unknown catalog items for support and operations.
+
+Rationale:
+Operators need visibility into why services are unavailable, while users should not see them as payable.
+
+Status: Accepted.
+
+## ADR-133 - Service catalog implementation must preserve safe defaults
+
+Decision:
+Every new seeded or imported service starts as non-payable unless explicitly approved with confirmed provider capability.
+
+Rationale:
+Safe defaults prevent accidental payment enablement from reference data or incomplete provider mapping.
+
+Status: Accepted.

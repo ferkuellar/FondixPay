@@ -10,36 +10,37 @@ import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { ServiceIconBadge } from '../../components/ServiceIconBadge';
 import { TextInput } from '../../components/TextInput';
-import { useServiceProviderStore } from '../../store/serviceProviderStore';
+import { useServiceCatalogStore } from '../../store/serviceCatalogStore';
 import { useServiceStore } from '../../store/serviceStore';
-import type { Provider, RootStackParamList } from '../../types';
+import type { Provider, RootStackParamList, ServiceCatalogItem } from '../../types';
 import { colors, radius, spacing, typography } from '../../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddService'>;
 type Step = 'list' | 'number' | 'confirm';
 
 export function AddServiceScreen({ navigation }: Props) {
-  const error = useServiceProviderStore((state) => state.error);
-  const fetchProviders = useServiceProviderStore((state) => state.fetchProviders);
-  const isLoading = useServiceProviderStore((state) => state.isLoading);
-  const providers = useServiceProviderStore((state) => state.providers);
+  const error = useServiceCatalogStore((state) => state.error);
+  const fetchServices = useServiceCatalogStore((state) => state.fetchServices);
+  const isLoading = useServiceCatalogStore((state) => state.isLoading);
+  const services = useServiceCatalogStore((state) => state.services);
   const addService = useServiceStore((state) => state.addService);
 
   const [step, setStep] = useState<Step>('list');
-  const [providerId, setProviderId] = useState<string>();
+  const [serviceId, setServiceId] = useState<string>();
   const [alias, setAlias] = useState('');
   const [reference, setReference] = useState('');
   const [showSavedTip, setShowSavedTip] = useState(false);
   const [validating, setValidating] = useState(false);
 
-  const selectedProvider = providers.find((provider) => provider.id === providerId);
+  const selectedService = services.find((service) => service.id === serviceId);
 
   useEffect(() => {
-    fetchProviders();
-  }, [fetchProviders]);
+    fetchServices();
+  }, [fetchServices]);
 
-  function selectProvider(provider: Provider) {
-    setProviderId(provider.id);
+  function selectService(service: ServiceCatalogItem) {
+    if (!service.payableInMobile) return;
+    setServiceId(service.id);
     setStep('number');
   }
 
@@ -52,7 +53,8 @@ export function AddServiceScreen({ navigation }: Props) {
   }
 
   function save() {
-    if (!selectedProvider) return;
+    if (!selectedService) return;
+    const selectedProvider = providerFromCatalogItem(selectedService);
     const service = addService(selectedProvider, alias || selectedProvider.displayName, reference);
     setShowSavedTip(true);
     setTimeout(() => {
@@ -60,7 +62,7 @@ export function AddServiceScreen({ navigation }: Props) {
     }, 1200);
   }
 
-  if (isLoading && providers.length === 0) {
+  if (isLoading && services.length === 0) {
     return (
       <Screen>
         <LoadingState message="Cargando servicios..." />
@@ -68,10 +70,10 @@ export function AddServiceScreen({ navigation }: Props) {
     );
   }
 
-  if (error && providers.length === 0) {
+  if (error && services.length === 0) {
     return (
       <Screen>
-        <ErrorState message="No pudimos cargar los servicios." onRetry={fetchProviders} />
+        <ErrorState message="No pudimos cargar los servicios disponibles." onRetry={() => fetchServices()} />
       </Screen>
     );
   }
@@ -83,11 +85,19 @@ export function AddServiceScreen({ navigation }: Props) {
           <>
             <Text style={styles.title}>¿Qué servicio quieres pagar?</Text>
             <View style={styles.list}>
-              {providers.map((provider) => (
-                <Pressable key={provider.id} onPress={() => selectProvider(provider)} style={styles.listItem}>
-                  <ServiceIconBadge category={provider.category} />
+              {services.length === 0 ? (
+                <View style={styles.emptyCard}>
+                  <Text style={styles.emptyTitle}>Aún no tenemos servicios disponibles para tu ubicación.</Text>
+                  <Text style={styles.emptyText}>
+                    Estamos habilitando servicios conforme se confirme la cobertura operativa del proveedor.
+                  </Text>
+                </View>
+              ) : null}
+              {services.map((service) => (
+                <Pressable key={service.id} onPress={() => selectService(service)} style={styles.listItem}>
+                  <ServiceIconBadge category={service.category} />
                   <Text style={styles.listLabel}>
-                    {labelForCategory(provider.category)} ({provider.displayName})
+                    {labelForCategory(service.category)} ({service.displayName})
                   </Text>
                   <Feather color={colors.textMuted} name="chevron-right" size={20} />
                 </Pressable>
@@ -96,11 +106,11 @@ export function AddServiceScreen({ navigation }: Props) {
           </>
         ) : null}
 
-        {step === 'number' && selectedProvider ? (
+        {step === 'number' && selectedService ? (
           <>
             <View style={styles.center}>
-              <ServiceIconBadge category={selectedProvider.category} size={72} />
-              <Text style={styles.title}>{labelForCategory(selectedProvider.category)} ({selectedProvider.displayName})</Text>
+              <ServiceIconBadge category={selectedService.category} size={72} />
+              <Text style={styles.title}>{labelForCategory(selectedService.category)} ({selectedService.displayName})</Text>
               <Text style={styles.subtitle}>Ingresa tu número de servicio</Text>
             </View>
             <TextInput
@@ -121,11 +131,11 @@ export function AddServiceScreen({ navigation }: Props) {
           </>
         ) : null}
 
-        {step === 'confirm' && selectedProvider ? (
+        {step === 'confirm' && selectedService ? (
           <>
             <View style={styles.center}>
-              <ServiceIconBadge category={selectedProvider.category} size={72} />
-              <Text style={styles.detected}>{selectedProvider.displayName} detectado ✓</Text>
+              <ServiceIconBadge category={selectedService.category} size={72} />
+              <Text style={styles.detected}>{selectedService.displayName} detectado ✓</Text>
             </View>
             <View style={styles.confirmCard}>
               <Text style={styles.confirmLabel}>Nombre</Text>
@@ -155,14 +165,48 @@ export function AddServiceScreen({ navigation }: Props) {
 function labelForCategory(category: string) {
   const labels: Record<string, string> = {
     ELECTRICITY: 'Luz',
+    electricity: 'Luz',
     PHONE: 'Celular',
+    mobile_topup_or_bill: 'Celular',
     INTERNET: 'Internet',
+    internet: 'Internet',
+    telecom: 'Telecom',
     WATER: 'Agua',
+    water: 'Agua',
     GAS: 'Gas',
+    gas: 'Gas',
     TV: 'Cable',
+    government: 'Gobierno',
     OTHER: 'Otro',
+    other: 'Otro',
   };
   return labels[category] ?? 'Servicio';
+}
+
+function providerFromCatalogItem(service: ServiceCatalogItem): Provider {
+  return {
+    id: service.id,
+    name: service.slug,
+    displayName: service.displayName,
+    category: service.category,
+    iconKey: service.iconKey,
+    integrationType: 'CATALOG',
+    isActive: service.payableInMobile,
+    sortOrder: 100,
+    icon: iconFor(service.iconKey),
+  };
+}
+
+function iconFor(iconKey: string) {
+  const icons: Record<string, string> = {
+    electricity: '⚡',
+    phone: '📱',
+    internet: '📶',
+    water: '💧',
+    gas: '🔥',
+    tv: '📺',
+  };
+  return icons[iconKey] ?? '💳';
 }
 
 const styles = StyleSheet.create({
@@ -197,6 +241,23 @@ const styles = StyleSheet.create({
   error: {
     color: colors.danger,
     paddingHorizontal: spacing.xl,
+  },
+  emptyCard: {
+    backgroundColor: colors.bgSubtle,
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    gap: spacing.sm,
+    padding: spacing.lg,
+  },
+  emptyText: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+  },
+  emptyTitle: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '700',
   },
   helper: {
     ...typography.bodySmall,

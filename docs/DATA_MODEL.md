@@ -703,7 +703,7 @@ Rules:
 - WhatsApp delivery does not replace internal receipt/proof, ledger, or audit records.
 ## Coverage-Aware Service Catalog Proposed Model
 
-Status: proposed for Phase 10F. Not implemented in runtime during Phase 10E.
+Status: partially implemented in Phase 10F.
 
 ### ServiceCategory
 
@@ -802,3 +802,27 @@ Status: proposed for Phase 10F. Not implemented in runtime during Phase 10E.
 - Landing visibility does not imply mobile payment eligibility.
 - Provider codes and sync metadata are admin-only.
 - Coverage changes require audit events.
+
+### Phase 10F Implementation Notes
+
+Implemented tables:
+
+- `catalog_service_categories`
+- `service_catalog_items`
+- `service_coverage_by_state`
+- `provider_service_capabilities`
+- `coverage_map_sources`
+
+Not yet implemented:
+
+- `service_catalog_syncs`
+- `service_availability_events`
+
+The implemented seed uses safe defaults:
+
+- `coverage_status=provider_pending`
+- `payable_in_mobile=false`
+- `visible_on_mobile=false`
+- provider capability `status=to_confirm`
+- `supports_payment_execution=false`
+- `supports_receipt=false`

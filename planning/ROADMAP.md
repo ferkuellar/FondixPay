@@ -410,7 +410,10 @@ Design the coverage-aware service catalog that separates public coverage display
 
 ## Phase 10F - Coverage-Aware Service Catalog Implementation
 
-Status: recommended next catalog phase.
+Status: implemented as conservative backend/mobile foundation.
 
 Purpose:
 Implement service catalog models, coverage-by-state rules, provider capability records, admin visibility, mobile payable filtering, and future landing map data source governance.
+
+Notes:
+Seeded services remain non-payable. Real Prontipagos provider confirmation remains pending.

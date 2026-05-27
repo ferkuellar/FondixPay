@@ -11,12 +11,20 @@ type Props = {
 function iconName(category: string): keyof typeof Feather.glyphMap {
   const map: Record<string, keyof typeof Feather.glyphMap> = {
     ELECTRICITY: 'zap',
+    electricity: 'zap',
     INTERNET: 'wifi',
+    internet: 'wifi',
+    telecom: 'wifi',
     PHONE: 'smartphone',
+    mobile_topup_or_bill: 'smartphone',
     GAS: 'droplet',
+    gas: 'droplet',
     WATER: 'droplet',
+    water: 'droplet',
     TV: 'tv',
+    government: 'file-text',
     OTHER: 'file-text',
+    other: 'file-text',
   };
   return map[category] ?? 'file-text';
 }

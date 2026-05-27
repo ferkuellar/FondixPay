@@ -365,3 +365,11 @@ The landing may include public placeholders for future app store, terms, privacy
 - Prontipagos credentials and provider API keys must stay in secret management, never in catalog records or frontend bundles.
 - Raw provider catalog sync payloads must be stored only if there is a redaction and retention policy; otherwise store normalized safe fields only.
 - A compromised public landing page must not grant access to mobile payment APIs, admin APIs, CRM, ledger, receipts, provider payloads, or secrets.
+
+### Phase 10F Implementation Notes
+
+- Public `/service-catalog` hides provider capability internals and returns only payable services by default.
+- Public `/coverage-map` is reference-only and does not expose provider credentials or raw payloads.
+- Admin `/admin/service-catalog` requires RBAC via `admin.catalog.view` or `admin.catalog.manage`.
+- Admin PATCH blocks `payable_in_mobile=true` unless provider capability and availability rules pass.
+- No provider secrets, Prontipagos credentials, PAN, CVV, or card tokens are stored in catalog tables.

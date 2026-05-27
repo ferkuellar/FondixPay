@@ -267,3 +267,12 @@ Future WhatsApp UX must be opt-in, explicit, and revocable.
 - Support-facing views should provide safe explanation language.
 - Admin/finance views can show provider mapping only according to RBAC.
 - Coverage changes must be visible with audit history.
+
+### Phase 10F Mobile Behavior
+
+- `AddServiceScreen` now consumes the coverage-aware `/service-catalog` endpoint.
+- If no payable service exists, the screen shows:
+  - `Aún no tenemos servicios disponibles para tu ubicación.`
+  - Supporting copy explaining that services are enabled after provider validation.
+- Provider-pending services are not rendered as selectable payment options.
+- Existing saved demo services remain available for mock/internal validation but are not proof of production availability.

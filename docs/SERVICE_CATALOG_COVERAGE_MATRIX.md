@@ -92,3 +92,20 @@ The Excel matrix contains 82 service rows and 32 state columns. Its detected are
 
 The Excel is approved as coverage reference. It still requires normalization into catalog entities and provider capabilities before any service is payable.
 
+## Phase 10F Seed Status
+
+The implementation seeded a conservative subset/representation of national reference services and map local/regional services into backend catalog tables.
+
+Runtime defaults:
+
+- `coverage_status=provider_pending`
+- `payable_in_mobile=false`
+- `visible_on_mobile=false`
+- `visible_on_admin=true`
+- `show_in_coverage_map=true`
+- provider capability `status=to_confirm`
+- no payment execution support
+- no receipt support
+
+No row in this matrix is production-payable as of Phase 10F.
+

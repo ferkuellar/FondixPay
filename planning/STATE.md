@@ -273,3 +273,35 @@ Operating status:
 Next recommended phase:
 
 Phase 10F - Coverage-Aware Service Catalog Implementation.
+
+## Current Phase - Phase 10F - Coverage-Aware Service Catalog Implementation
+
+FondixPay is currently in Phase 10F: Coverage-Aware Service Catalog Implementation.
+
+This phase implemented the first backend coverage-aware service catalog foundation and connected mobile Add Service discovery to the strict payable catalog endpoint.
+
+Implemented:
+
+- Backend `service_catalog` module.
+- Catalog categories, items, coverage-by-state, provider capability, and source metadata models.
+- Conservative seed from coverage references.
+- Public/mobile `/service-catalog` endpoint.
+- Public/reference `/coverage-map` endpoint.
+- Admin `/admin/service-catalog` endpoints protected by RBAC.
+- Payable validation service.
+- Mobile service catalog API/store.
+- Mobile Add Service empty state when no payable services exist.
+- Tests for catalog, coverage map, payable rules, and admin catalog access.
+
+Operating status:
+
+- Seeded coverage is reference-only.
+- No seeded service is payable.
+- CFE, Telmex, Telcel, and every map/Excel-derived item remain non-payable until provider capability is confirmed.
+- No Prontipagos real integration was added.
+- No payment flow was changed to move real money.
+- Production commercial launch remains blocked.
+
+Next recommended phase:
+
+Fase AWS-1 - Terraform Foundation, or Fase 11 - Audit, Fraud & Chargeback Readiness depending on active roadmap priority.

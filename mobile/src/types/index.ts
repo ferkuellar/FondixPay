@@ -139,6 +139,51 @@ export type Provider = {
   icon: string;
 };
 
+export type CoverageStatus =
+  | 'available'
+  | 'unavailable'
+  | 'coming_soon'
+  | 'provider_pending'
+  | 'temporarily_disabled'
+  | 'maintenance'
+  | 'deprecated'
+  | 'unknown'
+  | 'to_confirm';
+
+export type ProviderCapabilityStatus = 'confirmed' | 'pending' | 'rejected' | 'unavailable' | 'unknown' | 'to_confirm';
+
+export type ServiceCategory = {
+  id: number;
+  code: string;
+  name: string;
+  displayOrder: number;
+};
+
+export type ServiceCatalogItem = {
+  id: string;
+  displayName: string;
+  slug: string;
+  category: string;
+  iconKey: string;
+  description?: string;
+  isNational: boolean;
+  coverageStatus: CoverageStatus;
+  visibleOnMobile: boolean;
+  payableInMobile: boolean;
+  referenceOnly: boolean;
+  disclaimer: string;
+};
+
+export type CoverageMapState = {
+  stateCode: string;
+  stateName: string;
+  referenceServices: ServiceCatalogItem[];
+  payableServices: ServiceCatalogItem[];
+  referenceOnly: boolean;
+  paymentAvailabilityNotGuaranteed: boolean;
+  disclaimer: string;
+};
+
 export type SavedService = {
   id: string;
   provider: Provider;

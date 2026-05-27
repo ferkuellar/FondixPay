@@ -616,3 +616,11 @@ Use safe copy:
 - `catalog_sync_failure_count`
 - `service_disabled_count`
 - `provider_mapping_mismatch_count`
+
+### Phase 10F Operator Notes
+
+- Current seed is reference-only and all services are non-payable.
+- Support should explain unavailable services as pending provider validation, not as app failure.
+- Admin can inspect catalog state through `/admin/service-catalog`.
+- Admin cannot mark services payable until provider capability is confirmed by the backend rule.
+- `/coverage-map` supports public coverage display but must not be used to approve payment attempts.

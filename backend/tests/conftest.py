@@ -25,6 +25,13 @@ from app.modules.ledger.models import (
 from app.modules.notifications.models import Notification
 from app.modules.payments.models import Payment, PaymentStatus
 from app.modules.receipts.models import Receipt
+from app.modules.service_catalog.models import (
+    CoverageMapSource,
+    ProviderServiceCapability,
+    ServiceCatalogItem,
+    ServiceCategory as CatalogServiceCategory,
+    ServiceCoverageByState,
+)
 from app.modules.service_providers.models import IntegrationType, ServiceCategory, ServiceProvider
 from app.modules.user_services.models import UserService
 from app.modules.users.models import User

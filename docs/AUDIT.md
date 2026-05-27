@@ -707,3 +707,23 @@ Required fields for admin catalog changes:
 - `request_id`
 - `correlation_id`
 - `created_at`
+
+### Phase 10F Implementation Status
+
+Implemented/partially emitted:
+
+- `coverage_map.viewed`
+- `coverage_map.state_selected`
+- `service_catalog.viewed`
+- `service_catalog.coverage_changed`
+- `service_catalog.visibility_changed`
+- `service_catalog.item_disabled`
+- `service_catalog.seeded`
+
+Pending broader workflow:
+
+- `service_catalog.item_enabled`
+- `service_catalog.provider_mapping_changed`
+- `service_catalog.sync_started`
+- `service_catalog.sync_completed`
+- `service_catalog.sync_failed`

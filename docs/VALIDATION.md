@@ -510,3 +510,31 @@ Checklist for future implementation:
 - CFE, Telmex, Telcel, and other national services are not marked `available` unless confirmed.
 - Provider codes and capability details are hidden from public/mobile responses.
 - Tests cover unavailable, provider-pending, maintenance, and available states.
+
+## Phase 10F - Coverage-Aware Service Catalog Implementation Validation
+
+Commands:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest
+```
+
+```powershell
+cd mobile
+npm run typecheck
+```
+
+Checklist:
+
+- `/service-catalog` returns 200.
+- `/service-catalog` does not return `provider_pending`, `to_confirm`, `unknown`, or unavailable services by default.
+- Seeded services are not payable by default.
+- `/coverage-map` returns `reference_only=true`.
+- `/coverage-map/states/{state_code}` distinguishes `reference_services` from `payable_services`.
+- Admin catalog list requires admin RBAC.
+- Admin list can show non-payable services.
+- Admin PATCH cannot mark unconfirmed services payable.
+- `validate_service_is_payable` returns false without confirmed provider capability.
+- Mobile Add Service compiles and shows empty state when no payable services exist.

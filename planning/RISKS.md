@@ -346,3 +346,15 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | Wrong provider service code | SEV-1 | open | Provider mapping requires admin review and audit trail. |
 | No audit trail for coverage changes | SEV-1 | open | ADR-129 requires audit events for coverage and visibility changes. |
 | User frustration from unavailable services | SEV-2 | open | MVP hides unavailable services and uses clear unavailable copy. |
+
+## Phase 10F - Service Catalog Implementation Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Seed interpreted as provider confirmation | SEV-1 | mitigated/ongoing | Seeded items are `provider_pending`, non-payable, and have unconfirmed provider capability. |
+| Mobile showing unavailable services | SEV-1 | mitigated | Mobile Add Service consumes `/service-catalog`, which returns only payable services by default. |
+| Catalog hardcoded divergence | SEV-2 | ongoing | Backend catalog module is now source for mobile discovery; existing demo saved services remain mock only. |
+| Excel/map inconsistency | SEV-2 | open | Seed is conservative; future import must report discrepancies before enablement. |
+| Admin activating service without audit | SEV-1 | partially mitigated | Admin PATCH is RBAC-protected and emits audit; broader admin workflow remains pending. |
+| User attempting payment without provider capability | SEV-1 | partially mitigated | Catalog validation exists; payment-flow enforcement is still required before real payments. |
+| Landing map confused with payment availability | SEV-1 | mitigated/ongoing | `/coverage-map` returns reference-only flags and disclaimer. |

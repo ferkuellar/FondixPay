@@ -141,3 +141,15 @@ The map includes all 32 Mexico states through state-code normalization. Top loca
 - Keep mobile payment eligibility separate from public coverage visualization.
 - Add audit events before any admin can change coverage or provider mappings.
 
+## Phase 10F Runtime Boundary
+
+The existing `landing/assets/coverage_map.html` was not converted to React and was not made payment-authoritative.
+
+Phase 10F added backend `/coverage-map` APIs that expose reference-only coverage data with:
+
+- `reference_only=true`
+- `payment_availability_not_guaranteed=true`
+- public disclaimer text
+
+The D3 asset remains a landing/reference asset.
+

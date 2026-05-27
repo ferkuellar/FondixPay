@@ -349,3 +349,31 @@ Before real service payments:
 - Audit logs.
 - Automated tests.
 
+## Phase 10F Implementation Status
+
+Implemented in Phase 10F:
+
+- Backend `service_catalog` module.
+- Models for categories, catalog items, state coverage, provider capability, and map source metadata.
+- Conservative static seed based on approved coverage references.
+- `/service-catalog` mobile endpoint.
+- `/service-categories` endpoint.
+- `/coverage-map` and `/coverage-map/states/{state_code}` reference endpoints.
+- RBAC-protected `/admin/service-catalog` endpoints.
+- Payable validation rules.
+- Mobile Add Service integration with strict payable catalog.
+
+Current safe default:
+
+- Seeded services are `provider_pending`.
+- `payable_in_mobile=false`.
+- Provider capability is `to_confirm`.
+- Payment execution and receipt support are false.
+
+Pending:
+
+- Real Prontipagos catalog confirmation.
+- Provider capability confirmation.
+- Admin frontend catalog page.
+- Payment-flow enforcement before real payments.
+

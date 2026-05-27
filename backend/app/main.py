@@ -21,6 +21,15 @@ from app.modules.ledger.models import (
 from app.modules.notifications.routes import router as notifications_router
 from app.modules.payments.routes import router as payments_router
 from app.modules.receipts.routes import router as receipts_router
+from app.modules.service_catalog.models import (
+    CoverageMapSource,
+    ProviderServiceCapability,
+    ServiceCatalogItem,
+    ServiceCategory as CatalogServiceCategory,
+    ServiceCoverageByState,
+)
+from app.modules.service_catalog.routes import admin_router as service_catalog_admin_router
+from app.modules.service_catalog.routes import coverage_router, router as service_catalog_router
 from app.modules.service_providers.routes import router as providers_router
 from app.modules.user_services.routes import router as user_services_router
 from app.modules.users.routes import router as users_router
@@ -48,6 +57,9 @@ app.include_router(receipts_router, prefix="/receipts", tags=["receipts"])
 app.include_router(notifications_router, prefix="/notifications", tags=["notifications"])
 app.include_router(accounts_router, prefix="/account", tags=["account"])
 app.include_router(admin_router, prefix="/admin", tags=["admin"])
+app.include_router(service_catalog_router, prefix="/service-catalog", tags=["service catalog"])
+app.include_router(coverage_router, tags=["coverage map"])
+app.include_router(service_catalog_admin_router, prefix="/admin/service-catalog", tags=["admin service catalog"])
 
 
 @app.get("/health")
