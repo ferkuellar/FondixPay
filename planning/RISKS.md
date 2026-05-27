@@ -317,3 +317,17 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | WhatsApp provider not selected | SEV-2 | open | Provider selection and security review are future gates before runtime. |
 | Template rejected by provider | SEV-2 | open | Template approval is a future backlog item and production gate. |
 | Future webhook spoofing | SEV-1 | open | Webhook signature/replay verification required before accepting provider webhooks. |
+
+## Phase 10X - Public Landing Page Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Landing page coupled to financial core | SEV-1 | mitigated for current phase | Landing lives under `landing/` as static HTML and does not import mobile/backend/admin code. |
+| Vercel used for sensitive runtime | SEV-1 | mitigated by decision | Vercel is documented as landing-only; backend/CRM/payments remain separate. |
+| Public copy promises production payments | SEV-1 | reduced | Landing copy was adjusted to launch-pending language and production blockers remain explicit. |
+| Unsupported security/compliance claims | SEV-1 | reduced | CNBV/IFPE/SPEI/CoDi and unsupported security claims were removed from the landing. |
+| Unconfirmed support or social channels published | SEV-2 | reduced | Public channels use `[PENDING_SUPPORT_CHANNEL]` until confirmed. |
+| App store URLs published before approval | SEV-2 | reduced | Download links use `[PENDING_APP_STORE_URL]` and `[PENDING_PLAY_STORE_URL]`. |
+| Privacy/terms URLs missing before launch | SEV-2 | open | Placeholders remain until legal/privacy pages are approved. |
+| External map/CDN dependency breaks public landing | SEV-3 | open | Review CDN usage before production publication or replace with local/static map. |
+| Accidental mobile/backend/admin modification | SEV-1 | mitigated | Phase 10X changes are limited to landing/docs/planning. |

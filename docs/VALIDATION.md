@@ -471,3 +471,21 @@ Documentation/design checklist:
 - Provider secrets remain outside the repo.
 
 Phase 10D.1 has no runtime code changes. Backend/mobile/admin tests are not required unless a later implementation changes runtime behavior.
+
+## Phase 10X - Public Landing Validation
+
+Static validation checklist:
+
+- `landing/index.html` exists.
+- Landing assets resolve from `landing/assets/` and `landing/fonts/`.
+- No mobile runtime files changed.
+- No backend runtime files changed.
+- No CRM/Admin runtime files changed.
+- No payment, ledger, audit, receipt, Prontipagos, or card processor code changed.
+- No secrets are present in `landing/`.
+- Required placeholders remain until official URLs are approved.
+- Vercel is documented as landing-only.
+- Landing copy does not promise production payments.
+- Landing copy does not publish unsupported security, regulatory, PCI, tokenization, SPEI, CoDi, or WhatsApp delivery claims.
+
+Runtime tests for backend/mobile/admin are not required when Phase 10X changes are limited to static landing and documentation.

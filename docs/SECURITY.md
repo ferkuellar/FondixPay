@@ -336,3 +336,22 @@ Security requirements for future implementation:
 - WhatsApp failure must not block or alter payment, receipt, proof, ledger, or audit state.
 
 The internal receipt/proof remains the source of truth. WhatsApp is a convenience delivery channel only.
+
+## Phase 10X - Public Landing Page Security
+
+The public landing page is a static commercial front door under `landing/`.
+
+Security rules:
+
+- No secrets, API keys, private URLs, or backend tokens.
+- No payment processing.
+- No card capture.
+- No PAN/CVV.
+- No login or account access.
+- No CRM/Admin links.
+- No provider payloads.
+- No ledger, receipt, reconciliation, or audit runtime.
+- No unsupported compliance, regulation, tokenization, PCI, or "100% secure" claims.
+- Vercel is approved only for this static landing, not for backend financial or admin runtime.
+
+The landing may include public placeholders for future app store, terms, privacy, support, and landing URLs. Those placeholders must not be replaced until official channels are approved.

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 54" role="img" aria-label="Disponible en Google Play">
+  <rect x="0" y="0" width="180" height="54" rx="9" fill="#0A1628"></rect>
+  <rect x="0.5" y="0.5" width="179" height="53" rx="8.5" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"></rect>
+  
+  <g transform="translate(14 14)" fill="#FFFFFF">
+    <path d="M0 1.5 0 24.5 C0 25.5 1.1 26.1 1.9 25.6 L20.4 14.3 C21.3 13.8 21.3 12.3 20.4 11.7 L1.9 0.4 C1.1 -0.1 0 0.4 0 1.5 Z"></path>
+  </g>
+  
+  <text x="49" y="22" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif" font-size="9" font-weight="400" letter-spacing="0.3">Disponible en</text>
+  <text x="49" y="40" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, &#39;Helvetica Neue&#39;, Helvetica, Arial, sans-serif" font-size="17" font-weight="600" letter-spacing="-0.3">Google Play</text>
+</svg>

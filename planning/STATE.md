@@ -1,8 +1,8 @@
 # Project State
 
-Updated: 2026-05-20
+Updated: 2026-05-26
 
-Current phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
+Current phase: Phase 10X - Public Landing Page Integration & Commercial Front Door.
 
 Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, mock/dev fee transparency, explicit mock payment methods, recovery UX, demo balance/movements, and hardened mobile history/receipt detail semantics. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
@@ -236,3 +236,13 @@ WhatsApp receipt delivery has been approved as a future non-blocking notificatio
 - No payment flow, receipt generation, CRM workflow, provider integration, or money movement was changed.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 11 - Audit, Fraud & Chargeback Readiness, or Phase 10G - WhatsApp Payment Receipt MVP Implementation only after infrastructure, secrets, audit logs, provider selection, and deployment discipline are ready.
+
+# Phase 10X - Public Landing Page Integration & Commercial Front Door
+
+- Current phase: Phase 10X - Public Landing Page Integration & Commercial Front Door.
+- Status: implemented as a separate static public landing under `landing/`.
+- The landing is a commercial front door only; it does not process payments, handle cards, access backend financial APIs, access CRM/Admin, or store sensitive data.
+- Vercel is approved only for the public landing page.
+- `mobile/`, `backend/`, and `admin/` runtime modules remain unchanged by this phase.
+- Commercial production remains blocked.
+- Next recommended phase: Phase 10E - Coverage-Aware Service Catalog Design, or Phase AWS-1 - Terraform Foundation if infrastructure is prioritized.

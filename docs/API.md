@@ -653,3 +653,19 @@ Status: future/proposed only. No WhatsApp runtime endpoints are implemented in P
 | `POST /notifications/whatsapp/webhooks/{provider}` | Receive provider delivery webhook | provider signed | future/proposed | Requires signature/replay verification before runtime. |
 
 Future MVP is limited to template `fondix_pago_exitoso`. WhatsApp failure must return a safe delivery status and must not change payment, receipt, ledger, or proof state.
+
+## Public Landing Page
+
+Status: implemented as static public front door under `landing/`.
+
+The public landing page does not expose or consume backend API endpoints. It must not call:
+
+- `/payments`,
+- `/receipts`,
+- `/notifications`,
+- `/admin/*`,
+- provider endpoints,
+- ledger/audit endpoints,
+- user account endpoints.
+
+Future public waitlist or contact capture would require a separate approved API contract, privacy review, rate limiting, spam controls, and no sensitive financial data.

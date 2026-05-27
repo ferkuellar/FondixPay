@@ -520,3 +520,30 @@ Future metrics:
 - `whatsapp_duplicate_blocked_count`
 - `whatsapp_consent_rate`
 - `whatsapp_revocation_rate`
+
+## Phase 10X - Public Landing Operations
+
+The public landing page is operated separately from the transactional core.
+
+Runbook - pre-publication review:
+
+1. Confirm `landing/index.html` loads locally.
+2. Confirm app store, privacy, terms, public landing, and support URLs are officially approved before replacing placeholders.
+3. Confirm no payment, login, CRM, admin, provider, or backend links exist.
+4. Confirm Vercel project root is `landing`.
+5. Confirm no secrets are configured in the landing project.
+6. Confirm public copy does not claim production readiness, regulation, PCI, tokenization, "100% secure", or real payment availability.
+
+Runbook - content correction after publication:
+
+1. Classify whether the issue is copy, legal/privacy, link, availability, or security.
+2. Remove incorrect claims before adding replacement claims.
+3. Keep users pointed to confirmed public channels only.
+4. Do not route support issues to CRM/Admin from the public page.
+
+Future metrics:
+
+- `public_landing_view_count`
+- `public_landing_cta_click_count`
+- `public_landing_waitlist_interest_count`
+- `public_landing_broken_link_count`

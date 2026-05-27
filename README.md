@@ -74,6 +74,17 @@ npm run dev
 
 El acceso admin actual usa token backend existente y un rol de desarrollo frontend claramente marcado cuando `VITE_ENABLE_ADMIN_DEV_AUTH=true`. No sustituye autenticacion admin endurecida ni habilita produccion.
 
+## Public Landing
+
+La landing publica comercial vive en `landing/` como sitio estatico independiente. Se basa en el design system entregado en ZIP y esta preparada para Vercel solo como frente publico.
+
+```powershell
+cd landing
+python -m http.server 4175
+```
+
+La landing no procesa pagos, no inicia sesion, no consume backend financiero, no accede al CRM/Admin y no contiene secretos. Las URLs de App Store, Play Store, soporte, terminos y privacidad permanecen como placeholders hasta confirmacion oficial.
+
 ## Docker
 
 Desde la raiz del proyecto:

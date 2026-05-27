@@ -223,3 +223,15 @@ Future WhatsApp UX must be opt-in, explicit, and revocable.
 - The in-app receipt remains the authoritative proof surface.
 - WhatsApp receipt copy must avoid fiscal/legal claims unless a future approved fiscal product exists.
 - If delivery fails, UI should say the receipt is still available in the app and avoid raw provider errors.
+
+## Public Landing Page UX
+
+- The public landing is a commercial front door, not a transactional surface.
+- Use the delivered FondixPay design system ZIP as the visual source for web marketing.
+- Keep the landing separate from mobile app flows and CRM/Admin operations.
+- Public CTAs must point to launch, interest, or future download placeholders until official app store URLs exist.
+- Avoid "Paga ahora", login, account, balance, receipt, CRM, admin, or transaction CTAs.
+- State clearly when the platform is preparing launch and payments are not yet live.
+- Do not imply confirmed nationwide coverage unless provider/catalog availability is approved.
+- Do not imply official WhatsApp support or receipt delivery until runtime and consent are implemented.
+- Do not use unsupported claims such as "fintech regulada", "100% seguro", "PCI compliant", or "tokenización segura".

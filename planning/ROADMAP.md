@@ -1,6 +1,6 @@
 # Roadmap
 
-Updated: 2026-05-21
+Updated: 2026-05-26
 
 ## Current Route Summary
 
@@ -26,8 +26,8 @@ Current practical position:
 - Phase 8A/8B: completed as sandbox integration designs.
 - Phase 8C: completed for contractual sandbox/mock orchestration.
 - Phase 9: completed for notifications, receipts, and proof-of-payment hardening.
-- Current phase: Phase 10A - CRM Admin Panel Architecture & RBAC Design.
-- Recommended next phase: Phase 10B - CRM Admin Panel Backend APIs.
+- Current phase: Phase 10X - Public Landing Page Integration & Commercial Front Door.
+- Recommended next phase: Phase 10E - Coverage-Aware Service Catalog Design, or Phase AWS-1 - Terraform Foundation if infrastructure is prioritized.
 
 Before any real payment provider implementation, the project must preserve ledger/audit, idempotency, fee transparency, card payment method strategy, payment recovery paths, card processor sandbox design, Prontipagos sandbox design, support/receipt proof, and provider-selection gates. Real payments remain blocked.
 
@@ -266,9 +266,10 @@ Out of scope: WhatsApp provider integration, real messages, credentials, payment
 
 ## Phase 10X - Public Landing Page Integration & Commercial Front Door
 
-Status: planned.
-Objective: integrate the public commercial front door without enabling real payments or production financial claims.
-Out of scope: payment production launch.
+Status: completed as static landing integration.
+Objective: integrate the public commercial front door without enabling real payments, backend access, CRM access, or production financial claims.
+Deliverables: `landing/`, `docs/PUBLIC_LANDING_PAGE.md`, sprint 10X handoff, Vercel landing-only guidance, and copy/security boundaries.
+Out of scope: payment production launch, backend/CRM hosting, real waitlist storage, app store publication, final support URLs, provider integrations, and production claims.
 
 ## Phase 10E - Coverage-Aware Service Catalog Design
 

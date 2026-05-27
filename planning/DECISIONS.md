@@ -903,3 +903,35 @@ Decision: The future WhatsApp MVP is limited to `fondix_pago_exitoso`. Failed pa
 Rationale: Successful receipt delivery is the lowest-risk first channel use because it follows existing receipt/proof evidence.
 
 Status: Accepted.
+
+## ADR-121 - Public landing page is commercial front door only
+
+Decision: The public FondixPay landing page functions only as a commercial, informational, and interest-capture front door. It does not host transactional, financial, CRM, payment, reconciliation, ledger, admin, provider, or secret-handling logic.
+
+Rationale: Public marketing can move faster than regulated/financial runtime, but it must not blur into payment operations or production readiness claims.
+
+Status: Accepted.
+
+## ADR-122 - Vercel is approved only for public landing page
+
+Decision: Vercel is approved only for the static public landing page under `landing/`. Sensitive backend, CRM/Admin, payment, reconciliation, ledger, provider, and secret-bearing runtime must be deployed separately on controlled infrastructure.
+
+Rationale: Static marketing hosting is a different risk class than financial transaction systems.
+
+Status: Accepted.
+
+## ADR-123 - Landing page must not expose unconfirmed operational channels
+
+Decision: The public landing must not publish final support, WhatsApp, app store, terms, privacy, social, or public-domain URLs until officially confirmed.
+
+Rationale: Unconfirmed public channels create support, legal, privacy, and trust risk.
+
+Status: Accepted.
+
+## ADR-124 - Landing page must preserve mobile/core separation
+
+Decision: The public landing must not import, modify, or couple itself to the mobile app, backend, CRM/Admin, payments, ledger, audit, receipts, Prontipagos, or card processor modules.
+
+Rationale: Commercial front-door work must not destabilize the transactional core or imply production readiness.
+
+Status: Accepted.
