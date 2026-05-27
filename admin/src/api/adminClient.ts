@@ -1,4 +1,5 @@
 import type {
+  AdminNotificationDelivery,
   AdminPayment,
   AdminReceipt,
   AdminSearchResponse,
@@ -79,6 +80,10 @@ export function createAdminClient(getToken: TokenProvider) {
     receipt: (id: string) => request<AdminReceipt>(`/admin/receipts/${id}`),
     auditEvents: (params: { event_type?: string; actor_id?: string; entity_id?: string; correlation_id?: string }) =>
       request<AuditEvent[]>(`/admin/audit-events${query(params)}`),
+    notificationDeliveries: (params: { status?: string; template_name?: string; user_id?: string }) =>
+      request<AdminNotificationDelivery[]>(`/admin/notifications/deliveries${query(params)}`),
+    notificationDelivery: (id: string) =>
+      request<AdminNotificationDelivery>(`/admin/notifications/deliveries/${id}`),
     search: (params: { q: string; type?: string }) =>
       request<AdminSearchResponse>(`/admin/search${query(params)}`),
     cardReconciliation: () => request<ReconciliationSummary>("/admin/reconciliation/card"),

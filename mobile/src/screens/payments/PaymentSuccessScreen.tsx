@@ -5,6 +5,7 @@ import { PrimaryButton } from '../../components/PrimaryButton';
 import { ReceiptStatusBadge } from '../../components/ReceiptStatusBadge';
 import { Screen } from '../../components/Screen';
 import { SuccessIllustration } from '../../components/SuccessIllustration';
+import { useNotificationPreferencesStore } from '../../store/notificationPreferencesStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { colors, spacing, typography } from '../../theme';
 import type { RootStackParamList } from '../../types';
@@ -14,6 +15,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PaymentSuccess'>;
 
 export function PaymentSuccessScreen({ navigation, route }: Props) {
   const payment = usePaymentStore((state) => state.getPayment(route.params.paymentId));
+  const whatsappReceiptEnabled = useNotificationPreferencesStore((state) => Boolean(state.whatsappReceipt?.enabled));
 
   return (
     <Screen padded={false}>
@@ -62,6 +64,16 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
                 <ReceiptStatusBadge status={payment.receiptStatus} />
               </View>
               <Text style={styles.mockCopy}>Mock/dev. No es comprobante fiscal ni confirmación productiva.</Text>
+            </View>
+            <View style={styles.whatsappBox}>
+              <Text style={styles.whatsappTitle}>
+                {whatsappReceiptEnabled ? 'Comprobante por WhatsApp activado.' : 'WhatsApp opcional'}
+              </Text>
+              <Text style={styles.whatsappBody}>
+                {whatsappReceiptEnabled
+                  ? 'Te enviaremos una copia si el canal está disponible.'
+                  : 'Te enviaremos tu comprobante por WhatsApp si activaste esta opción.'}
+              </Text>
             </View>
           </>
         ) : null}
@@ -200,5 +212,24 @@ const styles = StyleSheet.create({
   totalValue: {
     ...typography.heading,
     color: colors.success,
+  },
+  whatsappBody: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  whatsappBox: {
+    backgroundColor: colors.primarySoft,
+    borderColor: colors.border,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: spacing.xs,
+    marginTop: spacing.lg,
+    padding: spacing.md,
+    width: '100%',
+  },
+  whatsappTitle: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '700',
   },
 });

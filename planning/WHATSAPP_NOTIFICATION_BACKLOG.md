@@ -18,3 +18,20 @@
 | WA-014 | SEV-2 | Expansion | `fondix_recordatorio_vencimiento` template | future after MVP | pending |
 | WA-015 | SEV-2 | Expansion | `fondix_resumen_mensual` template | future after MVP | pending |
 | WA-016 | SEV-1 | Auth | WhatsApp OTP login | separate future auth phase | pending |
+## Phase 10G Backlog Update
+
+Completed for MVP:
+
+- Runtime template `fondix_pago_exitoso`.
+- Consent storage and mobile opt-in/out.
+- Delivery evidence with masked recipient and idempotency.
+- Mock provider abstraction.
+- User send endpoint and admin delivery visibility.
+
+Still pending:
+
+- Real WhatsApp Business provider adapter.
+- Meta template approval for production.
+- Webhook signature validation and inbound status processing.
+- Retry/backoff and operational monitoring.
+- OTP, reminders, failed-payment notices, monthly summaries, and campaigns remain future backlog and are not runtime in 10G.

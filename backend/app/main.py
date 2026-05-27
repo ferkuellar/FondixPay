@@ -18,7 +18,8 @@ from app.modules.ledger.models import (
     ProviderTransaction,
     ReconciliationRecord,
 )
-from app.modules.notifications.routes import router as notifications_router
+from app.modules.notifications.models import NotificationDelivery, NotificationPreference
+from app.modules.notifications.routes import preferences_router, router as notifications_router
 from app.modules.payments.routes import router as payments_router
 from app.modules.receipts.routes import router as receipts_router
 from app.modules.service_catalog.models import (
@@ -55,6 +56,7 @@ app.include_router(user_services_router, prefix="/user-services", tags=["user se
 app.include_router(payments_router, prefix="/payments", tags=["payments"])
 app.include_router(receipts_router, prefix="/receipts", tags=["receipts"])
 app.include_router(notifications_router, prefix="/notifications", tags=["notifications"])
+app.include_router(preferences_router, prefix="/notification-preferences", tags=["notification preferences"])
 app.include_router(accounts_router, prefix="/account", tags=["account"])
 app.include_router(admin_router, prefix="/admin", tags=["admin"])
 app.include_router(service_catalog_router, prefix="/service-catalog", tags=["service catalog"])

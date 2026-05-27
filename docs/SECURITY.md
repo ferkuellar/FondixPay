@@ -373,3 +373,12 @@ The landing may include public placeholders for future app store, terms, privacy
 - Admin `/admin/service-catalog` requires RBAC via `admin.catalog.view` or `admin.catalog.manage`.
 - Admin PATCH blocks `payable_in_mobile=true` unless provider capability and availability rules pass.
 - No provider secrets, Prontipagos credentials, PAN, CVV, or card tokens are stored in catalog tables.
+## Phase 10G WhatsApp Receipt Security Controls
+
+- WhatsApp payment receipts require explicit opt-in consent and are disabled by default.
+- The delivery log stores only recipient hash and masked phone.
+- Template payload is limited to service name, total amount, currency, safe folio/reference, paid date, success state, and app link placeholder.
+- Prohibited payload fields: PAN, CVV, card token, raw provider payload, secrets, full phone, and technical raw errors.
+- Provider is mock by default; production provider credentials must stay in secret storage, never in repo.
+- WhatsApp failure is isolated from payment, receipt, proof, ledger, and internal audit state.
+- Admin delivery views are RBAC-protected and show masked destination only.

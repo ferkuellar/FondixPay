@@ -9,6 +9,7 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ManualReviewDetailPage } from "./pages/ManualReviewDetailPage";
 import { ManualReviewPage } from "./pages/ManualReviewPage";
+import { NotificationDeliveriesPage } from "./pages/NotificationDeliveriesPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { PaymentDetailPage } from "./pages/PaymentDetailPage";
 import { PaymentsPage } from "./pages/PaymentsPage";
@@ -59,6 +60,7 @@ export function App() {
       {paymentId ? <RequirePermission permission="admin.payments.view"><PaymentDetailPage id={paymentId} /></RequirePermission> : null}
       {path === "/receipts" ? <RequirePermission permission="admin.receipts.list"><ReceiptsPage /></RequirePermission> : null}
       {receiptId ? <RequirePermission permission="admin.receipts.view"><ReceiptDetailPage id={receiptId} /></RequirePermission> : null}
+      {path === "/notifications/deliveries" ? <RequirePermission permission="admin.notifications.list"><NotificationDeliveriesPage /></RequirePermission> : null}
       {path === "/search" ? <RequirePermission permission="admin.search.view"><SearchPage /></RequirePermission> : null}
       {path === "/tickets" ? <RequirePermission permission="admin.support_tickets.list"><SupportTicketsPage /></RequirePermission> : null}
       {ticketId ? <RequirePermission permission="admin.support_tickets.list"><SupportTicketDetailPage id={ticketId} /></RequirePermission> : null}
@@ -72,6 +74,7 @@ export function App() {
         "/users",
         "/payments",
         "/receipts",
+        "/notifications/deliveries",
         "/search",
         "/tickets",
         "/manual-review",

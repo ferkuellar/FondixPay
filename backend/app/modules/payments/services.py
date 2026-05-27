@@ -5,6 +5,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.core.request_context import RequestContext
+from app.core.config import settings
 from app.modules.integrations.aggregator_mock.client import AggregatorMockClient
 from app.modules.audit.services import create_audit_event
 from app.modules.ledger import repository as ledger_repository
@@ -149,6 +150,32 @@ def pay_service(
         entity_id=payment.id,
         correlation_id=intent.correlation_id,
     )
+    if settings.whatsapp_enable_receipt_mvp:
+        try:
+            from app.modules.notifications.services import send_whatsapp_receipt
+
+            send_whatsapp_receipt(
+                db,
+                receipt_id=receipt.id,
+                user_id=user_id,
+                triggered_by="payment_success",
+                request_id=context.request_id,
+                correlation_id=intent.correlation_id,
+            )
+        except HTTPException:
+            pass
+        except Exception as exc:
+            create_audit_event(
+                db,
+                event_type="whatsapp.receipt_send_failed",
+                actor_type="SYSTEM",
+                entity_type="Receipt",
+                entity_id=receipt.id,
+                result="failed",
+                metadata={"safe_error": exc.__class__.__name__, "non_blocking": True},
+                request_id=context.request_id,
+                correlation_id=intent.correlation_id,
+            )
     user_service.amount_due = Decimal("0.00")
     db.commit()
     db.refresh(payment)

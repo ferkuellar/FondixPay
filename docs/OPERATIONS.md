@@ -624,3 +624,19 @@ Use safe copy:
 - Admin can inspect catalog state through `/admin/service-catalog`.
 - Admin cannot mark services payable until provider capability is confirmed by the backend rule.
 - `/coverage-map` supports public coverage display but must not be used to approve payment attempts.
+## Phase 10G WhatsApp Receipt Operations
+
+Configuration:
+
+- `WHATSAPP_PROVIDER=mock`
+- `WHATSAPP_ENV=sandbox`
+- `WHATSAPP_ENABLE_RECEIPT_MVP=false`
+- `WHATSAPP_TEMPLATE_PAYMENT_SUCCESS=fondix_pago_exitoso`
+- `WHATSAPP_PROVIDER_API_BASE_URL=`
+- `WHATSAPP_PROVIDER_TOKEN=`
+- `WHATSAPP_WEBHOOK_SECRET=`
+- `WHATSAPP_TIMEOUT_SECONDS=10`
+
+Operational rule: leave `WHATSAPP_ENABLE_RECEIPT_MVP=false` unless the environment is intentionally testing the mock channel. Production remains blocked without approved provider contracts, Meta template approval, webhook validation, monitoring, and privacy review.
+
+Admin can inspect delivery status at `/admin/notifications/deliveries`; this is evidence only and must not be used to change financial status.

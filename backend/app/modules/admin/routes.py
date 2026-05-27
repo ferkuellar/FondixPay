@@ -12,6 +12,8 @@ from app.modules.admin.redaction import (
 )
 from app.modules.admin.schemas import (
     AdminAuditEventListItem,
+    AdminNotificationDeliveryDetail,
+    AdminNotificationDeliveryListItem,
     AdminPaymentDetail,
     AdminPaymentListItem,
     AdminReceiptDetail,
@@ -29,6 +31,7 @@ from app.modules.admin.schemas import (
     SupportTicketRead,
     SupportTicketUpdate,
 )
+from app.modules.notifications import repository as notification_repository
 from app.modules.users.models import User
 
 router = APIRouter()
@@ -202,6 +205,52 @@ def list_audit_events(
     ]
     _audit(db, request, current_user, "admin.audit_events_viewed", "admin.audit.list")
     return result
+
+
+@router.get("/notifications/deliveries", response_model=list[AdminNotificationDeliveryListItem])
+def list_notification_deliveries(
+    request: Request,
+    status: str | None = None,
+    template_name: str | None = None,
+    user_id: int | None = None,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    current_user: User = Depends(require_admin_permission("admin.notifications.list")),
+    db: Session = Depends(get_db),
+) -> list[AdminNotificationDeliveryListItem]:
+    deliveries = notification_repository.list_deliveries(
+        db,
+        status=status,
+        template_name=template_name,
+        user_id=user_id,
+        limit=limit,
+        offset=offset,
+    )
+    _audit(db, request, current_user, "admin.notification_deliveries_viewed", "admin.notifications.list")
+    return [AdminNotificationDeliveryListItem.model_validate(item, from_attributes=True) for item in deliveries]
+
+
+@router.get("/notifications/deliveries/{delivery_id}", response_model=AdminNotificationDeliveryDetail)
+def get_notification_delivery(
+    delivery_id: int,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.notifications.view")),
+    db: Session = Depends(get_db),
+) -> AdminNotificationDeliveryDetail:
+    delivery = services.get_or_404(
+        notification_repository.get_delivery(db, delivery_id),
+        "Delivery de notificacion no encontrado",
+    )
+    _audit(
+        db,
+        request,
+        current_user,
+        "admin.notification_delivery_viewed",
+        "admin.notifications.view",
+        "NotificationDelivery",
+        delivery.id,
+    )
+    return AdminNotificationDeliveryDetail.model_validate(delivery, from_attributes=True)
 
 
 @router.get("/search", response_model=AdminSearchResponse)

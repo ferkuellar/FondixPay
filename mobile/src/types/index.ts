@@ -125,6 +125,16 @@ export type NotificationItem = {
   createdAt: string;
 };
 
+export type NotificationPreference = {
+  id: string;
+  channel: 'whatsapp';
+  notificationType: 'payment_receipt';
+  enabled: boolean;
+  consentedAt?: string;
+  revokedAt?: string;
+  source: string;
+};
+
 export type TransactionHistoryFilter = 'all' | 'succeeded' | 'pending' | 'failed';
 
 export type Provider = {

@@ -1,6 +1,6 @@
 # File Inventory
 
-Updated: 2026-05-19
+Updated: 2026-05-27
 
 | Path | Purpose | State | Sensitive | Notes |
 | --- | --- | --- | --- | --- |
@@ -40,11 +40,11 @@ Updated: 2026-05-19
 
 | Item | Type | Source | Purpose | Current Use | Future Use | Sensitive? | Status | Notes |
 |---|---|---|---|---|---|---|---|---|
-| Coverage-Aware Service Catalog | Product Feature | Business requirement / coverage matrix reference | Show only services available in the user's selected state | Inventory only during Phase 10D | Backend catalog, mobile filtering, support visibility | No | Planned | MVP rule: unavailable services are hidden, not disabled |
+| Coverage-Aware Service Catalog | Product Feature | Business requirement / coverage matrix reference | Show only services available in the user's selected state | Implemented as conservative backend/mobile foundation in Phase 10F | Backend catalog, mobile filtering, support visibility | No | Implemented | MVP rule: unavailable services are hidden, not disabled; seeded services remain non-payable |
 | State Coverage Matrix | Business Data Reference | Initial coverage workbook / client coverage rules | Define which services are available per Mexican state | Reference only; not used directly by app | Seed/import source for normalized DB tables | Low/Medium | Pending normalization | Do not ship Excel logic in mobile app |
-| services table | Database Entity | Backend DB | Store bill-payment services | Planned | Used by service catalog API and Prontipagos mapping | No | Planned | Must include active flag, category, provider code, fee metadata |
-| service_coverage table | Database Entity | Backend DB | Map services to supported states | Planned | Used by API filtering | No | Planned | Unique constraint: service_id + state_code |
+| service_catalog_items table | Database Entity | Backend DB | Store bill-payment catalog items | Implemented in Phase 10F | Used by service catalog API and future Prontipagos mapping | No | Implemented | Seeded items are reference/provider-pending and non-payable |
+| service_coverage_by_state table | Database Entity | Backend DB | Map services to supported states | Implemented in Phase 10F | Used by API filtering and coverage map output | No | Implemented | State coverage does not imply payment eligibility |
 | user_profile.state_code | User Data | Mobile onboarding/profile | Store user-selected state | Planned | Drives visible service catalog | Yes | Planned | Manual state selection takes priority over GPS |
-| GET /api/services/available | API Endpoint | Backend | Return only services available to the user state | Planned | Mobile catalog source | No | Planned | If state is missing, return national services only |
+| GET /service-catalog | API Endpoint | Backend | Return only mobile-payable services | Implemented in Phase 10F | Mobile Add Service catalog source | No | Implemented | Conservative seed currently returns no payable services |
 | PATCH /api/me/location-state | API Endpoint | Backend | Save/change user selected state | Planned | Mobile profile/location setting | Yes | Planned | Must audit user state changes |
 | Support Service Coverage View | Support Console Feature | Admin/support console | Let support see if a service is available in a user's state | Candidate for Phase 10D | Helps answer “why can’t I see/pay this service?” | Yes | Candidate | Read-only visibility only during 10D |

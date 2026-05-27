@@ -135,6 +135,30 @@ class AdminAuditEventListItem(BaseModel):
     created_at: datetime
 
 
+class AdminNotificationDeliveryListItem(BaseModel):
+    id: int
+    user_id: int
+    channel: str
+    notification_type: str
+    template_name: str
+    entity_type: str
+    entity_id: str
+    recipient_masked: str
+    status: str
+    provider_name: str | None = None
+    provider_message_id: str | None = None
+    error_code: str | None = None
+    error_message_safe: str | None = None
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class AdminNotificationDeliveryDetail(AdminNotificationDeliveryListItem):
+    metadata_json: dict | None = None
+
+
 class SupportTicketCreate(BaseModel):
     user_id: int | None = None
     payment_id: int | None = None

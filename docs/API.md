@@ -728,3 +728,23 @@ Current conservative seed returns no payable services:
   "disclaimer": "Cobertura referencial sujeta a disponibilidad del proveedor..."
 }
 ```
+## Phase 10G WhatsApp Receipt Endpoints
+
+User endpoints:
+
+- `GET /notification-preferences`: returns the current WhatsApp payment receipt preference. Default is disabled.
+- `PATCH /notification-preferences`: updates explicit consent for `channel=whatsapp` and `notification_type=payment_receipt`.
+- `GET /notifications/deliveries`: returns the authenticated user's notification deliveries with masked recipient only.
+- `POST /notifications/whatsapp/receipts/{receipt_id}/send`: requests a non-blocking WhatsApp receipt delivery for a confirmed receipt.
+
+Admin endpoints:
+
+- `GET /admin/notifications/deliveries`: lists masked notification deliveries for permitted admin roles.
+- `GET /admin/notifications/deliveries/{id}`: returns one masked delivery.
+
+Rules:
+
+- `fondix_pago_exitoso` is the only runtime WhatsApp template in this phase.
+- Send requires auth, confirmed payment, confirmed/generated receipt proof, valid recipient, and explicit consent.
+- Duplicate sends are blocked by receipt/channel/template/recipient hash idempotency.
+- Delivery failure never mutates payment, receipt, proof, ledger, or internal receipt status.

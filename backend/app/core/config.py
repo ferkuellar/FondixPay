@@ -40,6 +40,14 @@ class Settings(BaseSettings):
     prontipagos_client_secret: str = ""
     prontipagos_timeout_seconds: int = 15
     prontipagos_enable_sandbox_mock: bool = True
+    whatsapp_provider: str = "mock"
+    whatsapp_env: str = "sandbox"
+    whatsapp_enable_receipt_mvp: bool = False
+    whatsapp_template_payment_success: str = "fondix_pago_exitoso"
+    whatsapp_provider_api_base_url: str = ""
+    whatsapp_provider_token: str = ""
+    whatsapp_webhook_secret: str = ""
+    whatsapp_timeout_seconds: int = 10
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

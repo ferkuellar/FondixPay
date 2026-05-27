@@ -538,3 +538,22 @@ Checklist:
 - Admin PATCH cannot mark unconfirmed services payable.
 - `validate_service_is_payable` returns false without confirmed provider capability.
 - Mobile Add Service compiles and shows empty state when no payable services exist.
+## Phase 10G WhatsApp Receipt Validation
+
+Required checks:
+
+- `cd backend && python -m compileall app`
+- `cd backend && python -m pytest`
+- `cd mobile && npm run typecheck` when mobile consent/success UI changes.
+- `cd admin && npm run typecheck && npm run build` when admin delivery visibility changes.
+
+Coverage expectations:
+
+- Default WhatsApp receipt consent is disabled.
+- User can enable and revoke consent.
+- No send without consent.
+- No send unless payment is successful and receipt proof is confirmed/generated.
+- Successful send creates one `NotificationDelivery`.
+- Duplicate send is blocked by idempotency.
+- Provider failure does not mutate payment, receipt, proof, or ledger state.
+- Responses and audit metadata do not expose full phone, PAN, CVV, tokens, secrets, or raw provider payloads.

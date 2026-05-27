@@ -826,3 +826,17 @@ The implemented seed uses safe defaults:
 - provider capability `status=to_confirm`
 - `supports_payment_execution=false`
 - `supports_receipt=false`
+## Phase 10G Notification Tables
+
+`notification_preferences`:
+
+- Stores explicit user consent by `user_id`, `channel`, and `notification_type`.
+- Phase 10G uses `channel=whatsapp` and `notification_type=payment_receipt`.
+- Default is `enabled=false`; enabling sets `consented_at`; disabling sets `revoked_at`.
+
+`notification_deliveries`:
+
+- Stores delivery evidence for notification attempts.
+- Recipient is stored as `recipient_hash` and `recipient_masked`; full phone is not stored.
+- `idempotency_key` is unique and built from receipt id, channel, template name, and recipient hash.
+- `metadata_json` may include the safe template payload, never PAN, CVV, card token, secrets, raw provider payload, or full phone.

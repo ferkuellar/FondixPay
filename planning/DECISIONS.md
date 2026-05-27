@@ -1014,3 +1014,20 @@ Rationale:
 Safe defaults prevent accidental payment enablement from reference data or incomplete provider mapping.
 
 Status: Accepted.
+## ADR-010G-001 - WhatsApp receipt MVP uses mock provider by default
+
+Decision: Phase 10G implements `fondix_pago_exitoso` through a provider abstraction with `WhatsAppMockProvider` as the only runtime provider.
+
+Rationale: FondixPay has no approved production WhatsApp provider, Meta template approval, webhook security review, or production credentials.
+
+## ADR-010G-002 - WhatsApp delivery is not financial truth
+
+Decision: WhatsApp delivery failure never changes payment, receipt, proof, ledger, or internal receipt status.
+
+Rationale: The internal ledger/audit/receipt evidence remains the source of truth. WhatsApp is a convenience notification channel only.
+
+## ADR-010G-003 - Consent is explicit and disabled by default
+
+Decision: `NotificationPreference` defaults to disabled and requires user opt-in for `whatsapp/payment_receipt`.
+
+Rationale: WhatsApp is an external messaging channel and must not send payment receipts without consent.

@@ -12,6 +12,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: "#/users", label: "Usuarios", permission: "admin.users.list" },
   { href: "#/payments", label: "Pagos", permission: "admin.payments.list" },
   { href: "#/receipts", label: "Recibos", permission: "admin.receipts.list" },
+  { href: "#/notifications/deliveries", label: "Notificaciones", permission: "admin.notifications.list" },
   { href: "#/search", label: "Busqueda", permission: "admin.search.view" },
   { href: "#/tickets", label: "Tickets", permission: "admin.support_tickets.list" },
   { href: "#/manual-review", label: "Revision manual", permission: "admin.manual_review.list" },

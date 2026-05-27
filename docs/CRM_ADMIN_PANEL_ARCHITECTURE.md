@@ -345,3 +345,13 @@ Future CRM behavior:
 - WhatsApp delivery failure must not change payment, receipt, proof, or ledger status.
 
 This is future architecture only. Phase 10D.1 does not add CRM runtime behavior.
+
+## Phase 10G Notification Delivery Visibility
+
+Implemented admin visibility:
+
+- `GET /admin/notifications/deliveries`
+- `GET /admin/notifications/deliveries/{id}`
+- Admin frontend route `#/notifications/deliveries`
+
+Visible fields are intentionally limited to template name, status, created time, masked recipient, entity id, provider message id, and safe error message. Full phone numbers, raw provider payloads, secrets, card data, and technical raw errors remain hidden.

@@ -358,3 +358,18 @@ SPEI, CoDi, OXXO/store payment, cash-in, wallet balance, stored balance, cash, a
 | Admin activating service without audit | SEV-1 | partially mitigated | Admin PATCH is RBAC-protected and emits audit; broader admin workflow remains pending. |
 | User attempting payment without provider capability | SEV-1 | partially mitigated | Catalog validation exists; payment-flow enforcement is still required before real payments. |
 | Landing map confused with payment availability | SEV-1 | mitigated/ongoing | `/coverage-map` returns reference-only flags and disclaimer. |
+## Phase 10G WhatsApp Receipt Risks
+
+Mitigated in MVP:
+
+- Unconsented messaging: default disabled and explicit opt-in required.
+- Payment disruption from notification failure: WhatsApp errors are non-blocking.
+- Duplicate delivery: idempotency key blocks duplicate receipt/channel/template/recipient sends.
+- Sensitive data leakage: delivery stores masked/hash recipient and minimal template payload.
+
+Open production risks:
+
+- Meta template approval and provider contract are not complete.
+- Webhook signature verification is scaffolded by configuration only, not implemented.
+- Delivery monitoring, retry policy, opt-out compliance, and incident runbook need a future phase.
+- Legal/privacy approval is required before real user messaging.

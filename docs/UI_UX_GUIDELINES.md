@@ -276,3 +276,25 @@ Future WhatsApp UX must be opt-in, explicit, and revocable.
   - Supporting copy explaining that services are enabled after provider validation.
 - Provider-pending services are not rendered as selectable payment options.
 - Existing saved demo services remain available for mock/internal validation but are not proof of production availability.
+## Phase 10G WhatsApp Receipt UX
+
+Mobile consent copy:
+
+> Autorizo recibir por WhatsApp comprobantes de pagos exitosos de FondixPay. Puedo desactivarlo cuando quiera.
+
+Payment success copy is non-blocking and must not depend on delivery status:
+
+- Enabled: `Comprobante por WhatsApp activado. Te enviaremos una copia si el canal está disponible.`
+- Disabled or unknown: `Te enviaremos tu comprobante por WhatsApp si activaste esta opción.`
+
+Template visual target for `fondix_pago_exitoso`:
+
+- Verified business header: `FONDIX PAY` and `Negocio verificado`.
+- Teal/green header and white rich-message card.
+- Title: `Pago realizado`.
+- Main copy: `Ya quedó! 🙌`.
+- Details: service, amount plus currency, folio, date.
+- Final copy: `Tu comprobante oficial está guardado en la app FONDIX PAY.`
+- CTA: `Ver en la app`.
+
+Do not implement OTP, reminders, failed payment, monthly summary, or campaigns as runtime in Phase 10G.

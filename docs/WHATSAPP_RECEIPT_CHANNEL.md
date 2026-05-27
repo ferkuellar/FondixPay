@@ -197,3 +197,23 @@ Before runtime implementation:
 - WhatsApp failure proven non-blocking.
 
 Commercial production remains blocked until broader payment, audit, fraud, reconciliation, security, operations, and provider gates are complete.
+## Phase 10G Runtime Implementation
+
+Phase 10G implements only the WhatsApp post-payment receipt MVP template `fondix_pago_exitoso`.
+
+Runtime scope:
+
+- `NotificationPreference` stores explicit consent for `channel=whatsapp` and `notification_type=payment_receipt`.
+- Default consent is disabled.
+- `NotificationDelivery` stores append-only delivery evidence with masked recipient and recipient hash.
+- The provider abstraction is implemented with `WhatsAppMockProvider` only.
+- The template payload mirrors the approved visual reference: verified FONDIX PAY header, `Pago realizado`, `Ya quedó! 🙌`, service, amount, folio, date, final app-storage copy, and CTA `Ver en la app`.
+- The payment service can trigger the send after success only when `WHATSAPP_ENABLE_RECEIPT_MVP=true`; failures are non-blocking.
+
+Non-goals preserved:
+
+- No OTP, reminders, failed-payment WhatsApp, monthly summary, campaigns, or production provider integration.
+- No PAN, CVV, card token, full phone, raw provider payload, secrets, or technical raw errors in delivery responses.
+- WhatsApp failure never changes payment, receipt, proof, ledger, or internal audit truth.
+
+Production status: blocked until a real WhatsApp Business provider, approved Meta template, webhook security, operational monitoring, and legal/privacy review are completed.

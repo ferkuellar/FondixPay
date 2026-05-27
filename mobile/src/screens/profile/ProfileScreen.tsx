@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect } from 'react';
+import { StyleSheet, Switch, Text, View } from 'react-native';
 
 import { BottomTabBar } from '../../components/BottomTabBar';
 import { PrimaryButton } from '../../components/PrimaryButton';
@@ -7,6 +8,7 @@ import { NotificationBadge } from '../../components/NotificationBadge';
 import { Screen } from '../../components/Screen';
 import { useAuthStore } from '../../store/authStore';
 import { colors, radius, spacing, typography } from '../../theme';
+import { useNotificationPreferencesStore } from '../../store/notificationPreferencesStore';
 import { useNotificationStore } from '../../store/notificationStore';
 import type { RootStackParamList } from '../../types';
 
@@ -17,6 +19,15 @@ export function ProfileScreen({ navigation }: Props) {
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
   const unreadCount = useNotificationStore((state) => state.unreadCount);
+  const whatsappReceipt = useNotificationPreferencesStore((state) => state.whatsappReceipt);
+  const preferencesLoading = useNotificationPreferencesStore((state) => state.isLoading);
+  const preferencesError = useNotificationPreferencesStore((state) => state.error);
+  const fetchPreferences = useNotificationPreferencesStore((state) => state.fetchPreferences);
+  const setWhatsappReceiptEnabled = useNotificationPreferencesStore((state) => state.setWhatsappReceiptEnabled);
+
+  useEffect(() => {
+    void fetchPreferences();
+  }, [fetchPreferences]);
 
   return (
     <Screen padded={false} style={styles.screen}>
@@ -32,6 +43,22 @@ export function ProfileScreen({ navigation }: Props) {
             <NotificationBadge unreadCount={unreadCount} />
           </View>
         </PrimaryButton>
+        <View style={styles.card}>
+          <View style={styles.preferenceHeader}>
+            <View style={styles.preferenceCopy}>
+              <Text style={styles.preferenceTitle}>Recibir comprobantes por WhatsApp</Text>
+              <Text style={styles.preferenceBody}>
+                Autorizo recibir por WhatsApp comprobantes de pagos exitosos de FondixPay. Puedo desactivarlo cuando quiera.
+              </Text>
+            </View>
+            <Switch
+              disabled={preferencesLoading}
+              onValueChange={(enabled) => void setWhatsappReceiptEnabled(enabled)}
+              value={Boolean(whatsappReceipt?.enabled)}
+            />
+          </View>
+          {preferencesError ? <Text style={styles.errorText}>{preferencesError}</Text> : null}
+        </View>
         <View style={styles.card}>
           <Text style={styles.label}>Cuenta</Text>
           <Text style={styles.value}>Demo segura</Text>
@@ -77,6 +104,28 @@ const styles = StyleSheet.create({
   notificationLabel: {
     ...typography.button,
     color: colors.primary,
+  },
+  preferenceBody: {
+    ...typography.caption,
+    color: colors.textSecondary,
+  },
+  preferenceCopy: {
+    flex: 1,
+    gap: spacing.xs,
+  },
+  preferenceHeader: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.md,
+  },
+  preferenceTitle: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '700',
+  },
+  errorText: {
+    ...typography.caption,
+    color: colors.danger,
   },
   screen: {
     flex: 1,

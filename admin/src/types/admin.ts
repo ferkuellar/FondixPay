@@ -8,6 +8,8 @@ export type Permission =
   | "admin.payments.view"
   | "admin.receipts.list"
   | "admin.receipts.view"
+  | "admin.notifications.list"
+  | "admin.notifications.view"
   | "admin.audit.list"
   | "admin.reconciliation.card.view"
   | "admin.reconciliation.prontipagos.view"
@@ -184,6 +186,25 @@ export type AuditEvent = {
   correlation_id?: string | null;
   metadata?: Record<string, unknown> | null;
   created_at: string;
+};
+
+export type AdminNotificationDelivery = {
+  id: number;
+  user_id: number;
+  channel: string;
+  notification_type: string;
+  template_name: string;
+  entity_type: string;
+  entity_id: string;
+  recipient_masked: string;
+  status: string;
+  provider_name?: string | null;
+  provider_message_id?: string | null;
+  error_code?: string | null;
+  error_message_safe?: string | null;
+  created_at: string;
+  updated_at: string;
+  metadata_json?: Record<string, unknown> | null;
 };
 
 export type ReconciliationSummary = {

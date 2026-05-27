@@ -305,3 +305,21 @@ Operating status:
 Next recommended phase:
 
 Fase AWS-1 - Terraform Foundation, or Fase 11 - Audit, Fraud & Chargeback Readiness depending on active roadmap priority.
+## Phase 10G State - WhatsApp Payment Receipt MVP
+
+Implemented:
+
+- WhatsApp receipt preference and delivery models.
+- Explicit opt-in/out for `whatsapp/payment_receipt`, disabled by default.
+- Mock WhatsApp provider and provider abstraction.
+- Runtime template `fondix_pago_exitoso` only.
+- Non-blocking receipt send service with idempotency and safe payload.
+- User endpoints for preferences, deliveries, and manual receipt send.
+- Admin endpoints and frontend list for masked delivery visibility.
+- Mobile profile consent control and PaymentSuccess informational copy.
+- Backend tests for consent, delivery, idempotency, security, and admin visibility.
+
+Still blocked for production:
+
+- Real WhatsApp Business provider, approved Meta template, webhook validation, monitoring, legal/privacy review, and production credentials.
+- Real money movement remains out of scope; card processor and Prontipagos production integrations are still future work.

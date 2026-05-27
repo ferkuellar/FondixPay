@@ -1,6 +1,6 @@
 # Roadmap
 
-Updated: 2026-05-26
+Updated: 2026-05-27
 
 ## Current Route Summary
 
@@ -26,22 +26,16 @@ Current practical position:
 - Phase 8A/8B: completed as sandbox integration designs.
 - Phase 8C: completed for contractual sandbox/mock orchestration.
 - Phase 9: completed for notifications, receipts, and proof-of-payment hardening.
-- Current phase: Phase 10X - Public Landing Page Integration & Commercial Front Door.
-- Recommended next phase: Phase 10E - Coverage-Aware Service Catalog Design, or Phase AWS-1 - Terraform Foundation if infrastructure is prioritized.
+- Current phase: Phase 10F - Coverage-Aware Service Catalog Implementation.
+- Recommended next phase: Phase AWS-1 - Terraform Foundation, or Phase 11 - Commercial Readiness Gate Review if readiness/governance is prioritized.
 
 Before any real payment provider implementation, the project must preserve ledger/audit, idempotency, fee transparency, card payment method strategy, payment recovery paths, card processor sandbox design, Prontipagos sandbox design, support/receipt proof, and provider-selection gates. Real payments remain blocked.
 
 ## Immediate Recommended Path
 
-1. Phase 5B - Ledger & Audit Implementation.
-2. Phase 5C - Payment Trust & Fee Transparency.
-3. Phase 5D - Card Payment Method Strategy.
-4. Phase 5E - Card Payment UX Mock Implementation.
-5. Phase 5F - Payment Recovery Paths.
-6. Phase 8A - Card Processor Sandbox Design.
-7. Phase 8B - Prontipagos Sandbox Integration Design.
-8. Phase 8C - Sandbox Integration Implementation.
-9. Phase 5 - User Services Domain Hardening.
+1. Phase AWS-1 - Terraform Foundation if infrastructure is the active priority.
+2. Phase 11 - Commercial Readiness Gate Review if governance/readiness is the active priority.
+3. Provider selection and production payment work remain blocked until card processor, Prontipagos, security, reconciliation, support, and launch gates are accepted.
 
 Real payment integration must not start before card processor selection, Phase 8A/8B design gates, sandbox implementation acceptance, PCI/security review, and the existing auth/ledger/audit/recovery gates are accepted.
 
@@ -137,7 +131,7 @@ Out of scope: storing raw card data or adding a provider without approved decisi
 
 ## Phase 5E - Card Payment UX Mock Implementation
 
-Status: planned.
+Status: completed for mock/dev mobile UX.
 Objective: implement mock add/select/change card UX without real provider or card storage.
 Deliverables: add-card mock screen, select/change card mock UX, card demo component, empty state, and confirmation integration.
 Acceptance: user can add/select/change a clearly labeled card demo before mock payment.
@@ -153,7 +147,7 @@ Out of scope: production credentials, real payments, and live provider traffic.
 
 ## Phase 5F - Payment Recovery Paths
 
-Status: planned.
+Status: completed for mock/dev recovery UX plus recovery blueprint.
 Objective: design and implement failed/uncertain payment paths with retry, change method, support, and charged/not-charged clarity.
 Deliverables: error states, retry rules, support handoff, pending state copy, and audit event mapping.
 Acceptance: users know what happened and what to do after a failed or uncertain payment.
@@ -209,7 +203,7 @@ Out of scope: provider adapter, real charges, real secrets, Prontipagos integrat
 
 ## Phase 8B - Prontipagos Sandbox Integration Design
 
-Status: current/completed as documentation/design.
+Status: completed as documentation/design.
 Objective: design the service-payment aggregator leg after approved card charge/auth state.
 Deliverables: reference validation, service payment execution, provider status/error mapping, receipts, reconciliation, and recovery design for Prontipagos.
 Acceptance: card processor charge state and Prontipagos service state remain separately traceable.
@@ -233,26 +227,26 @@ Out of scope: fiscal receipts, production providers, real push/email delivery, a
 
 ## Phase 10A - CRM Admin Panel Architecture & RBAC Design
 
-Status: current design/documentation phase after Phase 9 and before Phase 11.
+Status: completed as documentation/design.
 Objective: define CRM modules, RBAC, redaction, support, reconciliation, manual review, audit, future APIs, and frontend architecture before implementation.
 Deliverables: CRM architecture, CRM RBAC matrix, CRM backlog, sprint handoff, and cross-doc production gates.
 Out of scope: admin endpoints, admin frontend, admin auth runtime, real roles in DB, provider integration, and money movement.
 
 ## Phase 10B - CRM Admin Panel Backend APIs
 
-Status: planned next phase.
+Status: completed for initial protected backend admin APIs.
 Objective: implement permissioned admin backend contracts with auth, roles, redacted responses, audit events, fixtures, and RBAC tests.
 Out of scope: full CRM frontend.
 
 ## Phase 10C - CRM Admin Panel Frontend Implementation
 
-Status: planned.
+Status: completed for initial separate web CRM Admin frontend.
 Objective: build the internal web admin over the 10B permissioned API contracts.
 Out of scope: weakening backend authorization through frontend-only controls.
 
 ## Phase 10D - Support, Reconciliation & Manual Review Workflows
 
-Status: planned.
+Status: completed for sandbox/mock operational workflows.
 Objective: complete operational workflows, queues, runbooks, and provider-leg reconciliation views before commercial production.
 Out of scope: destructive ledger editing and unsupported provider assumptions.
 
@@ -273,13 +267,13 @@ Out of scope: payment production launch, backend/CRM hosting, real waitlist stor
 
 ## Phase 10E - Coverage-Aware Service Catalog Design
 
-Status: planned.
+Status: completed as documentation/design.
 Objective: design service coverage rules by geography/provider availability so unavailable services are hidden or explained.
 Out of scope: hardcoding service coverage in mobile.
 
 ## Phase 10F - Coverage-Aware Service Catalog Implementation
 
-Status: planned.
+Status: completed as conservative backend/mobile foundation.
 Objective: implement backend-driven service coverage behavior after design approval.
 Out of scope: changing provider/payment execution contracts.
 
@@ -403,7 +397,7 @@ Real wallet and real balance remain moved to a future regulated phase after lega
 Wallet/account/simulated balance work in the current roadmap is demo/account-model work only. It is not a user-facing payment method and does not replace debit or credit card.
 ## Phase 10E - Coverage-Aware Service Catalog Design
 
-Status: current design phase.
+Status: completed as documentation/design.
 
 Purpose:
 Design the coverage-aware service catalog that separates public coverage display from mobile payment eligibility. This phase uses the coverage map and approved Excel as references, but does not implement runtime catalog behavior.
@@ -417,3 +411,15 @@ Implement service catalog models, coverage-by-state rules, provider capability r
 
 Notes:
 Seeded services remain non-payable. Real Prontipagos provider confirmation remains pending.
+## Phase 10G - WhatsApp Payment Receipt MVP
+
+Status: implemented for mock/dev MVP.
+
+Delivered:
+
+- `fondix_pago_exitoso` template runtime only.
+- Consent, delivery evidence, provider abstraction, mock provider, idempotency, audit events, user/admin endpoints, mobile consent UX, and admin delivery list.
+
+Next recommended phase:
+
+- Phase 10H should focus on provider readiness: Meta template approval checklist, webhook signature validation, provider adapter selection, monitoring metrics, retry/backoff policy, privacy/legal approval, and production release gates.

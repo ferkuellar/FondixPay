@@ -727,3 +727,19 @@ Pending broader workflow:
 - `service_catalog.sync_started`
 - `service_catalog.sync_completed`
 - `service_catalog.sync_failed`
+## Phase 10G WhatsApp Receipt Audit Events
+
+Implemented event types:
+
+- `whatsapp.consent_granted`
+- `whatsapp.consent_revoked`
+- `whatsapp.receipt_send_requested`
+- `whatsapp.receipt_send_skipped_no_consent`
+- `whatsapp.receipt_send_skipped_invalid_recipient`
+- `whatsapp.receipt_send_succeeded`
+- `whatsapp.receipt_send_failed`
+- `whatsapp.duplicate_blocked`
+- `notification.delivery_created`
+- `notification.delivery_status_updated`
+
+Audit metadata must use masked recipient values only. Payment, receipt, proof, and ledger events remain the source of truth for financial status.
