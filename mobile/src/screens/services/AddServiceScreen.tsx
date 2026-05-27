@@ -23,6 +23,7 @@ export function AddServiceScreen({ navigation }: Props) {
   const { theme } = useAppTheme();
   const error = useServiceCatalogStore((state) => state.error);
   const fetchServices = useServiceCatalogStore((state) => state.fetchServices);
+  const isUsingDemoFallback = useServiceCatalogStore((state) => state.isUsingDemoFallback);
   const isLoading = useServiceCatalogStore((state) => state.isLoading);
   const services = useServiceCatalogStore((state) => state.services);
   const addService = useServiceStore((state) => state.addService);
@@ -90,6 +91,13 @@ export function AddServiceScreen({ navigation }: Props) {
             <Text style={[styles.subtitle, { color: theme.fg2 }]}>
               Proveedores soportados en esta versión: CFE, agua, internet, recargas y gas.
             </Text>
+            {isUsingDemoFallback ? (
+              <AlertCard
+                tone="info"
+                title="Servicios demo disponibles"
+                message="Estos servicios sirven para validar el flujo mock. No indican disponibilidad productiva ni proveedor real activo."
+              />
+            ) : null}
             <View style={styles.list}>
               {services.length === 0 ? (
                 <View style={[styles.emptyCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>

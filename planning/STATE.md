@@ -323,3 +323,18 @@ Still blocked for production:
 
 - Real WhatsApp Business provider, approved Meta template, webhook validation, monitoring, legal/privacy review, and production credentials.
 - Real money movement remains out of scope; card processor and Prontipagos production integrations are still future work.
+
+## Hotfix - Mobile Services, Theme Toggle, and Demo Payments
+
+Status: implemented on 2026-05-27 for mobile mock/dev usability.
+
+This hotfix restores the mobile demo flow after the conservative Phase 10F service catalog made `/service-catalog` return no payable production services. The mobile app now shows a clearly labeled local demo service fallback when the strict catalog is empty or unavailable. This does not mark backend catalog items as production-payable and does not confirm Prontipagos capability.
+
+Also updated:
+
+- Removed the stack Fondix header from Home.
+- Removed stack header chrome from Phone Login.
+- Added a visible Day/Night toggle under Profile and persisted it with Expo Secure Store.
+- Ensured a safe `Tarjeta demo` exists for local mock payment confirmation.
+
+Production status remains blocked. No real payment provider, Prontipagos integration, card processor, or money movement was added.

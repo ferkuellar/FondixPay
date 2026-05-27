@@ -557,3 +557,25 @@ Coverage expectations:
 - Duplicate send is blocked by idempotency.
 - Provider failure does not mutate payment, receipt, proof, or ledger state.
 - Responses and audit metadata do not expose full phone, PAN, CVV, tokens, secrets, or raw provider payloads.
+
+## Hotfix Mobile Services, Theme Toggle, And Demo Payments Validation
+
+Executed on 2026-05-27:
+
+```powershell
+cd mobile
+npm run typecheck
+```
+
+Result: passed.
+
+Checklist:
+
+- Add Service must show demo services if the strict payable catalog is empty.
+- Demo services must clearly say they are not production/provider availability.
+- Home must not render the Fondix stack header logo.
+- Phone Login must not render unnecessary stack header chrome.
+- Profile must expose a Day/Night toggle.
+- Theme selection should persist locally.
+- Confirm Payment must have a safe `Tarjeta demo` for mock validation.
+- No PAN, CVV, real provider token, Prontipagos credential, or real payment operation is introduced.

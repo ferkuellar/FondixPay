@@ -7,7 +7,7 @@ import { PrimaryButton } from '../../components/PrimaryButton';
 import { NotificationBadge } from '../../components/NotificationBadge';
 import { Screen } from '../../components/Screen';
 import { useAuthStore } from '../../store/authStore';
-import { colors, radius, spacing, typography } from '../../theme';
+import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
 import { useNotificationPreferencesStore } from '../../store/notificationPreferencesStore';
 import { useNotificationStore } from '../../store/notificationStore';
 import type { RootStackParamList } from '../../types';
@@ -15,6 +15,7 @@ import type { RootStackParamList } from '../../types';
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 export function ProfileScreen({ navigation }: Props) {
+  const { mode, theme, toggleMode } = useAppTheme();
   const isLoading = useAuthStore((state) => state.isLoading);
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
@@ -32,10 +33,10 @@ export function ProfileScreen({ navigation }: Props) {
   return (
     <Screen padded={false} style={styles.screen}>
       <View style={styles.content}>
-        <Text style={styles.title}>Mi perfil</Text>
-        <View style={styles.card}>
-          <Text style={styles.label}>Teléfono</Text>
-          <Text style={styles.value}>{user?.phone ?? 'Sin teléfono'}</Text>
+        <Text style={[styles.title, { color: theme.fg }]}>Mi perfil</Text>
+        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Text style={[styles.label, { color: theme.fg2 }]}>Teléfono</Text>
+          <Text style={[styles.value, { color: theme.fg }]}>{user?.phone ?? 'Sin teléfono'}</Text>
         </View>
         <PrimaryButton onPress={() => navigation.navigate('Notifications')} variant="secondary">
           <View style={styles.notificationAction}>
@@ -43,11 +44,25 @@ export function ProfileScreen({ navigation }: Props) {
             <NotificationBadge unreadCount={unreadCount} />
           </View>
         </PrimaryButton>
-        <View style={styles.card}>
+        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
           <View style={styles.preferenceHeader}>
             <View style={styles.preferenceCopy}>
-              <Text style={styles.preferenceTitle}>Recibir comprobantes por WhatsApp</Text>
-              <Text style={styles.preferenceBody}>
+              <Text style={[styles.preferenceTitle, { color: theme.fg }]}>Modo {mode === 'night' ? 'Night' : 'Day'}</Text>
+              <Text style={[styles.preferenceBody, { color: theme.fg2 }]}>Cambia entre vista clara y oscura.</Text>
+            </View>
+            <Switch
+              onValueChange={toggleMode}
+              thumbColor={mode === 'night' ? theme.primaryHi : theme.surface}
+              trackColor={{ false: theme.borderHi, true: theme.primary }}
+              value={mode === 'night'}
+            />
+          </View>
+        </View>
+        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <View style={styles.preferenceHeader}>
+            <View style={styles.preferenceCopy}>
+              <Text style={[styles.preferenceTitle, { color: theme.fg }]}>Recibir comprobantes por WhatsApp</Text>
+              <Text style={[styles.preferenceBody, { color: theme.fg2 }]}>
                 Autorizo recibir por WhatsApp comprobantes de pagos exitosos de FondixPay. Puedo desactivarlo cuando quiera.
               </Text>
             </View>
@@ -57,12 +72,12 @@ export function ProfileScreen({ navigation }: Props) {
               value={Boolean(whatsappReceipt?.enabled)}
             />
           </View>
-          {preferencesError ? <Text style={styles.errorText}>{preferencesError}</Text> : null}
+          {preferencesError ? <Text style={[styles.errorText, { color: theme.error }]}>{preferencesError}</Text> : null}
         </View>
-        <View style={styles.card}>
-          <Text style={styles.label}>Cuenta</Text>
-          <Text style={styles.value}>Demo segura</Text>
-          <Text style={styles.note}>Pagos simulados — no es dinero real.</Text>
+        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <Text style={[styles.label, { color: theme.fg2 }]}>Cuenta</Text>
+          <Text style={[styles.value, { color: theme.fg }]}>Demo segura</Text>
+          <Text style={[styles.note, { color: theme.warning }]}>Pagos simulados - no es dinero real.</Text>
         </View>
         <PrimaryButton disabled={isLoading} loading={isLoading} onPress={logout} variant="danger">
           CERRAR SESIÓN

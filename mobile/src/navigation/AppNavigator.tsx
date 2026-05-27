@@ -1,6 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
-import { Image, StyleSheet } from 'react-native';
 
 import { LoadingState } from '../components/LoadingState';
 import { Screen } from '../components/Screen';
@@ -29,17 +28,6 @@ import { useAppTheme } from '../theme';
 import type { RootStackParamList } from '../types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
-
-function HeaderLogo() {
-  return (
-    <Image
-      accessibilityLabel="Fondix Pay"
-      resizeMode="contain"
-      source={require('../assets/images/header.png')}
-      style={styles.headerLogo}
-    />
-  );
-}
 
 export function AppNavigator() {
   const { theme } = useAppTheme();
@@ -85,8 +73,7 @@ export function AppNavigator() {
             component={HomeScreen}
             options={{
               headerBackVisible: false,
-              headerTitle: () => <HeaderLogo />,
-              headerTitleAlign: 'center',
+              headerShown: false,
             }}
           />
           <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Agregar servicio' }} />
@@ -120,17 +107,10 @@ export function AppNavigator() {
       ) : (
         <>
           <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ headerShown: false }} />
-          <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} options={{ title: 'Entrar' }} />
+          <Stack.Screen name="PhoneLogin" component={PhoneLoginScreen} options={{ headerShown: false }} />
           <Stack.Screen name="OtpVerification" component={OtpVerificationScreen} options={{ title: 'Código' }} />
         </>
       )}
     </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  headerLogo: {
-    height: 120,
-    width: 340,
-  },
-});

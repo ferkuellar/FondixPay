@@ -298,3 +298,12 @@ Template visual target for `fondix_pago_exitoso`:
 - CTA: `Ver en la app`.
 
 Do not implement OTP, reminders, failed payment, monthly summary, or campaigns as runtime in Phase 10G.
+
+## Hotfix Mobile Demo UX Notes
+
+- When the production-safe service catalog has no payable services, mobile may show a local demo-only catalog for internal validation.
+- Demo services must be visually and textually labeled as demo/mock and must not imply production availability.
+- Home should not carry an extra brand header when the screen already has greeting, amount, and bottom navigation hierarchy.
+- Phone Login should stay visually quiet and focused on the phone number action.
+- Day/Night mode must be discoverable from Cuenta/Perfil.
+- Demo payment confirmation may ensure a safe `Tarjeta demo`, but must never request or store PAN, CVV, expiration date, CLABE, SPEI, CoDi, OXXO, cash, wallet, or real card credentials.

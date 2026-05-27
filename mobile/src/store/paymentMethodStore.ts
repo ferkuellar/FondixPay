@@ -6,6 +6,7 @@ type PaymentMethodState = {
   paymentMethods: PaymentMethod[];
   selectedPaymentMethodId?: string;
   addMockPaymentMethod: (type?: PaymentMethodType) => PaymentMethod;
+  ensureDemoPaymentMethod: () => PaymentMethod;
   selectPaymentMethod: (methodId: string) => void;
   removePaymentMethod: (methodId: string) => void;
   getSelectedPaymentMethod: () => PaymentMethod | undefined;
@@ -40,6 +41,16 @@ export const usePaymentMethodStore = create<PaymentMethodState>((set, get) => ({
     }));
 
     return method;
+  },
+  ensureDemoPaymentMethod: () => {
+    const current = get().getSelectedPaymentMethod() ?? get().paymentMethods.find((method) => method.status === 'active');
+    if (current) {
+      if (!get().selectedPaymentMethodId) {
+        set({ selectedPaymentMethodId: current.id });
+      }
+      return current;
+    }
+    return get().addMockPaymentMethod('card_mock');
   },
   selectPaymentMethod: (methodId) => {
     const method = get().paymentMethods.find((item) => item.id === methodId);

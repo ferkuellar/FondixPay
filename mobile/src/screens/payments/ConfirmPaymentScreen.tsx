@@ -1,5 +1,5 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ErrorState } from '../../components/ErrorState';
@@ -29,9 +29,14 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
   const payService = usePaymentStore((state) => state.payService);
   const recordRecoveryAttempt = usePaymentStore((state) => state.recordRecoveryAttempt);
   const setMockScenario = usePaymentStore((state) => state.setMockScenario);
+  const ensureDemoPaymentMethod = usePaymentMethodStore((state) => state.ensureDemoPaymentMethod);
   const selectedPaymentMethod = usePaymentMethodStore((state) => state.getSelectedPaymentMethod());
   const [isPaying, setIsPaying] = useState(false);
   const [duplicateMessage, setDuplicateMessage] = useState(false);
+
+  useEffect(() => {
+    ensureDemoPaymentMethod();
+  }, [ensureDemoPaymentMethod]);
 
   if (!service) {
     return (
