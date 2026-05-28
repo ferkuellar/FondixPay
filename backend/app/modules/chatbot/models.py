@@ -79,10 +79,25 @@ class ChatbotConversation(Base):
     status: Mapped[str] = mapped_column(String(40), default="open", index=True)
     detected_intent: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
     confidence: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
+    severity: Mapped[str] = mapped_column(String(20), default="SEV-4", index=True)
+    suggested_severity: Mapped[str | None] = mapped_column(String(20), nullable=True, index=True)
+    classification_reason: Mapped[str | None] = mapped_column(Text, nullable=True)
+    ai_suggested_severity: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    linked_ticket_id: Mapped[int | None] = mapped_column(
+        ForeignKey("support_tickets.id", name="fk_chatbot_conversations_linked_ticket_id_support", use_alter=True),
+        nullable=True,
+        index=True,
+    )
+    assigned_to: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
+    escalation_status: Mapped[str] = mapped_column(String(40), default="none", index=True)
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    reviewed_by: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, onupdate=utcnow)
 
     messages = relationship("ChatbotMessage", back_populates="conversation", cascade="all, delete-orphan")
+    events = relationship("ChatbotConversationEvent", back_populates="conversation", cascade="all, delete-orphan")
+    internal_notes = relationship("ChatbotInternalNote", back_populates="conversation", cascade="all, delete-orphan")
 
 
 class ChatbotMessage(Base):
@@ -109,3 +124,30 @@ class ChatbotFallback(Base):
     reason: Mapped[str] = mapped_column(String(160), default="no_confident_answer")
     reviewed: Mapped[bool] = mapped_column(Boolean, default=False, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
+
+
+class ChatbotConversationEvent(Base):
+    __tablename__ = "chatbot_conversation_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    conversation_id: Mapped[int] = mapped_column(ForeignKey("chatbot_conversations.id"), index=True)
+    event_type: Mapped[str] = mapped_column(String(120), index=True)
+    actor_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
+    before_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    after_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
+    note: Mapped[str | None] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)
+
+    conversation = relationship("ChatbotConversation", back_populates="events")
+
+
+class ChatbotInternalNote(Base):
+    __tablename__ = "chatbot_internal_notes"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    conversation_id: Mapped[int] = mapped_column(ForeignKey("chatbot_conversations.id"), index=True)
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    body: Mapped[str] = mapped_column(Text)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)
+
+    conversation = relationship("ChatbotConversation", back_populates="internal_notes")

@@ -464,3 +464,14 @@ Remaining blockers:
 - AI provider keys are optional environment variables and must never be committed.
 - If no AI provider is configured, the chatbot remains available in FAQ/rule-only mode.
 - No Meta, WhatsApp Cloud API, Twilio, third-party chat widget, or WhatsApp Web extension is used.
+
+## Phase 10X.2 Chat Operations Security
+
+- Chat Operations is internal CRM only and requires backend authentication plus explicit `admin.chat_ops.*` permissions.
+- The public chatbot cannot access or reveal support ticket internals.
+- `SEV-1` and `SEV-2` cases route to human review and cannot be closed automatically by AI.
+- `SUPPORT` can work the queue but cannot downgrade `SEV-1` without manager/admin permission.
+- Internal notes are masked with the same public-chat sensitive text helper before storage.
+- Stored messages and notes must not contain PAN, CVV, OTPs, passwords, provider secrets, raw provider payloads, or raw provider errors.
+- The operational console does not mutate payments, receipts, ledger entries, Prontipagos states, card processor states, or settlement records.
+- The DEV AUTH warning banner is shown in non-production internal environments and is hidden in `PRODUCTION` unless explicitly re-enabled by configuration.

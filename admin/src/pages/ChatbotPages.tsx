@@ -31,6 +31,7 @@ export function ChatbotDashboardPage() {
         <a className="button" href="#/chatbot/settings">Configuracion</a>
         <a className="button" href="#/chatbot/conversations">Conversaciones</a>
         <a className="button" href="#/chatbot/fallbacks">Fallbacks</a>
+        <a className="button button-quiet" href="#/chat-operations">Ver Chat Operations</a>
       </div>
     </section>
   );

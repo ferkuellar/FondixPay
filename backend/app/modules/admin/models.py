@@ -13,19 +13,33 @@ class SupportTicket(Base):
     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
     payment_id: Mapped[int | None] = mapped_column(ForeignKey("payments.id"), nullable=True, index=True)
     receipt_id: Mapped[int | None] = mapped_column(ForeignKey("receipts.id"), nullable=True, index=True)
+    conversation_id: Mapped[int | None] = mapped_column(
+        ForeignKey("chatbot_conversations.id", name="fk_support_tickets_conversation_id_chatbot", use_alter=True),
+        nullable=True,
+        index=True,
+    )
     manual_review_case_id: Mapped[int | None] = mapped_column(
         ForeignKey("manual_review_cases.id", name="fk_support_tickets_manual_review_case_id", use_alter=True),
         nullable=True,
         index=True,
     )
     correlation_id: Mapped[str | None] = mapped_column(String(120), nullable=True, index=True)
+    ticket_number: Mapped[str | None] = mapped_column(String(40), nullable=True, unique=True, index=True)
+    source: Mapped[str] = mapped_column(String(40), default="admin", index=True)
     status: Mapped[str] = mapped_column(String(40), default="open", index=True)
     priority: Mapped[str] = mapped_column(String(40), default="medium", index=True)
+    severity: Mapped[str] = mapped_column(String(20), default="SEV-3", index=True)
     category: Mapped[str] = mapped_column(String(80), default="other", index=True)
+    title: Mapped[str | None] = mapped_column(String(180), nullable=True)
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True)
+    customer_message_excerpt: Mapped[str | None] = mapped_column(Text, nullable=True)
     subject: Mapped[str] = mapped_column(String(180))
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     assigned_to: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True)
     created_by: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    sla_due_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    first_response_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    resolved_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc))
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
@@ -33,6 +47,7 @@ class SupportTicket(Base):
         onupdate=lambda: datetime.now(timezone.utc),
     )
     closed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    reopened_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
 
     notes = relationship("SupportTicketNote", back_populates="ticket", cascade="all, delete-orphan")
 

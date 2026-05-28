@@ -1,16 +1,31 @@
 import re
 import unicodedata
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException, Request, status
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.request_context import get_request_context
+from app.modules.admin.models import SupportTicket
 from app.modules.audit.services import create_audit_event
 from app.modules.chatbot import repository
-from app.modules.chatbot.models import ChatbotFallback, ChatbotFaq, ChatbotIntent, ChatbotKnowledgeEntry, ChatbotMessage
+from app.modules.chatbot.models import (
+    ChatbotConversation,
+    ChatbotConversationEvent,
+    ChatbotFallback,
+    ChatbotFaq,
+    ChatbotIntent,
+    ChatbotInternalNote,
+    ChatbotKnowledgeEntry,
+    ChatbotMessage,
+)
 from app.modules.chatbot.schemas import (
+    ChatOperationNoteCreate,
+    ChatOperationSeverityUpdate,
+    ChatOperationTicketCreate,
+    ChatOperationsMetrics,
     ChatbotFaqCreate,
     ChatbotFaqUpdate,
     ChatbotIntentCreate,
@@ -41,6 +56,9 @@ PRIVATE_TERMS = {
     "cuenta",
 }
 
+SEVERITY_RANK = {"SEV-1": 1, "SEV-2": 2, "SEV-3": 3, "SEV-4": 4, "SEV-5": 5}
+HIGH_SEVERITIES = {"SEV-1", "SEV-2"}
+
 
 def normalize_text(value: str) -> str:
     text = unicodedata.normalize("NFKD", value.strip().lower())
@@ -61,6 +79,26 @@ def mask_sensitive_message(value: str) -> str:
     text = re.sub(r"\b(?:\+?52)?\s?\d{10}\b", "[PHONE_MASKED]", text)
     text = re.sub(r"(?i)(password|token|api[_ -]?key|secret|contrase(?:n|ñ)a)\s*[:=]\s*\S+", r"\1=[REDACTED]", text)
     return text
+
+
+def classify_message(value: str) -> dict[str, str]:
+    normalized = normalize_text(value)
+    rules: list[tuple[str, str, set[str], str]] = [
+        ("fraud_concern", "SEV-1", {"fraude", "hack", "hackearon", "robo", "clonaron", "datos", "demanda", "legal", "profeco"}, "fraud, security, data exposure, or legal concern"),
+        ("payment_concern", "SEV-2", {"no se aplico", "no aplico", "pago no", "cobraron", "cargo", "dinero", "perdi"}, "payment confirmation, charge, or money-loss concern"),
+        ("receipt_issue", "SEV-2", {"recibo", "comprobante", "folio"}, "receipt or proof-of-payment issue"),
+        ("registration_issue", "SEV-3", {"registro", "registrar", "cuenta", "login", "entrar"}, "registration or account-access question"),
+        ("coverage_question", "SEV-3", {"cobertura", "estado", "municipio", "ciudad", "funciona"}, "coverage question"),
+        ("commission_question", "SEV-4", {"comision", "comisione", "costo", "cuanto cobran"}, "commission or cost FAQ"),
+        ("app_download_question", "SEV-4", {"descargar", "app store", "google play", "instalar"}, "app download question"),
+        ("feature_request", "SEV-5", {"podrian", "agregar", "sugerencia", "feature", "me gustaria"}, "feature request or product suggestion"),
+    ]
+    for intent, severity, terms, reason in rules:
+        if any(term in normalized for term in terms):
+            return {"intent": intent, "severity": severity, "reason": reason}
+    if _is_private_request(normalized):
+        return {"intent": "payment_concern", "severity": "SEV-2", "reason": "private payment/account request routed to authenticated support"}
+    return {"intent": "general_faq", "severity": "SEV-4", "reason": "general public FAQ or informational question"}
 
 
 def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Request) -> PublicChatResponse:
@@ -91,6 +129,43 @@ def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Reques
         _audit_public(db, request, "chatbot.conversation.created", conversation.id)
     _audit_public(db, request, "chatbot.message.received", conversation.id, {"message_id": user_message.id})
 
+    classification = classify_message(message)
+    previous_state = {
+        "detected_intent": conversation.detected_intent,
+        "severity": conversation.severity,
+        "escalation_status": conversation.escalation_status,
+    }
+    conversation.detected_intent = classification["intent"]
+    conversation.severity = classification["severity"]
+    conversation.suggested_severity = classification["severity"]
+    conversation.classification_reason = classification["reason"]
+    if classification["severity"] in HIGH_SEVERITIES:
+        conversation.escalation_status = "ticket_required"
+        conversation.status = "escalated"
+    repository.add_conversation_event(
+        db,
+        ChatbotConversationEvent(
+            conversation_id=conversation.id,
+            event_type="conversation.classified",
+            before_json=previous_state,
+            after_json={
+                "detected_intent": classification["intent"],
+                "severity": classification["severity"],
+                "escalation_status": conversation.escalation_status,
+            },
+            note=classification["reason"],
+        ),
+    )
+    _audit_public(
+        db,
+        request,
+        "conversation.classified",
+        conversation.id,
+        {"intent": classification["intent"], "severity": classification["severity"]},
+    )
+    if classification["severity"] in HIGH_SEVERITIES:
+        _audit_public(db, request, "conversation.escalated", conversation.id, {"severity": classification["severity"]})
+
     reply, confidence, detected_intent = _resolve_reply(db, message)
     bot_message = repository.add_message(
         db,
@@ -103,7 +178,8 @@ def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Reques
         ),
     )
     conversation.last_message_at = datetime.now(timezone.utc)
-    conversation.detected_intent = detected_intent
+    if detected_intent and classification["intent"] in {"general_faq", "fallback_unknown"}:
+        conversation.detected_intent = detected_intent
     conversation.confidence = confidence
     if confidence == "fallback":
         repository.add_fallback(
@@ -200,6 +276,172 @@ def update_knowledge(db: Session, item: ChatbotKnowledgeEntry, payload: ChatbotK
     return item
 
 
+def chat_operations_metrics(db: Session) -> ChatOperationsMetrics:
+    total = db.query(ChatbotConversation).count()
+    active = db.query(ChatbotConversation).filter(ChatbotConversation.status.in_(["open", "escalated"])).count()
+    escalated = db.query(ChatbotConversation).filter(ChatbotConversation.escalation_status.in_(["human_queue", "ticket_required", "escalated"])).count()
+    fallback_count = db.query(ChatbotFallback).count()
+    ticket_query = db.query(SupportTicket).filter(SupportTicket.source == "chatbot")
+    tickets = ticket_query.count()
+    by_severity = {severity: ticket_query.filter(SupportTicket.severity == severity).count() for severity in SEVERITY_RANK}
+    statuses = ["new", "triaged", "assigned", "waiting_customer", "waiting_internal_review", "escalated", "resolved", "closed", "reopened"]
+    by_status = {value: ticket_query.filter(SupportTicket.status == value).count() for value in statuses}
+    top_intents = [
+        {"intent": intent or "unknown", "count": count}
+        for intent, count in db.query(ChatbotConversation.detected_intent, func.count(ChatbotConversation.id))
+        .group_by(ChatbotConversation.detected_intent)
+        .order_by(func.count(ChatbotConversation.id).desc())
+        .limit(6)
+        .all()
+    ]
+    top_unresolved = [
+        {"question": item.message_text_masked[:120], "count": 1}
+        for item in db.query(ChatbotFallback).order_by(ChatbotFallback.created_at.desc()).limit(6).all()
+    ]
+    return ChatOperationsMetrics(
+        total_conversations=total,
+        active_conversations=active,
+        bot_resolved_conversations=max(total - escalated - fallback_count, 0),
+        human_escalated_conversations=escalated,
+        tickets_created=tickets,
+        assigned_tickets=ticket_query.filter(SupportTicket.assigned_to.is_not(None)).count(),
+        unassigned_tickets=ticket_query.filter(SupportTicket.assigned_to.is_(None)).count(),
+        sla_breached_tickets=ticket_query.filter(SupportTicket.sla_due_at < datetime.now(timezone.utc), SupportTicket.status.notin_(["resolved", "closed"])).count(),
+        fallback_rate=round((fallback_count / total) * 100, 2) if total else 0.0,
+        tickets_by_severity=by_severity,
+        tickets_by_status=by_status,
+        top_intents=top_intents,
+        top_unresolved_questions=top_unresolved,
+    )
+
+
+def assign_conversation(db: Session, conversation: ChatbotConversation, actor: User, assigned_to: int | None) -> ChatbotConversation:
+    before = {"assigned_to": conversation.assigned_to, "escalation_status": conversation.escalation_status}
+    conversation.assigned_to = assigned_to
+    if assigned_to is not None and conversation.escalation_status in {"none", "ticket_required"}:
+        conversation.escalation_status = "human_queue"
+    _add_event(db, conversation, actor, "ticket.assigned" if before["assigned_to"] is None else "ticket.reassigned", before, {"assigned_to": assigned_to})
+    db.flush()
+    return conversation
+
+
+def update_conversation_severity(db: Session, conversation: ChatbotConversation, payload: ChatOperationSeverityUpdate, actor: User) -> ChatbotConversation:
+    before_severity = conversation.severity
+    if actor.role == "SUPPORT" and before_severity == "SEV-1" and SEVERITY_RANK[payload.severity] > SEVERITY_RANK[before_severity]:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="SUPPORT cannot downgrade SEV-1 without manager approval.")
+    conversation.severity = payload.severity
+    conversation.suggested_severity = conversation.suggested_severity or payload.severity
+    if payload.severity in HIGH_SEVERITIES:
+        conversation.escalation_status = "human_queue"
+        conversation.status = "escalated"
+    _add_event(
+        db,
+        conversation,
+        actor,
+        "ticket.severity_changed",
+        {"severity": before_severity},
+        {"severity": payload.severity},
+        note=payload.note,
+    )
+    db.flush()
+    return conversation
+
+
+def add_internal_note(db: Session, conversation: ChatbotConversation, payload: ChatOperationNoteCreate, actor: User) -> ChatbotInternalNote:
+    note = repository.add_internal_note(db, ChatbotInternalNote(conversation_id=conversation.id, author_id=actor.id, body=mask_sensitive_message(payload.body)))
+    _add_event(db, conversation, actor, "internal_note.created", None, {"note_id": note.id})
+    return note
+
+
+def mark_reviewed(db: Session, conversation: ChatbotConversation, actor: User) -> ChatbotConversation:
+    before = {"status": conversation.status, "reviewed_at": conversation.reviewed_at.isoformat() if conversation.reviewed_at else None}
+    conversation.reviewed_at = datetime.now(timezone.utc)
+    conversation.reviewed_by = actor.id
+    if conversation.status == "open":
+        conversation.status = "reviewed"
+    _add_event(db, conversation, actor, "conversation.reviewed", before, {"status": conversation.status, "reviewed_by": actor.id})
+    db.flush()
+    return conversation
+
+
+def escalate_conversation(db: Session, conversation: ChatbotConversation, actor: User) -> ChatbotConversation:
+    before = {"status": conversation.status, "escalation_status": conversation.escalation_status}
+    conversation.status = "escalated"
+    conversation.escalation_status = "human_queue"
+    if conversation.severity not in HIGH_SEVERITIES and conversation.severity == "SEV-4":
+        conversation.severity = "SEV-3"
+    _add_event(db, conversation, actor, "conversation.escalated", before, {"status": conversation.status, "escalation_status": conversation.escalation_status})
+    db.flush()
+    return conversation
+
+
+def create_ticket_from_conversation(
+    db: Session,
+    conversation: ChatbotConversation,
+    payload: ChatOperationTicketCreate,
+    actor: User,
+) -> SupportTicket:
+    from app.modules.admin import repository as admin_repository
+
+    latest_user_message = next((message for message in sorted(conversation.messages, key=lambda item: item.id, reverse=True) if message.sender_type == "user"), None)
+    priority = payload.priority or _priority_for_severity(conversation.severity)
+    title = payload.title or f"Chat {conversation.id} - {conversation.detected_intent or 'sin clasificar'}"
+    ticket = SupportTicket(
+        conversation_id=conversation.id,
+        ticket_number=None,
+        source="chatbot",
+        status="new" if conversation.severity not in HIGH_SEVERITIES else "escalated",
+        priority=priority,
+        severity=conversation.severity,
+        category="other",
+        title=title,
+        subject=title,
+        summary=payload.summary or conversation.classification_reason,
+        description=payload.summary or conversation.classification_reason,
+        customer_message_excerpt=latest_user_message.message_text_masked[:500] if latest_user_message else None,
+        assigned_to=payload.assigned_to,
+        created_by=actor.id,
+        sla_due_at=datetime.now(timezone.utc) + _sla_for_severity(conversation.severity),
+    )
+    admin_repository.create_support_ticket(db, ticket)
+    ticket.ticket_number = f"TK-{ticket.id:06d}"
+    conversation.linked_ticket_id = ticket.id
+    conversation.escalation_status = "human_queue" if conversation.severity in HIGH_SEVERITIES else "ticket_created"
+    _add_event(db, conversation, actor, "ticket.created", None, {"ticket_id": ticket.id, "severity": ticket.severity})
+    db.flush()
+    return ticket
+
+
+def mark_ticket_first_response(db: Session, ticket: SupportTicket, conversation: ChatbotConversation | None, actor: User) -> SupportTicket:
+    ticket.first_response_at = datetime.now(timezone.utc)
+    if ticket.status in {"new", "triaged", "escalated"}:
+        ticket.status = "assigned" if ticket.assigned_to else "triaged"
+    if conversation is not None:
+        _add_event(db, conversation, actor, "ticket.first_response_marked", None, {"ticket_id": ticket.id})
+    db.flush()
+    return ticket
+
+
+def update_chat_ticket_status(db: Session, ticket: SupportTicket, conversation: ChatbotConversation | None, actor: User, target_status: str, note: str | None) -> SupportTicket:
+    before = {"status": ticket.status}
+    if target_status in {"resolved", "closed"} and not note:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Resolution note is required.")
+    ticket.status = target_status
+    now = datetime.now(timezone.utc)
+    if target_status == "resolved":
+        ticket.resolved_at = now
+    if target_status == "closed":
+        ticket.closed_at = now
+    if target_status == "reopened":
+        ticket.reopened_at = now
+        ticket.closed_at = None
+        ticket.resolved_at = None
+    if conversation is not None:
+        _add_event(db, conversation, actor, f"ticket.{target_status}", before, {"status": target_status, "ticket_id": ticket.id}, note=note)
+    db.flush()
+    return ticket
+
+
 def get_or_404(item, detail: str):
     if item is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
@@ -231,6 +473,48 @@ def audit_admin_chatbot_action(
         user_agent=context.user_agent,
     )
     db.commit()
+
+
+def _add_event(
+    db: Session,
+    conversation: ChatbotConversation,
+    actor: User,
+    event_type: str,
+    before: dict | None,
+    after: dict | None,
+    note: str | None = None,
+) -> None:
+    repository.add_conversation_event(
+        db,
+        ChatbotConversationEvent(
+            conversation_id=conversation.id,
+            event_type=event_type,
+            actor_id=actor.id,
+            before_json=before,
+            after_json=after,
+            note=mask_sensitive_message(note) if note else None,
+        ),
+    )
+
+
+def _priority_for_severity(severity: str) -> str:
+    return {
+        "SEV-1": "urgent",
+        "SEV-2": "high",
+        "SEV-3": "medium",
+        "SEV-4": "low",
+        "SEV-5": "low",
+    }.get(severity, "medium")
+
+
+def _sla_for_severity(severity: str) -> timedelta:
+    return {
+        "SEV-1": timedelta(minutes=30),
+        "SEV-2": timedelta(hours=2),
+        "SEV-3": timedelta(hours=8),
+        "SEV-4": timedelta(days=2),
+        "SEV-5": timedelta(days=5),
+    }.get(severity, timedelta(hours=8))
 
 
 def _audit_public(db: Session, request: Request, event_type: str, conversation_id: int, metadata: dict | None = None) -> None:

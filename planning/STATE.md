@@ -451,3 +451,33 @@ Operating status:
 Next recommended phase:
 
 Phase 10X.2 - Chatbot Content Governance & Landing Visual Validation, focused on approved FAQ content, production support routing policy, analytics/privacy review, browser screenshot validation, and rate-limiting middleware if selected.
+
+## Phase 10X.2 - CRM Chat Operations Console & Human Escalation
+
+Current phase: Phase 10X.2 - CRM Chat Operations Console & Human Escalation.
+
+Status: implemented for internal CRM/admin operations.
+
+Implemented:
+
+- CRM topbar now includes theme toggle, notification bell, environment selector, `DEV / SANDBOX` pill, role pill, and `Salir`.
+- Non-production DEV AUTH warning banner appears below the topbar and can be hidden.
+- `Bot de Landing` remains in the existing sidebar position between `Disputas` and `Conciliacion tarjeta`.
+- `Chat console` was not restored to the sidebar.
+- Internal `#/chat-operations` route provides chat metrics, filters, conversation queue, transcript, severity, ticket link, notes, and audit timeline.
+- Backend deterministic classifier stores detected intent, suggested severity, classification reason, and escalation state.
+- `SEV-1` and `SEV-2` conversations require human review and are routed to ticket-required/human queue states.
+- Chat-origin support ticket fields were added for source, severity, SLA, first response, resolution, reopen, and conversation linkage.
+- Backend Chat Operations endpoints are RBAC-protected and audited.
+- Tests cover high-severity public classification, admin ticket creation from chat, and blocked SUPPORT severity downgrade.
+
+Operating status:
+
+- Public chatbot remains informational and does not query private customer, payment, receipt, balance, OTP, card, account, provider, ledger, or admin data.
+- No Meta, WhatsApp Cloud API, Twilio, third-party chat widget, or WhatsApp Web extension was introduced.
+- No core payment, Prontipagos, ledger, transaction state, reconciliation, or settlement logic was changed.
+- The console is operational but live browser screenshot validation should still be performed against a running local backend/admin stack.
+
+Next recommended phase:
+
+Phase 10X.3 - Chat Operations QA & Content Governance, focused on seeded chatbot content, browser visual validation against the CRM design reference, SLA policy tuning, and production support-channel approval.

@@ -1151,3 +1151,51 @@ Decision: Dispute evidence stores metadata and private/internal references only,
 Rationale: Evidence can contain sensitive operational or customer context and must not leak through public URLs, logs, or docs.
 
 Status: Accepted.
+
+## ADR-144 - CRM Chat Operations Console is the internal chatbot escalation console
+
+Decision: The CRM Chat Operations Console is the official internal console for monitoring chatbot conversations, managing escalations, and routing high-severity cases to human support.
+
+Rationale: Bot response configuration and human support operations are different workflows and require separate permissions, auditability, and UI surfaces.
+
+Status: Accepted.
+
+## ADR-145 - SEV-1 and SEV-2 chat cases require human review
+
+Decision: `SEV-1` and `SEV-2` chatbot-origin cases must always require human review and must not be automatically closed by AI.
+
+Rationale: Fraud, data exposure, payment trust, receipt, and money-loss concerns can harm users if resolved by autonomous logic.
+
+Status: Accepted.
+
+## ADR-146 - Bot de Landing remains configuration and metrics only
+
+Decision: `Bot de Landing` remains focused on identity, welcome message, prompt, guided responses, knowledge base, metrics, and model health. Ticket operations and human escalation belong to Chat Operations, Tickets, or Human Queue.
+
+Rationale: Mixing configuration with support execution would obscure accountability and increase operational risk.
+
+Status: Accepted.
+
+## ADR-147 - Public chatbot remains informational and non-private
+
+Decision: The public chatbot remains informational and routing-oriented and must not access private payment, transaction, receipt, balance, OTP, card, account, or customer data.
+
+Rationale: The landing page is public and unauthenticated. Private support must happen through authenticated app/support flows.
+
+Status: Accepted.
+
+## ADR-148 - Chat console is not restored to sidebar
+
+Decision: Chat console must not be restored to the CRM sidebar unless explicitly approved; navigation must respect the current CRM structure.
+
+Rationale: The approved module structure keeps `Bot de Landing` visible and avoids adding an unapproved sidebar module.
+
+Status: Accepted.
+
+## ADR-149 - DEV AUTH banner is non-production only by default
+
+Decision: The DEV AUTH banner must be visible in internal non-production environments and must not be shown in production unless explicitly enabled by configuration.
+
+Rationale: Internal dev warnings prevent production confusion while avoiding false production warnings.
+
+Status: Accepted.

@@ -57,7 +57,7 @@ def dashboard_summary(db: Session) -> DashboardSummary:
         .scalar()
         or 0,
         support_tickets_open_count=db.query(func.count(SupportTicket.id))
-        .filter(SupportTicket.status.in_(["open", "pending"]))
+        .filter(SupportTicket.status.in_(["open", "pending", "new", "triaged", "assigned", "waiting_customer", "waiting_internal_review", "escalated", "reopened"]))
         .scalar()
         or 0,
         card_reconciliation_status="not_implemented",
@@ -117,7 +117,11 @@ def receipt_detail(db: Session, receipt: Receipt, role: str) -> AdminReceiptDeta
 
 def create_ticket(db: Session, payload: SupportTicketCreate, actor: User) -> SupportTicket:
     ticket = SupportTicket(**payload.model_dump(), created_by=actor.id)
-    return repository.create_support_ticket(db, ticket)
+    ticket = repository.create_support_ticket(db, ticket)
+    if ticket.ticket_number is None:
+        ticket.ticket_number = f"TK-{ticket.id:06d}"
+        db.flush()
+    return ticket
 
 
 def update_ticket(db: Session, ticket: SupportTicket, payload: SupportTicketUpdate, actor: User) -> SupportTicket:
@@ -130,8 +134,15 @@ def update_ticket(db: Session, ticket: SupportTicket, payload: SupportTicketUpda
         )
     for field, value in changes.items():
         setattr(ticket, field, value)
-    if ticket.status == "closed":
+    if ticket.status == "resolved":
+        ticket.resolved_at = datetime.now(timezone.utc)
+        ticket.closed_at = None
+    elif ticket.status == "closed":
         ticket.closed_at = datetime.now(timezone.utc)
+    elif ticket.status == "reopened":
+        ticket.reopened_at = datetime.now(timezone.utc)
+        ticket.closed_at = None
+        ticket.resolved_at = None
     elif "status" in changes:
         ticket.closed_at = None
     if _has_resolution_text(resolution_note):

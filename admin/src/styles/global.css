@@ -21,6 +21,25 @@
   text-rendering: optimizeLegibility;
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #09111f;
+  --surface: #111c2e;
+  --surface-muted: #17243a;
+  --text: #edf4ff;
+  --muted: #a8b5c8;
+  --border: #293853;
+  --accent: #5cb8ff;
+  --success: #7ee2a8;
+  --success-bg: #103d2a;
+  --warning: #f4c95d;
+  --warning-bg: #3c2d0b;
+  --danger: #ff9a92;
+  --danger-bg: #4a1715;
+  --info: #9bc7ff;
+  --info-bg: #132b4d;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -132,13 +151,15 @@ small {
   border-bottom: 1px solid var(--border);
   display: flex;
   justify-content: space-between;
-  min-height: 76px;
-  padding: 16px clamp(18px, 3vw, 34px);
+  min-height: 60px;
+  padding: 10px clamp(18px, 3vw, 34px);
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
-.topbar > div:first-child {
-  display: grid;
-  gap: 3px;
+:root[data-theme="dark"] .topbar {
+  background: rgba(17, 28, 46, 0.96);
 }
 
 .topbar-actions {
@@ -146,6 +167,67 @@ small {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.topbar-search {
+  min-width: min(420px, 38vw);
+}
+
+.icon-button {
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  cursor: pointer;
+  display: inline-flex;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.bell-button {
+  position: relative;
+}
+
+.bell-button::after {
+  background: #ef4444;
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  content: "";
+  height: 8px;
+  position: absolute;
+  right: 7px;
+  top: 7px;
+  width: 8px;
+}
+
+.environment-select {
+  min-height: 36px;
+  padding: 7px 9px;
+}
+
+.dev-auth-banner {
+  align-items: center;
+  background: #ffd84d;
+  border-bottom: 1px solid #d6a900;
+  color: #302300;
+  display: flex;
+  font-size: 13px;
+  font-weight: 800;
+  gap: 14px;
+  justify-content: space-between;
+  min-height: 38px;
+  padding: 8px clamp(18px, 3vw, 34px);
+}
+
+.dev-auth-banner button {
+  background: transparent;
+  border: 0;
+  color: #302300;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 900;
 }
 
 .environment-pill,
@@ -169,7 +251,7 @@ small {
 }
 
 main {
-  padding: clamp(18px, 3vw, 34px);
+  padding: 26px clamp(18px, 3vw, 34px) 60px;
 }
 
 .page {
@@ -408,6 +490,11 @@ textarea {
   color: var(--text);
 }
 
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .button-link {
   white-space: nowrap;
 }
@@ -474,6 +561,116 @@ textarea {
   display: grid;
   gap: 12px;
   min-height: 260px;
+}
+
+.chat-ops-page .stats-grid {
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+}
+
+.metric-danger {
+  border-color: #ffb4ac;
+}
+
+.metric-warning {
+  border-color: #f4d889;
+}
+
+.chat-ops-filters {
+  align-items: end;
+}
+
+.chat-ops-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: minmax(240px, 0.82fr) minmax(360px, 1.5fr) minmax(280px, 0.95fr);
+  min-height: 620px;
+}
+
+.chat-ops-list,
+.chat-ops-context {
+  align-content: start;
+  display: grid;
+  gap: 12px;
+}
+
+.queue-item {
+  background: var(--surface-muted);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--text);
+  cursor: pointer;
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+  text-align: left;
+}
+
+.queue-item.active {
+  background: var(--info-bg);
+  border-color: var(--accent);
+}
+
+.queue-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chat-ops-thread {
+  display: grid;
+  gap: 14px;
+  grid-template-rows: auto minmax(260px, 1fr) auto;
+}
+
+.thread-header {
+  align-items: start;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 12px;
+}
+
+.thread-messages {
+  align-content: start;
+  display: grid;
+  gap: 10px;
+  max-height: 480px;
+  overflow: auto;
+}
+
+.thread-message {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  max-width: 78%;
+  padding: 12px;
+}
+
+.thread-message p {
+  color: var(--text);
+  margin: 7px 0;
+}
+
+.thread-message.user {
+  justify-self: end;
+  background: var(--info-bg);
+}
+
+.thread-message.bot,
+.thread-message.system {
+  justify-self: start;
+  background: var(--surface-muted);
+}
+
+.internal-note-box,
+.action-stack,
+.severity-grid,
+.audit-mini-list {
+  display: grid;
+  gap: 10px;
+}
+
+.severity-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .login-shell {

@@ -130,3 +130,22 @@ Rules:
 - `FINANCE` may view masked chatbot context for operational risk review but cannot manage bot responses.
 - `AUDITOR` is read-only and cannot review/resolve fallbacks.
 - Only `ADMIN` and `SUPER_ADMIN` can manage FAQs, intents, knowledge entries, and settings.
+
+## Phase 10X.2 Chat Operations Permissions
+
+| Permission | SUPPORT | FINANCE | ADMIN | AUDITOR | SUPER_ADMIN |
+|---|---|---|---|---|---|
+| `admin.chat_ops.view` | yes | yes | yes | yes | yes |
+| `admin.chat_ops.assign` | yes | no | yes | no | yes |
+| `admin.chat_ops.notes.create` | yes | no | yes | no | yes |
+| `admin.chat_ops.first_response` | yes | no | yes | no | yes |
+| `admin.chat_ops.manage` | no | no | yes | no | yes |
+| `admin.chat_ops.severity.override` | no | no | yes | no | yes |
+
+Rules:
+
+- `SUPPORT` maps to the support-agent role. It can view the queue, assign to self, add notes, and mark first response.
+- `ADMIN` and `SUPER_ADMIN` map to manager/admin roles and can create tickets, escalate, resolve/close/reopen chat-origin tickets, and override severity.
+- `FINANCE` and `AUDITOR` are read-only for Chat Operations in this phase.
+- `SUPPORT` cannot downgrade `SEV-1` without manager/admin approval.
+- `SEV-1` and `SEV-2` require human review and cannot be auto-closed by AI.

@@ -20,6 +20,10 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.chatbot.view",
     "admin.chatbot.conversations.view",
     "admin.chatbot.fallbacks.review",
+    "admin.chat_ops.view",
+    "admin.chat_ops.assign",
+    "admin.chat_ops.notes.create",
+    "admin.chat_ops.first_response",
   ],
   FINANCE: [
     "admin.dashboard.view",
@@ -45,6 +49,7 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.chatbot.view",
     "admin.chatbot.conversations.view",
     "admin.chatbot.fallbacks.review",
+    "admin.chat_ops.view",
   ],
   ADMIN: [
     "admin.dashboard.view",
@@ -75,6 +80,12 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.chatbot.settings.manage",
     "admin.chatbot.conversations.view",
     "admin.chatbot.fallbacks.review",
+    "admin.chat_ops.view",
+    "admin.chat_ops.manage",
+    "admin.chat_ops.assign",
+    "admin.chat_ops.severity.override",
+    "admin.chat_ops.notes.create",
+    "admin.chat_ops.first_response",
   ],
   AUDITOR: [
     "admin.dashboard.view",
@@ -97,6 +108,7 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.support_tickets.list",
     "admin.chatbot.view",
     "admin.chatbot.conversations.view",
+    "admin.chat_ops.view",
   ],
   SUPER_ADMIN: [
     "admin.dashboard.view",
@@ -127,6 +139,12 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.chatbot.settings.manage",
     "admin.chatbot.conversations.view",
     "admin.chatbot.fallbacks.review",
+    "admin.chat_ops.view",
+    "admin.chat_ops.manage",
+    "admin.chat_ops.assign",
+    "admin.chat_ops.severity.override",
+    "admin.chat_ops.notes.create",
+    "admin.chat_ops.first_response",
   ],
 };
 

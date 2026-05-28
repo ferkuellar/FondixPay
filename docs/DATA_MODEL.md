@@ -1002,3 +1002,58 @@ Rules:
 - Raw private customer/payment/account state is not queried or stored by the public chatbot.
 - Admin response configuration is RBAC-protected and audited.
 - AI provider configuration keys are not stored in the database; they are read from environment variables if approved.
+
+## Phase 10X.2 Chat Operations Data Model
+
+Migration: `backend/alembic/versions/20260528_0010_phase_10x2_chat_operations.py`.
+
+Extended `chatbot_conversations`:
+
+- `severity`
+- `suggested_severity`
+- `classification_reason`
+- `ai_suggested_severity`
+- `linked_ticket_id`
+- `assigned_to`
+- `escalation_status`
+- `reviewed_at`
+- `reviewed_by`
+
+New `chatbot_conversation_events`:
+
+- `id`
+- `conversation_id`
+- `event_type`
+- `actor_id`
+- `before_json`
+- `after_json`
+- `note`
+- `created_at`
+
+New `chatbot_internal_notes`:
+
+- `id`
+- `conversation_id`
+- `author_id`
+- `body`
+- `created_at`
+
+Extended `support_tickets` for chat-origin cases:
+
+- `conversation_id`
+- `ticket_number`
+- `source`
+- `severity`
+- `title`
+- `summary`
+- `customer_message_excerpt`
+- `sla_due_at`
+- `first_response_at`
+- `resolved_at`
+- `reopened_at`
+
+Rules:
+
+- `SEV-1` and `SEV-2` represent human-review-required chat cases.
+- Chat-origin tickets use `source=chatbot`.
+- Notes and excerpts store masked text and must not contain raw sensitive values.

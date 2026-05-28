@@ -797,3 +797,25 @@ Implemented chatbot events:
 - `chatbot.fallback.created`
 
 Admin events include actor id, role, permission, entity type, entity id, result, and safe before/after metadata when applicable. Public chatbot events use `actor_type=SYSTEM` and store only masked/safe metadata. Chatbot audit metadata must not include raw user messages, PAN, CVV, OTPs, emails, full phone numbers, secrets, API keys, access tokens, raw provider payloads, or customer-specific payment evidence.
+
+## Phase 10X.2 Chat Operations Audit Events
+
+Implemented or recorded in the conversation event timeline:
+
+- `conversation.created`
+- `conversation.classified`
+- `conversation.escalated`
+- `ticket.created`
+- `ticket.assigned`
+- `ticket.reassigned`
+- `ticket.severity_changed`
+- `ticket.status_changed`
+- `ticket.first_response_marked`
+- `ticket.resolved`
+- `ticket.closed`
+- `ticket.reopened`
+- `internal_note.created`
+- `classifier.suggestion_created`
+- `human_override.created`
+
+Global admin audit events are emitted for privileged API actions through the existing audit writer. Conversation-local event records preserve before/after state, actor, note, and timestamp for operational timeline review. Metadata must remain safe and redacted.

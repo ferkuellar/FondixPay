@@ -1,0 +1,260 @@
+/* ============================================================
+   FONDIX PAY — Design Tokens
+   Single source of truth for color + typography.
+   ------------------------------------------------------------
+   Import once in any HTML doc:
+     <link rel="stylesheet" href="colors_and_type.css" />
+   Fonts are loaded from Google Fonts (Sora + Azeret Mono).
+============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;700&display=swap');
+
+/* ============================================================
+   Bricolage Grotesque — wired from local /fonts/
+   Variable font covers all weights/widths; static faces below
+   are progressive-enhancement fallbacks for older engines.
+============================================================ */
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  font-weight: 200 800;
+  font-stretch: 75% 100%;
+  font-style: normal;
+  font-display: swap;
+  src: url('fonts/BricolageGrotesque-VariableFont_opsz_wdth_wght.ttf') format('truetype-variations'),
+       url('fonts/BricolageGrotesque-VariableFont_opsz_wdth_wght.ttf') format('truetype');
+}
+
+/* Static Default-width fallbacks */
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 200; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque-ExtraLight.ttf') format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 300; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque-Light.ttf')      format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 400; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque-Regular.ttf')    format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 500; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque-Medium.ttf')     format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 600; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque-SemiBold.ttf')   format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 700; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque-Bold.ttf')       format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque'; font-weight: 800; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque-ExtraBold.ttf')  format('truetype'); }
+
+/* Condensed sub-family — for display headlines that need extra punch */
+@font-face { font-family: 'Bricolage Grotesque Condensed'; font-weight: 200; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque_Condensed-ExtraLight.ttf') format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque Condensed'; font-weight: 300; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque_Condensed-Light.ttf')      format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque Condensed'; font-weight: 400; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque_Condensed-Regular.ttf')    format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque Condensed'; font-weight: 500; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque_Condensed-Medium.ttf')     format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque Condensed'; font-weight: 600; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque_Condensed-SemiBold.ttf')   format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque Condensed'; font-weight: 700; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque_Condensed-Bold.ttf')       format('truetype'); }
+@font-face { font-family: 'Bricolage Grotesque Condensed'; font-weight: 800; font-style: normal; font-display: swap; src: url('fonts/BricolageGrotesque_Condensed-ExtraBold.ttf')  format('truetype'); }
+
+:root {
+  /* ───────── Brand / Surfaces (dark) ───────── */
+  --navy-900:        #0A1628;  /* primary bg — app, web dark mode */
+  --navy-800:        #0F1E36;  /* sunken surfaces, footer */
+  --navy-700:        #142848;  /* elevated card */
+  --navy-600:        #1B335A;  /* hovered card / divider */
+  --navy-500:        #25426F;  /* border on dark bg */
+
+  /* ───────── Brand / Surfaces (light) ───────── */
+  --paper:           #FFFFFF;  /* success screens, onboarding */
+  --paper-tint:      #F4F8FF;  /* soft white card on light bg */
+  --paper-border:    #E2EAF4;  /* hairline on light bg */
+
+  /* ───────── Brand blues ───────── */
+  --blue-50:         #E8F2FF;
+  --blue-100:        #C9DEFF;
+  --blue-300:        #5CB8FF;  /* gradient start */
+  --blue-500:        #3B9BFF;  /* button gradient start */
+  --blue-600:        #1565E8;  /* primary brand */
+  --blue-700:        #0D4FBF;  /* pressed */
+  --blue-800:        #093E96;
+
+  --gradient-icon:   linear-gradient(135deg, #5CB8FF 0%, #1565E8 100%);
+  --gradient-btn:    linear-gradient(135deg, #3B9BFF 0%, #1565E8 100%);
+  --gradient-btn-hover: linear-gradient(135deg, #5CB8FF 0%, #0D4FBF 100%);
+
+  /* ───────── Text ───────── */
+  --fg-1:            #E2EAF4;  /* primary text on dark */
+  --fg-2:            #7A95B8;  /* secondary / muted on dark */
+  --fg-3:            #4E6788;  /* tertiary / placeholder */
+  --fg-on-light-1:   #0A1628;  /* primary text on white */
+  --fg-on-light-2:   #4E6788;  /* secondary on white */
+  --fg-on-blue:      #FFFFFF;  /* text on primary buttons */
+
+  /* ───────── Category colors (NEVER reassign) ───────── */
+  --cat-energia:     #F59E0B;  /* ⚡  CFE / Energía */
+  --cat-wifi:        #22C55E;  /* 📶  Internet */
+  --cat-agua:        #0EA5E9;  /* 💧  Agua */
+  --cat-telefonia:   #7C3AED;  /* 📱  Telcel / TAE */
+  --cat-gas:         #F97316;  /* 🔥  Gas */
+  --cat-streaming:   #EC4899;  /* ▶   Netflix etc. */
+  --cat-gobierno:    #10B981;  /* 🏛   Predial / Tesorería */
+
+  /* tinted backgrounds for category chips (10% on navy) */
+  --cat-energia-bg:    rgba(245, 158, 11, 0.14);
+  --cat-wifi-bg:       rgba(34, 197, 94, 0.14);
+  --cat-agua-bg:       rgba(14, 165, 233, 0.14);
+  --cat-telefonia-bg:  rgba(124, 58, 237, 0.14);
+  --cat-gas-bg:        rgba(249, 115, 22, 0.14);
+  --cat-streaming-bg:  rgba(236, 72, 153, 0.14);
+  --cat-gobierno-bg:   rgba(16, 185, 129, 0.14);
+
+  /* ───────── Map coverage (D3 quantize) ───────── */
+  --map-c1: #E6F1FB;
+  --map-c2: #B5D4F4;
+  --map-c3: #6EA8DC;
+  --map-c4: #378ADD;
+  --map-c5: #185FA5;
+  --map-c6: #0C447C;
+  --map-c7: #042C53;
+  --map-teal: #00C7A0;   /* high-coverage accent */
+
+  /* ───────── Status ───────── */
+  --status-success:  #22C55E;
+  --status-warn:     #F59E0B;
+  --status-danger:   #EF4444;
+  --status-info:     #5CB8FF;
+
+  /* ───────── Type — families ───────── */
+  --font-display:    'Bricolage Grotesque', system-ui, sans-serif;
+  --font-display-cd: 'Bricolage Grotesque Condensed', 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body:       'Bricolage Grotesque', system-ui, sans-serif;
+  --font-mono:       'Azeret Mono', ui-monospace, monospace;  /* amounts + data */
+
+  /* ───────── Type — weights ───────── */
+  --w-light:   300;
+  --w-regular: 400;
+  --w-medium:  500;
+  --w-semi:    600;
+  --w-bold:    700;
+
+  /* ───────── Type — sizes (mobile-first; 375 base) ───────── */
+  --t-display-1: 40px;  /* hero numerals "$1,247" */
+  --t-display-2: 32px;  /* H1 onboarding */
+  --t-h1:        26px;
+  --t-h2:        22px;
+  --t-h3:        18px;
+  --t-body:      15px;
+  --t-body-sm:   13px;
+  --t-caption:   12px;
+  --t-micro:     11px;
+
+  /* ───────── Spacing scale ───────── */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  20px;
+  --s-6:  24px;
+  --s-7:  32px;
+  --s-8:  40px;
+  --s-9:  56px;
+  --s-10: 72px;
+
+  /* ───────── Radii ───────── */
+  --r-xs:   6px;
+  --r-sm:   10px;
+  --r-btn:  14px;   /* spec: buttons */
+  --r-card: 16px;   /* spec: cards */
+  --r-lg:   20px;
+  --r-xl:   28px;
+  --r-pill: 999px;
+
+  /* ───────── Shadows ───────── */
+  --sh-card:    0 4px 16px rgba(5, 12, 28, 0.32);              /* on navy */
+  --sh-card-lt: 0 8px 28px rgba(21, 101, 232, 0.10);           /* on white */
+  --sh-btn:     0 8px 22px rgba(21, 101, 232, 0.45),
+                inset 0 1px 0 rgba(255,255,255,0.20);
+  --sh-btn-press: 0 2px 6px rgba(21, 101, 232, 0.55);
+  --sh-mascot:  0 24px 60px rgba(21, 101, 232, 0.25);
+  --sh-bubble:  0 6px 14px rgba(10, 22, 40, 0.10);
+
+  /* ───────── Motion ───────── */
+  --ease-out:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast:   140ms;
+  --t-base:   220ms;
+  --t-slow:   420ms;
+}
+
+/* ============================================================
+   Base / Reset — opt-in by adding `class="fpay"` on <body>
+============================================================ */
+.fpay {
+  background: var(--navy-900);
+  color: var(--fg-1);
+  font-family: var(--font-body);
+  font-weight: var(--w-regular);
+  font-size: var(--t-body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.fpay.light {
+  background: var(--paper);
+  color: var(--fg-on-light-1);
+}
+
+/* ───────── Semantic type roles ───────── */
+.fpay h1, .fpay .h1 {
+  font-family: var(--font-display);
+  font-weight: var(--w-bold);
+  font-size: var(--t-h1);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.fpay h2, .fpay .h2 {
+  font-family: var(--font-display);
+  font-weight: var(--w-semi);
+  font-size: var(--t-h2);
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin: 0;
+}
+.fpay h3, .fpay .h3 {
+  font-family: var(--font-display);
+  font-weight: var(--w-semi);
+  font-size: var(--t-h3);
+  line-height: 1.3;
+  margin: 0;
+}
+.fpay .display-1 {
+  font-family: var(--font-mono);   /* numerals → Azeret Mono */
+  font-weight: var(--w-bold);
+  font-size: var(--t-display-1);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.fpay .display-2 {
+  font-family: var(--font-display);
+  font-weight: var(--w-bold);
+  font-size: var(--t-display-2);
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+.fpay p, .fpay .body {
+  font-size: var(--t-body);
+  line-height: 1.55;
+  margin: 0;
+}
+.fpay .caption {
+  font-size: var(--t-caption);
+  color: var(--fg-2);
+  letter-spacing: 0.01em;
+}
+.fpay .micro {
+  font-size: var(--t-micro);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+  font-weight: var(--w-medium);
+}
+.fpay .mono,
+.fpay .amount {
+  font-family: var(--font-mono);
+  font-weight: var(--w-bold);
+  font-variant-numeric: tabular-nums;
+}
+.fpay .muted { color: var(--fg-2); }
+.fpay .brand-grad {
+  background: var(--gradient-icon);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

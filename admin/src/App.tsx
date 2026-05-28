@@ -15,6 +15,7 @@ import {
   ChatbotKnowledgePage,
   ChatbotSettingsPage,
 } from "./pages/ChatbotPages";
+import { ChatOperationsPage } from "./pages/ChatOperationsPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DisputeDetailPage } from "./pages/DisputeDetailPage";
 import { DisputesPage } from "./pages/DisputesPage";
@@ -95,6 +96,7 @@ export function App() {
       {path === "/chatbot/conversations" ? <RequirePermission permission="admin.chatbot.conversations.view"><ChatbotConversationsPage /></RequirePermission> : null}
       {chatbotConversationId ? <RequirePermission permission="admin.chatbot.conversations.view"><ChatbotConversationDetailPage id={chatbotConversationId} /></RequirePermission> : null}
       {path === "/chatbot/fallbacks" ? <RequirePermission permission="admin.chatbot.fallbacks.review"><ChatbotFallbacksPage /></RequirePermission> : null}
+      {path === "/chat-operations" ? <RequirePermission permission="admin.chat_ops.view"><ChatOperationsPage /></RequirePermission> : null}
       {path === "/reconciliation/card" ? <RequirePermission permission="admin.reconciliation.card.view"><CardReconciliationPage /></RequirePermission> : null}
       {path === "/reconciliation/prontipagos" ? <RequirePermission permission="admin.reconciliation.prontipagos.view"><ProntipagosReconciliationPage /></RequirePermission> : null}
       {path === "/audit-logs" ? <RequirePermission permission="admin.audit.list"><AuditLogsPage /></RequirePermission> : null}
@@ -116,6 +118,7 @@ export function App() {
         "/chatbot/settings",
         "/chatbot/conversations",
         "/chatbot/fallbacks",
+        "/chat-operations",
         "/reconciliation/card",
         "/reconciliation/prontipagos",
         "/audit-logs",

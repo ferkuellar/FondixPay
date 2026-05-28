@@ -25,7 +25,7 @@ class Settings(BaseSettings):
     otp_dev_code: str = "123456"
     otp_dev_response_enabled: bool = True
     app_env: AppEnv = "development"
-    cors_origins: str = "http://localhost:19006,http://localhost:8081"
+    cors_origins: str = "http://localhost:19006,http://localhost:8081,http://localhost:4173,http://127.0.0.1:4173"
     fondix_fee_minor: int = 750
     card_processor_provider: str = "mock"
     card_processor_env: str = "sandbox"

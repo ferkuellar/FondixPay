@@ -3,9 +3,11 @@ from sqlalchemy.orm import Session
 
 from app.modules.chatbot.models import (
     ChatbotConversation,
+    ChatbotConversationEvent,
     ChatbotFallback,
     ChatbotFaq,
     ChatbotIntent,
+    ChatbotInternalNote,
     ChatbotKnowledgeEntry,
     ChatbotMessage,
     ChatbotSetting,
@@ -114,12 +116,56 @@ def add_fallback(db: Session, fallback: ChatbotFallback) -> ChatbotFallback:
     return fallback
 
 
-def list_conversations(db: Session, *, limit: int, offset: int) -> list[ChatbotConversation]:
-    return db.query(ChatbotConversation).order_by(ChatbotConversation.last_message_at.desc()).offset(offset).limit(limit).all()
+def list_conversations(
+    db: Session,
+    *,
+    limit: int,
+    offset: int,
+    status: str | None = None,
+    severity: str | None = None,
+    source: str | None = None,
+    assigned_to: int | None = None,
+    has_ticket: bool | None = None,
+    escalated: bool | None = None,
+    q: str | None = None,
+) -> list[ChatbotConversation]:
+    query = db.query(ChatbotConversation)
+    if status:
+        query = query.filter(ChatbotConversation.status == status)
+    if severity:
+        query = query.filter(ChatbotConversation.severity == severity)
+    if source:
+        query = query.filter(ChatbotConversation.source == source)
+    if assigned_to is not None:
+        query = query.filter(ChatbotConversation.assigned_to == assigned_to)
+    if has_ticket is True:
+        query = query.filter(ChatbotConversation.linked_ticket_id.is_not(None))
+    elif has_ticket is False:
+        query = query.filter(ChatbotConversation.linked_ticket_id.is_(None))
+    if escalated is True:
+        query = query.filter(ChatbotConversation.escalation_status.in_(["human_queue", "ticket_required", "escalated"]))
+    elif escalated is False:
+        query = query.filter(ChatbotConversation.escalation_status == "none")
+    if q:
+        like = f"%{q}%"
+        query = query.filter(or_(ChatbotConversation.session_id.contains(q), ChatbotConversation.detected_intent.like(like)))
+    return query.order_by(ChatbotConversation.last_message_at.desc()).offset(offset).limit(limit).all()
 
 
 def get_conversation(db: Session, item_id: int) -> ChatbotConversation | None:
     return db.query(ChatbotConversation).filter(ChatbotConversation.id == item_id).one_or_none()
+
+
+def add_conversation_event(db: Session, event: ChatbotConversationEvent) -> ChatbotConversationEvent:
+    db.add(event)
+    db.flush()
+    return event
+
+
+def add_internal_note(db: Session, note: ChatbotInternalNote) -> ChatbotInternalNote:
+    db.add(note)
+    db.flush()
+    return note
 
 
 def list_fallbacks(db: Session, *, reviewed: bool | None, limit: int, offset: int) -> list[ChatbotFallback]:

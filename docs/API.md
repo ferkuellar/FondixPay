@@ -816,3 +816,27 @@ Rules:
 - Public chatbot cannot query private payment, receipt, balance, customer, transaction, OTP, card, or account data.
 - FAQ/rule-only mode works when no AI provider is configured.
 - Admin responses and conversation logs are internal and RBAC-protected.
+
+## Phase 10X.2 Chat Operations APIs
+
+Status: implemented as internal CRM/Admin operational APIs. They are authenticated, RBAC-protected, and do not expose public ticket internals.
+
+| Endpoint | Purpose | Permission |
+|---|---|---|
+| `GET /admin/chat/operations/metrics` | Chat operations metrics: conversations, escalations, tickets, SLA, fallback, intents. | `admin.chat_ops.view` |
+| `GET /admin/chat/operations/conversations` | Search/filter operational conversation queue by status, severity, source, assignment, ticket, escalation, and query. | `admin.chat_ops.view` |
+| `GET /admin/chat/operations/conversations/{id}` | View one conversation with masked messages, classification, notes, and events. | `admin.chat_ops.view` |
+| `POST /admin/chat/operations/conversations/{id}/ticket` | Create a chat-origin support ticket. | `admin.chat_ops.manage` |
+| `POST /admin/chat/operations/conversations/{id}/escalate` | Route a conversation to the human queue. | `admin.chat_ops.manage` |
+| `POST /admin/chat/operations/conversations/{id}/assign` | Assign a conversation to the current admin or supplied agent. | `admin.chat_ops.assign` |
+| `POST /admin/chat/operations/conversations/{id}/severity` | Manually override conversation severity. | `admin.chat_ops.severity.override` |
+| `POST /admin/chat/operations/conversations/{id}/notes` | Add an internal masked note. | `admin.chat_ops.notes.create` |
+| `POST /admin/chat/operations/conversations/{id}/review` | Mark a conversation reviewed. | `admin.chat_ops.manage` |
+| `POST /admin/chat/operations/tickets/{ticket_id}/first-response` | Mark first human response timestamp. | `admin.chat_ops.first_response` |
+| `POST /admin/chat/operations/tickets/{ticket_id}/{resolved|closed|reopened}` | Move chat-origin ticket through terminal/reopen states with required note. | `admin.chat_ops.manage` |
+
+Rules:
+
+- `SEV-1` and `SEV-2` conversations must require ticket/human review and must not be auto-closed by AI.
+- Public chatbot responses continue to use safe routing and do not reveal ticket, customer, payment, receipt, balance, or transaction internals.
+- Admin operation audit events are emitted with actor, role, permission, entity, result, and safe metadata.

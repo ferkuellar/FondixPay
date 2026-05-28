@@ -3,8 +3,16 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.modules.admin.dependencies import require_admin_permission
+from app.modules.admin.models import SupportTicket
+from app.modules.admin.schemas import SupportTicketRead
 from app.modules.chatbot import repository, services
 from app.modules.chatbot.schemas import (
+    ChatOperationAssign,
+    ChatOperationNoteCreate,
+    ChatOperationSeverityUpdate,
+    ChatOperationTicketCreate,
+    ChatOperationTicketStatusUpdate,
+    ChatOperationsMetrics,
     ChatbotConversationRead,
     ChatbotFallbackRead,
     ChatbotFaqCreate,
@@ -163,6 +171,169 @@ def list_conversations(limit: int = Query(default=50, ge=1, le=200), offset: int
 def get_conversation(item_id: int, current_user: User = Depends(require_admin_permission("admin.chatbot.conversations.view")), db: Session = Depends(get_db)) -> ChatbotConversationRead:
     item = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
     return ChatbotConversationRead.model_validate(item, from_attributes=True)
+
+
+@admin_router.get("/operations/metrics", response_model=ChatOperationsMetrics)
+def get_chat_operations_metrics(
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.view")),
+    db: Session = Depends(get_db),
+) -> ChatOperationsMetrics:
+    return services.chat_operations_metrics(db)
+
+
+@admin_router.get("/operations/conversations", response_model=list[ChatbotConversationRead])
+def list_chat_operations_conversations(
+    status_value: str | None = Query(default=None, alias="status"),
+    severity: str | None = None,
+    source: str | None = None,
+    assigned_to: int | None = None,
+    has_ticket: bool | None = None,
+    escalated: bool | None = None,
+    q: str | None = None,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.view")),
+    db: Session = Depends(get_db),
+) -> list[ChatbotConversationRead]:
+    return [
+        ChatbotConversationRead.model_validate(item, from_attributes=True)
+        for item in repository.list_conversations(
+            db,
+            limit=limit,
+            offset=offset,
+            status=status_value,
+            severity=severity,
+            source=source,
+            assigned_to=assigned_to,
+            has_ticket=has_ticket,
+            escalated=escalated,
+            q=q,
+        )
+    ]
+
+
+@admin_router.get("/operations/conversations/{item_id}", response_model=ChatbotConversationRead)
+def get_chat_operations_conversation(
+    item_id: int,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.view")),
+    db: Session = Depends(get_db),
+) -> ChatbotConversationRead:
+    item = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
+    return ChatbotConversationRead.model_validate(item, from_attributes=True)
+
+
+@admin_router.post("/operations/conversations/{item_id}/ticket", response_model=SupportTicketRead, status_code=status.HTTP_201_CREATED)
+def create_ticket_from_conversation(
+    item_id: int,
+    payload: ChatOperationTicketCreate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.manage")),
+    db: Session = Depends(get_db),
+) -> SupportTicketRead:
+    conversation = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
+    ticket = services.create_ticket_from_conversation(db, conversation, payload, current_user)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="ticket.created", permission="admin.chat_ops.manage", entity_type="SupportTicket", entity_id=ticket.id)
+    return SupportTicketRead.model_validate(ticket, from_attributes=True)
+
+
+@admin_router.post("/operations/conversations/{item_id}/escalate", response_model=ChatbotConversationRead)
+def escalate_conversation(
+    item_id: int,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.manage")),
+    db: Session = Depends(get_db),
+) -> ChatbotConversationRead:
+    conversation = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
+    conversation = services.escalate_conversation(db, conversation, current_user)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="conversation.escalated", permission="admin.chat_ops.manage", entity_type="ChatbotConversation", entity_id=conversation.id)
+    return ChatbotConversationRead.model_validate(conversation, from_attributes=True)
+
+
+@admin_router.post("/operations/conversations/{item_id}/assign", response_model=ChatbotConversationRead)
+def assign_conversation(
+    item_id: int,
+    payload: ChatOperationAssign,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.assign")),
+    db: Session = Depends(get_db),
+) -> ChatbotConversationRead:
+    conversation = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
+    conversation = services.assign_conversation(db, conversation, current_user, payload.assigned_to or current_user.id)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="ticket.assigned", permission="admin.chat_ops.assign", entity_type="ChatbotConversation", entity_id=conversation.id)
+    return ChatbotConversationRead.model_validate(conversation, from_attributes=True)
+
+
+@admin_router.post("/operations/conversations/{item_id}/severity", response_model=ChatbotConversationRead)
+def update_conversation_severity(
+    item_id: int,
+    payload: ChatOperationSeverityUpdate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.severity.override")),
+    db: Session = Depends(get_db),
+) -> ChatbotConversationRead:
+    conversation = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
+    conversation = services.update_conversation_severity(db, conversation, payload, current_user)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="human_override.created", permission="admin.chat_ops.severity.override", entity_type="ChatbotConversation", entity_id=conversation.id, metadata={"severity": conversation.severity})
+    return ChatbotConversationRead.model_validate(conversation, from_attributes=True)
+
+
+@admin_router.post("/operations/conversations/{item_id}/notes", response_model=ChatbotConversationRead)
+def add_conversation_note(
+    item_id: int,
+    payload: ChatOperationNoteCreate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.notes.create")),
+    db: Session = Depends(get_db),
+) -> ChatbotConversationRead:
+    conversation = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
+    services.add_internal_note(db, conversation, payload, current_user)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="internal_note.created", permission="admin.chat_ops.notes.create", entity_type="ChatbotConversation", entity_id=conversation.id)
+    return ChatbotConversationRead.model_validate(conversation, from_attributes=True)
+
+
+@admin_router.post("/operations/conversations/{item_id}/review", response_model=ChatbotConversationRead)
+def mark_conversation_reviewed(
+    item_id: int,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.manage")),
+    db: Session = Depends(get_db),
+) -> ChatbotConversationRead:
+    conversation = services.get_or_404(repository.get_conversation(db, item_id), "Conversacion no encontrada")
+    conversation = services.mark_reviewed(db, conversation, current_user)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="conversation.reviewed", permission="admin.chat_ops.manage", entity_type="ChatbotConversation", entity_id=conversation.id)
+    return ChatbotConversationRead.model_validate(conversation, from_attributes=True)
+
+
+@admin_router.post("/operations/tickets/{ticket_id}/first-response", response_model=SupportTicketRead)
+def mark_ticket_first_response(
+    ticket_id: int,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.first_response")),
+    db: Session = Depends(get_db),
+) -> SupportTicketRead:
+    ticket = services.get_or_404(db.query(SupportTicket).filter(SupportTicket.id == ticket_id).one_or_none(), "Ticket no encontrado")
+    conversation = repository.get_conversation(db, ticket.conversation_id) if ticket.conversation_id else None
+    ticket = services.mark_ticket_first_response(db, ticket, conversation, current_user)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="ticket.first_response_marked", permission="admin.chat_ops.first_response", entity_type="SupportTicket", entity_id=ticket.id)
+    return SupportTicketRead.model_validate(ticket, from_attributes=True)
+
+
+@admin_router.post("/operations/tickets/{ticket_id}/{target_status}", response_model=SupportTicketRead)
+def update_chat_ticket_status(
+    ticket_id: int,
+    target_status: str,
+    payload: ChatOperationTicketStatusUpdate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.chat_ops.manage")),
+    db: Session = Depends(get_db),
+) -> SupportTicketRead:
+    if target_status not in {"resolved", "closed", "reopened"}:
+        services.get_or_404(None, "Estado no soportado")
+    ticket = services.get_or_404(db.query(SupportTicket).filter(SupportTicket.id == ticket_id).one_or_none(), "Ticket no encontrado")
+    conversation = repository.get_conversation(db, ticket.conversation_id) if ticket.conversation_id else None
+    ticket = services.update_chat_ticket_status(db, ticket, conversation, current_user, target_status, payload.note)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type=f"ticket.{target_status}", permission="admin.chat_ops.manage", entity_type="SupportTicket", entity_id=ticket.id)
+    return SupportTicketRead.model_validate(ticket, from_attributes=True)
 
 
 @admin_router.get("/fallbacks", response_model=list[ChatbotFallbackRead])

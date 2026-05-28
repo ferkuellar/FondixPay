@@ -11,6 +11,7 @@ import type {
   ChatbotIntent,
   ChatbotKnowledgeEntry,
   ChatbotSetting,
+  ChatOperationsMetrics,
   DashboardSummary,
   DisputeCase,
   FraudSignal,
@@ -163,5 +164,32 @@ export function createAdminClient(getToken: TokenProvider) {
     chatbotSettings: () => request<ChatbotSetting[]>("/admin/chat/settings"),
     updateChatbotSetting: (key: string, value: Record<string, unknown>) =>
       request<ChatbotSetting>(`/admin/chat/settings/${key}`, { method: "PATCH", body: JSON.stringify({ value }) }),
+    chatOperationsMetrics: () => request<ChatOperationsMetrics>("/admin/chat/operations/metrics"),
+    chatOperationsConversations: (params: {
+      status?: string;
+      severity?: string;
+      source?: string;
+      assigned_to?: string;
+      has_ticket?: string;
+      escalated?: string;
+      q?: string;
+    }) => request<ChatbotConversation[]>(`/admin/chat/operations/conversations${query(params)}`),
+    chatOperationsConversation: (id: string) => request<ChatbotConversation>(`/admin/chat/operations/conversations/${id}`),
+    createChatOperationsTicket: (id: string, payload: { title?: string; summary?: string; priority?: string; assigned_to?: number | null }) =>
+      request<SupportTicket>(`/admin/chat/operations/conversations/${id}/ticket`, { method: "POST", body: JSON.stringify(payload) }),
+    escalateChatConversation: (id: string) =>
+      request<ChatbotConversation>(`/admin/chat/operations/conversations/${id}/escalate`, { method: "POST" }),
+    assignChatConversation: (id: string, assigned_to?: number | null) =>
+      request<ChatbotConversation>(`/admin/chat/operations/conversations/${id}/assign`, { method: "POST", body: JSON.stringify({ assigned_to }) }),
+    updateChatConversationSeverity: (id: string, payload: { severity: string; note?: string }) =>
+      request<ChatbotConversation>(`/admin/chat/operations/conversations/${id}/severity`, { method: "POST", body: JSON.stringify(payload) }),
+    addChatConversationNote: (id: string, body: string) =>
+      request<ChatbotConversation>(`/admin/chat/operations/conversations/${id}/notes`, { method: "POST", body: JSON.stringify({ body }) }),
+    reviewChatConversation: (id: string) =>
+      request<ChatbotConversation>(`/admin/chat/operations/conversations/${id}/review`, { method: "POST" }),
+    markChatTicketFirstResponse: (ticketId: number) =>
+      request<SupportTicket>(`/admin/chat/operations/tickets/${ticketId}/first-response`, { method: "POST" }),
+    updateChatTicketStatus: (ticketId: number, targetStatus: "resolved" | "closed" | "reopened", note: string) =>
+      request<SupportTicket>(`/admin/chat/operations/tickets/${ticketId}/${targetStatus}`, { method: "POST", body: JSON.stringify({ note }) }),
   };
 }

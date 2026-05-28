@@ -421,3 +421,15 @@ Open production risks:
 | Public endpoint abuse could create storage or support-review noise. | SEV-2 | open | Message length validation exists; rate limiting should be added when middleware is selected. |
 | AI provider output could drift if enabled later. | SEV-2 | open | Current implementation works without AI provider; future AI integration requires provider-specific guardrails, evaluation, and logging policy. |
 | Landing visual regression could occur during future edits. | SEV-2 | open | Approved design is documented; manual browser/screenshot validation is required after landing UI changes. |
+
+## Phase 10X.2 Chat Operations Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| SEV-1/SEV-2 chat cases could be under-triaged. | SEV-1 | mitigated/ongoing | Deterministic classifier marks high-risk payment/fraud/receipt concerns and routes them to human review. |
+| AI could be used to close sensitive cases prematurely. | SEV-1 | mitigated | No AI closure path exists; docs and code require human review for `SEV-1`/`SEV-2`. |
+| Support notes could contain sensitive data. | SEV-1 | mitigated/ongoing | Notes are masked before storage and docs prohibit PAN, CVV, OTPs, secrets, raw provider payloads, and raw provider errors. |
+| Chat Operations could expose payment/customer internals to the public chatbot. | SEV-1 | mitigated | Public chatbot does not receive ticket internals and still cannot query private payment, receipt, balance, account, or transaction data. |
+| `Bot de Landing` could become an overloaded support desk. | SEV-2 | mitigated | `Bot de Landing` remains config/metrics; Chat Operations owns ticket and escalation workflows. |
+| Sidebar navigation could drift from approved CRM module structure. | SEV-2 | mitigated | Chat Operations is reachable internally but `Chat console` was not restored to the sidebar. |
+| Deterministic classification false positives/negatives. | SEV-2 | open | Classifier is explainable and manual override is available for authorized roles. Future tuning should use reviewed outcomes. |

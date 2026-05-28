@@ -30,7 +30,13 @@ export type Permission =
   | "admin.chatbot.manage"
   | "admin.chatbot.settings.manage"
   | "admin.chatbot.conversations.view"
-  | "admin.chatbot.fallbacks.review";
+  | "admin.chatbot.fallbacks.review"
+  | "admin.chat_ops.view"
+  | "admin.chat_ops.manage"
+  | "admin.chat_ops.assign"
+  | "admin.chat_ops.severity.override"
+  | "admin.chat_ops.notes.create"
+  | "admin.chat_ops.first_response";
 
 export type RequestState<T> = {
   data: T | null;
@@ -119,10 +125,27 @@ export type SupportTicket = {
   user_id?: number | null;
   payment_id?: number | null;
   receipt_id?: number | null;
+  conversation_id?: number | null;
   manual_review_case_id?: number | null;
   correlation_id?: string | null;
-  status: "open" | "pending" | "waiting_user" | "waiting_internal" | "resolved" | "closed";
+  ticket_number?: string | null;
+  source?: string | null;
+  status:
+    | "open"
+    | "pending"
+    | "waiting_user"
+    | "waiting_internal"
+    | "resolved"
+    | "closed"
+    | "new"
+    | "triaged"
+    | "assigned"
+    | "waiting_customer"
+    | "waiting_internal_review"
+    | "escalated"
+    | "reopened";
   priority: "low" | "medium" | "high" | "urgent";
+  severity?: "SEV-1" | "SEV-2" | "SEV-3" | "SEV-4" | "SEV-5";
   category:
     | "payment_failed"
     | "payment_pending"
@@ -134,12 +157,19 @@ export type SupportTicket = {
     | "card_issue"
     | "other";
   subject: string;
+  title?: string | null;
+  summary?: string | null;
+  customer_message_excerpt?: string | null;
   description?: string | null;
   assigned_to?: number | null;
   created_by: number;
+  sla_due_at?: string | null;
+  first_response_at?: string | null;
+  resolved_at?: string | null;
   created_at: string;
   updated_at: string;
   closed_at?: string | null;
+  reopened_at?: string | null;
   notes: SupportTicketNote[];
 };
 
@@ -354,11 +384,28 @@ export type ChatbotSetting = {
 
 export type ChatbotMessage = {
   id: number;
-  conversation_id: string;
+  conversation_id?: string;
   sender_type: "user" | "bot" | "system";
   message_text_masked: string;
   raw_message_stored: boolean;
   classification?: string | null;
+  created_at: string;
+};
+
+export type ChatbotConversationEvent = {
+  id: number;
+  event_type: string;
+  actor_id?: number | null;
+  before_json?: Record<string, unknown> | null;
+  after_json?: Record<string, unknown> | null;
+  note?: string | null;
+  created_at: string;
+};
+
+export type ChatbotInternalNote = {
+  id: number;
+  author_id: number;
+  body: string;
   created_at: string;
 };
 
@@ -372,9 +419,20 @@ export type ChatbotConversation = {
   status: string;
   detected_intent?: string | null;
   confidence?: string | null;
+  severity?: "SEV-1" | "SEV-2" | "SEV-3" | "SEV-4" | "SEV-5";
+  suggested_severity?: string | null;
+  classification_reason?: string | null;
+  ai_suggested_severity?: string | null;
+  linked_ticket_id?: number | null;
+  assigned_to?: number | null;
+  escalation_status?: string;
+  reviewed_at?: string | null;
+  reviewed_by?: number | null;
   created_at: string;
   updated_at: string;
   messages?: ChatbotMessage[];
+  events?: ChatbotConversationEvent[];
+  internal_notes?: ChatbotInternalNote[];
 };
 
 export type ChatbotFallback = {
@@ -385,4 +443,23 @@ export type ChatbotFallback = {
   reason: string;
   reviewed: boolean;
   created_at: string;
+};
+
+export type ChatOperationsMetrics = {
+  total_conversations: number;
+  active_conversations: number;
+  bot_resolved_conversations: number;
+  human_escalated_conversations: number;
+  tickets_created: number;
+  assigned_tickets: number;
+  unassigned_tickets: number;
+  sla_breached_tickets: number;
+  fallback_rate: number;
+  average_first_response_minutes?: number | null;
+  average_resolution_minutes?: number | null;
+  csat_average?: number | null;
+  tickets_by_severity: Record<string, number>;
+  tickets_by_status: Record<string, number>;
+  top_intents: Array<Record<string, unknown>>;
+  top_unresolved_questions: Array<Record<string, unknown>>;
 };

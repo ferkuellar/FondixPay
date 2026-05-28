@@ -3,7 +3,21 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-SupportTicketStatus = Literal["open", "pending", "waiting_user", "waiting_internal", "resolved", "closed"]
+SupportTicketStatus = Literal[
+    "open",
+    "pending",
+    "waiting_user",
+    "waiting_internal",
+    "resolved",
+    "closed",
+    "new",
+    "triaged",
+    "assigned",
+    "waiting_customer",
+    "waiting_internal_review",
+    "escalated",
+    "reopened",
+]
 SupportTicketPriority = Literal["low", "medium", "high", "urgent"]
 SupportTicketCategory = Literal[
     "payment_failed",
@@ -187,23 +201,37 @@ class SupportTicketCreate(BaseModel):
     user_id: int | None = None
     payment_id: int | None = None
     receipt_id: int | None = None
+    conversation_id: int | None = None
     manual_review_case_id: int | None = None
     correlation_id: str | None = Field(default=None, max_length=120)
+    ticket_number: str | None = Field(default=None, max_length=40)
+    source: str = Field(default="admin", max_length=40)
     priority: SupportTicketPriority = "medium"
+    severity: str = Field(default="SEV-3", pattern=r"^SEV-[1-5]$")
     category: SupportTicketCategory = "other"
+    title: str | None = Field(default=None, max_length=180)
+    summary: str | None = Field(default=None, max_length=4000)
+    customer_message_excerpt: str | None = Field(default=None, max_length=4000)
     subject: str = Field(min_length=3, max_length=180)
     description: str | None = Field(default=None, max_length=4000)
     assigned_to: int | None = None
+    sla_due_at: datetime | None = None
 
 
 class SupportTicketUpdate(BaseModel):
     status: SupportTicketStatus | None = None
     priority: SupportTicketPriority | None = None
+    severity: str | None = Field(default=None, pattern=r"^SEV-[1-5]$")
+    title: str | None = Field(default=None, min_length=3, max_length=180)
+    summary: str | None = Field(default=None, max_length=4000)
+    customer_message_excerpt: str | None = Field(default=None, max_length=4000)
     subject: str | None = Field(default=None, min_length=3, max_length=180)
     description: str | None = Field(default=None, max_length=4000)
     assigned_to: int | None = None
     manual_review_case_id: int | None = None
     correlation_id: str | None = Field(default=None, max_length=120)
+    sla_due_at: datetime | None = None
+    first_response_at: datetime | None = None
     resolution_note: str | None = Field(default=None, max_length=4000)
 
 
@@ -227,18 +255,29 @@ class SupportTicketRead(BaseModel):
     user_id: int | None = None
     payment_id: int | None = None
     receipt_id: int | None = None
+    conversation_id: int | None = None
     manual_review_case_id: int | None = None
     correlation_id: str | None = None
+    ticket_number: str | None = None
+    source: str = "admin"
     status: str
     priority: str
+    severity: str = "SEV-3"
     category: str
+    title: str | None = None
+    summary: str | None = None
+    customer_message_excerpt: str | None = None
     subject: str
     description: str | None = None
     assigned_to: int | None = None
     created_by: int
+    sla_due_at: datetime | None = None
+    first_response_at: datetime | None = None
+    resolved_at: datetime | None = None
     created_at: datetime
     updated_at: datetime
     closed_at: datetime | None = None
+    reopened_at: datetime | None = None
     notes: list[SupportTicketNoteRead] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}

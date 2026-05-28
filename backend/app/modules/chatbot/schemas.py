@@ -3,6 +3,9 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 
+ChatSeverity = str
+
+
 class PublicChatRequest(BaseModel):
     message: str = Field(min_length=1, max_length=500)
     sessionId: str = Field(min_length=8, max_length=120)
@@ -133,6 +136,27 @@ class ChatbotMessageRead(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class ChatbotConversationEventRead(BaseModel):
+    id: int
+    event_type: str
+    actor_id: int | None = None
+    before_json: dict | None = None
+    after_json: dict | None = None
+    note: str | None = None
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ChatbotInternalNoteRead(BaseModel):
+    id: int
+    author_id: int
+    body: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 class ChatbotConversationRead(BaseModel):
     id: int
     session_id: str
@@ -143,7 +167,18 @@ class ChatbotConversationRead(BaseModel):
     status: str
     detected_intent: str | None = None
     confidence: str | None = None
+    severity: str = "SEV-4"
+    suggested_severity: str | None = None
+    classification_reason: str | None = None
+    ai_suggested_severity: str | None = None
+    linked_ticket_id: int | None = None
+    assigned_to: int | None = None
+    escalation_status: str = "none"
+    reviewed_at: datetime | None = None
+    reviewed_by: int | None = None
     messages: list[ChatbotMessageRead] = Field(default_factory=list)
+    events: list[ChatbotConversationEventRead] = Field(default_factory=list)
+    internal_notes: list[ChatbotInternalNoteRead] = Field(default_factory=list)
 
     model_config = {"from_attributes": True}
 
@@ -158,3 +193,46 @@ class ChatbotFallbackRead(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class ChatOperationsMetrics(BaseModel):
+    total_conversations: int
+    active_conversations: int
+    bot_resolved_conversations: int
+    human_escalated_conversations: int
+    tickets_created: int
+    assigned_tickets: int
+    unassigned_tickets: int
+    sla_breached_tickets: int
+    fallback_rate: float
+    average_first_response_minutes: float | None = None
+    average_resolution_minutes: float | None = None
+    csat_average: float | None = None
+    tickets_by_severity: dict[str, int] = Field(default_factory=dict)
+    tickets_by_status: dict[str, int] = Field(default_factory=dict)
+    top_intents: list[dict] = Field(default_factory=list)
+    top_unresolved_questions: list[dict] = Field(default_factory=list)
+
+
+class ChatOperationAssign(BaseModel):
+    assigned_to: int | None = None
+
+
+class ChatOperationSeverityUpdate(BaseModel):
+    severity: str = Field(pattern=r"^SEV-[1-5]$")
+    note: str | None = Field(default=None, max_length=1000)
+
+
+class ChatOperationNoteCreate(BaseModel):
+    body: str = Field(min_length=1, max_length=4000)
+
+
+class ChatOperationTicketCreate(BaseModel):
+    title: str | None = Field(default=None, min_length=3, max_length=180)
+    summary: str | None = Field(default=None, max_length=4000)
+    priority: str | None = Field(default=None, max_length=40)
+    assigned_to: int | None = None
+
+
+class ChatOperationTicketStatusUpdate(BaseModel):
+    note: str | None = Field(default=None, max_length=4000)
