@@ -373,3 +373,13 @@ Open production risks:
 - Webhook signature verification is scaffolded by configuration only, not implemented.
 - Delivery monitoring, retry policy, opt-out compliance, and incident runbook need a future phase.
 - Legal/privacy approval is required before real user messaging.
+
+## Phase AWS-2 Dev/Staging Deployment Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| AWS credentials are not configured, blocking plan/apply validation against a live account. | SEV-2 | open | Configure credentials for a confirmed non-production account, run `aws sts get-caller-identity`, then rerun `terraform plan`. |
+| Staging is implied by phase name but not implemented in Terraform. | SEV-2 | open | Treat AWS-2 as dev-only until an approved sprint adds `infra/terraform/environments/staging`. |
+| Public subnet dev compute could be overexposed if enabled with broad CIDRs. | SEV-1 | mitigated by default | Keep `enable_compute=false`; if enabled, restrict SSH/backend CIDRs and do not use `0.0.0.0/0`. |
+| AWS Budgets do not stop spend. | SEV-2 | open | Monitor budget alerts and manually destroy unused dev resources after testing. |
+| Terraform apply could target the wrong AWS account if identity is not checked. | SEV-1 | open | Require `aws sts get-caller-identity`, account review, plan review, and explicit approval before apply. |

@@ -338,3 +338,32 @@ Also updated:
 - Ensured a safe `Tarjeta demo` exists for local mock payment confirmation.
 
 Production status remains blocked. No real payment provider, Prontipagos integration, card processor, or money movement was added.
+
+## Phase AWS-2 - Dev/Staging Deployment
+
+Current phase: Phase AWS-2 - Dev/Staging Deployment.
+
+Status: completed as plan-only validation and documentation; live AWS deployment is blocked by missing AWS credentials.
+
+Validated:
+
+- AWS-1 Terraform foundation reviewed.
+- Repository hygiene checked for Terraform runtime artifacts.
+- `.gitignore` already excludes `.terraform/`, `*.tfstate`, `*.tfvars`, `tfplan`, and `*.tfplan`.
+- `terraform fmt -recursive` passed.
+- `terraform init` passed for `infra/terraform/environments/dev` and `infra/terraform/backend`.
+- `terraform validate` passed for `infra/terraform/environments/dev` and `infra/terraform/backend`.
+- `aws sts get-caller-identity` failed with missing credentials.
+- `terraform plan` failed with `No valid credential sources found`.
+- `terraform apply` was intentionally skipped.
+
+Operating status:
+
+- Current Terraform implementation supports `dev` only.
+- Staging is not implemented yet because `environment` is restricted to `dev`.
+- No production resources were deployed.
+- No real payments, real Prontipagos connectivity, card processor, production secrets, or application payment logic were changed.
+
+Next recommended phase:
+
+AWS-2B - Dev Apply With Confirmed AWS Account, after configuring credentials for a confirmed non-production AWS account and reviewing a successful plan.

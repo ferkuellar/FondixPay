@@ -127,3 +127,24 @@ Avoided:
 
 This is not production infrastructure. Real payments, Prontipagos, card processing, production secrets, and commercial launch remain blocked.
 
+## AWS-2 Validation Status
+
+AWS-2 validated the current dev Terraform foundation as a plan-only workflow.
+
+Validated:
+
+- `terraform fmt -recursive`
+- `terraform init` in `environments/dev`
+- `terraform init` in `backend`
+- `terraform validate` in `environments/dev`
+- `terraform validate` in `backend`
+
+Blocked:
+
+- `terraform plan` requires AWS credentials for a confirmed non-production account.
+- `terraform apply` must not run until plan is reviewed and explicitly approved.
+
+Current environment support:
+
+- `dev` is implemented.
+- `staging` is not implemented yet. The dev variables currently validate `environment = "dev"` only.

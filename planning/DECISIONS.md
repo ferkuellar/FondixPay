@@ -1031,3 +1031,19 @@ Rationale: The internal ledger/audit/receipt evidence remains the source of trut
 Decision: `NotificationPreference` defaults to disabled and requires user opt-in for `whatsapp/payment_receipt`.
 
 Rationale: WhatsApp is an external messaging channel and must not send payment receipts without consent.
+
+## ADR-134 - AWS-2 remains dev-only until staging Terraform exists
+
+Decision: Phase AWS-2 may validate and document the current non-production Terraform workflow, but the only implemented environment is `dev`. Staging must not be claimed as deployed until an approved sprint adds a dedicated staging environment under `infra/terraform/environments/staging`.
+
+Rationale: The AWS-1 Terraform code validates `environment = "dev"` only. Treating dev infrastructure as staging would blur environment boundaries and increase operational risk.
+
+Status: Accepted.
+
+## ADR-135 - Terraform apply requires confirmed non-production identity and explicit approval
+
+Decision: Terraform `apply` for AWS-2 must not run until AWS credentials are configured, `aws sts get-caller-identity` confirms a non-production account, `terraform plan` succeeds, the plan is reviewed, and explicit human approval is given.
+
+Rationale: Infrastructure changes can create cost, exposure, or production-impact risk if account, region, environment, or destructive changes are not reviewed first.
+
+Status: Accepted.

@@ -640,3 +640,37 @@ Configuration:
 Operational rule: leave `WHATSAPP_ENABLE_RECEIPT_MVP=false` unless the environment is intentionally testing the mock channel. Production remains blocked without approved provider contracts, Meta template approval, webhook validation, monitoring, and privacy review.
 
 Admin can inspect delivery status at `/admin/notifications/deliveries`; this is evidence only and must not be used to change financial status.
+
+## AWS-2 Dev/Staging Deployment Operations
+
+AWS-2 validates non-production Terraform operations only. The current Terraform implementation supports `dev`; staging remains a future approved environment.
+
+Operational workflow:
+
+1. Confirm AWS identity with `aws sts get-caller-identity`.
+2. Confirm the account is non-production.
+3. Run `terraform fmt -recursive`.
+4. Run `terraform init`.
+5. Run `terraform validate`.
+6. Run `terraform plan`.
+7. Review account, region, tags, cost, public exposure, and destructive changes.
+8. Run `terraform apply` only after explicit human approval.
+
+Current AWS-2 result:
+
+- `fmt`, `init`, and `validate` passed.
+- `plan` is blocked by missing AWS credentials.
+- `apply` was intentionally skipped.
+
+Rollback/destruction:
+
+- Run `terraform plan -destroy` before any destroy.
+- Run `terraform destroy` only after explicit human approval.
+- Confirm account, region, and `Environment = dev` before destructive action.
+
+Cost guardrails:
+
+- `enable_compute=false` by default.
+- No NAT Gateway, Load Balancer, RDS, ECS, EKS, or WAF.
+- Budget alerts are required.
+- Budgets alert but do not stop spend.

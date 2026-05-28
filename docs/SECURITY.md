@@ -382,3 +382,29 @@ The landing may include public placeholders for future app store, terms, privacy
 - Provider is mock by default; production provider credentials must stay in secret storage, never in repo.
 - WhatsApp failure is isolated from payment, receipt, proof, ledger, and internal audit state.
 - Admin delivery views are RBAC-protected and show masked destination only.
+
+## AWS-2 Dev/Staging Deployment Security
+
+AWS-2 does not deploy production systems. The current Terraform code supports dev only.
+
+Security controls reviewed:
+
+- Terraform state backend uses S3 encryption, S3 public access block, versioning, and DynamoDB locking.
+- Dev artifacts bucket blocks public access and uses server-side encryption.
+- Optional EC2 compute is disabled by default.
+- Optional EC2 requires IMDSv2 and encrypted root volume.
+- SSH and backend ingress default to empty CIDR lists.
+- Common tags identify project, environment, owner, Terraform management, and cost control.
+
+Security blockers:
+
+- AWS credentials are not configured, so live account, IAM permissions, and actual region could not be confirmed.
+- No production secrets management is implemented.
+- Public subnet compute is acceptable only for controlled dev/mock validation.
+- Staging is not implemented and must not be inferred from dev infrastructure.
+
+Rules:
+
+- Do not commit `terraform.tfvars`, state files, plans, providers, or credentials.
+- Do not store secrets, PAN, CVV, card tokens, provider credentials, or raw provider payloads in S3 artifacts.
+- Do not run `terraform apply` until plan is reviewed and explicitly approved.

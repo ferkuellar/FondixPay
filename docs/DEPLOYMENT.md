@@ -58,3 +58,19 @@ Key current variables:
 - Mobile build profiles.
 - Android/iOS release process.
 - Rollback plan.
+
+## AWS Dev Deployment
+
+The AWS Terraform foundation lives under `infra/terraform/`.
+
+Current AWS deployment status:
+
+- Dev Terraform foundation exists.
+- Terraform format/init/validate pass for dev and backend bootstrap.
+- Terraform plan is blocked until AWS credentials for a confirmed non-production account are configured.
+- Terraform apply has not been run.
+- No production AWS deployment exists.
+
+Detailed workflow: [AWS_DEV_STAGING_DEPLOYMENT.md](AWS_DEV_STAGING_DEPLOYMENT.md).
+
+Production-sensitive systems, real payments, production Prontipagos connectivity, production secrets, and production databases remain out of scope.
