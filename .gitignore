@@ -31,3 +31,14 @@ crash.log
 crash.*.log
 *.tfvars
 *.tfvars.json
+
+# Terraform local/runtime files
+**/.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+tfplan
+*.tfplan
+crash.log
+crash.*.log
