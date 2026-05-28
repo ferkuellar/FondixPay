@@ -842,12 +842,6 @@ Unless a separate written agreement states otherwise:
 * Any third-party libraries, frameworks, SDKs, APIs, fonts, icons, illustrations, payment processors, cloud services, or provider integrations remain subject to their own licenses, contracts, terms of service, and commercial restrictions.
 * Credentials, secrets, API keys, payment tokens, service-provider agreements, and customer data are confidential and must never be committed to the repository or shared outside approved operational channels.
 
-### Commercial Use
-
-This repository is intended for controlled development, validation, and future commercial operation of FONDIX PAY.
-
-Production use requires prior completion of the required security, legal, compliance, payment, reconciliation, privacy, support, and operational readiness gates documented in this repository.
-
 ### Client / Vendor Delivery Terms
 
 Before external delivery, onboarding of vendors, investor review, production deployment, or handoff to a third-party engineering team, the following must be confirmed in writing:
@@ -863,28 +857,7 @@ Before external delivery, onboarding of vendors, investor review, production dep
 * Production operation responsibilities
 * Termination and handoff conditions
 
-### Current License Status
-
-```txt
-Private / Proprietary
-Not open source
-All rights reserved
-Final legal terms pending formal review
-```
-
-### Recommended Final Notice
-
-```txt
-Copyright © 2026 FONDIX PAY.
-All rights reserved.
-
-This software, documentation, designs, workflows, and related materials are proprietary and confidential. Unauthorized copying, distribution, modification, public disclosure, or commercial use is strictly prohibited without prior written authorization from the project owner.
-```
-
-
 ---
-
-Reemplaza la sección **Maintainer Notes** por esta versión más profesional y con mejor tono operativo:
 
 ## Maintainer Notes
 
@@ -927,9 +900,20 @@ Before adding real payment behavior, make sure the rails exist:
 
 ### Final Standard
 
-```txt
 Build the rails before driving the train.
-```
 
 FONDIX PAY should be built as a controlled financial operations platform, not as a demo that accidentally became production.
+
+Copyright © 2026 FONDIX PAY.
+All rights reserved.
+
+This software, documentation, designs, workflows, and related materials are proprietary and confidential. Unauthorized copying, distribution, modification, public disclosure, or commercial use is strictly prohibited without prior written authorization from the project owner.
+
+### Current License Status
+
+Private / Proprietary
+Not open source
+All rights reserved
+Final legal terms pending formal review
+
 
