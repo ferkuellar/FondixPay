@@ -1079,3 +1079,35 @@ Decision: CI/CD may validate the static landing folder, but Vercel deployment is
 Rationale: The public landing page is a different risk class than backend, CRM/Admin, payment, ledger, provider, and reconciliation workloads.
 
 Status: Accepted.
+
+## ADR-140 - Fraud readiness is manual review only
+
+Decision: Phase 11 fraud readiness stores explainable fraud signals for authorized human review and does not automatically block users, refund payments, close accounts, or change payment state.
+
+Rationale: Fraud false positives can harm users and create operational/legal risk. The safe Phase 11 goal is evidence and review.
+
+Status: Accepted.
+
+## ADR-141 - Chargeback readiness is internal evidence management only
+
+Decision: Dispute and chargeback cases in Phase 11 are internal records with evidence metadata. They do not submit responses to card networks, card processors, or Prontipagos.
+
+Rationale: External dispute submission requires provider contracts, legal review, evidence rules, deadlines, and production approval.
+
+Status: Accepted.
+
+## ADR-142 - Fraud and dispute admin operations require RBAC and audit
+
+Decision: Fraud signal and dispute/chargeback operations require explicit backend permissions and emit audit events for mutations.
+
+Rationale: Sensitive investigation workflows must be traceable and cannot rely on frontend-only controls.
+
+Status: Accepted.
+
+## ADR-143 - Evidence references are private metadata
+
+Decision: Dispute evidence stores metadata and private/internal references only, not public files or raw provider/card payloads.
+
+Rationale: Evidence can contain sensitive operational or customer context and must not leak through public URLs, logs, or docs.
+
+Status: Accepted.

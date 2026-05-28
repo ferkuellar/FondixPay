@@ -22,6 +22,13 @@ from app.modules.admin.schemas import (
     AdminUserDetail,
     AdminUserListItem,
     DashboardSummary,
+    DisputeCaseCreate,
+    DisputeCaseRead,
+    DisputeCaseUpdate,
+    DisputeEvidenceCreate,
+    FraudSignalCreate,
+    FraudSignalRead,
+    FraudSignalUpdate,
     ManualReviewCaseCreate,
     ManualReviewCaseRead,
     ManualReviewCaseUpdate,
@@ -386,6 +393,194 @@ def update_manual_review(
         case.correlation_id,
     )
     return ManualReviewCaseRead.model_validate(case, from_attributes=True)
+
+
+@router.get("/fraud/signals", response_model=list[FraudSignalRead])
+def list_fraud_signals(
+    status_filter: str | None = Query(default=None, alias="status"),
+    severity: str | None = None,
+    payment_id: int | None = None,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    current_user: User = Depends(require_admin_permission("admin.fraud_signals.list")),
+    db: Session = Depends(get_db),
+) -> list[FraudSignalRead]:
+    return [
+        FraudSignalRead.model_validate(signal, from_attributes=True)
+        for signal in repository.list_fraud_signals(
+            db,
+            status=status_filter,
+            severity=severity,
+            payment_id=payment_id,
+            limit=limit,
+            offset=offset,
+        )
+    ]
+
+
+@router.get("/fraud/signals/{signal_id}", response_model=FraudSignalRead)
+def get_fraud_signal(
+    signal_id: int,
+    current_user: User = Depends(require_admin_permission("admin.fraud_signals.view")),
+    db: Session = Depends(get_db),
+) -> FraudSignalRead:
+    signal = services.get_or_404(repository.get_fraud_signal(db, signal_id), "Senal de fraude no encontrada")
+    return FraudSignalRead.model_validate(signal, from_attributes=True)
+
+
+@router.post("/fraud/signals", response_model=FraudSignalRead, status_code=status.HTTP_201_CREATED)
+def create_fraud_signal(
+    payload: FraudSignalCreate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.fraud_signals.update")),
+    db: Session = Depends(get_db),
+) -> FraudSignalRead:
+    signal = services.create_fraud_signal(db, payload, current_user)
+    _audit(
+        db,
+        request,
+        current_user,
+        "fraud.signal.created",
+        "admin.fraud_signals.update",
+        "FraudSignal",
+        signal.id,
+        {"signal_type": signal.signal_type, "severity": signal.severity, "status": signal.status},
+    )
+    return FraudSignalRead.model_validate(signal, from_attributes=True)
+
+
+@router.patch("/fraud/signals/{signal_id}/status", response_model=FraudSignalRead)
+def update_fraud_signal_status(
+    signal_id: int,
+    payload: FraudSignalUpdate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.fraud_signals.update")),
+    db: Session = Depends(get_db),
+) -> FraudSignalRead:
+    signal = services.get_or_404(repository.get_fraud_signal(db, signal_id), "Senal de fraude no encontrada")
+    previous_status = signal.status
+    signal = services.update_fraud_signal(db, signal, payload, current_user)
+    event_type = {
+        "reviewed": "fraud.signal.reviewed",
+        "dismissed": "fraud.signal.dismissed",
+        "escalated": "fraud.signal.escalated",
+    }.get(signal.status, "fraud.signal.reviewed")
+    _audit(
+        db,
+        request,
+        current_user,
+        event_type,
+        "admin.fraud_signals.update",
+        "FraudSignal",
+        signal.id,
+        {"before_status": previous_status, "after_status": signal.status},
+    )
+    return FraudSignalRead.model_validate(signal, from_attributes=True)
+
+
+@router.get("/disputes", response_model=list[DisputeCaseRead])
+def list_disputes(
+    status_filter: str | None = Query(default=None, alias="status"),
+    case_type: str | None = None,
+    payment_id: int | None = None,
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    current_user: User = Depends(require_admin_permission("admin.disputes.list")),
+    db: Session = Depends(get_db),
+) -> list[DisputeCaseRead]:
+    return [
+        DisputeCaseRead.model_validate(case, from_attributes=True)
+        for case in repository.list_dispute_cases(
+            db,
+            status=status_filter,
+            case_type=case_type,
+            payment_id=payment_id,
+            limit=limit,
+            offset=offset,
+        )
+    ]
+
+
+@router.post("/disputes", response_model=DisputeCaseRead, status_code=status.HTTP_201_CREATED)
+def create_dispute(
+    payload: DisputeCaseCreate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.disputes.update")),
+    db: Session = Depends(get_db),
+) -> DisputeCaseRead:
+    case = services.create_dispute_case(db, payload, current_user)
+    _audit(
+        db,
+        request,
+        current_user,
+        "chargeback.created" if case.case_type == "chargeback" else "dispute.created",
+        "admin.disputes.update",
+        "DisputeCase",
+        case.id,
+        {"case_type": case.case_type, "status": case.status, "payment_id": case.payment_id},
+    )
+    return DisputeCaseRead.model_validate(case, from_attributes=True)
+
+
+@router.get("/disputes/{case_id}", response_model=DisputeCaseRead)
+def get_dispute(
+    case_id: int,
+    current_user: User = Depends(require_admin_permission("admin.disputes.view")),
+    db: Session = Depends(get_db),
+) -> DisputeCaseRead:
+    case = services.get_or_404(repository.get_dispute_case(db, case_id), "Caso de disputa no encontrado")
+    return DisputeCaseRead.model_validate(case, from_attributes=True)
+
+
+@router.patch("/disputes/{case_id}/status", response_model=DisputeCaseRead)
+def update_dispute_status(
+    case_id: int,
+    payload: DisputeCaseUpdate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.disputes.update")),
+    db: Session = Depends(get_db),
+) -> DisputeCaseRead:
+    case = services.get_or_404(repository.get_dispute_case(db, case_id), "Caso de disputa no encontrado")
+    previous_status = case.status
+    case = services.update_dispute_case(db, case, payload, current_user)
+    event_type = "chargeback.status_changed" if case.case_type == "chargeback" else "dispute.status_changed"
+    if case.status in {"CLOSED", "CANCELED", "WON", "LOST"}:
+        event_type = "chargeback.closed" if case.case_type == "chargeback" else "dispute.closed"
+    _audit(
+        db,
+        request,
+        current_user,
+        event_type,
+        "admin.disputes.update",
+        "DisputeCase",
+        case.id,
+        {"before_status": previous_status, "after_status": case.status},
+    )
+    return DisputeCaseRead.model_validate(case, from_attributes=True)
+
+
+@router.post("/disputes/{case_id}/evidence", response_model=DisputeCaseRead, status_code=status.HTTP_201_CREATED)
+def add_dispute_evidence(
+    case_id: int,
+    payload: DisputeEvidenceCreate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.disputes.update")),
+    db: Session = Depends(get_db),
+) -> DisputeCaseRead:
+    case = services.get_or_404(repository.get_dispute_case(db, case_id), "Caso de disputa no encontrado")
+    evidence = services.add_dispute_evidence(db, case, payload, current_user)
+    event_type = "chargeback.evidence_added" if case.case_type == "chargeback" else "dispute.evidence_added"
+    _audit(
+        db,
+        request,
+        current_user,
+        event_type,
+        "admin.disputes.update",
+        "DisputeCase",
+        case.id,
+        {"evidence_id": evidence.id, "evidence_type": evidence.evidence_type},
+    )
+    return DisputeCaseRead.model_validate(case, from_attributes=True)
 
 
 @router.get("/support/tickets", response_model=list[SupportTicketRead])

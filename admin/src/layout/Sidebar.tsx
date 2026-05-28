@@ -16,6 +16,8 @@ const NAV_ITEMS: NavItem[] = [
   { href: "#/search", label: "Busqueda", permission: "admin.search.view" },
   { href: "#/tickets", label: "Tickets", permission: "admin.support_tickets.list" },
   { href: "#/manual-review", label: "Revision manual", permission: "admin.manual_review.list" },
+  { href: "#/fraud-signals", label: "Senales fraude", permission: "admin.fraud_signals.list" },
+  { href: "#/disputes", label: "Disputas", permission: "admin.disputes.list" },
   { href: "#/reconciliation/card", label: "Conciliacion tarjeta", permission: "admin.reconciliation.card.view" },
   {
     href: "#/reconciliation/prontipagos",

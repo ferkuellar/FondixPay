@@ -7,7 +7,15 @@ from sqlalchemy.orm import Session
 
 from app.core.request_context import get_request_context
 from app.modules.admin import repository
-from app.modules.admin.models import ManualReviewCase, ManualReviewEvent, SupportTicket, SupportTicketNote
+from app.modules.admin.models import (
+    DisputeCase,
+    DisputeEvidence,
+    FraudSignal,
+    ManualReviewCase,
+    ManualReviewEvent,
+    SupportTicket,
+    SupportTicketNote,
+)
 from app.modules.admin.redaction import redact_sensitive_dict
 from app.modules.admin.schemas import (
     AdminSearchResponse,
@@ -16,6 +24,11 @@ from app.modules.admin.schemas import (
     AdminReceiptDetail,
     AdminUserDetail,
     DashboardSummary,
+    DisputeCaseCreate,
+    DisputeCaseUpdate,
+    DisputeEvidenceCreate,
+    FraudSignalCreate,
+    FraudSignalUpdate,
     ManualReviewCaseCreate,
     ManualReviewCaseUpdate,
     SupportTicketCreate,
@@ -191,6 +204,56 @@ def update_manual_review_case(
     )
     db.flush()
     return case
+
+
+def create_fraud_signal(db: Session, payload: FraudSignalCreate, actor: User) -> FraudSignal:
+    signal = FraudSignal(
+        **payload.model_dump(),
+        created_by=actor.id,
+    )
+    return repository.create_fraud_signal(db, signal)
+
+
+def update_fraud_signal(db: Session, signal: FraudSignal, payload: FraudSignalUpdate, actor: User) -> FraudSignal:
+    if payload.status in {"reviewed", "dismissed", "escalated"} and not _has_resolution_text(payload.resolution):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Fraud signal resolution is required before reviewed, dismissed, or escalated.",
+        )
+    signal.status = payload.status
+    signal.resolution = payload.resolution
+    signal.reviewed_by = actor.id
+    signal.reviewed_at = datetime.now(timezone.utc)
+    db.flush()
+    return signal
+
+
+def create_dispute_case(db: Session, payload: DisputeCaseCreate, actor: User) -> DisputeCase:
+    case = DisputeCase(**payload.model_dump(), status="OPEN", created_by=actor.id, updated_by=actor.id)
+    return repository.create_dispute_case(db, case)
+
+
+def update_dispute_case(db: Session, case: DisputeCase, payload: DisputeCaseUpdate, actor: User) -> DisputeCase:
+    before_status = case.status
+    case.status = payload.status
+    case.assigned_to = payload.assigned_to
+    case.updated_by = actor.id
+    if payload.status in {"CLOSED", "CANCELED", "WON", "LOST"}:
+        case.closed_at = datetime.now(timezone.utc)
+    elif before_status != payload.status:
+        case.closed_at = None
+    db.flush()
+    return case
+
+
+def add_dispute_evidence(
+    db: Session,
+    case: DisputeCase,
+    payload: DisputeEvidenceCreate,
+    actor: User,
+) -> DisputeEvidence:
+    evidence = DisputeEvidence(dispute_case_id=case.id, created_by=actor.id, **payload.model_dump())
+    return repository.add_dispute_evidence(db, evidence)
 
 
 def get_or_404(item: Any, detail: str):

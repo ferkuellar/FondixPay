@@ -6,7 +6,15 @@ from app.core.database import Base, engine
 from app.core.request_context import RequestContextMiddleware
 from app.modules.accounts.models import Account, BalanceSnapshot, Movement
 from app.modules.accounts.routes import router as accounts_router
-from app.modules.admin.models import ManualReviewCase, ManualReviewEvent, SupportTicket, SupportTicketNote
+from app.modules.admin.models import (
+    DisputeCase,
+    DisputeEvidence,
+    FraudSignal,
+    ManualReviewCase,
+    ManualReviewEvent,
+    SupportTicket,
+    SupportTicketNote,
+)
 from app.modules.admin.routes import router as admin_router
 from app.modules.audit.models import AuditEvent
 from app.modules.auth.routes import router as auth_router

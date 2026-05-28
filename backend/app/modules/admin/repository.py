@@ -3,7 +3,15 @@ from datetime import datetime
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
-from app.modules.admin.models import ManualReviewCase, ManualReviewEvent, SupportTicket, SupportTicketNote
+from app.modules.admin.models import (
+    DisputeCase,
+    DisputeEvidence,
+    FraudSignal,
+    ManualReviewCase,
+    ManualReviewEvent,
+    SupportTicket,
+    SupportTicketNote,
+)
 from app.modules.audit.models import AuditEvent
 from app.modules.ledger.models import PaymentIntent
 from app.modules.payments.models import Payment
@@ -133,6 +141,70 @@ def add_manual_review_event(db: Session, event: ManualReviewEvent) -> ManualRevi
     db.add(event)
     db.flush()
     return event
+
+
+def create_fraud_signal(db: Session, signal: FraudSignal) -> FraudSignal:
+    db.add(signal)
+    db.flush()
+    return signal
+
+
+def list_fraud_signals(
+    db: Session,
+    *,
+    status: str | None,
+    severity: str | None,
+    payment_id: int | None,
+    limit: int,
+    offset: int,
+) -> list[FraudSignal]:
+    query = db.query(FraudSignal)
+    if status:
+        query = query.filter(FraudSignal.status == status)
+    if severity:
+        query = query.filter(FraudSignal.severity == severity)
+    if payment_id is not None:
+        query = query.filter(FraudSignal.payment_id == payment_id)
+    return query.order_by(FraudSignal.id.desc()).offset(offset).limit(limit).all()
+
+
+def get_fraud_signal(db: Session, signal_id: int) -> FraudSignal | None:
+    return db.query(FraudSignal).filter(FraudSignal.id == signal_id).one_or_none()
+
+
+def create_dispute_case(db: Session, case: DisputeCase) -> DisputeCase:
+    db.add(case)
+    db.flush()
+    return case
+
+
+def list_dispute_cases(
+    db: Session,
+    *,
+    status: str | None,
+    case_type: str | None,
+    payment_id: int | None,
+    limit: int,
+    offset: int,
+) -> list[DisputeCase]:
+    query = db.query(DisputeCase)
+    if status:
+        query = query.filter(DisputeCase.status == status)
+    if case_type:
+        query = query.filter(DisputeCase.case_type == case_type)
+    if payment_id is not None:
+        query = query.filter(DisputeCase.payment_id == payment_id)
+    return query.order_by(DisputeCase.id.desc()).offset(offset).limit(limit).all()
+
+
+def get_dispute_case(db: Session, case_id: int) -> DisputeCase | None:
+    return db.query(DisputeCase).filter(DisputeCase.id == case_id).one_or_none()
+
+
+def add_dispute_evidence(db: Session, evidence: DisputeEvidence) -> DisputeEvidence:
+    db.add(evidence)
+    db.flush()
+    return evidence
 
 
 def search_users(db: Session, q: str, limit: int) -> list[User]:

@@ -16,6 +16,12 @@ export type Permission =
   | "admin.manual_review.list"
   | "admin.manual_review.view"
   | "admin.manual_review.update"
+  | "admin.fraud_signals.list"
+  | "admin.fraud_signals.view"
+  | "admin.fraud_signals.update"
+  | "admin.disputes.list"
+  | "admin.disputes.view"
+  | "admin.disputes.update"
   | "admin.search.view"
   | "admin.support_tickets.list"
   | "admin.support_tickets.create"
@@ -172,6 +178,61 @@ export type ManualReviewCase = {
   created_at: string;
   updated_at: string;
   closed_at?: string | null;
+};
+
+export type FraudSignal = {
+  id: number;
+  signal_type: string;
+  severity: "low" | "medium" | "high" | "urgent";
+  status: "open" | "reviewed" | "dismissed" | "escalated";
+  entity_type: string;
+  entity_id: string;
+  user_id?: number | null;
+  payment_id?: number | null;
+  transaction_id?: number | null;
+  reason: string;
+  metadata_json?: Record<string, unknown> | null;
+  created_by: number;
+  created_at: string;
+  reviewed_at?: string | null;
+  reviewed_by?: number | null;
+  resolution?: string | null;
+};
+
+export type DisputeEvidence = {
+  id: number;
+  dispute_case_id: number;
+  evidence_type: string;
+  title: string;
+  description?: string | null;
+  storage_reference?: string | null;
+  source_entity_type?: string | null;
+  source_entity_id?: string | null;
+  created_at: string;
+  created_by: number;
+};
+
+export type DisputeCase = {
+  id: number;
+  case_type: "dispute" | "chargeback";
+  status: "OPEN" | "UNDER_REVIEW" | "EVIDENCE_GATHERING" | "SUBMITTED" | "WON" | "LOST" | "CLOSED" | "CANCELED";
+  payment_id?: number | null;
+  transaction_id?: number | null;
+  user_id?: number | null;
+  provider_transaction_id?: string | null;
+  card_processor_reference?: string | null;
+  amount_minor?: number | null;
+  currency: string;
+  reason_code?: string | null;
+  summary: string;
+  opened_at: string;
+  due_at?: string | null;
+  closed_at?: string | null;
+  assigned_to?: number | null;
+  created_by: number;
+  updated_by?: number | null;
+  updated_at: string;
+  evidence: DisputeEvidence[];
 };
 
 export type AuditEvent = {

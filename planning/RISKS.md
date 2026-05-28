@@ -397,3 +397,16 @@ Open production risks:
 | Production deployment could be added prematurely. | SEV-1 | mitigated for AWS-3 | No production workflow exists; future production requires a separate approved phase. |
 | Vercel could be misused for sensitive runtime. | SEV-1 | mitigated by documentation | CI/CD docs and security docs keep Vercel landing-only. |
 | CI may fail because dependency installation depends on external registries. | SEV-2 | open | Use lockfiles and GitHub cache; investigate dependency or registry outages without bypassing validation. |
+
+## Phase 11 Audit, Fraud & Chargeback Readiness Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Fraud signals may create false positives. | SEV-2 | open | Signals are review-only and require human resolution; no auto-blocking exists. |
+| Fraud thresholds are not finalized. | SEV-2 | open | Signal catalog is documented; future phase must define thresholds/time windows. |
+| Chargeback legal response policy is missing. | SEV-1 | open | Phase 11 stores internal evidence only; legal templates/deadlines remain future. |
+| Evidence retention policy is missing. | SEV-1 | open | Avoid destructive deletion; define retention/legal hold before production. |
+| Evidence notes could over-collect PII. | SEV-1 | open | Docs and security rules prohibit PAN/CVV/secrets/raw provider payloads/unnecessary PII. |
+| Reconciliation execution is still placeholder-only. | SEV-1 | open | Link disputes to reconciliation evidence where available; implement real reconciliation later. |
+| External chargeback submission could be added prematurely. | SEV-1 | mitigated for Phase 11 | No external integration exists; future submission requires approved phase. |
+| SUPPORT may need dispute context but cannot update cases. | SEV-2 | accepted | SUPPORT uses support tickets and escalates to FINANCE/ADMIN for dispute updates. |

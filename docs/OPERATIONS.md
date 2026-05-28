@@ -706,3 +706,25 @@ Required operational setup:
 - OIDC IAM role for GitHub Actions.
 - Remote state bucket and lock table secrets.
 - Dev Terraform variable secrets.
+
+## Phase 11 Fraud And Chargeback Operations
+
+Fraud signal operations:
+
+1. Review the signal in CRM/Admin.
+2. Compare linked payment, receipt, provider transaction, support ticket, and audit evidence.
+3. Update status to `reviewed`, `dismissed`, or `escalated` with resolution text.
+4. Do not block users, issue refunds, or mutate payment state from the fraud signal workflow.
+
+Dispute/chargeback operations:
+
+1. Create a `dispute` or `chargeback` case with safe references.
+2. Move through `OPEN`, `UNDER_REVIEW`, and `EVIDENCE_GATHERING` as evidence is collected.
+3. Add evidence metadata for payment summary, receipt, provider confirmation, support note, manual review, reconciliation, or customer communication.
+4. Close only after authorized review. Closing the case does not change ledger or provider state.
+
+Failure handling:
+
+- Missing evidence keeps the case open or in `EVIDENCE_GATHERING`.
+- Provider ambiguity routes to manual review/reconciliation; do not infer success.
+- Any destructive action, refund, block, or external chargeback response requires a future approved phase.

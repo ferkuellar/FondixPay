@@ -840,3 +840,71 @@ The implemented seed uses safe defaults:
 - Recipient is stored as `recipient_hash` and `recipient_masked`; full phone is not stored.
 - `idempotency_key` is unique and built from receipt id, channel, template name, and recipient hash.
 - `metadata_json` may include the safe template payload, never PAN, CVV, card token, secrets, raw provider payload, or full phone.
+
+## Phase 11 Fraud And Chargeback Readiness Model
+
+Implemented tables:
+
+### `fraud_signals`
+
+- `id`
+- `signal_type`
+- `severity`
+- `status`
+- `entity_type`
+- `entity_id`
+- `user_id` nullable
+- `payment_id` nullable
+- `transaction_id` nullable
+- `reason`
+- `metadata_json`
+- `created_by`
+- `created_at`
+- `reviewed_at` nullable
+- `reviewed_by` nullable
+- `resolution` nullable
+
+Rules:
+
+- Signals are review-only and do not change user, payment, receipt, ledger, or provider state.
+- Reviewed, dismissed, and escalated states require resolution text.
+- Metadata must stay redacted.
+
+### `dispute_cases`
+
+- `id`
+- `case_type`: `dispute` or `chargeback`
+- `status`
+- `payment_id` nullable
+- `transaction_id` nullable
+- `user_id` nullable
+- `provider_transaction_id` nullable
+- `card_processor_reference` nullable
+- `amount_minor` nullable
+- `currency`
+- `reason_code` nullable
+- `summary`
+- `opened_at`
+- `due_at` nullable
+- `closed_at` nullable
+- `assigned_to` nullable
+- `created_by`
+- `updated_by`
+- `updated_at`
+
+Statuses: `OPEN`, `UNDER_REVIEW`, `EVIDENCE_GATHERING`, `SUBMITTED`, `WON`, `LOST`, `CLOSED`, `CANCELED`.
+
+### `dispute_evidence`
+
+- `id`
+- `dispute_case_id`
+- `evidence_type`
+- `title`
+- `description` nullable
+- `storage_reference` nullable
+- `source_entity_type` nullable
+- `source_entity_id` nullable
+- `created_at`
+- `created_by`
+
+Evidence records are append-style metadata references. They must not expose private files publicly and must not store PAN, CVV, secrets, or raw provider payloads.

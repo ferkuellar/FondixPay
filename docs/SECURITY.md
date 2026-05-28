@@ -439,3 +439,13 @@ Remaining blockers:
 - OIDC role trust policy and least-privilege IAM policy must be reviewed in the AWS account before live apply.
 - Staging has no Terraform environment and must not be inferred from dev.
 - Production deployment requires a future approved architecture and security review.
+
+## Phase 11 Fraud And Chargeback Security
+
+- Fraud signals are internal only and must not be exposed to customers by default.
+- Fraud signal status changes do not block users, refund payments, or change payment/receipt/ledger/provider state.
+- Dispute and chargeback cases are internal evidence records only; no external submission is automated.
+- Evidence `storage_reference` must be private/internal and must not expose public files.
+- Internal notes, evidence descriptions, audit metadata, and dispute summaries must not include PAN, CVV, secrets, raw provider payloads, raw provider errors, OTPs, or unnecessary PII.
+- Backend RBAC is authoritative for all `/admin/fraud/signals` and `/admin/disputes` endpoints.
+- SUPPORT has read-only fraud signal visibility and no dispute/chargeback update permission in Phase 11.

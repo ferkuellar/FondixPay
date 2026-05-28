@@ -394,3 +394,30 @@ Operating status:
 Next recommended phase:
 
 AWS-2B - Dev Apply With Confirmed AWS Account, or AWS-4 - Staging Environment Definition after dev apply is validated.
+
+## Phase 11 - Audit, Fraud & Chargeback Readiness
+
+Current phase: Phase 11 - Audit, Fraud & Chargeback Readiness.
+
+Status: implemented for internal readiness and manual workflows.
+
+Implemented:
+
+- Backend fraud signal model, schemas, repository, services, RBAC permissions, and admin routes.
+- Backend dispute/chargeback case and evidence model, schemas, repository, services, RBAC permissions, and admin routes.
+- Alembic migration `20260527_0007_phase_11_fraud_chargeback_readiness.py`.
+- CRM/Admin pages for fraud signal list/detail and dispute/chargeback list/detail.
+- Audit events for fraud signal creation/review/dismissal/escalation and dispute/chargeback creation/status/evidence/closure.
+- Backend tests for fraud signal RBAC/audit and chargeback evidence/status/audit.
+- Fraud readiness, chargeback readiness, reconciliation, support workflow, API, data model, audit, security, operations, and validation documentation.
+
+Operating status:
+
+- Fraud detection remains explainable signal + human review only.
+- No automatic user blocking, refunds, chargeback submission, account closure, or autonomous remediation was added.
+- No production Prontipagos, card processor, or payment behavior was changed.
+- Internal evidence workflows are ready for sandbox/admin review only.
+
+Next recommended phase:
+
+Phase 12 - Production Readiness Gap Closure, focused on real provider evidence, reconciliation execution, retention/legal policy, admin session hardening, and controlled launch gates.

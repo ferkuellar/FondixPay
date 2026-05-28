@@ -579,3 +579,31 @@ Checklist:
 - Theme selection should persist locally.
 - Confirm Payment must have a safe `Tarjeta demo` for mock validation.
 - No PAN, CVV, real provider token, Prontipagos credential, or real payment operation is introduced.
+
+## Phase 11 Audit, Fraud, And Chargeback Validation
+
+Executed on 2026-05-27:
+
+```powershell
+cd backend
+python -m compileall app
+python -m pytest tests\test_admin_fraud_chargeback.py
+
+cd admin
+npm run typecheck
+```
+
+Results:
+
+- Backend compile passed.
+- New backend fraud/chargeback tests passed.
+- Admin TypeScript typecheck passed.
+
+Coverage expectations:
+
+- FINANCE can create/review/escalate fraud signals.
+- SUPPORT can view fraud signals but cannot update them.
+- FINANCE can create chargeback cases, add evidence, and close them.
+- AUDITOR can view disputes but cannot create them.
+- Audit events are generated for fraud signal creation/escalation and chargeback creation/evidence/closure.
+- No workflow changes payment, receipt, ledger, user, or provider state.

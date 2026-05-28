@@ -6,6 +6,10 @@ import { AdminLayout } from "./layout/AdminLayout";
 import { AuditLogsPage } from "./pages/AuditLogsPage";
 import { CardReconciliationPage } from "./pages/CardReconciliationPage";
 import { DashboardPage } from "./pages/DashboardPage";
+import { DisputeDetailPage } from "./pages/DisputeDetailPage";
+import { DisputesPage } from "./pages/DisputesPage";
+import { FraudSignalDetailPage } from "./pages/FraudSignalDetailPage";
+import { FraudSignalsPage } from "./pages/FraudSignalsPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ManualReviewDetailPage } from "./pages/ManualReviewDetailPage";
 import { ManualReviewPage } from "./pages/ManualReviewPage";
@@ -50,6 +54,8 @@ export function App() {
   const receiptId = matchDetail(path, "receipts");
   const ticketId = matchDetail(path, "tickets");
   const manualReviewId = matchDetail(path, "manual-review");
+  const fraudSignalId = matchDetail(path, "fraud-signals");
+  const disputeId = matchDetail(path, "disputes");
 
   return (
     <AdminLayout>
@@ -66,6 +72,10 @@ export function App() {
       {ticketId ? <RequirePermission permission="admin.support_tickets.list"><SupportTicketDetailPage id={ticketId} /></RequirePermission> : null}
       {path === "/manual-review" ? <RequirePermission permission="admin.manual_review.list"><ManualReviewPage /></RequirePermission> : null}
       {manualReviewId ? <RequirePermission permission="admin.manual_review.view"><ManualReviewDetailPage id={manualReviewId} /></RequirePermission> : null}
+      {path === "/fraud-signals" ? <RequirePermission permission="admin.fraud_signals.list"><FraudSignalsPage /></RequirePermission> : null}
+      {fraudSignalId ? <RequirePermission permission="admin.fraud_signals.view"><FraudSignalDetailPage id={fraudSignalId} /></RequirePermission> : null}
+      {path === "/disputes" ? <RequirePermission permission="admin.disputes.list"><DisputesPage /></RequirePermission> : null}
+      {disputeId ? <RequirePermission permission="admin.disputes.view"><DisputeDetailPage id={disputeId} /></RequirePermission> : null}
       {path === "/reconciliation/card" ? <RequirePermission permission="admin.reconciliation.card.view"><CardReconciliationPage /></RequirePermission> : null}
       {path === "/reconciliation/prontipagos" ? <RequirePermission permission="admin.reconciliation.prontipagos.view"><ProntipagosReconciliationPage /></RequirePermission> : null}
       {path === "/audit-logs" ? <RequirePermission permission="admin.audit.list"><AuditLogsPage /></RequirePermission> : null}
@@ -78,10 +88,12 @@ export function App() {
         "/search",
         "/tickets",
         "/manual-review",
+        "/fraud-signals",
+        "/disputes",
         "/reconciliation/card",
         "/reconciliation/prontipagos",
         "/audit-logs",
-      ].includes(path) && !userId && !paymentId && !receiptId && !ticketId && !manualReviewId ? <NotFoundPage /> : null}
+      ].includes(path) && !userId && !paymentId && !receiptId && !ticketId && !manualReviewId && !fraudSignalId && !disputeId ? <NotFoundPage /> : null}
     </AdminLayout>
   );
 }

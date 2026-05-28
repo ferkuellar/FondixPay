@@ -743,3 +743,34 @@ Implemented event types:
 - `notification.delivery_status_updated`
 
 Audit metadata must use masked recipient values only. Payment, receipt, proof, and ledger events remain the source of truth for financial status.
+
+## Phase 11 Fraud, Dispute, And Chargeback Audit Events
+
+Implemented Phase 11 internal events:
+
+- `fraud.signal.created`
+- `fraud.signal.reviewed`
+- `fraud.signal.dismissed`
+- `fraud.signal.escalated`
+- `dispute.created`
+- `dispute.status_changed`
+- `dispute.evidence_added`
+- `dispute.closed`
+- `chargeback.created`
+- `chargeback.status_changed`
+- `chargeback.evidence_added`
+- `chargeback.closed`
+
+Documented/future events:
+
+- `manual_review.created`
+- `manual_review.assigned`
+- `manual_review.status_changed`
+- `manual_review.note_added`
+- `reconciliation.mismatch_detected`
+- `reconciliation.mismatch_reviewed`
+- `admin.override_requested`
+- `admin.override_approved`
+- `admin.override_rejected`
+
+Required fields remain actor, role, permission, entity type, entity ID, result, request ID, timestamp, and safe before/after metadata when applicable. Fraud signal and dispute metadata must not store PAN, CVV, secrets, raw provider payloads, OTPs, or unnecessary PII.

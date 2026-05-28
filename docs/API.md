@@ -748,3 +748,30 @@ Rules:
 - Send requires auth, confirmed payment, confirmed/generated receipt proof, valid recipient, and explicit consent.
 - Duplicate sends are blocked by receipt/channel/template/recipient hash idempotency.
 - Delivery failure never mutates payment, receipt, proof, ledger, or internal receipt status.
+
+## Phase 11 Fraud And Dispute Admin APIs
+
+Status: implemented as internal CRM/Admin APIs. These endpoints do not expose customer-facing fraud labels and do not mutate payment, receipt, ledger, or provider state.
+
+### Fraud Signals
+
+| Endpoint | Purpose | Permission | Audit |
+|---|---|---|---|
+| `GET /admin/fraud/signals` | List signals by status, severity, or payment. | `admin.fraud_signals.list` | none on list in Phase 11 |
+| `GET /admin/fraud/signals/{signal_id}` | View one signal. | `admin.fraud_signals.view` | none on detail in Phase 11 |
+| `POST /admin/fraud/signals` | Create an explainable signal for review. | `admin.fraud_signals.update` | `fraud.signal.created` |
+| `PATCH /admin/fraud/signals/{signal_id}/status` | Mark reviewed, dismissed, or escalated. | `admin.fraud_signals.update` | `fraud.signal.reviewed`, `fraud.signal.dismissed`, or `fraud.signal.escalated` |
+
+Resolution text is required for reviewed, dismissed, or escalated status.
+
+### Disputes And Chargebacks
+
+| Endpoint | Purpose | Permission | Audit |
+|---|---|---|---|
+| `GET /admin/disputes` | List dispute/chargeback cases. | `admin.disputes.list` | none on list in Phase 11 |
+| `POST /admin/disputes` | Create an internal case. | `admin.disputes.update` | `dispute.created` or `chargeback.created` |
+| `GET /admin/disputes/{case_id}` | View one case with evidence metadata. | `admin.disputes.view` | none on detail in Phase 11 |
+| `PATCH /admin/disputes/{case_id}/status` | Update case status/assignment. | `admin.disputes.update` | `dispute.status_changed`, `dispute.closed`, `chargeback.status_changed`, or `chargeback.closed` |
+| `POST /admin/disputes/{case_id}/evidence` | Append evidence metadata. | `admin.disputes.update` | `dispute.evidence_added` or `chargeback.evidence_added` |
+
+Evidence stores safe metadata and private references only. No external card-network submission is implemented.

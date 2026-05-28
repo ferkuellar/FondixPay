@@ -42,6 +42,30 @@ ManualReviewCaseType = Literal[
     "reconciliation_mismatch",
     "other",
 ]
+FraudSignalStatus = Literal["open", "reviewed", "dismissed", "escalated"]
+FraudSignalSeverity = Literal["low", "medium", "high", "urgent"]
+DisputeCaseType = Literal["dispute", "chargeback"]
+DisputeCaseStatus = Literal[
+    "OPEN",
+    "UNDER_REVIEW",
+    "EVIDENCE_GATHERING",
+    "SUBMITTED",
+    "WON",
+    "LOST",
+    "CLOSED",
+    "CANCELED",
+]
+DisputeEvidenceType = Literal[
+    "payment_summary",
+    "receipt",
+    "provider_confirmation",
+    "card_processor_reference",
+    "support_note",
+    "manual_review",
+    "reconciliation",
+    "customer_communication",
+    "other",
+]
 
 
 class DashboardSummary(BaseModel):
@@ -260,6 +284,113 @@ class ManualReviewCaseRead(BaseModel):
     created_at: datetime
     updated_at: datetime
     closed_at: datetime | None = None
+
+
+class FraudSignalCreate(BaseModel):
+    signal_type: str = Field(min_length=3, max_length=120)
+    severity: FraudSignalSeverity = "medium"
+    entity_type: str = Field(min_length=2, max_length=80)
+    entity_id: str = Field(min_length=1, max_length=80)
+    user_id: int | None = None
+    payment_id: int | None = None
+    transaction_id: int | None = None
+    reason: str = Field(min_length=3, max_length=4000)
+    metadata_json: dict | None = None
+
+
+class FraudSignalUpdate(BaseModel):
+    status: FraudSignalStatus
+    resolution: str | None = Field(default=None, max_length=4000)
+
+
+class FraudSignalRead(BaseModel):
+    id: int
+    signal_type: str
+    severity: str
+    status: str
+    entity_type: str
+    entity_id: str
+    user_id: int | None = None
+    payment_id: int | None = None
+    transaction_id: int | None = None
+    reason: str
+    metadata_json: dict | None = None
+    created_by: int
+    created_at: datetime
+    reviewed_at: datetime | None = None
+    reviewed_by: int | None = None
+    resolution: str | None = None
+
+    model_config = {"from_attributes": True}
+
+
+class DisputeEvidenceCreate(BaseModel):
+    evidence_type: DisputeEvidenceType
+    title: str = Field(min_length=3, max_length=180)
+    description: str | None = Field(default=None, max_length=4000)
+    storage_reference: str | None = Field(default=None, max_length=260)
+    source_entity_type: str | None = Field(default=None, max_length=80)
+    source_entity_id: str | None = Field(default=None, max_length=80)
+
+
+class DisputeEvidenceRead(BaseModel):
+    id: int
+    dispute_case_id: int
+    evidence_type: str
+    title: str
+    description: str | None = None
+    storage_reference: str | None = None
+    source_entity_type: str | None = None
+    source_entity_id: str | None = None
+    created_at: datetime
+    created_by: int
+
+    model_config = {"from_attributes": True}
+
+
+class DisputeCaseCreate(BaseModel):
+    case_type: DisputeCaseType = "dispute"
+    payment_id: int | None = None
+    transaction_id: int | None = None
+    user_id: int | None = None
+    provider_transaction_id: str | None = Field(default=None, max_length=160)
+    card_processor_reference: str | None = Field(default=None, max_length=160)
+    amount_minor: int | None = Field(default=None, ge=0)
+    currency: str = Field(default="MXN", min_length=3, max_length=3)
+    reason_code: str | None = Field(default=None, max_length=80)
+    summary: str = Field(min_length=3, max_length=4000)
+    due_at: datetime | None = None
+    assigned_to: int | None = None
+
+
+class DisputeCaseUpdate(BaseModel):
+    status: DisputeCaseStatus
+    assigned_to: int | None = None
+
+
+class DisputeCaseRead(BaseModel):
+    id: int
+    case_type: str
+    status: str
+    payment_id: int | None = None
+    transaction_id: int | None = None
+    user_id: int | None = None
+    provider_transaction_id: str | None = None
+    card_processor_reference: str | None = None
+    amount_minor: int | None = None
+    currency: str
+    reason_code: str | None = None
+    summary: str
+    opened_at: datetime
+    due_at: datetime | None = None
+    closed_at: datetime | None = None
+    assigned_to: int | None = None
+    created_by: int
+    updated_by: int | None = None
+    updated_at: datetime
+    evidence: list[DisputeEvidenceRead] = Field(default_factory=list)
+
+    model_config = {"from_attributes": True}
 
 
 class ReconciliationSummaryCounts(BaseModel):
