@@ -1,0 +1,20 @@
+aws_region        = "us-east-1"
+availability_zone = "us-east-1a"
+
+# Must be globally unique.
+artifacts_bucket_name = "fondixpay-dev-artifacts-REPLACE_ME"
+
+# Required so AWS Budgets can send alerts. This is not a secret.
+budget_alert_emails = ["finance@example.com"]
+
+# Default: no EC2, lowest cost.
+enable_compute = false
+
+# If a short-lived dev host is needed:
+# enable_compute = true
+# instance_type = "t4g.micro"
+# cpu_architecture = "arm64"
+# key_name = "your-existing-ec2-keypair"
+# allowed_ssh_cidrs = ["203.0.113.10/32"]
+# allowed_backend_cidrs = ["203.0.113.10/32"]
+
