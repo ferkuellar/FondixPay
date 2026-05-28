@@ -1047,3 +1047,35 @@ Decision: Terraform `apply` for AWS-2 must not run until AWS credentials are con
 Rationale: Infrastructure changes can create cost, exposure, or production-impact risk if account, region, environment, or destructive changes are not reviewed first.
 
 Status: Accepted.
+
+## ADR-136 - CI validation is separated from deployment
+
+Decision: FONDIXPAY pull request and push validation must not deploy infrastructure or application runtimes.
+
+Rationale: CI should reduce regression risk without creating uncontrolled infrastructure or production deployment paths.
+
+Status: Accepted.
+
+## ADR-137 - Dev Terraform apply is manual and approval-gated
+
+Decision: Terraform apply for dev may run only through a manual GitHub Actions workflow using GitHub Environment `dev`, OIDC, remote state, environment confirmation, and a plan immediately before apply.
+
+Rationale: Infrastructure apply can create cost, public exposure, or wrong-account impact. Manual approval and identity checks keep AWS-3 non-production and auditable.
+
+Status: Accepted.
+
+## ADR-138 - Production deployment is not active in AWS-3
+
+Decision: AWS-3 does not enable production deployment workflows for infrastructure, backend, admin, payments, reconciliation, ledger/audit, or landing-adjacent sensitive runtime.
+
+Rationale: Production requires a future approved environment design, secret model, monitoring, rollback, and security review.
+
+Status: Accepted.
+
+## ADR-139 - Vercel remains landing-only in CI/CD
+
+Decision: CI/CD may validate the static landing folder, but Vercel deployment is not wired in AWS-3 and Vercel remains approved only for `landing/`.
+
+Rationale: The public landing page is a different risk class than backend, CRM/Admin, payment, ledger, provider, and reconciliation workloads.
+
+Status: Accepted.

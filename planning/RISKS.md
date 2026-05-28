@@ -383,3 +383,17 @@ Open production risks:
 | Public subnet dev compute could be overexposed if enabled with broad CIDRs. | SEV-1 | mitigated by default | Keep `enable_compute=false`; if enabled, restrict SSH/backend CIDRs and do not use `0.0.0.0/0`. |
 | AWS Budgets do not stop spend. | SEV-2 | open | Monitor budget alerts and manually destroy unused dev resources after testing. |
 | Terraform apply could target the wrong AWS account if identity is not checked. | SEV-1 | open | Require `aws sts get-caller-identity`, account review, plan review, and explicit approval before apply. |
+
+## Phase AWS-3 CI/CD Pipeline Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| CI/CD could accidentally deploy infrastructure from pull requests. | SEV-1 | mitigated | Pull request workflows validate only; `deploy-dev.yml` is manual and environment-gated. |
+| Terraform apply could run against the wrong AWS account. | SEV-1 | open | OIDC role, GitHub `dev` environment approval, and `aws sts get-caller-identity` are required before apply. |
+| Long-lived AWS keys could leak through CI configuration. | SEV-1 | mitigated by design | Workflows use OIDC role assumption and do not require committed or long-lived access keys. |
+| Terraform state or plan could be exposed as an artifact. | SEV-1 | mitigated | Workflows do not upload state or plan artifacts. |
+| Dev apply could lose state if remote backend is not configured. | SEV-1 | mitigated | Manual plan/apply workflows require S3 state bucket and DynamoDB lock table secrets and generate an uncommitted backend override. |
+| Staging could be implied without a real environment. | SEV-2 | open | AWS-3 documents dev only; staging requires a future Terraform environment. |
+| Production deployment could be added prematurely. | SEV-1 | mitigated for AWS-3 | No production workflow exists; future production requires a separate approved phase. |
+| Vercel could be misused for sensitive runtime. | SEV-1 | mitigated by documentation | CI/CD docs and security docs keep Vercel landing-only. |
+| CI may fail because dependency installation depends on external registries. | SEV-2 | open | Use lockfiles and GitHub cache; investigate dependency or registry outages without bypassing validation. |

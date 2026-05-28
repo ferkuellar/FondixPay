@@ -408,3 +408,34 @@ Rules:
 - Do not commit `terraform.tfvars`, state files, plans, providers, or credentials.
 - Do not store secrets, PAN, CVV, card tokens, provider credentials, or raw provider payloads in S3 artifacts.
 - Do not run `terraform apply` until plan is reviewed and explicitly approved.
+
+## AWS-3 CI/CD Security
+
+CI/CD security controls:
+
+- Pull request validation is separated from deployment.
+- `ci.yml` does not require AWS credentials and does not deploy.
+- Terraform pull request validation uses `terraform init -backend=false`.
+- Terraform plan against AWS is manual and scoped to the GitHub `dev` environment.
+- Terraform apply is manual only through `deploy-dev.yml`.
+- Workflow permissions are limited to `contents: read`; Terraform cloud jobs add `id-token: write` for OIDC.
+- Terraform state and tfplan files are not uploaded as artifacts.
+- Production deployment is not enabled.
+
+Secret management:
+
+- Use GitHub OIDC with `AWS_ROLE_TO_ASSUME`.
+- Prefer GitHub Environment secrets scoped to `dev`.
+- Do not commit AWS keys, Terraform variable values, `.env`, `terraform.tfvars`, state, or plan files.
+- Long-lived AWS access keys are not used by the committed workflows.
+
+Vercel boundary:
+
+- Vercel may host only the static public landing page under `landing/`.
+- Backend/API, CRM/Admin, payment operations, reconciliation, ledger/audit workloads, payment credentials, provider secrets, and production payment processing must not run through Vercel.
+
+Remaining blockers:
+
+- OIDC role trust policy and least-privilege IAM policy must be reviewed in the AWS account before live apply.
+- Staging has no Terraform environment and must not be inferred from dev.
+- Production deployment requires a future approved architecture and security review.

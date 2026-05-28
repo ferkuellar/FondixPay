@@ -367,3 +367,30 @@ Operating status:
 Next recommended phase:
 
 AWS-2B - Dev Apply With Confirmed AWS Account, after configuring credentials for a confirmed non-production AWS account and reviewing a successful plan.
+
+## Phase AWS-3 - CI/CD Pipeline
+
+Current phase: Phase AWS-3 - CI/CD Pipeline.
+
+Status: completed as a safe CI/CD foundation.
+
+Implemented:
+
+- GitHub Actions `CI` workflow for backend, mobile, admin, and landing validation.
+- GitHub Actions `Terraform Dev` workflow for Terraform fmt/init/validate and manual dev plan.
+- GitHub Actions `Deploy Dev` workflow for manual dev-only Terraform apply.
+- CI/CD documentation with GitHub secrets, environment approvals, rollback, failure handling, and branch protection recommendations.
+- AWS-3 sprint requirements, blueprint, acceptance, and completion report.
+
+Operating status:
+
+- Pull request validation does not deploy.
+- Terraform apply cannot run automatically on push to `main`.
+- Dev apply requires `workflow_dispatch`, `confirm_environment=dev`, `apply=true`, OIDC, required secrets, and GitHub Environment `dev`.
+- Production deployment is not enabled.
+- Staging deployment is not enabled because no Terraform staging environment exists.
+- No real payment provider, Prontipagos production connection, production secrets, or application payment logic was changed.
+
+Next recommended phase:
+
+AWS-2B - Dev Apply With Confirmed AWS Account, or AWS-4 - Staging Environment Definition after dev apply is validated.

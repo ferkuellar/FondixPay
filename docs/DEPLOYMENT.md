@@ -74,3 +74,25 @@ Current AWS deployment status:
 Detailed workflow: [AWS_DEV_STAGING_DEPLOYMENT.md](AWS_DEV_STAGING_DEPLOYMENT.md).
 
 Production-sensitive systems, real payments, production Prontipagos connectivity, production secrets, and production databases remain out of scope.
+
+## AWS-3 CI/CD Deployment Controls
+
+CI/CD workflow documentation: [CICD_PIPELINE.md](CICD_PIPELINE.md).
+
+Current GitHub Actions deployment posture:
+
+- Pull request validation does not deploy.
+- `ci.yml` validates backend, mobile, admin, and landing boundaries without cloud credentials.
+- `terraform-dev.yml` validates Terraform on infrastructure changes and can run a manual dev plan only when GitHub `dev` environment secrets are configured.
+- `deploy-dev.yml` is manual only, requires `confirm_environment=dev`, requires `apply=true`, and uses the GitHub `dev` environment.
+- Production deployment is not enabled.
+- Staging deployment is not enabled because no Terraform staging environment exists.
+
+Rollback/destruction remains manual:
+
+1. Review the failed deployment logs.
+2. Run a fresh Terraform plan for dev.
+3. Run `terraform plan -destroy` only if destruction is the intended rollback.
+4. Do not run `terraform destroy` without explicit human approval.
+
+Vercel remains approved only for `landing/`. Backend/API, CRM/Admin, payment processing, ledger/audit, reconciliation, provider credentials, and production secrets must not be deployed through the landing pipeline.

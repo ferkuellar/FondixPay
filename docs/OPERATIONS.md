@@ -674,3 +674,35 @@ Cost guardrails:
 - No NAT Gateway, Load Balancer, RDS, ECS, EKS, or WAF.
 - Budget alerts are required.
 - Budgets alert but do not stop spend.
+
+## AWS-3 CI/CD Operations
+
+GitHub Actions workflows:
+
+- `CI`: application and landing validation only.
+- `Terraform Dev`: Terraform format, init, validate, and optional manual dev plan.
+- `Deploy Dev`: manual dev Terraform apply only.
+
+Operational rules:
+
+1. Treat pull request failures as blockers until the failing area is fixed.
+2. Do not bypass Terraform validation for infrastructure changes.
+3. Keep the GitHub `dev` environment protected with required reviewers.
+4. Confirm AWS identity in workflow logs before approving any dev apply.
+5. Do not upload Terraform state or plan files as artifacts.
+6. Do not add production deployment jobs without a new approved phase.
+
+Failure handling:
+
+- Backend CI failure: inspect compile/test logs and rerun `python -m compileall app` and `python -m pytest` locally from `backend/`.
+- Mobile CI failure: rerun `npm run typecheck` from `mobile/`.
+- Admin CI failure: rerun `npm run typecheck` and `npm run build` from `admin/`.
+- Terraform validation failure: rerun `terraform fmt -recursive -check`, `terraform init -backend=false`, and `terraform validate`.
+- Terraform apply failure: preserve logs, rerun plan, and require explicit approval before any destroy or rollback action.
+
+Required operational setup:
+
+- GitHub Environment `dev`.
+- OIDC IAM role for GitHub Actions.
+- Remote state bucket and lock table secrets.
+- Dev Terraform variable secrets.

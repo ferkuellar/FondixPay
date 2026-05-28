@@ -148,3 +148,25 @@ Current environment support:
 
 - `dev` is implemented.
 - `staging` is not implemented yet. The dev variables currently validate `environment = "dev"` only.
+
+## AWS-3 CI/CD Usage
+
+GitHub Actions now provides Terraform validation and controlled dev deployment workflows.
+
+Workflows:
+
+- `.github/workflows/terraform-dev.yml`: runs `terraform fmt -recursive -check`, init, and validate for backend and dev. Manual dispatch can run a dev plan when secrets are configured.
+- `.github/workflows/deploy-dev.yml`: manual dev apply only. Requires GitHub Environment `dev`, OIDC, remote state secrets, `confirm_environment=dev`, and `apply=true`.
+
+Required GitHub values:
+
+- `AWS_REGION`
+- `AWS_ROLE_TO_ASSUME`
+- `TF_STATE_BUCKET`
+- `TF_LOCK_TABLE`
+- `TF_VAR_ARTIFACTS_BUCKET_NAME`
+- `TF_VAR_BUDGET_ALERT_EMAILS`
+
+The workflows generate an uncommitted `backend_override.tf` in the GitHub runner for remote S3 state. Do not commit backend override files, local `terraform.tfvars`, state files, plans, or downloaded providers.
+
+CI/CD does not enable staging or production. Staging requires a future `infra/terraform/environments/staging` design.
