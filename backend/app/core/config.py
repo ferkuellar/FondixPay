@@ -48,6 +48,10 @@ class Settings(BaseSettings):
     whatsapp_provider_token: str = ""
     whatsapp_webhook_secret: str = ""
     whatsapp_timeout_seconds: int = 10
+    chatbot_ai_provider: str = ""
+    chatbot_ai_api_key: str = ""
+    chatbot_ai_model: str = ""
+    chatbot_max_message_length: int = 500
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

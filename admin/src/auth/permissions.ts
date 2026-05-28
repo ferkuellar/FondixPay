@@ -17,6 +17,9 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.support_tickets.list",
     "admin.support_tickets.create",
     "admin.support_tickets.update",
+    "admin.chatbot.view",
+    "admin.chatbot.conversations.view",
+    "admin.chatbot.fallbacks.review",
   ],
   FINANCE: [
     "admin.dashboard.view",
@@ -39,6 +42,9 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.disputes.update",
     "admin.search.view",
     "admin.support_tickets.list",
+    "admin.chatbot.view",
+    "admin.chatbot.conversations.view",
+    "admin.chatbot.fallbacks.review",
   ],
   ADMIN: [
     "admin.dashboard.view",
@@ -64,6 +70,11 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.support_tickets.list",
     "admin.support_tickets.create",
     "admin.support_tickets.update",
+    "admin.chatbot.view",
+    "admin.chatbot.manage",
+    "admin.chatbot.settings.manage",
+    "admin.chatbot.conversations.view",
+    "admin.chatbot.fallbacks.review",
   ],
   AUDITOR: [
     "admin.dashboard.view",
@@ -84,6 +95,8 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.disputes.view",
     "admin.search.view",
     "admin.support_tickets.list",
+    "admin.chatbot.view",
+    "admin.chatbot.conversations.view",
   ],
   SUPER_ADMIN: [
     "admin.dashboard.view",
@@ -109,6 +122,11 @@ export const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admin.support_tickets.list",
     "admin.support_tickets.create",
     "admin.support_tickets.update",
+    "admin.chatbot.view",
+    "admin.chatbot.manage",
+    "admin.chatbot.settings.manage",
+    "admin.chatbot.conversations.view",
+    "admin.chatbot.fallbacks.review",
   ],
 };
 

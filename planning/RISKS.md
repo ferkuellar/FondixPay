@@ -410,3 +410,14 @@ Open production risks:
 | Reconciliation execution is still placeholder-only. | SEV-1 | open | Link disputes to reconciliation evidence where available; implement real reconciliation later. |
 | External chargeback submission could be added prematurely. | SEV-1 | mitigated for Phase 11 | No external integration exists; future submission requires approved phase. |
 | SUPPORT may need dispute context but cannot update cases. | SEV-2 | accepted | SUPPORT uses support tickets and escalates to FINANCE/ADMIN for dispute updates. |
+
+## Phase 10X.1 Public Landing Chatbot Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Public chatbot could be mistaken for authenticated support. | SEV-1 | mitigated/ongoing | Private payment/account/receipt/balance/OTP/card questions route to authenticated app/support flow. |
+| User may type sensitive data into public chat. | SEV-1 | mitigated/ongoing | Backend masks likely card numbers, OTP-like codes, emails, phone numbers, tokens, secrets, and password-like values before storage. |
+| Incorrect FAQ/intent content could make unsupported product claims. | SEV-2 | open | CRM/Admin response console is RBAC-protected and audited; content approval workflow remains a next-phase governance item. |
+| Public endpoint abuse could create storage or support-review noise. | SEV-2 | open | Message length validation exists; rate limiting should be added when middleware is selected. |
+| AI provider output could drift if enabled later. | SEV-2 | open | Current implementation works without AI provider; future AI integration requires provider-specific guardrails, evaluation, and logging policy. |
+| Landing visual regression could occur during future edits. | SEV-2 | open | Approved design is documented; manual browser/screenshot validation is required after landing UI changes. |

@@ -27,3 +27,11 @@
 - Which notifications should be sent to the user during pending/recovery states?
 - What SLA should support use for `paid_pending_receipt`?
 - Which states should block a new payment for the same service reference?
+
+# Phase 10X.1 Chatbot Questions
+
+- Who approves public chatbot FAQ, intent, and knowledge-base content before production publication?
+- Which official authenticated support channel should the public chatbot route private cases to at launch?
+- Should the chatbot public endpoint use IP/session rate limiting in app middleware, edge middleware, or both?
+- Will an AI provider be approved later, or should Phase 10X.2 remain FAQ/rule-only?
+- What retention period applies to masked chatbot conversations and fallback records?

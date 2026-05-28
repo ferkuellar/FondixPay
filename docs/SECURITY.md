@@ -449,3 +449,18 @@ Remaining blockers:
 - Internal notes, evidence descriptions, audit metadata, and dispute summaries must not include PAN, CVV, secrets, raw provider payloads, raw provider errors, OTPs, or unnecessary PII.
 - Backend RBAC is authoritative for all `/admin/fraud/signals` and `/admin/disputes` endpoints.
 - SUPPORT has read-only fraud signal visibility and no dispute/chargeback update permission in Phase 11.
+
+## Phase 10X.1 Public Landing Chatbot Security
+
+- The chatbot is public and untrusted-input facing.
+- The landing frontend calls only `POST /api/public/chat`; it does not call payment, receipt, balance, account, admin, provider, ledger, or reconciliation endpoints.
+- The backend rejects empty and oversized messages.
+- Public responses must not reveal whether a phone, user, payment, receipt, transaction, balance, card, or OTP exists.
+- Questions about private status, receipts, balances, cards, OTPs, account changes, cancellation, or customer-specific operations are routed to the authenticated app/support flow.
+- User messages are masked before storage for likely card numbers, OTP-like codes, emails, phone numbers, passwords, tokens, secrets, and API keys.
+- Stored messages use `raw_message_stored=false` by default.
+- The browser rendering escapes chatbot text before applying lightweight bold/newline formatting.
+- Admin chatbot endpoints require backend authentication and explicit permissions.
+- AI provider keys are optional environment variables and must never be committed.
+- If no AI provider is configured, the chatbot remains available in FAQ/rule-only mode.
+- No Meta, WhatsApp Cloud API, Twilio, third-party chat widget, or WhatsApp Web extension is used.

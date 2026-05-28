@@ -112,3 +112,21 @@ Rules:
 - FINANCE cannot mutate ledger, payment amounts, provider confirmations, or receipts.
 - SUPER_ADMIN still cannot see PAN/CVV/secrets/tokens/raw payloads.
 - No admin workflow endpoint may exist without a permission entry.
+
+## Phase 10X.1 Chatbot Permissions
+
+| Permission | SUPPORT | FINANCE | ADMIN | AUDITOR | SUPER_ADMIN |
+|---|---|---|---|---|---|
+| `admin.chatbot.view` | yes | yes | yes | yes | yes |
+| `admin.chatbot.manage` | no | no | yes | no | yes |
+| `admin.chatbot.settings.manage` | no | no | yes | no | yes |
+| `admin.chatbot.conversations.view` | yes | yes | yes | yes | yes |
+| `admin.chatbot.fallbacks.review` | yes | yes | yes | no | yes |
+
+Rules:
+
+- `USER` has no chatbot admin permissions.
+- `SUPPORT` may review masked conversations and fallbacks but cannot change public response configuration.
+- `FINANCE` may view masked chatbot context for operational risk review but cannot manage bot responses.
+- `AUDITOR` is read-only and cannot review/resolve fallbacks.
+- Only `ADMIN` and `SUPER_ADMIN` can manage FAQs, intents, knowledge entries, and settings.

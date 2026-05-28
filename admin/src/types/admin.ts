@@ -25,7 +25,12 @@ export type Permission =
   | "admin.search.view"
   | "admin.support_tickets.list"
   | "admin.support_tickets.create"
-  | "admin.support_tickets.update";
+  | "admin.support_tickets.update"
+  | "admin.chatbot.view"
+  | "admin.chatbot.manage"
+  | "admin.chatbot.settings.manage"
+  | "admin.chatbot.conversations.view"
+  | "admin.chatbot.fallbacks.review";
 
 export type RequestState<T> = {
   data: T | null;
@@ -296,4 +301,88 @@ export type AdminSearchResponse = {
   query: string;
   type?: string | null;
   results: AdminSearchResult[];
+};
+
+export type ChatbotFaq = {
+  id: number;
+  question: string;
+  normalized_question: string;
+  answer: string;
+  category?: string | null;
+  priority: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  created_by?: number | null;
+  updated_by?: number | null;
+};
+
+export type ChatbotIntent = {
+  id: number;
+  name: string;
+  description?: string | null;
+  example_phrases: string[];
+  response: string;
+  severity_hint?: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  created_by?: number | null;
+  updated_by?: number | null;
+};
+
+export type ChatbotKnowledgeEntry = {
+  id: number;
+  title: string;
+  content: string;
+  category?: string | null;
+  tags: string[];
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  created_by?: number | null;
+  updated_by?: number | null;
+};
+
+export type ChatbotSetting = {
+  id: number;
+  key: string;
+  value?: Record<string, unknown> | null;
+  updated_at: string;
+  updated_by?: number | null;
+};
+
+export type ChatbotMessage = {
+  id: number;
+  conversation_id: string;
+  sender_type: "user" | "bot" | "system";
+  message_text_masked: string;
+  raw_message_stored: boolean;
+  classification?: string | null;
+  created_at: string;
+};
+
+export type ChatbotConversation = {
+  id: string;
+  session_id: string;
+  source: string;
+  page_url?: string | null;
+  started_at: string;
+  last_message_at: string;
+  status: string;
+  detected_intent?: string | null;
+  confidence?: string | null;
+  created_at: string;
+  updated_at: string;
+  messages?: ChatbotMessage[];
+};
+
+export type ChatbotFallback = {
+  id: number;
+  conversation_id: string;
+  message_id?: number | null;
+  message_text_masked: string;
+  reason: string;
+  reviewed: boolean;
+  created_at: string;
 };

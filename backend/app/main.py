@@ -18,6 +18,17 @@ from app.modules.admin.models import (
 from app.modules.admin.routes import router as admin_router
 from app.modules.audit.models import AuditEvent
 from app.modules.auth.routes import router as auth_router
+from app.modules.chatbot.models import (
+    ChatbotConversation,
+    ChatbotFallback,
+    ChatbotFaq,
+    ChatbotIntent,
+    ChatbotKnowledgeEntry,
+    ChatbotMessage,
+    ChatbotSetting,
+)
+from app.modules.chatbot.routes import admin_router as chatbot_admin_router
+from app.modules.chatbot.routes import public_router as chatbot_public_router
 from app.modules.ledger.models import (
     LedgerAccount,
     LedgerEntry,
@@ -70,6 +81,8 @@ app.include_router(admin_router, prefix="/admin", tags=["admin"])
 app.include_router(service_catalog_router, prefix="/service-catalog", tags=["service catalog"])
 app.include_router(coverage_router, tags=["coverage map"])
 app.include_router(service_catalog_admin_router, prefix="/admin/service-catalog", tags=["admin service catalog"])
+app.include_router(chatbot_public_router, prefix="/api/public", tags=["public chatbot"])
+app.include_router(chatbot_admin_router, prefix="/admin/chat", tags=["admin chatbot"])
 
 
 @app.get("/health")

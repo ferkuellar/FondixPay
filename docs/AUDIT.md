@@ -774,3 +774,26 @@ Documented/future events:
 - `admin.override_rejected`
 
 Required fields remain actor, role, permission, entity type, entity ID, result, request ID, timestamp, and safe before/after metadata when applicable. Fraud signal and dispute metadata must not store PAN, CVV, secrets, raw provider payloads, OTPs, or unnecessary PII.
+
+## Phase 10X.1 Chatbot Audit Events
+
+Implemented chatbot events:
+
+- `chatbot.faq.created`
+- `chatbot.faq.updated`
+- `chatbot.faq.disabled`
+- `chatbot.faq.enabled`
+- `chatbot.intent.created`
+- `chatbot.intent.updated`
+- `chatbot.intent.disabled`
+- `chatbot.intent.enabled`
+- `chatbot.knowledge.created`
+- `chatbot.knowledge.updated`
+- `chatbot.knowledge.disabled`
+- `chatbot.knowledge.enabled`
+- `chatbot.settings.updated`
+- `chatbot.conversation.created`
+- `chatbot.message.received`
+- `chatbot.fallback.created`
+
+Admin events include actor id, role, permission, entity type, entity id, result, and safe before/after metadata when applicable. Public chatbot events use `actor_type=SYSTEM` and store only masked/safe metadata. Chatbot audit metadata must not include raw user messages, PAN, CVV, OTPs, emails, full phone numbers, secrets, API keys, access tokens, raw provider payloads, or customer-specific payment evidence.

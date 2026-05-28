@@ -594,6 +594,46 @@ Decision: FondixPay will use a card processor to tokenize/charge the user's debi
 
 Status: Accepted.
 
+## ADR-144 - Public landing chatbot is an owned web channel
+
+Decision: The public landing chatbot is a web-first owned channel and does not depend on Meta, WhatsApp Cloud API, Twilio, WhatsApp Web extensions, or third-party chat widgets.
+
+Rationale: The landing assistant must stay controlled, auditable, and separate from unsupported messaging channels.
+
+Status: Accepted.
+
+## ADR-145 - Approved chatbot visual design is preserved
+
+Decision: The approved floating chatbot FAB, robot SVG, tooltip, panel, colors, animations, suggested pills, message bubbles, and input style must remain unchanged during implementation. Only the backend integration may change.
+
+Rationale: The founder-approved UI is the visual contract for Phase 10X.1.
+
+Status: Accepted.
+
+## ADR-146 - Public chatbot is informational and routing-only
+
+Decision: The public chatbot must not access private customer data, payment data, transaction status, receipt details, balances, OTP validation, card checks, or account-level operations.
+
+Rationale: The landing page is unauthenticated and must not become a public data oracle or payment operations surface.
+
+Status: Accepted.
+
+## ADR-147 - CRM/Admin owns chatbot response configuration
+
+Decision: The CRM/Admin includes a response console to manage FAQs, intents, knowledge base entries, bot settings, conversations, and fallbacks.
+
+Rationale: Public chatbot answers need operational governance, RBAC, audit events, and fallback review.
+
+Status: Accepted.
+
+## ADR-148 - Chatbot works without an AI provider
+
+Decision: If no AI provider is configured, the chatbot continues operating in FAQ/rule/intent/knowledge/fallback mode.
+
+Rationale: Availability and safety must not depend on external AI credentials during MVP readiness.
+
+Status: Accepted.
+
 ## ADR-078 — Tokenization required for real card payments
 
 Decision: FondixPay will not store PAN or CVV. Every real card payment requires tokenization through an approved processor flow.

@@ -5,6 +5,16 @@ import { useAdminAuth } from "./auth/AdminAuthProvider";
 import { AdminLayout } from "./layout/AdminLayout";
 import { AuditLogsPage } from "./pages/AuditLogsPage";
 import { CardReconciliationPage } from "./pages/CardReconciliationPage";
+import {
+  ChatbotConversationDetailPage,
+  ChatbotConversationsPage,
+  ChatbotDashboardPage,
+  ChatbotFallbacksPage,
+  ChatbotFaqsPage,
+  ChatbotIntentsPage,
+  ChatbotKnowledgePage,
+  ChatbotSettingsPage,
+} from "./pages/ChatbotPages";
 import { DashboardPage } from "./pages/DashboardPage";
 import { DisputeDetailPage } from "./pages/DisputeDetailPage";
 import { DisputesPage } from "./pages/DisputesPage";
@@ -56,6 +66,7 @@ export function App() {
   const manualReviewId = matchDetail(path, "manual-review");
   const fraudSignalId = matchDetail(path, "fraud-signals");
   const disputeId = matchDetail(path, "disputes");
+  const chatbotConversationId = path.match(/^\/chatbot\/conversations\/([^/]+)$/)?.[1] ?? null;
 
   return (
     <AdminLayout>
@@ -76,6 +87,14 @@ export function App() {
       {fraudSignalId ? <RequirePermission permission="admin.fraud_signals.view"><FraudSignalDetailPage id={fraudSignalId} /></RequirePermission> : null}
       {path === "/disputes" ? <RequirePermission permission="admin.disputes.list"><DisputesPage /></RequirePermission> : null}
       {disputeId ? <RequirePermission permission="admin.disputes.view"><DisputeDetailPage id={disputeId} /></RequirePermission> : null}
+      {path === "/chatbot" ? <RequirePermission permission="admin.chatbot.view"><ChatbotDashboardPage /></RequirePermission> : null}
+      {path === "/chatbot/faqs" ? <RequirePermission permission="admin.chatbot.view"><ChatbotFaqsPage /></RequirePermission> : null}
+      {path === "/chatbot/intents" ? <RequirePermission permission="admin.chatbot.view"><ChatbotIntentsPage /></RequirePermission> : null}
+      {path === "/chatbot/knowledge" ? <RequirePermission permission="admin.chatbot.view"><ChatbotKnowledgePage /></RequirePermission> : null}
+      {path === "/chatbot/settings" ? <RequirePermission permission="admin.chatbot.view"><ChatbotSettingsPage /></RequirePermission> : null}
+      {path === "/chatbot/conversations" ? <RequirePermission permission="admin.chatbot.conversations.view"><ChatbotConversationsPage /></RequirePermission> : null}
+      {chatbotConversationId ? <RequirePermission permission="admin.chatbot.conversations.view"><ChatbotConversationDetailPage id={chatbotConversationId} /></RequirePermission> : null}
+      {path === "/chatbot/fallbacks" ? <RequirePermission permission="admin.chatbot.fallbacks.review"><ChatbotFallbacksPage /></RequirePermission> : null}
       {path === "/reconciliation/card" ? <RequirePermission permission="admin.reconciliation.card.view"><CardReconciliationPage /></RequirePermission> : null}
       {path === "/reconciliation/prontipagos" ? <RequirePermission permission="admin.reconciliation.prontipagos.view"><ProntipagosReconciliationPage /></RequirePermission> : null}
       {path === "/audit-logs" ? <RequirePermission permission="admin.audit.list"><AuditLogsPage /></RequirePermission> : null}
@@ -90,10 +109,17 @@ export function App() {
         "/manual-review",
         "/fraud-signals",
         "/disputes",
+        "/chatbot",
+        "/chatbot/faqs",
+        "/chatbot/intents",
+        "/chatbot/knowledge",
+        "/chatbot/settings",
+        "/chatbot/conversations",
+        "/chatbot/fallbacks",
         "/reconciliation/card",
         "/reconciliation/prontipagos",
         "/audit-logs",
-      ].includes(path) && !userId && !paymentId && !receiptId && !ticketId && !manualReviewId && !fraudSignalId && !disputeId ? <NotFoundPage /> : null}
+      ].includes(path) && !userId && !paymentId && !receiptId && !ticketId && !manualReviewId && !fraudSignalId && !disputeId && !chatbotConversationId ? <NotFoundPage /> : null}
     </AdminLayout>
   );
 }

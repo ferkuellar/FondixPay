@@ -775,3 +775,44 @@ Resolution text is required for reviewed, dismissed, or escalated status.
 | `POST /admin/disputes/{case_id}/evidence` | Append evidence metadata. | `admin.disputes.update` | `dispute.evidence_added` or `chargeback.evidence_added` |
 
 Evidence stores safe metadata and private references only. No external card-network submission is implemented.
+
+## Phase 10X.1 Public Landing Chatbot APIs
+
+Status: implemented for public landing informational routing and internal CRM response management.
+
+Public:
+
+| Endpoint | Purpose | Auth | Notes |
+|---|---|---|---|
+| `POST /api/public/chat` | Answer public landing chatbot questions. | no | Uses anonymous session ID, masks stored user message, and never accesses private customer/payment data. |
+
+Internal admin:
+
+| Endpoint | Purpose | Permission |
+|---|---|---|
+| `GET /admin/chat/faqs` | List FAQ responses. | `admin.chatbot.view` |
+| `POST /admin/chat/faqs` | Create FAQ response. | `admin.chatbot.manage` |
+| `PATCH /admin/chat/faqs/{id}` | Update FAQ response. | `admin.chatbot.manage` |
+| `POST /admin/chat/faqs/{id}/disable` | Disable FAQ response. | `admin.chatbot.manage` |
+| `POST /admin/chat/faqs/{id}/enable` | Enable FAQ response. | `admin.chatbot.manage` |
+| `GET /admin/chat/intents` | List intents. | `admin.chatbot.view` |
+| `POST /admin/chat/intents` | Create intent. | `admin.chatbot.manage` |
+| `PATCH /admin/chat/intents/{id}` | Update intent. | `admin.chatbot.manage` |
+| `POST /admin/chat/intents/{id}/disable` | Disable intent. | `admin.chatbot.manage` |
+| `POST /admin/chat/intents/{id}/enable` | Enable intent. | `admin.chatbot.manage` |
+| `GET /admin/chat/knowledge` | List knowledge entries. | `admin.chatbot.view` |
+| `POST /admin/chat/knowledge` | Create knowledge entry. | `admin.chatbot.manage` |
+| `PATCH /admin/chat/knowledge/{id}` | Update knowledge entry. | `admin.chatbot.manage` |
+| `POST /admin/chat/knowledge/{id}/disable` | Disable knowledge entry. | `admin.chatbot.manage` |
+| `POST /admin/chat/knowledge/{id}/enable` | Enable knowledge entry. | `admin.chatbot.manage` |
+| `GET /admin/chat/conversations` | List conversation history. | `admin.chatbot.conversations.view` |
+| `GET /admin/chat/conversations/{id}` | View masked messages in one conversation. | `admin.chatbot.conversations.view` |
+| `GET /admin/chat/fallbacks` | Review unanswered/fallback prompts. | `admin.chatbot.fallbacks.review` |
+| `GET /admin/chat/settings` | List bot settings. | `admin.chatbot.view` |
+| `PATCH /admin/chat/settings/{key}` | Update one setting value. | `admin.chatbot.settings.manage` |
+
+Rules:
+
+- Public chatbot cannot query private payment, receipt, balance, customer, transaction, OTP, card, or account data.
+- FAQ/rule-only mode works when no AI provider is configured.
+- Admin responses and conversation logs are internal and RBAC-protected.

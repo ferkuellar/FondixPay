@@ -421,3 +421,33 @@ Operating status:
 Next recommended phase:
 
 Phase 12 - Production Readiness Gap Closure, focused on real provider evidence, reconciliation execution, retention/legal policy, admin session hardening, and controlled launch gates.
+
+## Phase 10X.1 - Public Landing Chatbot & Admin Response Console
+
+Current phase: Phase 10X.1 - Public Landing Chatbot & Admin Response Console.
+
+Status: implemented for public landing informational chatbot and internal response management.
+
+Implemented:
+
+- Approved floating chatbot CSS, HTML, SVG, tooltip, panel, bubbles, input, suggested questions, and animations integrated into `landing/index.html`.
+- Prototype `window.claude.complete` usage removed and replaced by `POST /api/public/chat`.
+- Anonymous landing session ID persisted in `localStorage`.
+- Backend public chatbot endpoint with validation, message length limit, FAQ/rule/intent/knowledge/fallback response resolution, safe private-operation routing, masked conversation logging, and audit events.
+- Backend CRM/Admin chatbot APIs for FAQs, intents, knowledge entries, settings, conversations, and fallbacks.
+- SQLAlchemy models and Alembic migration for chatbot response configuration, conversations, messages, fallbacks, and settings.
+- CRM/Admin `Bot de Landing` console for response management and review.
+- Documentation for chatbot architecture, API, data model, permissions, audit, and security controls.
+- Backend tests for public chatbot safety, masking, fallback logging, FAQ matching, admin RBAC, and admin management actions.
+
+Operating status:
+
+- Chatbot is public-facing and informational only.
+- No Meta, WhatsApp Cloud API, Twilio, third-party chat widget, or WhatsApp Web extension was introduced.
+- Public chatbot does not query private customer, payment, receipt, balance, OTP, card, account, provider, ledger, or admin data.
+- AI provider integration remains optional; empty environment values keep FAQ/rule-only operation.
+- Manual visual validation of the landing chatbot remains recommended in a running browser/backend environment.
+
+Next recommended phase:
+
+Phase 10X.2 - Chatbot Content Governance & Landing Visual Validation, focused on approved FAQ content, production support routing policy, analytics/privacy review, browser screenshot validation, and rate-limiting middleware if selected.

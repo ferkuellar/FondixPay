@@ -908,3 +908,97 @@ Statuses: `OPEN`, `UNDER_REVIEW`, `EVIDENCE_GATHERING`, `SUBMITTED`, `WON`, `LOS
 - `created_by`
 
 Evidence records are append-style metadata references. They must not expose private files publicly and must not store PAN, CVV, secrets, or raw provider payloads.
+
+## Phase 10X.1 Chatbot Data Model
+
+Implemented tables:
+
+### `chatbot_faqs`
+
+- `id`
+- `question`
+- `normalized_question`
+- `answer`
+- `category`
+- `priority`
+- `is_active`
+- `created_at`
+- `updated_at`
+- `created_by`
+- `updated_by`
+
+### `chatbot_intents`
+
+- `id`
+- `name`
+- `description`
+- `example_phrases`
+- `response`
+- `severity_hint`
+- `is_active`
+- `created_at`
+- `updated_at`
+- `created_by`
+- `updated_by`
+
+### `chatbot_knowledge_entries`
+
+- `id`
+- `title`
+- `content`
+- `category`
+- `tags`
+- `is_active`
+- `created_at`
+- `updated_at`
+- `created_by`
+- `updated_by`
+
+### `chatbot_conversations`
+
+- `id`
+- `session_id`
+- `source`
+- `page_url`
+- `started_at`
+- `last_message_at`
+- `status`
+- `detected_intent`
+- `confidence`
+- `created_at`
+- `updated_at`
+
+### `chatbot_messages`
+
+- `id`
+- `conversation_id`
+- `sender_type`
+- `message_text_masked`
+- `raw_message_stored`
+- `classification`
+- `created_at`
+
+### `chatbot_fallbacks`
+
+- `id`
+- `conversation_id`
+- `message_id`
+- `message_text_masked`
+- `reason`
+- `reviewed`
+- `created_at`
+
+### `chatbot_settings`
+
+- `id`
+- `key`
+- `value`
+- `updated_at`
+- `updated_by`
+
+Rules:
+
+- Public messages are stored masked by default.
+- Raw private customer/payment/account state is not queried or stored by the public chatbot.
+- Admin response configuration is RBAC-protected and audited.
+- AI provider configuration keys are not stored in the database; they are read from environment variables if approved.

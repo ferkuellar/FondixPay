@@ -21,6 +21,9 @@ PERMISSIONS_BY_ROLE: dict[str, set[str]] = {
         "admin.support_tickets.list",
         "admin.support_tickets.create",
         "admin.support_tickets.update",
+        "admin.chatbot.view",
+        "admin.chatbot.conversations.view",
+        "admin.chatbot.fallbacks.review",
     },
     "FINANCE": {
         "admin.dashboard.view",
@@ -45,6 +48,9 @@ PERMISSIONS_BY_ROLE: dict[str, set[str]] = {
         "admin.disputes.view",
         "admin.disputes.update",
         "admin.support_tickets.list",
+        "admin.chatbot.view",
+        "admin.chatbot.conversations.view",
+        "admin.chatbot.fallbacks.review",
     },
     "ADMIN": {
         "admin.dashboard.view",
@@ -74,6 +80,11 @@ PERMISSIONS_BY_ROLE: dict[str, set[str]] = {
         "admin.support_tickets.update",
         "admin.catalog.view",
         "admin.catalog.manage",
+        "admin.chatbot.view",
+        "admin.chatbot.manage",
+        "admin.chatbot.settings.manage",
+        "admin.chatbot.conversations.view",
+        "admin.chatbot.fallbacks.review",
     },
     "AUDITOR": {
         "admin.dashboard.view",
@@ -96,6 +107,8 @@ PERMISSIONS_BY_ROLE: dict[str, set[str]] = {
         "admin.disputes.list",
         "admin.disputes.view",
         "admin.support_tickets.list",
+        "admin.chatbot.view",
+        "admin.chatbot.conversations.view",
     },
     "SUPER_ADMIN": {
         "admin.dashboard.view",
@@ -128,6 +141,11 @@ PERMISSIONS_BY_ROLE: dict[str, set[str]] = {
         "admin.roles.manage",
         "admin.config.view",
         "admin.config.manage",
+        "admin.chatbot.view",
+        "admin.chatbot.manage",
+        "admin.chatbot.settings.manage",
+        "admin.chatbot.conversations.view",
+        "admin.chatbot.fallbacks.review",
     },
 }
 

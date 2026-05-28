@@ -5,6 +5,12 @@ import type {
   AdminSearchResponse,
   AdminUser,
   AuditEvent,
+  ChatbotConversation,
+  ChatbotFallback,
+  ChatbotFaq,
+  ChatbotIntent,
+  ChatbotKnowledgeEntry,
+  ChatbotSetting,
   DashboardSummary,
   DisputeCase,
   FraudSignal,
@@ -128,5 +134,34 @@ export function createAdminClient(getToken: TokenProvider) {
       request<SupportTicket>(`/admin/support/tickets/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
     addTicketNote: (id: string, payload: { note: string; is_internal: boolean }) =>
       request<SupportTicket>(`/admin/support/tickets/${id}/notes`, { method: "POST", body: JSON.stringify(payload) }),
+    chatbotFaqs: () => request<ChatbotFaq[]>("/admin/chat/faqs"),
+    createChatbotFaq: (payload: Partial<ChatbotFaq>) =>
+      request<ChatbotFaq>("/admin/chat/faqs", { method: "POST", body: JSON.stringify(payload) }),
+    updateChatbotFaq: (id: number, payload: Partial<ChatbotFaq>) =>
+      request<ChatbotFaq>(`/admin/chat/faqs/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
+    enableChatbotFaq: (id: number) => request<ChatbotFaq>(`/admin/chat/faqs/${id}/enable`, { method: "POST" }),
+    disableChatbotFaq: (id: number) => request<ChatbotFaq>(`/admin/chat/faqs/${id}/disable`, { method: "POST" }),
+    chatbotIntents: () => request<ChatbotIntent[]>("/admin/chat/intents"),
+    createChatbotIntent: (payload: Partial<ChatbotIntent>) =>
+      request<ChatbotIntent>("/admin/chat/intents", { method: "POST", body: JSON.stringify(payload) }),
+    updateChatbotIntent: (id: number, payload: Partial<ChatbotIntent>) =>
+      request<ChatbotIntent>(`/admin/chat/intents/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
+    enableChatbotIntent: (id: number) => request<ChatbotIntent>(`/admin/chat/intents/${id}/enable`, { method: "POST" }),
+    disableChatbotIntent: (id: number) => request<ChatbotIntent>(`/admin/chat/intents/${id}/disable`, { method: "POST" }),
+    chatbotKnowledge: () => request<ChatbotKnowledgeEntry[]>("/admin/chat/knowledge"),
+    createChatbotKnowledge: (payload: Partial<ChatbotKnowledgeEntry>) =>
+      request<ChatbotKnowledgeEntry>("/admin/chat/knowledge", { method: "POST", body: JSON.stringify(payload) }),
+    updateChatbotKnowledge: (id: number, payload: Partial<ChatbotKnowledgeEntry>) =>
+      request<ChatbotKnowledgeEntry>(`/admin/chat/knowledge/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
+    enableChatbotKnowledge: (id: number) =>
+      request<ChatbotKnowledgeEntry>(`/admin/chat/knowledge/${id}/enable`, { method: "POST" }),
+    disableChatbotKnowledge: (id: number) =>
+      request<ChatbotKnowledgeEntry>(`/admin/chat/knowledge/${id}/disable`, { method: "POST" }),
+    chatbotConversations: () => request<ChatbotConversation[]>("/admin/chat/conversations"),
+    chatbotConversation: (id: string) => request<ChatbotConversation>(`/admin/chat/conversations/${id}`),
+    chatbotFallbacks: () => request<ChatbotFallback[]>("/admin/chat/fallbacks"),
+    chatbotSettings: () => request<ChatbotSetting[]>("/admin/chat/settings"),
+    updateChatbotSetting: (key: string, value: Record<string, unknown>) =>
+      request<ChatbotSetting>(`/admin/chat/settings/${key}`, { method: "PATCH", body: JSON.stringify({ value }) }),
   };
 }
