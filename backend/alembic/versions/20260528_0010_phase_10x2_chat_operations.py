@@ -3,6 +3,17 @@
 Revision ID: 20260528_0010
 Revises: 20260527_0009
 Create Date: 2026-05-28
+
+SQLite does not support ALTER TABLE ADD CONSTRAINT or DROP CONSTRAINT.
+Tables that require FK additions or removals use op.batch_alter_table()
+with recreate="always", which rebuilds the table via copy-and-rename.
+PostgreSQL uses the same path without issue; the recreate cost is
+acceptable for a dev/migration-time operation.
+
+chatbot_conversations and support_tickets share a circular FK
+(linked_ticket_id ↔ conversation_id). SQLite does not enforce FKs at
+DDL time, so each table can be rebuilt independently in sequence without
+a deferred constraint workaround.
 """
 
 from collections.abc import Sequence
@@ -17,42 +28,48 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    op.add_column("chatbot_conversations", sa.Column("severity", sa.String(length=20), nullable=False, server_default="SEV-4"))
-    op.add_column("chatbot_conversations", sa.Column("suggested_severity", sa.String(length=20), nullable=True))
-    op.add_column("chatbot_conversations", sa.Column("classification_reason", sa.Text(), nullable=True))
-    op.add_column("chatbot_conversations", sa.Column("ai_suggested_severity", sa.String(length=20), nullable=True))
-    op.add_column("chatbot_conversations", sa.Column("linked_ticket_id", sa.Integer(), nullable=True))
-    op.add_column("chatbot_conversations", sa.Column("assigned_to", sa.Integer(), nullable=True))
-    op.add_column("chatbot_conversations", sa.Column("escalation_status", sa.String(length=40), nullable=False, server_default="none"))
-    op.add_column("chatbot_conversations", sa.Column("reviewed_at", sa.DateTime(), nullable=True))
-    op.add_column("chatbot_conversations", sa.Column("reviewed_by", sa.Integer(), nullable=True))
-    op.create_index("ix_chatbot_conversations_severity", "chatbot_conversations", ["severity"])
-    op.create_index("ix_chatbot_conversations_suggested_severity", "chatbot_conversations", ["suggested_severity"])
-    op.create_index("ix_chatbot_conversations_linked_ticket_id", "chatbot_conversations", ["linked_ticket_id"])
-    op.create_index("ix_chatbot_conversations_assigned_to", "chatbot_conversations", ["assigned_to"])
-    op.create_index("ix_chatbot_conversations_escalation_status", "chatbot_conversations", ["escalation_status"])
-    op.create_foreign_key("fk_chatbot_conversations_assigned_to_users", "chatbot_conversations", "users", ["assigned_to"], ["id"])
-    op.create_foreign_key("fk_chatbot_conversations_reviewed_by_users", "chatbot_conversations", "users", ["reviewed_by"], ["id"])
+    # chatbot_conversations — FK additions require batch mode on SQLite.
+    # All columns, indexes, and all three FKs are added in a single batch pass.
+    with op.batch_alter_table("chatbot_conversations", recreate="always") as batch_op:
+        batch_op.add_column(sa.Column("severity", sa.String(length=20), nullable=False, server_default="SEV-4"))
+        batch_op.add_column(sa.Column("suggested_severity", sa.String(length=20), nullable=True))
+        batch_op.add_column(sa.Column("classification_reason", sa.Text(), nullable=True))
+        batch_op.add_column(sa.Column("ai_suggested_severity", sa.String(length=20), nullable=True))
+        batch_op.add_column(sa.Column("linked_ticket_id", sa.Integer(), nullable=True))
+        batch_op.add_column(sa.Column("assigned_to", sa.Integer(), nullable=True))
+        batch_op.add_column(sa.Column("escalation_status", sa.String(length=40), nullable=False, server_default="none"))
+        batch_op.add_column(sa.Column("reviewed_at", sa.DateTime(), nullable=True))
+        batch_op.add_column(sa.Column("reviewed_by", sa.Integer(), nullable=True))
+        batch_op.create_index("ix_chatbot_conversations_severity", ["severity"])
+        batch_op.create_index("ix_chatbot_conversations_suggested_severity", ["suggested_severity"])
+        batch_op.create_index("ix_chatbot_conversations_linked_ticket_id", ["linked_ticket_id"])
+        batch_op.create_index("ix_chatbot_conversations_assigned_to", ["assigned_to"])
+        batch_op.create_index("ix_chatbot_conversations_escalation_status", ["escalation_status"])
+        batch_op.create_foreign_key("fk_chatbot_conversations_assigned_to_users", "users", ["assigned_to"], ["id"])
+        batch_op.create_foreign_key("fk_chatbot_conversations_reviewed_by_users", "users", ["reviewed_by"], ["id"])
+        batch_op.create_foreign_key("fk_chatbot_conversations_linked_ticket_id_support", "support_tickets", ["linked_ticket_id"], ["id"])
 
-    op.add_column("support_tickets", sa.Column("conversation_id", sa.Integer(), nullable=True))
-    op.add_column("support_tickets", sa.Column("ticket_number", sa.String(length=40), nullable=True))
-    op.add_column("support_tickets", sa.Column("source", sa.String(length=40), nullable=False, server_default="admin"))
-    op.add_column("support_tickets", sa.Column("severity", sa.String(length=20), nullable=False, server_default="SEV-3"))
-    op.add_column("support_tickets", sa.Column("title", sa.String(length=180), nullable=True))
-    op.add_column("support_tickets", sa.Column("summary", sa.Text(), nullable=True))
-    op.add_column("support_tickets", sa.Column("customer_message_excerpt", sa.Text(), nullable=True))
-    op.add_column("support_tickets", sa.Column("sla_due_at", sa.DateTime(), nullable=True))
-    op.add_column("support_tickets", sa.Column("first_response_at", sa.DateTime(), nullable=True))
-    op.add_column("support_tickets", sa.Column("resolved_at", sa.DateTime(), nullable=True))
-    op.add_column("support_tickets", sa.Column("reopened_at", sa.DateTime(), nullable=True))
-    op.create_index("ix_support_tickets_conversation_id", "support_tickets", ["conversation_id"])
-    op.create_index("ix_support_tickets_ticket_number", "support_tickets", ["ticket_number"], unique=True)
-    op.create_index("ix_support_tickets_source", "support_tickets", ["source"])
-    op.create_index("ix_support_tickets_severity", "support_tickets", ["severity"])
+    # support_tickets — FK addition requires batch mode on SQLite.
+    # chatbot_conversations was rebuilt above, so the FK target exists.
+    with op.batch_alter_table("support_tickets", recreate="always") as batch_op:
+        batch_op.add_column(sa.Column("conversation_id", sa.Integer(), nullable=True))
+        batch_op.add_column(sa.Column("ticket_number", sa.String(length=40), nullable=True))
+        batch_op.add_column(sa.Column("source", sa.String(length=40), nullable=False, server_default="admin"))
+        batch_op.add_column(sa.Column("severity", sa.String(length=20), nullable=False, server_default="SEV-3"))
+        batch_op.add_column(sa.Column("title", sa.String(length=180), nullable=True))
+        batch_op.add_column(sa.Column("summary", sa.Text(), nullable=True))
+        batch_op.add_column(sa.Column("customer_message_excerpt", sa.Text(), nullable=True))
+        batch_op.add_column(sa.Column("sla_due_at", sa.DateTime(), nullable=True))
+        batch_op.add_column(sa.Column("first_response_at", sa.DateTime(), nullable=True))
+        batch_op.add_column(sa.Column("resolved_at", sa.DateTime(), nullable=True))
+        batch_op.add_column(sa.Column("reopened_at", sa.DateTime(), nullable=True))
+        batch_op.create_index("ix_support_tickets_conversation_id", ["conversation_id"])
+        batch_op.create_index("ix_support_tickets_ticket_number", ["ticket_number"], unique=True)
+        batch_op.create_index("ix_support_tickets_source", ["source"])
+        batch_op.create_index("ix_support_tickets_severity", ["severity"])
+        batch_op.create_foreign_key("fk_support_tickets_conversation_id_chatbot", "chatbot_conversations", ["conversation_id"], ["id"])
 
-    op.create_foreign_key("fk_support_tickets_conversation_id_chatbot", "support_tickets", "chatbot_conversations", ["conversation_id"], ["id"])
-    op.create_foreign_key("fk_chatbot_conversations_linked_ticket_id_support", "chatbot_conversations", "support_tickets", ["linked_ticket_id"], ["id"])
-
+    # chatbot_conversation_events — created fresh; FKs declared inline, no batch needed.
     op.create_table(
         "chatbot_conversation_events",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -72,6 +89,7 @@ def upgrade() -> None:
     op.create_index("ix_chatbot_conversation_events_actor_id", "chatbot_conversation_events", ["actor_id"])
     op.create_index("ix_chatbot_conversation_events_created_at", "chatbot_conversation_events", ["created_at"])
 
+    # chatbot_internal_notes — created fresh; FKs declared inline, no batch needed.
     op.create_table(
         "chatbot_internal_notes",
         sa.Column("id", sa.Integer(), nullable=False),
@@ -89,6 +107,7 @@ def upgrade() -> None:
 
 
 def downgrade() -> None:
+    # Drop child tables first — both reference chatbot_conversations.
     op.drop_index("ix_chatbot_internal_notes_created_at", table_name="chatbot_internal_notes")
     op.drop_index("ix_chatbot_internal_notes_author_id", table_name="chatbot_internal_notes")
     op.drop_index("ix_chatbot_internal_notes_conversation_id", table_name="chatbot_internal_notes")
@@ -99,37 +118,42 @@ def downgrade() -> None:
     op.drop_index("ix_chatbot_conversation_events_conversation_id", table_name="chatbot_conversation_events")
     op.drop_table("chatbot_conversation_events")
 
-    op.drop_constraint("fk_chatbot_conversations_linked_ticket_id_support", "chatbot_conversations", type_="foreignkey")
-    op.drop_constraint("fk_support_tickets_conversation_id_chatbot", "support_tickets", type_="foreignkey")
-    op.drop_index("ix_support_tickets_severity", table_name="support_tickets")
-    op.drop_index("ix_support_tickets_source", table_name="support_tickets")
-    op.drop_index("ix_support_tickets_ticket_number", table_name="support_tickets")
-    op.drop_index("ix_support_tickets_conversation_id", table_name="support_tickets")
-    op.drop_column("support_tickets", "reopened_at")
-    op.drop_column("support_tickets", "resolved_at")
-    op.drop_column("support_tickets", "first_response_at")
-    op.drop_column("support_tickets", "sla_due_at")
-    op.drop_column("support_tickets", "customer_message_excerpt")
-    op.drop_column("support_tickets", "summary")
-    op.drop_column("support_tickets", "title")
-    op.drop_column("support_tickets", "severity")
-    op.drop_column("support_tickets", "source")
-    op.drop_column("support_tickets", "ticket_number")
-    op.drop_column("support_tickets", "conversation_id")
+    # support_tickets — drop FK to chatbot_conversations first to break the circular
+    # reference, then drop indexes and columns.
+    with op.batch_alter_table("support_tickets", recreate="always") as batch_op:
+        batch_op.drop_constraint("fk_support_tickets_conversation_id_chatbot", type_="foreignkey")
+        batch_op.drop_index("ix_support_tickets_severity")
+        batch_op.drop_index("ix_support_tickets_source")
+        batch_op.drop_index("ix_support_tickets_ticket_number")
+        batch_op.drop_index("ix_support_tickets_conversation_id")
+        batch_op.drop_column("reopened_at")
+        batch_op.drop_column("resolved_at")
+        batch_op.drop_column("first_response_at")
+        batch_op.drop_column("sla_due_at")
+        batch_op.drop_column("customer_message_excerpt")
+        batch_op.drop_column("summary")
+        batch_op.drop_column("title")
+        batch_op.drop_column("severity")
+        batch_op.drop_column("source")
+        batch_op.drop_column("ticket_number")
+        batch_op.drop_column("conversation_id")
 
-    op.drop_constraint("fk_chatbot_conversations_reviewed_by_users", "chatbot_conversations", type_="foreignkey")
-    op.drop_constraint("fk_chatbot_conversations_assigned_to_users", "chatbot_conversations", type_="foreignkey")
-    op.drop_index("ix_chatbot_conversations_escalation_status", table_name="chatbot_conversations")
-    op.drop_index("ix_chatbot_conversations_assigned_to", table_name="chatbot_conversations")
-    op.drop_index("ix_chatbot_conversations_linked_ticket_id", table_name="chatbot_conversations")
-    op.drop_index("ix_chatbot_conversations_suggested_severity", table_name="chatbot_conversations")
-    op.drop_index("ix_chatbot_conversations_severity", table_name="chatbot_conversations")
-    op.drop_column("chatbot_conversations", "reviewed_by")
-    op.drop_column("chatbot_conversations", "reviewed_at")
-    op.drop_column("chatbot_conversations", "escalation_status")
-    op.drop_column("chatbot_conversations", "assigned_to")
-    op.drop_column("chatbot_conversations", "linked_ticket_id")
-    op.drop_column("chatbot_conversations", "ai_suggested_severity")
-    op.drop_column("chatbot_conversations", "classification_reason")
-    op.drop_column("chatbot_conversations", "suggested_severity")
-    op.drop_column("chatbot_conversations", "severity")
+    # chatbot_conversations — support_tickets no longer references it, safe to rebuild.
+    with op.batch_alter_table("chatbot_conversations", recreate="always") as batch_op:
+        batch_op.drop_constraint("fk_chatbot_conversations_linked_ticket_id_support", type_="foreignkey")
+        batch_op.drop_constraint("fk_chatbot_conversations_reviewed_by_users", type_="foreignkey")
+        batch_op.drop_constraint("fk_chatbot_conversations_assigned_to_users", type_="foreignkey")
+        batch_op.drop_index("ix_chatbot_conversations_escalation_status")
+        batch_op.drop_index("ix_chatbot_conversations_assigned_to")
+        batch_op.drop_index("ix_chatbot_conversations_linked_ticket_id")
+        batch_op.drop_index("ix_chatbot_conversations_suggested_severity")
+        batch_op.drop_index("ix_chatbot_conversations_severity")
+        batch_op.drop_column("reviewed_by")
+        batch_op.drop_column("reviewed_at")
+        batch_op.drop_column("escalation_status")
+        batch_op.drop_column("assigned_to")
+        batch_op.drop_column("linked_ticket_id")
+        batch_op.drop_column("ai_suggested_severity")
+        batch_op.drop_column("classification_reason")
+        batch_op.drop_column("suggested_severity")
+        batch_op.drop_column("severity")
