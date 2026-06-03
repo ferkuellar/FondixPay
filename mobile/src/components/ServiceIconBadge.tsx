@@ -17,8 +17,8 @@ function iconName(category: string): keyof typeof Feather.glyphMap {
     telecom: 'wifi',
     PHONE: 'smartphone',
     mobile_topup_or_bill: 'smartphone',
-    GAS: 'droplet',
-    gas: 'droplet',
+    GAS: 'thermometer',
+    gas: 'thermometer',
     WATER: 'droplet',
     water: 'droplet',
     TV: 'tv',
@@ -31,10 +31,21 @@ function iconName(category: string): keyof typeof Feather.glyphMap {
 
 export function ServiceIconBadge({ category, size = 48 }: Props) {
   const tint = serviceColorForCategory(category);
-  const iconSize = Math.round(size * 0.45);
+  const iconSize = Math.round(size * 0.44);
+  const borderRadius = Math.round(size * 0.29); // ~14px at size=48
 
   return (
-    <View style={[styles.badge, { backgroundColor: `${tint}22`, height: size, width: size, borderRadius: size / 2 }]}>
+    <View
+      style={[
+        styles.badge,
+        {
+          backgroundColor: `${tint}22`,
+          height: size,
+          width: size,
+          borderRadius,
+        },
+      ]}
+    >
       <Feather color={tint} name={iconName(category)} size={iconSize} />
     </View>
   );

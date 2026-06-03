@@ -34,11 +34,13 @@ export const colors = {
   disabledBg: dayTheme.disabledBg,
   disabledFg: dayTheme.disabledFg,
   service: {
-    luz: '#22C55E',
-    internet: '#3B82F6',
-    celular: '#8B5CF6',
-    gas: '#F97316',
-    agua: '#06B6D4',
+    luz: '#F59E0B',        // amber — CFE/Electricity (design kit mapping)
+    internet: '#22C55E',   // green — Internet
+    celular: '#8B5CF6',    // purple — Celular/TAE
+    gas: '#F97316',        // orange — Gas
+    agua: '#0EA5E9',       // sky — Water
+    streaming: '#EC4899',  // pink — Streaming/TV
+    gobierno: '#10B981',   // emerald — Government services
   },
   /** @deprecated Use bgSubtle */
   background: '#F9FAFB',
@@ -63,8 +65,8 @@ export function serviceColorForCategory(category: string) {
     gas: colors.service.gas,
     WATER: colors.service.agua,
     water: colors.service.agua,
-    TV: colors.service.internet,
-    government: colors.textSecondary,
+    TV: colors.service.streaming,
+    government: colors.service.gobierno,
     OTHER: colors.textSecondary,
     other: colors.textSecondary,
   };

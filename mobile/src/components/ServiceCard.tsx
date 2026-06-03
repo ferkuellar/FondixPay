@@ -1,9 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
 import type { SavedService } from '../types';
 import { radius, shadows, spacing, typography, useAppTheme } from '../theme';
 import { ServiceIconBadge } from './ServiceIconBadge';
-import { StatusBadge, type StatusBadgeVariant } from './StatusBadge';
 
 type Props = {
   service: SavedService;
@@ -11,89 +11,128 @@ type Props = {
   onPay: () => void;
 };
 
-function badgeForService(service: SavedService): { variant: StatusBadgeVariant; label: string } {
+function dueState(service: SavedService): 'paid' | 'urgent' | 'normal' {
+  if (service.amountDue <= 0) return 'paid';
   const due = service.dueText.toLowerCase();
-  if (service.amountDue <= 0) return { variant: 'paid', label: 'Pagado' };
-  if (due.includes('hoy')) return { variant: 'due-today', label: 'Vence hoy' };
-  if (due.includes('pendiente')) return { variant: 'pending', label: 'Pendiente' };
-  return { variant: 'due-soon', label: service.dueText };
+  if (due.includes('hoy') || due.includes('vence en 1') || due.includes('vence en 2') || due.includes('vence en 3')) return 'urgent';
+  return 'normal';
 }
 
 export function ServiceCard({ service, onPress, onPay }: Props) {
   const { theme } = useAppTheme();
-  const badge = badgeForService(service);
+  const state = dueState(service);
   const canPay = service.amountDue > 0;
+  const amountFormatted =
+    '$' +
+    service.amountDue.toLocaleString('es-MX', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
   return (
-    <View style={[styles.card, shadows.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-      <Pressable onPress={onPress} style={styles.main}>
-        <ServiceIconBadge category={service.provider.category} />
-        <View style={styles.body}>
-          <Text style={[styles.title, { color: theme.fg }]}>
-            {service.alias} ({service.provider.displayName})
+    <Pressable
+      onPress={onPress}
+      style={[styles.card, shadows.card, { backgroundColor: theme.surface }]}
+      accessibilityRole="button"
+    >
+      <ServiceIconBadge category={service.provider.category} size={48} />
+
+      <View style={styles.body}>
+        <Text style={[styles.title, { color: theme.fg }]} numberOfLines={1}>
+          {service.alias}
+        </Text>
+        <View style={styles.dueRow}>
+          {state === 'urgent' && (
+            <Feather name="alert-triangle" size={12} color={theme.warning} style={styles.dueIcon} />
+          )}
+          <Text
+            style={[
+              styles.dueText,
+              {
+                color:
+                  state === 'urgent'
+                    ? theme.warning
+                    : state === 'paid'
+                    ? theme.success
+                    : theme.fg3,
+              },
+            ]}
+            numberOfLines={1}
+          >
+            {state === 'paid' ? 'Al corriente' : service.dueText}
           </Text>
-          <StatusBadge label={badge.label} variant={badge.variant} />
         </View>
-      </Pressable>
-      <View style={styles.actions}>
-        <Text style={[styles.amount, { color: canPay ? theme.error : theme.success }]}>${service.amountDue.toFixed(0)}</Text>
-        <Pressable
-          accessibilityRole="button"
-          disabled={!canPay}
-          onPress={onPay}
-          style={[styles.payButton, { backgroundColor: canPay ? theme.primary : theme.disabledBg }, !canPay && styles.payButtonDisabled]}
-        >
-          <Text style={styles.payButtonText}>{canPay ? 'PAGAR' : 'LISTO'}</Text>
-        </Pressable>
       </View>
-    </View>
+
+      <View style={styles.right}>
+        <Text style={[styles.amount, { color: theme.fg }]}>{amountFormatted}</Text>
+        {canPay ? (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={`Pagar ${service.alias}`}
+            onPress={onPay}
+            hitSlop={8}
+          >
+            <Text style={[styles.payLink, { color: theme.primary }]}>Pagar →</Text>
+          </Pressable>
+        ) : (
+          <Text style={[styles.paidLabel, { color: theme.success }]}>✓ Listo</Text>
+        )}
+      </View>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  actions: {
-    alignItems: 'flex-end',
-    gap: spacing.sm,
-  },
   amount: {
-    ...typography.heading,
     ...typography.amountSmall,
-    fontSize: 18,
+    fontSize: 17,
+    letterSpacing: -0.3,
+    textAlign: 'right',
   },
   body: {
     flex: 1,
     gap: spacing.xs,
+    minWidth: 0,
   },
   card: {
     alignItems: 'center',
     borderRadius: radius.lg,
-    borderWidth: 1,
     flexDirection: 'row',
     gap: spacing.md,
     padding: spacing.lg,
   },
-  main: {
+  dueIcon: {
+    marginTop: 1,
+  },
+  dueRow: {
     alignItems: 'center',
-    flex: 1,
     flexDirection: 'row',
-    gap: spacing.md,
+    gap: 4,
   },
-  payButton: {
-    borderRadius: radius.pill,
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.sm,
+  dueText: {
+    fontSize: 12.5,
+    fontWeight: '600',
   },
-  payButtonDisabled: {
-    opacity: 0.45,
-  },
-  payButtonText: {
-    ...typography.caption,
-    color: '#FFFFFF',
+  paidLabel: {
+    fontSize: 12,
     fontWeight: '700',
-    letterSpacing: 0.5,
+    marginTop: 4,
+    textAlign: 'right',
+  },
+  payLink: {
+    fontSize: 12,
+    fontWeight: '700',
+    marginTop: 4,
+    textAlign: 'right',
+  },
+  right: {
+    alignItems: 'flex-end',
+    flexShrink: 0,
   },
   title: {
     ...typography.body,
     fontWeight: '700',
+    fontSize: 14.5,
   },
 });

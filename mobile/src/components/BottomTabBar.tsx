@@ -4,7 +4,7 @@ import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 
 import type { RootStackParamList } from '../types';
-import { radius, spacing, typography, useAppTheme } from '../theme';
+import { spacing, typography, useAppTheme } from '../theme';
 
 export type TabKey = 'Home' | 'AddService' | 'History' | 'Profile';
 
@@ -27,10 +27,12 @@ type Props = {
 
 export function BottomTabBar({ active }: Props) {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const { theme } = useAppTheme();
+  const { theme, mode } = useAppTheme();
+
+  const barBg = mode === 'night' ? 'rgba(7, 15, 30, 0.97)' : 'rgba(255, 255, 255, 0.97)';
 
   return (
-    <View style={[styles.bar, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
+    <View style={[styles.bar, { backgroundColor: barBg, borderTopColor: theme.border }]}>
       {TABS.map((tab) => {
         const isActive = tab.key === active;
         return (
@@ -41,10 +43,15 @@ export function BottomTabBar({ active }: Props) {
             onPress={() => navigation.navigate(tab.key)}
             style={styles.tab}
           >
-            <View style={[styles.iconWrap, isActive && { backgroundColor: `${theme.primary}18` }]}>
-              <Feather color={isActive ? theme.primary : theme.fg3} name={tab.icon} size={21} />
-            </View>
-            <Text style={[styles.label, { color: isActive ? theme.primary : theme.fg3 }]}>{tab.label}</Text>
+            <Feather
+              color={isActive ? theme.primary : theme.fg3}
+              name={tab.icon}
+              size={24}
+              strokeWidth={isActive ? 2.3 : 1.8}
+            />
+            <Text style={[styles.label, { color: isActive ? theme.primary : theme.fg3 }]}>
+              {tab.label}
+            </Text>
           </Pressable>
         );
       })}
@@ -56,18 +63,14 @@ const styles = StyleSheet.create({
   bar: {
     borderTopWidth: 1,
     flexDirection: 'row',
-    paddingBottom: spacing.sm,
+    paddingBottom: spacing.lg,
     paddingTop: spacing.sm,
-  },
-  iconWrap: {
-    alignItems: 'center',
-    borderRadius: radius.pill,
-    height: 32,
-    justifyContent: 'center',
-    width: 44,
+    paddingHorizontal: spacing.sm,
   },
   label: {
     ...typography.caption,
+    fontSize: 11,
+    fontWeight: '600',
     marginTop: spacing.xs,
   },
   tab: {
