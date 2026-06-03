@@ -77,6 +77,37 @@ Key historical files:
 
 ---
 
+## Feature Flag States
+
+FONDIXPAY controls Tekae activation through two environment variables. These must progress in order — no skipping.
+
+| State | `TEKAE_ENABLED` | `TEKAE_MODE` | Meaning |
+|---|---|---|---|
+| `disabled` | `false` | `disabled` | Default. No Tekae calls. Users see "Servicio en preparación." |
+| `unavailable` | `false` | `unavailable` | Tekae known but not yet connectable (docs received, sandbox not ready). |
+| `ready_for_sandbox` | `false` | `ready_for_sandbox` | Sandbox tested. Awaiting production approval. |
+| `ready_for_production` | `true` | `ready_for_production` | Fully approved. Live payments active. |
+
+**TEKAE_ENABLED must not be set to `true` without explicit product + security sign-off.**
+
+The feature flag constants live in `mobile/src/integrations/tekae/constants.ts`.
+
+---
+
+## Mobile UX — Disabled State
+
+While `TEKAE_ENABLED=false`, any screen that would offer a Tekae payment action must show:
+
+> **"Servicio en preparación. Muy pronto podrás pagar desde FONDIXPAY."**
+
+Rules:
+- Do not reveal "Tekae" as a provider name to users without product approval.
+- Do not show technical error codes or HTTP status codes.
+- Do not show a broken payment button — replace with the informational message above.
+- The support path must still be reachable from the payment failure screen.
+
+---
+
 ## Related Documents
 
 - `docs/integrations/TEKAE_API_CONTRACT.md` — API contract placeholder (TBD)

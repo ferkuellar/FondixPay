@@ -481,3 +481,42 @@ Operating status:
 Next recommended phase:
 
 Phase 10X.3 - Chat Operations QA & Content Governance, focused on seeded chatbot content, browser visual validation against the CRM design reference, SLA policy tuning, and production support-channel approval.
+
+## Phase 8B.1 — Production Readiness & Tekae Pre-Integration Scaffolding
+
+Current phase: Phase 8B.1 — Production Readiness & Tekae Pre-Integration Scaffolding.
+
+Status: documentation and safe scaffolding complete. No runtime code changed. No Tekae behavior implemented.
+
+Implemented:
+
+- `docs/PRODUCTION_READINESS.md` — master production gate checklist (8 gates).
+- `docs/ENVIRONMENTS.md` — environment strategy for local, dev, staging, and production.
+- `docs/RELEASE_CHECKLIST.md` — release gate checklist with sign-off fields.
+- `docs/ROLLBACK.md` — rollback procedures for backend, mobile, Tekae integration, and infra.
+- `docs/OBSERVABILITY.md` — event taxonomy (app, payment, integration, support), error categories, user-facing message standards.
+- `docs/SUPPORT_RUNBOOK.md` — mobile-user-facing support runbook for Tekae era.
+- `planning/STATE.md` — updated with current project state.
+- `mobile/src/integrations/tekae/README.md` — shell description and implementation gate.
+- `mobile/src/integrations/tekae/constants.ts` — `TEKAE_ENABLED=false`, `TEKAE_MODE='disabled'`.
+- `mobile/src/integrations/tekae/types.ts` — TypeScript type stubs (no API calls).
+- `mobile/src/integrations/tekae/statusMapper.ts` — placeholder, throws `TekaeIntegrationDisabledError` if called.
+- `mobile/src/integrations/tekae/errors.ts` — error class stubs only.
+- `.env.example` — Tekae feature flag section added.
+- `docs/integrations/TEKAE.md` — feature flag states and UX disabled state specification added.
+- `planning/TEKAE_RISKS.md` — RISK-T010 added (no production readiness documentation).
+
+Operating status:
+
+- `TEKAE_ENABLED=false` and `TEKAE_MODE=disabled` in all environments.
+- No Tekae API endpoints invented.
+- No payment execution code added.
+- All integration shell files throw or no-op if called at runtime.
+- Prontipagos historical artifacts preserved and untouched.
+- TypeScript compiles with 0 errors.
+- Real payments remain blocked.
+- Commercial production remains blocked.
+
+Next recommended phase:
+
+Phase 008b-tekae-integration-discovery closure — obtain official Tekae documentation, answer all 14 open questions in `planning/TEKAE_OPEN_QUESTIONS.md`, then produce an implementation sprint proposal.

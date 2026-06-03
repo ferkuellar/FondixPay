@@ -158,6 +158,22 @@ Each risk is rated by **Likelihood** (L/M/H) and **Impact** (L/M/H).
 
 ---
 
+### RISK-T010 — Production Readiness Not Documented
+| Field | Value |
+|---|---|
+| Likelihood | H |
+| Impact | M |
+| Priority | HIGH |
+| Status | Mitigated this sprint |
+
+**Description:** Without a formal production readiness checklist, release gates, rollback procedures, and environment strategy, FONDIXPAY could be deployed prematurely or without verifiable evidence that critical safety conditions are met.
+
+**Consequence:** Production deployment with incomplete security, auth, or provider integration. Financial and reputational risk.
+
+**Mitigation (applied):** Created `docs/PRODUCTION_READINESS.md`, `docs/ENVIRONMENTS.md`, `docs/RELEASE_CHECKLIST.md`, `docs/ROLLBACK.md`, `docs/OBSERVABILITY.md`, and `docs/SUPPORT_RUNBOOK.md` in sprint 8B.1. All production gates are now tracked and signed-off.
+
+---
+
 ## Resolved Risks
 
 > *(None yet.)*
