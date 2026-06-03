@@ -520,3 +520,28 @@ Operating status:
 Next recommended phase:
 
 Phase 008b-tekae-integration-discovery closure — obtain official Tekae documentation, answer all 14 open questions in `planning/TEKAE_OPEN_QUESTIONS.md`, then produce an implementation sprint proposal.
+
+## Phase 8B.2 — Tekae Integration Shell (Formal Record)
+
+Current phase: Phase 8B.2 — Tekae Integration Shell.
+
+Status: COMPLETE. Sprint 8B.2 reviewed and formally recorded the integration shell delivered in Sprint 8B.1. No shell files were modified. No payment runtime was changed.
+
+Sprint record created:
+
+- `planning/sprints/008b2-tekae-integration-shell/requirements.md`
+- `planning/sprints/008b2-tekae-integration-shell/acceptance.md`
+- `planning/sprints/008b2-tekae-integration-shell/COMPLETION_REPORT.md`
+
+All 12 acceptance criteria passed. TypeScript compiles with 0 errors. `TEKAE_ENABLED=false` confirmed. No API calls, endpoints, or payloads invented.
+
+Operating status:
+
+- Integration shell is inert and safe. No runtime Tekae behavior.
+- All 14 open questions in `planning/TEKAE_OPEN_QUESTIONS.md` remain unresolved.
+- Real payments remain blocked.
+- Commercial production remains blocked.
+
+Next recommended phase:
+
+Sprint `008b-tekae-integration-discovery` — business action required first: establish Tekae Business contact and obtain official API documentation.
