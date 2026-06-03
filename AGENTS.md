@@ -4,6 +4,8 @@ FONDIX PAY / FondixPay is a mobile-first application for domestic service paymen
 
 Current status: existing MVP mock/dev implementation. It is not a real financial production system and must not be represented as production-ready.
 
+FONDIXPAY is not a fintech, bank, wallet, card processor, acquirer, SPEI processor, or banking core. Tekae is the approved payment provider. FONDIXPAY only embeds Tekae payment capabilities and may generate backend Tekae SSO tokens when an approved Tekae integration sprint defines the contract.
+
 ## Current Stack
 
 - Mobile: Expo, React Native, TypeScript, React Navigation, Zustand, Expo Secure Store.
@@ -24,6 +26,8 @@ Every Builder must read these files before changing implementation:
 8. `docs/ARCHITECTURE.md`
 9. `docs/API.md`
 10. `docs/SECURITY.md`
+11. `docs/HARNESS.md`
+12. `docs/PROVIDER_BOUNDARIES.md`
 
 ## Operating Rules
 
@@ -38,6 +42,16 @@ Every Builder must read these files before changing implementation:
 - Do not declare the product production-ready while payment, receipt, OTP, and provider flows remain mock/dev.
 - Preserve AXON-AI Architect / Builder separation: Architect defines approved scope and Builder implements only against `requirements.md`, `blueprint.md`, and `acceptance.md`.
 
+## Provider Architecture Guardrails
+
+- Tekae is the approved payment provider for FONDIXPAY.
+- FONDIXPAY must only embed Tekae payment capabilities; it must not duplicate Tekae payment infrastructure.
+- Backend may generate Tekae SSO tokens only after an approved sprint defines the Tekae SSO contract, security controls, token lifetime, audit events, and failure behavior.
+- FONDIXPAY must not present itself as a fintech, bank, wallet, processor, acquirer, SPEI processor, or banking core.
+- FONDIXPAY must never implement a card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, or banking core.
+- Any provider-facing implementation must keep secrets out of the repo and must preserve backend auth, authorization, audit, and redaction controls.
+- Documentation may define boundaries and harnesses; application code must not change unless an approved sprint explicitly authorizes it.
+
 ## Current Mock Scope
 
 The current flow supports phone login, development OTP `123456`, adding CFE/Telmex/Telcel services, mock payment confirmation, mock receipt generation, and mock history.
@@ -51,7 +65,6 @@ All durable decisions must be recorded in `planning/DECISIONS.md`. All current s
 Agents may use the Controlled Iterative Agent Loop only for bounded, testable, auditable tasks such as documentation fixes, lint/typecheck cleanup, small refactors, and test generation.
 
 This technique does not override AXON-AI rules, phase scope, security controls, human approvals, or roadmap governance.
-
 
 ## FONDIXPAY CRM Design Handoff
 
@@ -71,3 +84,18 @@ Before modifying CRM/admin UI, inspect:
 Do not redesign the CRM.
 
 The implementation must preserve the reference design as closely as possible.
+
+
+## Mandatory Reading Order
+
+Every Builder must read:
+
+1. AGENTS.md
+2. planning/STATE.md
+3. planning/DECISIONS.md
+4. docs/HARNESS.md
+5. docs/PROVIDER_BOUNDARIES.md
+6. docs/ARCHITECTURE.md
+7. Active Sprint Files
+
+Do not start implementation before reading them.
