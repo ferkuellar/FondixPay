@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { BalanceCard } from '../../components/BalanceCard';
@@ -197,7 +197,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: spacing.xl,
-    paddingTop: spacing.md,
+    paddingTop: Platform.select({
+      android: (StatusBar.currentHeight ?? 0) + spacing.lg,
+      default: spacing.xxl,
+    }),
   },
   headerLeft: {
     alignItems: 'center',

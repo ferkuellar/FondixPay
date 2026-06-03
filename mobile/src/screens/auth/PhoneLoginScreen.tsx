@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import { NumericKeypad } from '../../components/NumericKeypad';
 import { PhoneInput } from '../../components/PhoneInput';
@@ -42,11 +42,13 @@ export function PhoneLoginScreen({ navigation }: Props) {
   return (
     <Screen padded={false} style={styles.screen}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.flex}>
-        <View style={styles.centered}>
+        <View style={styles.layout}>
           <View style={styles.content}>
             <Text style={[styles.title, { color: theme.fg }]}>Tu número de celular</Text>
             <Text style={[styles.subtitle, { color: theme.fg2 }]}>Te enviaremos un código por SMS para entrar. Es gratis.</Text>
-            <PhoneInput value={cleanPhone} />
+            <View style={styles.phoneContainer}>
+              <PhoneInput value={cleanPhone} />
+            </View>
             <Text style={[styles.hint, { color: theme.fg3 }]}>Solo lo usaremos para identificarte.</Text>
             <View style={[styles.securityCard, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
               <Text style={[styles.securityTitle, { color: theme.info }]}>Tu información está segura</Text>
@@ -60,7 +62,9 @@ export function PhoneLoginScreen({ navigation }: Props) {
               CONTINUAR
             </PrimaryButton>
           </View>
-          <NumericKeypad onBackspace={backspace} onKeyPress={appendDigit} />
+          <View style={styles.keypad}>
+            <NumericKeypad onBackspace={backspace} onKeyPress={appendDigit} />
+          </View>
         </View>
       </KeyboardAvoidingView>
     </Screen>
@@ -68,16 +72,22 @@ export function PhoneLoginScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  centered: {
+  layout: {
+    alignSelf: 'center',
     flex: 1,
-    justifyContent: 'space-between',
-    paddingBottom: spacing.xl,
+    justifyContent: 'flex-start',
+    maxWidth: 430,
+    paddingBottom: spacing.lg,
+    paddingHorizontal: spacing.xl,
+    width: '100%',
   },
   content: {
     gap: spacing.md,
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.md,
+    paddingBottom: spacing.lg,
+    paddingTop: Platform.select({
+      android: (StatusBar.currentHeight ?? 0) + spacing.lg,
+      default: spacing.xl,
+    }),
   },
   devHint: {
     ...typography.bodySmall,
@@ -91,6 +101,15 @@ const styles = StyleSheet.create({
   hint: {
     ...typography.bodySmall,
     textAlign: 'center',
+  },
+  keypad: {
+    marginTop: spacing.xxxl,
+  },
+  phoneContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.md,
+    width: '100%',
   },
   securityCard: {
     borderRadius: radius.lg,

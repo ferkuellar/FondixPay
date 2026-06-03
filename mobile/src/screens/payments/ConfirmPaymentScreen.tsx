@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { ErrorState } from '../../components/ErrorState';
 import { LoadingState } from '../../components/LoadingState';
@@ -103,87 +103,99 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
 
   return (
     <Screen>
-      <View style={[sharedStyles.container, { justifyContent: 'space-between' }]}>
-        <View style={styles.content}>
-          <AmountCard
-            amountMinor={breakdown.totalMinor}
-            label="Total a pagar"
-            footer="Revisa el monto antes de confirmar. No haremos otro pago automático."
-          />
-          <PaymentSummaryCard
-            alias={service.alias}
-            amount={service.amountDue}
-            category={service.provider.category}
-            paymentMethod={selectedPaymentMethod?.label}
-            paymentMethodNote={selectedPaymentMethod?.isMock ? 'Tarjeta demo · sin cargo real' : undefined}
-            providerName={service.provider.displayName}
-            reference={service.reference}
-          />
-          <View style={styles.methodSection}>
-            <View style={styles.methodHeader}>
-              <Text style={[styles.methodTitle, { color: theme.fg }]}>Método de pago</Text>
-              <PrimaryButton
-                onPress={() => navigation.navigate('PaymentMethods', { serviceId: service.id })}
-                size="md"
-                variant="secondary"
-              >
-                {selectedPaymentMethod ? 'CAMBIAR' : 'AGREGAR'}
-              </PrimaryButton>
-            </View>
-            {selectedPaymentMethod ? (
-              <>
-                <PaymentMethodCard method={selectedPaymentMethod} selected compact />
-                <PaymentMethodDemoNotice compact />
-              </>
-            ) : (
-              <AlertCard
-                tone="warning"
-                title="Agrega una tarjeta demo para continuar"
-                message="No se realizará ningún cargo real. Este paso evita mostrar métodos de pago fantasma."
-              />
-            )}
-          </View>
-          <AlertCard
-            tone="info"
-            title="Tu pago está protegido"
-            message="Confirmaremos el servicio con el proveedor mock. Si WhatsApp no está disponible, tu comprobante seguirá guardado en la app."
-          />
-          <View style={[styles.scenarioSection, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
-            <Text style={[styles.scenarioTitle, { color: theme.fg }]}>Escenario demo</Text>
-            <Text style={[styles.scenarioCopy, { color: theme.fg2 }]}>Prueba recovery mock sin proveedor real ni cargo real.</Text>
-            <View style={styles.scenarioList}>
-              {(['succeeded', 'failed', 'pending', 'timeout', 'duplicate_blocked'] as const).map((scenario) => (
-                <Pressable
-                  key={scenario}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected: mockScenario === scenario }}
-                  onPress={() => setMockScenario(scenario)}
-                  style={[
-                    styles.scenarioChip,
-                    { backgroundColor: theme.surface, borderColor: theme.border },
-                    mockScenario === scenario && { backgroundColor: `${theme.primary}18`, borderColor: theme.primary },
-                  ]}
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false} style={styles.scroll}>
+          <View style={styles.content}>
+            <AmountCard
+              amountMinor={breakdown.totalMinor}
+              label="Total a pagar"
+              footer="Revisa el monto antes de confirmar. No haremos otro pago automático."
+            />
+            <PaymentSummaryCard
+              alias={service.alias}
+              amount={service.amountDue}
+              category={service.provider.category}
+              paymentMethod={selectedPaymentMethod?.label}
+              paymentMethodNote={selectedPaymentMethod?.isMock ? 'Tarjeta demo · sin cargo real' : undefined}
+              providerName={service.provider.displayName}
+              reference={service.reference}
+            />
+            <View style={styles.methodSection}>
+              <View style={styles.methodHeader}>
+                <Text style={[styles.methodTitle, { color: theme.fg }]}>Método de pago</Text>
+                <PrimaryButton
+                  onPress={() => navigation.navigate('PaymentMethods', { serviceId: service.id })}
+                  size="md"
+                  variant="secondary"
                 >
-                  <Text style={[styles.scenarioChipText, { color: mockScenario === scenario ? theme.primary : theme.fg2 }]}>
-                    {scenario.replace('_', ' ')}
-                  </Text>
-                </Pressable>
-              ))}
+                  {selectedPaymentMethod ? 'CAMBIAR' : 'AGREGAR'}
+                </PrimaryButton>
+              </View>
+              {selectedPaymentMethod ? (
+                <>
+                  <PaymentMethodCard method={selectedPaymentMethod} selected compact />
+                  <PaymentMethodDemoNotice compact />
+                </>
+              ) : (
+                <AlertCard
+                  tone="warning"
+                  title="Agrega una tarjeta demo para continuar"
+                  message="No se realizará ningún cargo real. Este paso evita mostrar métodos de pago fantasma."
+                />
+              )}
             </View>
-            {duplicateMessage ? <Text style={[styles.duplicateText, { color: theme.warning }]}>Ya estamos procesando este pago.</Text> : null}
+            <AlertCard
+              tone="info"
+              title="Tu pago está protegido"
+              message="Confirmaremos el servicio con el proveedor mock. Si WhatsApp no está disponible, tu comprobante seguirá guardado en la app."
+            />
+            <View style={[styles.scenarioSection, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
+              <Text style={[styles.scenarioTitle, { color: theme.fg }]}>Escenario demo</Text>
+              <Text style={[styles.scenarioCopy, { color: theme.fg2 }]}>Prueba recovery mock sin proveedor real ni cargo real.</Text>
+              <View style={styles.scenarioList}>
+                {(['succeeded', 'failed', 'pending', 'timeout', 'duplicate_blocked'] as const).map((scenario) => (
+                  <Pressable
+                    key={scenario}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: mockScenario === scenario }}
+                    onPress={() => setMockScenario(scenario)}
+                    style={[
+                      styles.scenarioChip,
+                      { backgroundColor: theme.surface, borderColor: theme.border },
+                      mockScenario === scenario && { backgroundColor: `${theme.primary}18`, borderColor: theme.primary },
+                    ]}
+                  >
+                    <Text style={[styles.scenarioChipText, { color: mockScenario === scenario ? theme.primary : theme.fg2 }]}>
+                      {scenario.replace('_', ' ')}
+                    </Text>
+                  </Pressable>
+                ))}
+              </View>
+              {duplicateMessage ? <Text style={[styles.duplicateText, { color: theme.warning }]}>Ya estamos procesando este pago.</Text> : null}
+            </View>
           </View>
+        </ScrollView>
+        <View style={[styles.footer, { backgroundColor: theme.bg, borderTopColor: theme.border }]}>
+          <PrimaryButton disabled={!canPay || isPaying} onPress={pay} variant="success">
+            Confirmar pago
+          </PrimaryButton>
         </View>
-        <PrimaryButton disabled={!canPay || isPaying} onPress={pay} variant="success">
-          Confirmar pago
-        </PrimaryButton>
       </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   content: {
     gap: spacing.lg,
+  },
+  footer: {
+    borderTopWidth: 1,
+    paddingBottom: spacing.md,
+    paddingTop: spacing.md,
   },
   methodHeader: {
     alignItems: 'center',
@@ -238,6 +250,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     gap: spacing.sm,
     padding: spacing.md,
+  },
+  scrollContent: {
+    paddingBottom: spacing.lg,
+  },
+  scroll: {
+    flex: 1,
   },
   scenarioTitle: {
     ...typography.body,
