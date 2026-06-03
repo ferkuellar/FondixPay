@@ -1,9 +1,11 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { AlertCard } from '../../components/AlertCard';
 import { PaymentMethodDemoNotice } from '../../components/PaymentMethodDemoNotice';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
+import { getProviderReadinessPresentation, isDemoPaymentEnabled } from '../../integrations/providerReadiness';
 import { usePaymentMethodStore } from '../../store/paymentMethodStore';
 import { colors, radius, spacing, typography } from '../../theme';
 import type { PaymentMethodType, RootStackParamList } from '../../types';
@@ -25,6 +27,8 @@ const options: Array<{
 export function AddPaymentMethodMockScreen({ navigation, route }: Props) {
   const addMockPaymentMethod = usePaymentMethodStore((state) => state.addMockPaymentMethod);
   const serviceId = route.params?.serviceId;
+  const demoPaymentEnabled = isDemoPaymentEnabled();
+  const providerUnavailable = getProviderReadinessPresentation();
 
   function add(type: PaymentMethodType) {
     addMockPaymentMethod(type);
@@ -39,23 +43,36 @@ export function AddPaymentMethodMockScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Agregar tarjeta demo</Text>
-          <Text style={styles.subtitle}>Prueba el flujo card-only sin capturar tarjeta, CVV ni datos reales.</Text>
+          <Text style={styles.title}>{demoPaymentEnabled ? 'Agregar tarjeta demo' : 'Métodos de pago no disponibles'}</Text>
+          <Text style={styles.subtitle}>
+            {demoPaymentEnabled
+              ? 'Prueba el flujo card-only sin capturar tarjeta, CVV ni datos reales.'
+              : 'El alta de métodos queda bloqueada hasta tener proveedor transaccional aprobado.'}
+          </Text>
         </View>
-        <PaymentMethodDemoNotice />
-        <View style={styles.options}>
-          {options.map((option) => (
-            <View key={option.type} style={styles.option}>
-              <View style={styles.optionCopy}>
-                <Text style={styles.optionTitle}>{option.title}</Text>
-                <Text style={styles.optionDescription}>{option.description}</Text>
+        {demoPaymentEnabled ? <PaymentMethodDemoNotice /> : null}
+        {demoPaymentEnabled ? (
+          <View style={styles.options}>
+            {options.map((option) => (
+              <View key={option.type} style={styles.option}>
+                <View style={styles.optionCopy}>
+                  <Text style={styles.optionTitle}>{option.title}</Text>
+                  <Text style={styles.optionDescription}>{option.description}</Text>
+                </View>
+                <PrimaryButton onPress={() => add(option.type)} size="md">
+                  AGREGAR
+                </PrimaryButton>
               </View>
-              <PrimaryButton onPress={() => add(option.type)} size="md">
-                AGREGAR
-              </PrimaryButton>
-            </View>
-          ))}
-        </View>
+            ))}
+          </View>
+        ) : (
+          <>
+            <AlertCard tone="info" title={providerUnavailable.title} message={providerUnavailable.message} />
+            <PrimaryButton onPress={() => navigation.goBack()} variant="secondary">
+              VOLVER
+            </PrimaryButton>
+          </>
+        )}
       </View>
     </Screen>
   );

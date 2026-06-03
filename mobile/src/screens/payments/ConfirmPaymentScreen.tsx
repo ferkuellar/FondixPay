@@ -11,6 +11,7 @@ import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { AlertCard } from '../../components/AlertCard';
 import { AmountCard } from '../../components/AmountCard';
+import { getProviderReadinessPresentation, isDemoPaymentEnabled } from '../../integrations/providerReadiness';
 import { usePaymentMethodStore } from '../../store/paymentMethodStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
@@ -33,10 +34,14 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
   const selectedPaymentMethod = usePaymentMethodStore((state) => state.getSelectedPaymentMethod());
   const [isPaying, setIsPaying] = useState(false);
   const [duplicateMessage, setDuplicateMessage] = useState(false);
+  const demoPaymentEnabled = isDemoPaymentEnabled();
+  const providerUnavailable = getProviderReadinessPresentation();
 
   useEffect(() => {
-    ensureDemoPaymentMethod();
-  }, [ensureDemoPaymentMethod]);
+    if (demoPaymentEnabled) {
+      ensureDemoPaymentMethod();
+    }
+  }, [demoPaymentEnabled, ensureDemoPaymentMethod]);
 
   if (!service) {
     return (
@@ -53,7 +58,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
   }
 
   const breakdown = calculatePaymentBreakdown(service.amountDue);
-  const canPay = service.amountDue > 0 && Boolean(selectedPaymentMethod);
+  const canPay = demoPaymentEnabled && service.amountDue > 0 && Boolean(selectedPaymentMethod);
 
   if (isPaying) {
     return (
@@ -123,62 +128,80 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
             <View style={styles.methodSection}>
               <View style={styles.methodHeader}>
                 <Text style={[styles.methodTitle, { color: theme.fg }]}>Método de pago</Text>
-                <PrimaryButton
-                  onPress={() => navigation.navigate('PaymentMethods', { serviceId: service.id })}
-                  size="md"
-                  variant="secondary"
-                >
-                  {selectedPaymentMethod ? 'CAMBIAR' : 'AGREGAR'}
-                </PrimaryButton>
+                {demoPaymentEnabled ? (
+                  <PrimaryButton
+                    onPress={() => navigation.navigate('PaymentMethods', { serviceId: service.id })}
+                    size="md"
+                    variant="secondary"
+                  >
+                    {selectedPaymentMethod ? 'CAMBIAR' : 'AGREGAR'}
+                  </PrimaryButton>
+                ) : null}
               </View>
-              {selectedPaymentMethod ? (
+              {demoPaymentEnabled && selectedPaymentMethod ? (
                 <>
                   <PaymentMethodCard method={selectedPaymentMethod} selected compact />
                   <PaymentMethodDemoNotice compact />
                 </>
-              ) : (
+              ) : demoPaymentEnabled ? (
                 <AlertCard
                   tone="warning"
                   title="Agrega una tarjeta demo para continuar"
                   message="No se realizará ningún cargo real. Este paso evita mostrar métodos de pago fantasma."
                 />
+              ) : (
+                <AlertCard tone="info" title={providerUnavailable.title} message={providerUnavailable.message} />
               )}
             </View>
             <AlertCard
               tone="info"
               title="Tu pago está protegido"
-              message="Confirmaremos el servicio con el proveedor mock. Si WhatsApp no está disponible, tu comprobante seguirá guardado en la app."
+              message={
+                demoPaymentEnabled
+                  ? 'Confirmaremos el servicio con el proveedor mock. Si WhatsApp no está disponible, tu comprobante seguirá guardado en la app.'
+                  : 'Aún no hay proveedor transaccional activo. No se iniciará ningún pago desde esta pantalla.'
+              }
             />
-            <View style={[styles.scenarioSection, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
-              <Text style={[styles.scenarioTitle, { color: theme.fg }]}>Escenario demo</Text>
-              <Text style={[styles.scenarioCopy, { color: theme.fg2 }]}>Prueba recovery mock sin proveedor real ni cargo real.</Text>
-              <View style={styles.scenarioList}>
-                {(['succeeded', 'failed', 'pending', 'timeout', 'duplicate_blocked'] as const).map((scenario) => (
-                  <Pressable
-                    key={scenario}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: mockScenario === scenario }}
-                    onPress={() => setMockScenario(scenario)}
-                    style={[
-                      styles.scenarioChip,
-                      { backgroundColor: theme.surface, borderColor: theme.border },
-                      mockScenario === scenario && { backgroundColor: `${theme.primary}18`, borderColor: theme.primary },
-                    ]}
-                  >
-                    <Text style={[styles.scenarioChipText, { color: mockScenario === scenario ? theme.primary : theme.fg2 }]}>
-                      {scenario.replace('_', ' ')}
-                    </Text>
-                  </Pressable>
-                ))}
+            {demoPaymentEnabled ? (
+              <View style={[styles.scenarioSection, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
+                <Text style={[styles.scenarioTitle, { color: theme.fg }]}>Escenario demo</Text>
+                <Text style={[styles.scenarioCopy, { color: theme.fg2 }]}>
+                  Prueba recovery mock sin proveedor real ni cargo real.
+                </Text>
+                <View style={styles.scenarioList}>
+                  {(['succeeded', 'failed', 'pending', 'timeout', 'duplicate_blocked'] as const).map((scenario) => (
+                    <Pressable
+                      key={scenario}
+                      accessibilityRole="button"
+                      accessibilityState={{ selected: mockScenario === scenario }}
+                      onPress={() => setMockScenario(scenario)}
+                      style={[
+                        styles.scenarioChip,
+                        { backgroundColor: theme.surface, borderColor: theme.border },
+                        mockScenario === scenario && { backgroundColor: `${theme.primary}18`, borderColor: theme.primary },
+                      ]}
+                    >
+                      <Text style={[styles.scenarioChipText, { color: mockScenario === scenario ? theme.primary : theme.fg2 }]}>
+                        {scenario.replace('_', ' ')}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View>
+                {duplicateMessage ? (
+                  <Text style={[styles.duplicateText, { color: theme.warning }]}>Ya estamos procesando este pago.</Text>
+                ) : null}
               </View>
-              {duplicateMessage ? <Text style={[styles.duplicateText, { color: theme.warning }]}>Ya estamos procesando este pago.</Text> : null}
-            </View>
+            ) : null}
           </View>
         </ScrollView>
         <View style={[styles.footer, { backgroundColor: theme.bg, borderTopColor: theme.border }]}>
-          <PrimaryButton disabled={!canPay || isPaying} onPress={pay} variant="success">
-            Confirmar pago
-          </PrimaryButton>
+          {demoPaymentEnabled ? (
+            <PrimaryButton disabled={!canPay || isPaying} onPress={pay} variant="success">
+              Confirmar pago
+            </PrimaryButton>
+          ) : (
+            <Text style={[styles.footerMessage, { color: theme.fg2 }]}>{providerUnavailable.message}</Text>
+          )}
         </View>
       </View>
     </Screen>
@@ -196,6 +219,10 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingBottom: spacing.md,
     paddingTop: spacing.md,
+  },
+  footerMessage: {
+    ...typography.bodySmall,
+    textAlign: 'center',
   },
   methodHeader: {
     alignItems: 'center',

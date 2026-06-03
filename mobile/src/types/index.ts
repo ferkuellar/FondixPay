@@ -15,6 +15,7 @@ export type RootStackParamList = {
   PaymentPending: { recovery: PaymentRecoveryContext };
   SupportPlaceholder: { recovery: PaymentRecoveryContext };
   PaymentSuccess: { paymentId: string };
+  ProviderCallback: undefined;
   ReceiptDetail: { paymentId: string };
   Notifications: undefined;
   History: undefined;
@@ -24,6 +25,15 @@ export type RootStackParamList = {
 export type PaymentMethodType = 'card_mock';
 
 export type PaymentMethodStatus = 'active' | 'unavailable' | 'pending';
+
+export type ProviderReadinessState =
+  | 'PROVIDER_DISABLED'
+  | 'PROVIDER_UNAVAILABLE'
+  | 'PROVIDER_PENDING'
+  | 'PROVIDER_TIMEOUT'
+  | 'PROVIDER_FAILED'
+  | 'PROVIDER_SUCCEEDED'
+  | 'PROVIDER_MANUAL_REVIEW';
 
 export type PaymentMethod = {
   id: string;

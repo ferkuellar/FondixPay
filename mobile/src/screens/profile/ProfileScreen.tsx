@@ -1,30 +1,64 @@
+import { Feather } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
-import { StyleSheet, Switch, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { BottomTabBar } from '../../components/BottomTabBar';
-import { PrimaryButton } from '../../components/PrimaryButton';
-import { NotificationBadge } from '../../components/NotificationBadge';
 import { Screen } from '../../components/Screen';
 import { useAuthStore } from '../../store/authStore';
-import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
 import { useNotificationPreferencesStore } from '../../store/notificationPreferencesStore';
-import { useNotificationStore } from '../../store/notificationStore';
+import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
+
+type PaymentMethod = {
+  brand: string;
+  color: string;
+  title: string;
+  subtitle: string;
+  isPrimary?: boolean;
+};
+
+type SavedService = {
+  name: string;
+  provider: string;
+};
+
+const paymentMethods: PaymentMethod[] = [
+  {
+    brand: 'BBVA',
+    color: '#0F5CC8',
+    isPrimary: true,
+    subtitle: 'Cuenta principal',
+    title: 'Débito •••4291',
+  },
+  {
+    brand: 'Banorte',
+    color: '#A7191D',
+    subtitle: 'Visa · termina en 7720',
+    title: 'Crédito •••7720',
+  },
+];
+
+const savedServices: SavedService[] = [
+  { name: 'Luz · Casa', provider: 'CFE' },
+  { name: 'Internet Izzi', provider: 'Izzi' },
+  { name: 'Agua bimestral · SACMEX', provider: 'SACMEX' },
+];
 
 export function ProfileScreen({ navigation }: Props) {
   const { mode, theme, toggleMode } = useAppTheme();
   const isLoading = useAuthStore((state) => state.isLoading);
   const logout = useAuthStore((state) => state.logout);
   const user = useAuthStore((state) => state.user);
-  const unreadCount = useNotificationStore((state) => state.unreadCount);
   const whatsappReceipt = useNotificationPreferencesStore((state) => state.whatsappReceipt);
-  const preferencesLoading = useNotificationPreferencesStore((state) => state.isLoading);
   const preferencesError = useNotificationPreferencesStore((state) => state.error);
   const fetchPreferences = useNotificationPreferencesStore((state) => state.fetchPreferences);
-  const setWhatsappReceiptEnabled = useNotificationPreferencesStore((state) => state.setWhatsappReceiptEnabled);
+
+  const displayName = user?.name?.trim() || 'Sofía Ramírez';
+  const displayPhone = formatProfilePhone(user?.phone);
+  const notificationsStatus = whatsappReceipt?.enabled === false ? 'Inactivas' : 'Activas';
 
   useEffect(() => {
     void fetchPreferences();
@@ -32,24 +66,93 @@ export function ProfileScreen({ navigation }: Props) {
 
   return (
     <Screen padded={false} style={styles.screen}>
-      <View style={styles.content}>
-        <Text style={[styles.title, { color: theme.fg }]}>Mi perfil</Text>
-        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-          <Text style={[styles.label, { color: theme.fg2 }]}>Teléfono</Text>
-          <Text style={[styles.value, { color: theme.fg }]}>{user?.phone ?? 'Sin teléfono'}</Text>
-        </View>
-        <PrimaryButton onPress={() => navigation.navigate('Notifications')} variant="secondary">
-          <View style={styles.notificationAction}>
-            <Text style={styles.notificationLabel}>VER NOTIFICACIONES</Text>
-            <NotificationBadge unreadCount={unreadCount} />
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        style={styles.scroll}
+      >
+        <Text style={[styles.title, { color: theme.fg }]}>Cuenta</Text>
+
+        <View style={[styles.profileCard, { backgroundColor: theme.surface }]}>
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{getInitial(displayName)}</Text>
           </View>
-        </PrimaryButton>
-        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-          <View style={styles.preferenceHeader}>
-            <View style={styles.preferenceCopy}>
-              <Text style={[styles.preferenceTitle, { color: theme.fg }]}>Modo {mode === 'night' ? 'Night' : 'Day'}</Text>
-              <Text style={[styles.preferenceBody, { color: theme.fg2 }]}>Cambia entre vista clara y oscura.</Text>
+          <View style={styles.profileCopy}>
+            <Text style={[styles.profileName, { color: theme.fg }]}>{displayName}</Text>
+            <Text style={[styles.profilePhone, { color: theme.fg2 }]}>{displayPhone}</Text>
+          </View>
+          <Pressable accessibilityLabel="Editar perfil" hitSlop={10} style={styles.iconButton}>
+            <Feather color={theme.fg2} name="edit-2" size={20} />
+          </Pressable>
+        </View>
+
+        <SectionTitle label="PAGO" />
+        <View style={[styles.groupCard, { backgroundColor: theme.surface }]}>
+          {paymentMethods.map((method, index) => (
+            <View
+              key={method.title}
+              style={[
+                styles.row,
+                index < paymentMethods.length - 1 ? { borderBottomColor: theme.divider, borderBottomWidth: 1 } : null,
+              ]}
+            >
+              <View style={[styles.bankLogo, { backgroundColor: method.color }]}>
+                <Text style={styles.bankLogoText}>{method.brand}</Text>
+              </View>
+              <View style={styles.rowCopy}>
+                <Text style={[styles.rowTitle, { color: theme.fg }]}>{method.title}</Text>
+                <Text style={[styles.rowSubtitle, { color: theme.fg2 }]}>{method.subtitle}</Text>
+              </View>
+              {method.isPrimary ? (
+                <View style={styles.primaryPill}>
+                  <Feather color={colors.primary} name="star" size={12} />
+                  <Text style={styles.primaryPillText}>Principal</Text>
+                </View>
+              ) : null}
             </View>
+          ))}
+          <Pressable
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.row, styles.actionRow, pressed ? styles.pressed : null]}
+          >
+            <View style={styles.softIcon}>
+              <Feather color={theme.fg2} name="plus" size={22} />
+            </View>
+            <Text style={[styles.actionLabel, { color: theme.fg }]}>Agregar método de pago</Text>
+            <Feather color={theme.fg2} name="chevron-right" size={21} />
+          </Pressable>
+        </View>
+
+        <SectionTitle label="SERVICIOS GUARDADOS" />
+        <View style={[styles.groupCard, { backgroundColor: theme.surface }]}>
+          {savedServices.map((service, index) => (
+            <Pressable
+              accessibilityRole="button"
+              key={service.name}
+              style={({ pressed }) => [
+                styles.row,
+                styles.serviceRow,
+                index < savedServices.length - 1 ? { borderBottomColor: theme.divider, borderBottomWidth: 1 } : null,
+                pressed ? styles.pressed : null,
+              ]}
+            >
+              <View style={styles.softIcon}>
+                <Feather color={theme.fg2} name="credit-card" size={18} />
+              </View>
+              <Text style={[styles.serviceName, { color: theme.fg }]}>{service.name}</Text>
+              <Text style={[styles.provider, { color: theme.fg2 }]}>{service.provider}</Text>
+              <Feather color={theme.fg2} name="chevron-right" size={20} />
+            </Pressable>
+          ))}
+        </View>
+
+        <SectionTitle label="AJUSTES" />
+        <View style={[styles.groupCard, { backgroundColor: theme.surface }]}>
+          <View style={[styles.row, styles.settingsRow, { borderBottomColor: theme.divider, borderBottomWidth: 1 }]}>
+            <View style={styles.softIcon}>
+              <Feather color={theme.fg2} name="sun" size={18} />
+            </View>
+            <Text style={[styles.settingsLabel, { color: theme.fg }]}>Tema oscuro</Text>
             <Switch
               onValueChange={toggleMode}
               thumbColor={mode === 'night' ? theme.primaryHi : theme.surface}
@@ -57,101 +160,295 @@ export function ProfileScreen({ navigation }: Props) {
               value={mode === 'night'}
             />
           </View>
-        </View>
-        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-          <View style={styles.preferenceHeader}>
-            <View style={styles.preferenceCopy}>
-              <Text style={[styles.preferenceTitle, { color: theme.fg }]}>Recibir comprobantes por WhatsApp</Text>
-              <Text style={[styles.preferenceBody, { color: theme.fg2 }]}>
-                Autorizo recibir por WhatsApp comprobantes de pagos exitosos de FondixPay. Puedo desactivarlo cuando quiera.
-              </Text>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => navigation.navigate('Notifications')}
+            style={({ pressed }) => [
+              styles.row,
+              styles.settingsRow,
+              { borderBottomColor: theme.divider, borderBottomWidth: 1 },
+              pressed ? styles.pressed : null,
+            ]}
+          >
+            <View style={styles.softIcon}>
+              <Feather color={theme.fg2} name="bell" size={18} />
             </View>
-            <Switch
-              disabled={preferencesLoading}
-              onValueChange={(enabled) => void setWhatsappReceiptEnabled(enabled)}
-              value={Boolean(whatsappReceipt?.enabled)}
-            />
+            <Text style={[styles.settingsLabel, { color: theme.fg }]}>Notificaciones</Text>
+            <Text style={[styles.settingsMeta, { color: theme.fg2 }]}>{notificationsStatus}</Text>
+            <Feather color={theme.fg2} name="chevron-right" size={20} />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            style={({ pressed }) => [
+              styles.row,
+              styles.settingsRow,
+              { borderBottomColor: theme.divider, borderBottomWidth: 1 },
+              pressed ? styles.pressed : null,
+            ]}
+          >
+            <View style={styles.softIcon}>
+              <Feather color={theme.fg2} name="shield" size={18} />
+            </View>
+            <Text style={[styles.settingsLabel, { color: theme.fg }]}>Seguridad y privacidad</Text>
+            <Feather color={theme.fg2} name="chevron-right" size={20} />
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            style={({ pressed }) => [styles.row, styles.settingsRow, pressed ? styles.pressed : null]}
+          >
+            <View style={styles.softIcon}>
+              <Feather color={theme.fg2} name="help-circle" size={18} />
+            </View>
+            <Text style={[styles.settingsLabel, { color: theme.fg }]}>Ayuda y soporte</Text>
+            <Feather color={theme.fg2} name="chevron-right" size={20} />
+          </Pressable>
+        </View>
+
+        {preferencesError ? <Text style={[styles.errorText, { color: theme.error }]}>{preferencesError}</Text> : null}
+
+        <Pressable
+          accessibilityRole="button"
+          disabled={isLoading}
+          onPress={logout}
+          style={({ pressed }) => [
+            styles.logoutCard,
+            { backgroundColor: theme.surface, opacity: isLoading ? 0.65 : 1 },
+            pressed ? styles.pressed : null,
+          ]}
+        >
+          <View style={styles.logoutIcon}>
+            <Feather color={colors.danger} name="log-out" size={18} />
           </View>
-          {preferencesError ? <Text style={[styles.errorText, { color: theme.error }]}>{preferencesError}</Text> : null}
-        </View>
-        <View style={[styles.card, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-          <Text style={[styles.label, { color: theme.fg2 }]}>Cuenta</Text>
-          <Text style={[styles.value, { color: theme.fg }]}>Demo segura</Text>
-          <Text style={[styles.note, { color: theme.warning }]}>Pagos simulados - no es dinero real.</Text>
-        </View>
-        <PrimaryButton disabled={isLoading} loading={isLoading} onPress={logout} variant="danger">
-          CERRAR SESIÓN
-        </PrimaryButton>
-      </View>
+          <Text style={styles.logoutText}>{isLoading ? 'Cerrando sesión...' : 'Cerrar sesión'}</Text>
+        </Pressable>
+
+        <Text style={[styles.version, { color: theme.fg3 }]}>FONDIX PAY · v1.0.0</Text>
+      </ScrollView>
       <BottomTabBar active="Profile" />
     </Screen>
   );
 }
 
+function SectionTitle({ label }: { label: string }) {
+  return <Text style={styles.sectionTitle}>{label}</Text>;
+}
+
+function getInitial(name: string) {
+  return name.trim().charAt(0).toUpperCase() || 'S';
+}
+
+function formatProfilePhone(phone?: string | null) {
+  const digits = phone?.replace(/\D/g, '') ?? '';
+  const national = digits.startsWith('52') ? digits.slice(2) : digits;
+
+  if (national.length === 10) {
+    return `+52 ${national.slice(0, 2)} ${national.slice(2, 6)} ${national.slice(6)}`;
+  }
+
+  return '+52 61 4123 4567';
+}
+
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: colors.bg,
-    borderColor: colors.border,
-    borderRadius: radius.lg,
-    borderWidth: 1,
-    gap: spacing.xs,
-    padding: spacing.lg,
-  },
-  content: {
-    flex: 1,
-    gap: spacing.lg,
-    padding: spacing.xl,
-  },
-  label: {
-    ...typography.bodySmall,
-    color: colors.textSecondary,
-  },
-  note: {
-    ...typography.caption,
-    color: colors.warning,
-    marginTop: spacing.sm,
-  },
-  notificationAction: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.sm,
-  },
-  notificationLabel: {
-    ...typography.button,
-    color: colors.primary,
-  },
-  preferenceBody: {
-    ...typography.caption,
-    color: colors.textSecondary,
-  },
-  preferenceCopy: {
-    flex: 1,
-    gap: spacing.xs,
-  },
-  preferenceHeader: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    gap: spacing.md,
-  },
-  preferenceTitle: {
+  actionLabel: {
     ...typography.body,
-    color: colors.textPrimary,
-    fontWeight: '700',
+    flex: 1,
+    fontWeight: '800',
+  },
+  actionRow: {
+    minHeight: 60,
+  },
+  avatar: {
+    alignItems: 'center',
+    backgroundColor: '#3B9BFF',
+    borderRadius: 27,
+    height: 54,
+    justifyContent: 'center',
+    width: 54,
+  },
+  avatarText: {
+    ...typography.heading,
+    color: colors.surface,
+    fontSize: 22,
+  },
+  bankLogo: {
+    alignItems: 'center',
+    borderRadius: 5,
+    height: 29,
+    justifyContent: 'center',
+    width: 43,
+  },
+  bankLogoText: {
+    color: colors.surface,
+    fontSize: 8,
+    fontWeight: '900',
   },
   errorText: {
     ...typography.caption,
+    marginHorizontal: spacing.sm,
+  },
+  groupCard: {
+    borderRadius: radius.xl,
+    marginBottom: spacing.md,
+    overflow: 'hidden',
+    shadowColor: '#1C2F4D',
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 18,
+  },
+  iconButton: {
+    alignItems: 'center',
+    height: 38,
+    justifyContent: 'center',
+    width: 38,
+  },
+  logoutCard: {
+    alignItems: 'center',
+    borderRadius: radius.xl,
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginHorizontal: spacing.xs,
+    marginTop: spacing.sm,
+    minHeight: 58,
+    paddingHorizontal: spacing.lg,
+    shadowColor: '#1C2F4D',
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 18,
+  },
+  logoutIcon: {
+    alignItems: 'center',
+    backgroundColor: colors.dangerSoft,
+    borderRadius: radius.md,
+    height: 34,
+    justifyContent: 'center',
+    width: 34,
+  },
+  logoutText: {
+    ...typography.body,
     color: colors.danger,
+    fontWeight: '900',
+  },
+  pressed: {
+    opacity: 0.72,
+  },
+  primaryPill: {
+    alignItems: 'center',
+    backgroundColor: colors.primarySoft,
+    borderRadius: 999,
+    flexDirection: 'row',
+    gap: 4,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+  },
+  primaryPillText: {
+    ...typography.caption,
+    color: colors.primary,
+    fontWeight: '900',
+  },
+  profileCard: {
+    alignItems: 'center',
+    borderRadius: radius.xl,
+    flexDirection: 'row',
+    gap: spacing.md,
+    marginBottom: spacing.md,
+    minHeight: 84,
+    paddingHorizontal: spacing.lg,
+    shadowColor: '#1C2F4D',
+    shadowOffset: { height: 8, width: 0 },
+    shadowOpacity: 0.05,
+    shadowRadius: 18,
+  },
+  profileCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  profileName: {
+    ...typography.heading,
+    fontSize: 17,
+  },
+  profilePhone: {
+    ...typography.bodySmall,
+    letterSpacing: 0.4,
+  },
+  provider: {
+    ...typography.bodySmall,
+    minWidth: 48,
+    textAlign: 'right',
+  },
+  row: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    gap: spacing.md,
+    minHeight: 56,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+  },
+  rowCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  rowSubtitle: {
+    ...typography.caption,
+  },
+  rowTitle: {
+    ...typography.bodySmall,
+    fontWeight: '900',
   },
   screen: {
     flex: 1,
   },
+  scroll: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: spacing.xl,
+    paddingHorizontal: spacing.xl,
+    paddingTop: spacing.lg,
+  },
+  sectionTitle: {
+    ...typography.caption,
+    color: colors.textSecondary,
+    fontWeight: '900',
+    letterSpacing: 1.3,
+    marginBottom: spacing.sm,
+    marginLeft: spacing.xs,
+    marginTop: spacing.xs,
+  },
+  serviceName: {
+    ...typography.body,
+    flex: 1,
+    fontWeight: '900',
+  },
+  serviceRow: {
+    minHeight: 60,
+  },
+  settingsLabel: {
+    ...typography.body,
+    flex: 1,
+    fontWeight: '900',
+  },
+  settingsMeta: {
+    ...typography.bodySmall,
+  },
+  settingsRow: {
+    minHeight: 58,
+  },
+  softIcon: {
+    alignItems: 'center',
+    backgroundColor: colors.bgSubtle,
+    borderRadius: radius.md,
+    height: 34,
+    justifyContent: 'center',
+    width: 34,
+  },
   title: {
     ...typography.title,
-    color: colors.textPrimary,
+    fontSize: 27,
+    marginBottom: spacing.md,
   },
-  value: {
-    ...typography.heading,
-    color: colors.textPrimary,
-    fontSize: 20,
+  version: {
+    ...typography.caption,
+    marginTop: spacing.md,
+    textAlign: 'center',
   },
 });

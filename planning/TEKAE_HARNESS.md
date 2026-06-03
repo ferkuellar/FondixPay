@@ -96,3 +96,29 @@ See `planning/sprints/008b-tekae-integration-discovery/` for scope, requirements
 | `planning/TEKAE_DECISIONS.md` | Decision log | Active |
 | `planning/TEKAE_OPEN_QUESTIONS.md` | Open questions | Active |
 | `planning/TEKAE_RISKS.md` | Risk register | Active |
+
+---
+
+## Mobile Provider-State Harness (8B.4)
+
+Sprint `008b4-mobile-provider-state-readiness` adds a mobile readiness harness, not a Tekae runtime harness.
+
+What exists:
+- Internal mobile presentation states for disabled, unavailable, pending, timeout, failed, succeeded, and manual review.
+- Safe callback placeholder route: `fondixpay://provider/callback`.
+- User-safe unavailable-state copy when no provider is active.
+- Dev/internal-only demo payment guard.
+- Support path still reachable from failure states.
+
+What does not exist:
+- Tekae API client.
+- Tekae endpoints.
+- Tekae payload parsing.
+- Tekae status mapping.
+- Tekae webhook handling.
+- Tekae callback trust model.
+- Real transaction execution.
+
+Harness conclusion:
+
+The project now has a documentation harness and a mobile provider-state readiness harness. It still does not have a runtime integration harness because official Tekae documentation, sandbox credentials, signed callback rules, webhook model, and transaction-state contract have not been received.

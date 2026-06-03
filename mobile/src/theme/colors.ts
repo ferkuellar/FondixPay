@@ -8,18 +8,21 @@ export const colors = {
   secondary: dayTheme.secondary,
   accent: dayTheme.accent,
   success: dayTheme.success,
-  successSoft: '#E8F7EE',
+  successSoft: dayTheme.successBg,
   warning: dayTheme.warning,
-  warningSoft: '#FFF5DF',
+  warningSoft: dayTheme.warningBg,
   danger: dayTheme.error,
-  dangerSoft: '#FDECEC',
+  dangerSoft: dayTheme.errorBg,
   error: dayTheme.error,
-  errorSoft: '#FDECEC',
+  errorSoft: dayTheme.errorBg,
   info: dayTheme.info,
-  infoSoft: '#EAF2FF',
+  infoSoft: dayTheme.infoBg,
   pending: dayTheme.pending,
+  pendingSoft: dayTheme.pendingBg,
   processing: dayTheme.processing,
+  processingSoft: dayTheme.processingBg,
   review: dayTheme.review,
+  reviewSoft: dayTheme.reviewBg,
   bg: dayTheme.bg,
   bgSubtle: dayTheme.surface2,
   surface: dayTheme.surface,
@@ -34,13 +37,13 @@ export const colors = {
   disabledBg: dayTheme.disabledBg,
   disabledFg: dayTheme.disabledFg,
   service: {
-    luz: '#F59E0B',        // amber — CFE/Electricity (design kit mapping)
-    internet: '#22C55E',   // green — Internet
-    celular: '#8B5CF6',    // purple — Celular/TAE
-    gas: '#F97316',        // orange — Gas
-    agua: '#0EA5E9',       // sky — Water
-    streaming: '#EC4899',  // pink — Streaming/TV
-    gobierno: '#10B981',   // emerald — Government services
+    luz: '#D97706',        // amber — CFE/Electricity
+    internet: '#15803D',   // green — Internet
+    celular: '#6D28D9',    // purple — Celular/TAE
+    gas: '#C2410C',        // orange-red — Gas
+    agua: '#0369A1',       // blue — Water
+    streaming: '#BE185D',  // rose — Streaming/TV
+    gobierno: '#047857',   // emerald — Government services
   },
   /** @deprecated Use bgSubtle */
   background: '#F9FAFB',

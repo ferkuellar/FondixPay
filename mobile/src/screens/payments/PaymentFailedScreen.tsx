@@ -6,6 +6,7 @@ import { PaymentRecoverySummary } from '../../components/PaymentRecoverySummary'
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { AlertCard } from '../../components/AlertCard';
+import { getProviderReadinessPresentation, isDemoPaymentEnabled } from '../../integrations/providerReadiness';
 import { usePaymentStore } from '../../store/paymentStore';
 import { radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
@@ -29,6 +30,8 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
   const { theme } = useAppTheme();
   const recovery = route.params.recovery;
   const setMockScenario = usePaymentStore((state) => state.setMockScenario);
+  const demoPaymentEnabled = isDemoPaymentEnabled();
+  const providerUnavailable = getProviderReadinessPresentation();
 
   function retry() {
     setMockScenario('succeeded');
@@ -46,19 +49,27 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
           <Text style={[styles.body, { color: theme.fg2 }]}>{failureMessage(recovery.reason)}</Text>
         </View>
         <PaymentRecoverySummary recovery={recovery} />
-        <AlertCard
-          tone="info"
-          title="No se cobró nada"
-          message="No se movió dinero de tu cuenta. Puedes intentar de nuevo sin riesgo."
-        />
+        {demoPaymentEnabled ? (
+          <AlertCard
+            tone="info"
+            title="No se cobró nada"
+            message="No se movió dinero de tu cuenta. Puedes intentar de nuevo sin riesgo."
+          />
+        ) : (
+          <AlertCard tone="info" title={providerUnavailable.title} message={providerUnavailable.message} />
+        )}
         <View style={styles.actions}>
-          <PrimaryButton onPress={retry}>INTENTAR DE NUEVO</PrimaryButton>
-          <PrimaryButton
-            onPress={() => navigation.navigate('PaymentMethods', { serviceId: recovery.serviceId })}
-            variant="secondary"
-          >
-            Usar otro método de pago
-          </PrimaryButton>
+          {demoPaymentEnabled ? (
+            <>
+              <PrimaryButton onPress={retry}>INTENTAR DE NUEVO</PrimaryButton>
+              <PrimaryButton
+                onPress={() => navigation.navigate('PaymentMethods', { serviceId: recovery.serviceId })}
+                variant="secondary"
+              >
+                Usar otro método de pago
+              </PrimaryButton>
+            </>
+          ) : null}
           <PrimaryButton onPress={() => navigation.navigate('SupportPlaceholder', { recovery })} variant="secondary">
             NECESITO AYUDA
           </PrimaryButton>

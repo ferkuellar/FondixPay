@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 
+import { isInternalDemoMode } from '../integrations/providerReadiness';
 import { getServiceCatalog, getServiceCategories } from '../services/serviceCatalogApi';
 import type { ServiceCatalogItem, ServiceCategory } from '../types';
 
@@ -107,11 +108,20 @@ export const useServiceCatalogStore = create<ServiceCatalogState>((set) => ({
     try {
       const services = await getServiceCatalog(filters);
       if (services.length === 0) {
-        set({ isUsingDemoFallback: true, services: DEMO_SERVICES });
+        set({ isUsingDemoFallback: isInternalDemoMode(), services: isInternalDemoMode() ? DEMO_SERVICES : [] });
         return;
       }
       set({ isUsingDemoFallback: false, services });
     } catch {
+      if (!isInternalDemoMode()) {
+        set({
+          error: 'No pudimos cargar los servicios disponibles.',
+          isUsingDemoFallback: false,
+          services: [],
+        });
+        return;
+      }
+
       set({
         error: 'Mostramos servicios demo porque no pudimos cargar el catalogo.',
         isUsingDemoFallback: true,

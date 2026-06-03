@@ -13,12 +13,19 @@ export type AppTheme = {
   secondary: string;
   accent: string;
   success: string;
+  successBg: string;
   warning: string;
+  warningBg: string;
   error: string;
+  errorBg: string;
   info: string;
+  infoBg: string;
   pending: string;
+  pendingBg: string;
   processing: string;
+  processingBg: string;
   review: string;
+  reviewBg: string;
   fg: string;
   fg2: string;
   fg3: string;
@@ -45,12 +52,19 @@ export const dayTheme: AppTheme = {
   secondary: '#0A1628',
   accent: '#3B9BFF',
   success: '#15803D',
+  successBg: '#DCFCE7',
   warning: '#B45309',
+  warningBg: '#FEF3C7',
   error: '#B91C1C',
+  errorBg: '#FEE2E2',
   info: '#1D4ED8',
+  infoBg: '#DBEAFE',
   pending: '#A16207',
+  pendingBg: '#FEF9C3',
   processing: '#0E7490',
+  processingBg: '#CFFAFE',
   review: '#6D28D9',
+  reviewBg: '#EDE9FE',
   fg: '#0A1628',
   fg2: '#3E5675',
   fg3: '#6E8AAC',
@@ -77,12 +91,19 @@ export const nightTheme: AppTheme = {
   secondary: '#C9DEFF',
   accent: '#5CB8FF',
   success: '#34D399',
+  successBg: 'rgba(52,211,153,0.14)',
   warning: '#FBBF24',
+  warningBg: 'rgba(251,191,36,0.14)',
   error: '#F87171',
+  errorBg: 'rgba(248,113,113,0.14)',
   info: '#60A5FA',
+  infoBg: 'rgba(96,165,250,0.14)',
   pending: '#FCD34D',
+  pendingBg: 'rgba(252,211,77,0.14)',
   processing: '#22D3EE',
+  processingBg: 'rgba(34,211,238,0.14)',
   review: '#A78BFA',
+  reviewBg: 'rgba(167,139,250,0.16)',
   fg: '#EAF1FB',
   fg2: '#9DB4D2',
   fg3: '#637E9F',

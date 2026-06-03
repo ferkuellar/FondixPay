@@ -545,3 +545,47 @@ Operating status:
 Next recommended phase:
 
 Sprint `008b-tekae-integration-discovery` — business action required first: establish Tekae Business contact and obtain official API documentation.
+
+## Sprint 8B.4 — Mobile Provider-State Readiness
+
+Current phase: Sprint 8B.4 — Mobile Provider-State Readiness.
+
+Status: COMPLETE. Mobile-only readiness scaffolding added. No Tekae runtime behavior implemented.
+
+Implemented:
+
+- `mobile/src/integrations/providerReadiness.ts` — provider readiness presentation states and dev/internal demo guard.
+- `mobile/src/types/index.ts` — `ProviderReadinessState` and `ProviderCallback` route type.
+- `mobile/src/screens/payments/ProviderCallbackScreen.tsx` — safe callback placeholder for `fondixpay://provider/callback`.
+- `mobile/App.tsx` — React Navigation linking configuration for the callback placeholder.
+- `mobile/src/navigation/AppNavigator.tsx` — authenticated callback placeholder route registration.
+- `mobile/src/store/paymentMethodStore.ts` — mock payment methods gated to dev/internal mode.
+- `mobile/src/store/serviceCatalogStore.ts` — demo catalog fallback gated to dev/internal mode.
+- `mobile/src/screens/payments/ConfirmPaymentScreen.tsx` — payment action replaced with provider-preparation messaging when demo payments are disabled.
+- `mobile/src/screens/payments/PaymentMethodsScreen.tsx` — demo method management hidden when demo payments are disabled.
+- `mobile/src/screens/payments/AddPaymentMethodMockScreen.tsx` — demo method creation blocked when demo payments are disabled.
+- `mobile/src/screens/payments/PaymentFailedScreen.tsx` — support remains reachable while demo retry/change actions are hidden when demo payments are disabled.
+- `docs/integrations/TEKAE.md` — mobile provider-state readiness documented.
+- `planning/TEKAE_HARNESS.md` — harness status clarified.
+- `planning/sprints/008b4-mobile-provider-state-readiness/` — sprint record created.
+
+Sprint and harness audit:
+
+- Registered Tekae sprint records existed for `008b-tekae-integration-discovery` and `008b2-tekae-integration-shell`.
+- No `008b4-mobile-provider-state-readiness` sprint record existed before this implementation.
+- `planning/TEKAE_HARNESS.md` existed as a documentation/boundary harness only.
+- No runtime Tekae harness exists.
+
+Operating status:
+
+- `TEKAE_ENABLED=false` remains required.
+- No Tekae API endpoints were invented.
+- No Tekae payload contracts were invented.
+- No Tekae HTTP calls were added.
+- `paymentStore.ts` was not modified.
+- Real payments remain blocked.
+- Commercial production remains blocked.
+
+Next recommended phase:
+
+Tekae discovery closure: obtain official Tekae documentation, sandbox credentials, callback/webhook contract, transaction-state model, security requirements, and product/security approval before implementing any runtime integration.

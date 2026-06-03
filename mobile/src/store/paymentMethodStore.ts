@@ -1,12 +1,13 @@
 import { create } from 'zustand';
 
+import { isDemoPaymentEnabled } from '../integrations/providerReadiness';
 import type { PaymentMethod, PaymentMethodType } from '../types';
 
 type PaymentMethodState = {
   paymentMethods: PaymentMethod[];
   selectedPaymentMethodId?: string;
   addMockPaymentMethod: (type?: PaymentMethodType) => PaymentMethod;
-  ensureDemoPaymentMethod: () => PaymentMethod;
+  ensureDemoPaymentMethod: () => PaymentMethod | undefined;
   selectPaymentMethod: (methodId: string) => void;
   removePaymentMethod: (methodId: string) => void;
   getSelectedPaymentMethod: () => PaymentMethod | undefined;
@@ -28,6 +29,10 @@ export const usePaymentMethodStore = create<PaymentMethodState>((set, get) => ({
   paymentMethods: [],
   selectedPaymentMethodId: undefined,
   addMockPaymentMethod: (type = 'card_mock') => {
+    if (!isDemoPaymentEnabled()) {
+      throw new Error('Demo payment methods are disabled outside dev/internal mode.');
+    }
+
     const template = mockTemplates[type];
     const method: PaymentMethod = {
       ...template,
@@ -43,6 +48,10 @@ export const usePaymentMethodStore = create<PaymentMethodState>((set, get) => ({
     return method;
   },
   ensureDemoPaymentMethod: () => {
+    if (!isDemoPaymentEnabled()) {
+      return undefined;
+    }
+
     const current = get().getSelectedPaymentMethod() ?? get().paymentMethods.find((method) => method.status === 'active');
     if (current) {
       if (!get().selectedPaymentMethodId) {

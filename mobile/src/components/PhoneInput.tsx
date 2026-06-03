@@ -19,12 +19,14 @@ export function PhoneInput({ value }: Props) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.surface, borderColor: theme.borderHi }]}>
-      <View style={[styles.prefix, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
+      <View style={[styles.countryChip, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
         <Text style={[styles.country, { color: theme.fg2 }]}>MX</Text>
         <Text style={[styles.prefixText, { color: theme.fg }]}>+52</Text>
       </View>
       <Text style={[styles.value, { color: theme.fg }]}>{formatPhone(value) || '55 1234 5678'}</Text>
-      <Feather color={theme.primary} name="phone" size={20} />
+      <View style={styles.iconSlot}>
+        <Feather color={theme.primary} name="phone" size={20} />
+      </View>
     </View>
   );
 }
@@ -32,20 +34,25 @@ export function PhoneInput({ value }: Props) {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
+    alignSelf: 'center',
     borderRadius: radius.lg,
     borderWidth: 1.5,
     flexDirection: 'row',
+    maxWidth: 360,
     minHeight: 56,
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.sm,
+    width: '100%',
   },
-  prefix: {
+  countryChip: {
     alignItems: 'center',
     borderRadius: radius.md,
     borderWidth: 1,
     flexDirection: 'row',
     gap: spacing.xs,
-    marginRight: spacing.md,
-    paddingHorizontal: spacing.md,
+    justifyContent: 'center',
+    maxWidth: 72,
+    minWidth: 72,
+    paddingHorizontal: spacing.sm,
     paddingVertical: spacing.sm,
   },
   country: {
@@ -58,5 +65,12 @@ const styles = StyleSheet.create({
   value: {
     ...typography.amountSmall,
     flex: 1,
+    paddingHorizontal: spacing.sm,
+    textAlign: 'center',
+  },
+  iconSlot: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 36,
   },
 });

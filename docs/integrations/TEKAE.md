@@ -108,6 +108,37 @@ Rules:
 
 ---
 
+## Mobile Provider-State Readiness
+
+Sprint `008b4-mobile-provider-state-readiness` added mobile-only provider states and unavailable-state UX for the future Tekae era.
+
+Implemented mobile states:
+- `PROVIDER_DISABLED`
+- `PROVIDER_UNAVAILABLE`
+- `PROVIDER_PENDING`
+- `PROVIDER_TIMEOUT`
+- `PROVIDER_FAILED`
+- `PROVIDER_SUCCEEDED`
+- `PROVIDER_MANUAL_REVIEW`
+
+Current rules:
+- These states are local presentation states only.
+- They do not map to Tekae status codes.
+- They do not process provider payloads.
+- They do not trigger provider HTTP calls.
+- Demo payment methods are available only in development/internal mode.
+- Outside development/internal mode, payment screens show provider-preparation messaging instead of payment actions.
+
+Deep-link placeholder:
+
+```text
+fondixpay://provider/callback
+```
+
+This route opens a safe placeholder screen. It does not parse provider parameters, trust callback data, or update payment state. Callback handling remains blocked until official Tekae documentation defines the return URL, signed fields, webhook model, and transaction-state source of truth.
+
+---
+
 ## Related Documents
 
 - `docs/integrations/TEKAE_API_CONTRACT.md` — API contract placeholder (TBD)
@@ -119,3 +150,4 @@ Rules:
 - `planning/TEKAE_OPEN_QUESTIONS.md` — Open questions register
 - `planning/TEKAE_RISKS.md` — Risk register
 - `planning/sprints/008b-tekae-integration-discovery/` — Discovery sprint
+- `planning/sprints/008b4-mobile-provider-state-readiness/` — Mobile provider-state readiness sprint
