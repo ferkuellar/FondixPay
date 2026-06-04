@@ -1,7 +1,14 @@
 # Environments
 
-**Status:** Strategy documented. Only `local` is operational. Dev/staging/production are not deployed.
-**Last updated:** 2026-06-02
+**Status:** Sprint 013 aligned environment tier matrix. Only `local` is operational. Dev/staging/production app runtime are not deployed.
+**Last updated:** 2026-06-03
+
+Canonical relationship:
+
+- `docs/ENVIRONMENT.md` is the canonical current-state environment strategy.
+- This file is the tier matrix and must not imply deployed AWS services that do not exist in the current Terraform.
+- Current AWS infrastructure remains dev-only and minimal. It is not staging or production.
+- Vercel remains the public landing/front-door host only.
 
 ---
 
@@ -32,19 +39,19 @@
 | Property | Value |
 |---|---|
 | Purpose | Shared integration environment — merged feature branches |
-| Backend | AWS ECS (Terraform `dev` workspace) |
+| Backend | Not deployed. Future dev backend target remains to be approved; current Terraform supports dev foundation and optional EC2 only. |
 | Mobile | Expo development build pointing to dev API |
-| Database | AWS RDS dev instance |
-| Provider | Mock or Tekae sandbox once available |
+| Database | Not deployed in AWS. Local PostgreSQL/Docker is operational; no RDS exists in current Terraform. |
+| Provider | Mock/dev only. Tekae sandbox remains blocked until Sprint 011 contract readiness passes. |
 | OTP | Real OTP provider or dev code if provider unavailable — `OTP_DEV_RESPONSE_ENABLED` must be reviewed |
-| Secrets | AWS Secrets Manager (`dev` path) |
-| Deployment | GitHub Actions `deploy-dev.yml` — manual, requires `confirm_environment=dev` and `apply=true` |
+| Secrets | Future GitHub Environment secrets and/or AWS Secrets Manager once approved |
+| Deployment | GitHub Actions can validate and manually plan/apply dev Terraform when secrets are configured; no backend app deployment is active. |
 
 **Rules:**
 - Dev OTP code must be reviewed per environment decision.
 - Production credentials must never be used in dev.
 - CORS must be explicit — no wildcards.
-- Tekae sandbox credentials (when available) may be used here.
+- Tekae sandbox credentials must not be configured until Sprint 011 contract readiness passes and an implementation sprint is approved.
 
 ---
 
@@ -53,12 +60,12 @@
 | Property | Value |
 |---|---|
 | Purpose | Production mirror — pre-release validation |
-| Backend | AWS ECS (Terraform `staging` workspace — not yet created) |
+| Backend | Not implemented. Future design required. |
 | Mobile | Expo production build pointing to staging API |
-| Database | AWS RDS staging instance — separate from dev |
-| Provider | Tekae sandbox — must not use production credentials |
+| Database | Not implemented. Must be separate from dev once approved. |
+| Provider | Blocked. Future Tekae sandbox/staging behavior must be confirmed by official Tekae material. |
 | OTP | Real OTP provider only. `OTP_DEV_RESPONSE_ENABLED=false` |
-| Secrets | AWS Secrets Manager (`staging` path) |
+| Secrets | Future environment-specific secret store once approved |
 | Deployment | GitHub Actions — gated, requires explicit approval |
 
 **Rules:**
@@ -76,13 +83,13 @@
 
 | Property | Value |
 |---|---|
-| Purpose | Live user traffic — real money |
-| Backend | AWS ECS (Terraform `production` workspace — not yet created) |
+| Purpose | Future live user traffic. Not approved for real payment execution. |
+| Backend | Not implemented. Future approved architecture required. |
 | Mobile | App Store / Google Play release build |
-| Database | AWS RDS production instance — separate from staging |
-| Provider | Tekae production — only after Gate 3 passes |
+| Database | Not implemented. Must be separate from every non-production environment once approved. |
+| Provider | Tekae production only after Sprint 011 contract readiness and future production gates pass |
 | OTP | Real OTP provider only. `OTP_DEV_RESPONSE_ENABLED=false` |
-| Secrets | AWS Secrets Manager (`production` path) |
+| Secrets | Future production-approved secret store |
 | Deployment | GitHub Actions — gated, multi-approval required |
 
 **Rules:**
@@ -109,14 +116,14 @@
 | `TEKAE_ENABLED` | `false` | `false` | `false` until approved | `false` until approved |
 | `TEKAE_MODE` | `disabled` | `disabled` | `disabled` until approved | `disabled` until approved |
 | `CARD_PROCESSOR_PROVIDER` | `mock` | `mock` | TBD | TBD |
-| `PRONTIPAGOS_ENV` | `sandbox` (historical) | `sandbox` (historical) | superseded | superseded |
+| `PRONTIPAGOS_ENV` | `sandbox` (historical/superseded) | `sandbox` (historical/superseded) | superseded | superseded |
 
 ---
 
 ## Secret Management
 
 - **Local:** `.env` file — never committed, listed in `.gitignore`.
-- **Dev / staging / production:** AWS Secrets Manager. Path convention: `fondixpay/{env}/{service}/{key}`.
+- **Dev / staging / production:** Future environment-specific secret store, such as GitHub Environment secrets and/or AWS Secrets Manager once approved. Suggested path convention: `fondixpay/{env}/{service}/{key}`.
 - No provider secrets (API keys, webhook secrets, credentials) may appear in any `.env.example` file.
 - `.env.example` contains only placeholder/empty values and documentation comments.
 

@@ -184,7 +184,7 @@ Copy rule:
 ## Internal Blockers
 
 - `docs/ENVIRONMENT.md` and this readiness snapshot were created in Sprint 012 and should be reviewed before execution starts.
-- `docs/ENVIRONMENTS.md` has older target language for dev/staging that references ECS/RDS, while current Terraform implements a cheaper dev foundation with optional EC2 and no RDS/ECS. This should be reconciled in a future infra design sprint.
+- Sprint 013 reconciles `docs/ENVIRONMENTS.md` with `docs/ENVIRONMENT.md`: `ENVIRONMENT.md` is the canonical current-state strategy, and `ENVIRONMENTS.md` is the tier matrix. Current Terraform remains a cheaper dev foundation with optional EC2 and no RDS/ECS.
 - Historical Prontipagos/card processor references remain in older docs and code paths as documentation/runtime debt. Sprint 012 does not perform broad cleanup.
 - App copy and mock success screens need future review before real provider flow.
 

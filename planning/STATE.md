@@ -709,3 +709,34 @@ External Tekae blockers remain:
 - Security requirements.
 
 Do not mark Sprint 012 complete until acceptance criteria are reviewed against `planning/sprints/012-dev-readiness-app-cleanup-while-tekae-blocked/acceptance.md`.
+
+## Sprint 013 - Environment Docs Alignment & Mock Payment Copy Cleanup
+
+Current phase: Sprint 013 - Environment Docs Alignment & Mock Payment Copy Cleanup.
+
+Status: IN PROGRESS. Documentation/review execution started. Sprint 013 does not implement code, migrations, credentials, backend runtime changes, mobile runtime changes, payment endpoints, webhook endpoints, Terraform behavior, or production deployment changes.
+
+Active sprint:
+
+- `planning/sprints/013-environment-docs-alignment-mock-payment-copy-cleanup/`
+
+Sprint 013 objective:
+
+- Align `docs/ENVIRONMENT.md` and `docs/ENVIRONMENTS.md` so environment terminology does not imply deployed staging, production, ECS, RDS, or Tekae runtime.
+- Preserve AWS as current dev-only infrastructure unless a future approved decision changes it.
+- Preserve Vercel as public landing/front-door only.
+- Review mock payment copy risks without editing runtime files.
+
+Sprint 013 documentation outputs:
+
+- `docs/MOCK_PAYMENT_COPY_REVIEW.md`
+- Updates to environment, risk, question, and state docs.
+
+Operating status:
+
+- Tekae remains blocked until Sprint 011 contract readiness passes.
+- `TEKAE_ENABLED=false` and `TEKAE_MODE=disabled` remain required.
+- FONDIXPAY remains a platform/app using Tekae capabilities, not a fintech.
+- Tekae remains the approved provider.
+- Prontipagos remains permanently removed.
+- Mock/dev payment copy remains a runtime cleanup risk until a future approved UI copy sprint changes mobile/admin surfaces.

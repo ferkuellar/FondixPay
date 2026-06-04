@@ -454,3 +454,13 @@ Open production risks:
 | Environment placeholders could be filled with real secrets in source control. | SEV-1 | open | Secret hygiene rules require real values to live in environment-specific secret stores, never committed files. |
 | CI passing could be mistaken for Tekae readiness. | SEV-2 | open | Docs state CI validates local code quality only and does not prove provider contract readiness. |
 | Landing/Vercel boundary could drift into backend or payment runtime. | SEV-1 | open | Deployment/security docs keep Vercel landing-only and prohibit backend/API/payment/admin/provider credential runtime there. |
+
+## Sprint 013 Environment Docs Alignment And Mock Payment Copy Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Environment documentation could imply deployed ECS/RDS, staging, or production infrastructure that does not exist. | SEV-2 | mitigated/ongoing | Sprint 013 aligns `docs/ENVIRONMENT.md` as canonical current-state strategy and updates `docs/ENVIRONMENTS.md` as a tier matrix only. |
+| Mock payment copy could be misread as real provider-confirmed payment success. | SEV-1 | open | `docs/MOCK_PAYMENT_COPY_REVIEW.md` documents risky copy and future safer wording; runtime copy remains unchanged in this documentation-only sprint. |
+| Service-card or history copy could imply an external utility account is current or paid. | SEV-1 | open | Future UI cleanup must separate demo/local state from provider-confirmed state before real runtime. |
+| Historical Prontipagos labels in docs, README, or CRM/Admin copy could confuse future Tekae implementation. | SEV-2 | open | Preserve Prontipagos as permanently removed and schedule a future documentation/UI copy cleanup sprint. |
+| Vercel public landing boundary could be weakened by environment terminology drift. | SEV-1 | mitigated/ongoing | Sprint 013 restates Vercel as landing/front-door only, not backend/API/payment/admin/provider runtime. |

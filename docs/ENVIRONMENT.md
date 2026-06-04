@@ -1,8 +1,18 @@
 # Environment Strategy
 
-Status: Sprint 012 documentation snapshot. No credentials are configured here.
+Status: Sprint 013 documentation snapshot. No credentials are configured here.
 
-This document complements `docs/ENVIRONMENTS.md` and records the Sprint 012 environment strategy for future Tekae readiness.
+This document records the canonical current-state environment strategy for future Tekae readiness.
+
+## Canonical Documentation Relationship
+
+Sprint 013 aligns the environment documentation as follows:
+
+- `docs/ENVIRONMENT.md` is the canonical current-state environment strategy.
+- `docs/ENVIRONMENTS.md` is the environment tier matrix and must stay consistent with this file.
+- If older documentation implies deployed ECS, RDS, staging, production, real provider execution, or Tekae runtime, that language is stale until a future approved decision updates it.
+- Current AWS infrastructure remains dev-only. It is not staging or production.
+- Vercel remains the public landing/front-door host only. It must not host backend APIs, CRM/Admin runtime, payment execution, provider credentials, or Tekae tokens.
 
 ## Principles
 

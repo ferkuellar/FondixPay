@@ -76,3 +76,12 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - Which owner approves transition from mock/provider-disabled mode to Tekae sandbox mode after Sprint 011 passes?
 - Which support channel should users see while Tekae remains blocked and payment runtime is unavailable?
 - Should `.env.example` remove historical Prontipagos/card placeholders in a future cleanup sprint, or keep them labeled as superseded until runtime cleanup?
+
+## Sprint 013 Environment And Mock Copy Questions
+
+- Should `docs/ENVIRONMENT.md` remain the canonical current-state environment source while `docs/ENVIRONMENTS.md` remains the tier matrix?
+- Should future staging target ECS/RDS, optional EC2, or another lower-cost design after dev apply is validated?
+- Which exact mobile payment copy should be changed first: success screen title, service-card status, transaction history status, receipt detail status, or WhatsApp receipt messaging?
+- Should future cleanup change only user-facing copy, or also internal mock status names such as `paid`, `succeeded`, `confirmed`, and `PaymentSuccess`?
+- Should historical Prontipagos references in README, older planning, and CRM/Admin labels be archived, relabeled, or removed in a dedicated cleanup sprint?
+- Should the historical WhatsApp template name `fondix_pago_exitoso` be renamed after the official Tekae receipt/comprobante model is approved?
