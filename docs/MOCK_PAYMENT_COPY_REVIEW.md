@@ -84,3 +84,15 @@ Remaining intentional non-copy items:
 - Technical route/type names can still include success or paid semantics internally.
 - Tekae shell remains disabled.
 - Provider-confirmed success remains blocked until Sprint 011 contract readiness passes.
+
+## Sprint 015 QA Summary
+
+Sprint 015 performed static QA fallback for the mobile mock copy cleanup and recorded details in `docs/MOBILE_MOCK_COPY_QA_REVIEW.md`.
+
+Minor copy-only CTA tightening was applied for likely mobile overflow risk:
+
+- `REINTENTAR PRUEBA`
+- `VER COMPROBANTE DEMO`
+- `COMPARTIR RECIBO DEMO`
+
+No payment logic, provider adapter, backend, endpoint, webhook, migration, `.env`, Terraform, workflow, or deployment behavior changed.

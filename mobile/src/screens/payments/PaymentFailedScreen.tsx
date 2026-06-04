@@ -61,7 +61,7 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
         <View style={styles.actions}>
           {demoPaymentEnabled ? (
             <>
-              <PrimaryButton onPress={retry}>INTENTAR SIMULACIÓN DE NUEVO</PrimaryButton>
+              <PrimaryButton onPress={retry}>REINTENTAR PRUEBA</PrimaryButton>
               <PrimaryButton
                 onPress={() => navigation.navigate('PaymentMethods', { serviceId: recovery.serviceId })}
                 variant="secondary"

@@ -593,7 +593,6 @@ Next recommended phase:
 
 Tekae discovery closure: obtain official Tekae documentation, sandbox credentials, callback/webhook contract, transaction-state model, security requirements, and product/security approval before implementing any runtime integration.
 
-
 # Project State
 
 ## Current Status
@@ -777,6 +776,63 @@ Operating status:
 - FONDIXPAY remains a platform/app using Tekae capabilities, not a fintech.
 - Prontipagos remains permanently removed and was not reintroduced in mobile copy.
 
+Result:
+
+- Mobile mock/dev payment copy was cleaned so visible UI no longer implies real payment execution, real bank action, real provider confirmation, Tekae processing, WhatsApp delivery, settlement, or production receipt behavior.
+- Tekae remains disabled/blocked.
+- Prontipagos remains removed.
+- FONDIXPAY remains positioned as a service/payment platform, not a fintech.
+- No backend, endpoint, webhook, migration, environment, Terraform, workflow, deployment, or payment logic changes were made.
+- Validation passed: mobile typecheck and git diff check.
+
+Residual risk:
+
+- Internal technical names such as PaymentSuccess, succeeded, paidAt, and paid remain as controlled technical debt and must not be reused as visible user-facing copy.
+
 Next recommended sprint:
 
 Sprint 015 - Mobile Mock Copy QA And Visual Regression Review, or return to Sprint 011 when Tekae contract readiness evidence is available.
+
+## Sprint 015 - Mobile Mock Copy QA And Visual Regression Review
+
+Current phase: Sprint 015 - Mobile Mock Copy QA And Visual Regression Review.
+
+Status: COMPLETED with static QA fallback. Sprint 015 reviewed the mobile mock payment copy after Sprint 014 and made minor copy-only CTA tightening for likely mobile overflow risk.
+
+Scope completed:
+
+- Static QA reviewed confirmation, success, pending, failure, receipt, history, payment method, home, services, onboarding, profile, notifications, and navigation-related mobile copy.
+- Risky-copy searches confirmed visible payment copy does not imply real payment execution, real bank action, real provider confirmation, active Tekae processing, WhatsApp delivery, settlement, production receipt behavior, Prontipagos, or fintech positioning.
+- `docs/MOBILE_MOCK_COPY_QA_REVIEW.md` records the QA method, findings, fixes, residual risk, and decision boundary.
+- `docs/MOCK_PAYMENT_COPY_REVIEW.md` was updated with Sprint 015 QA summary.
+- `planning/RISKS.md` records residual risk that static QA can miss device-specific clipping or theme/font-scale issues.
+
+Fixes made:
+
+- Shortened payment failure retry CTA to `REINTENTAR PRUEBA`.
+- Shortened success receipt CTA to `VER COMPROBANTE DEMO`.
+- Shortened receipt share CTA to `COMPARTIR RECIBO DEMO`.
+
+Operating status:
+
+- No backend runtime behavior changed.
+- No payment logic changed.
+- No provider adapter changed.
+- No Tekae runtime was enabled.
+- No payment endpoint or webhook was created.
+- No migrations changed.
+- No `.env` or secret-bearing files changed.
+- No infrastructure, Terraform, workflow, or deployment behavior changed.
+- Tekae remains disabled and blocked until Sprint 011 contract readiness passes.
+- FONDIXPAY remains a platform/app using Tekae capabilities, not a fintech.
+- Prontipagos remains permanently removed.
+
+Validation status:
+
+- Visual device/simulator/browser screenshot QA was not completed in this environment; Sprint 015 used static QA fallback.
+- Expo web command/help was available, but no interactive browser evidence was captured.
+- Required validation commands were run after the copy changes.
+
+Next recommended sprint:
+
+Sprint 016 - Mobile Device Screenshot QA, or return to Sprint 011 when Tekae contract readiness evidence is available.

@@ -84,7 +84,7 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
             }
             variant="secondary"
           >
-            VER COMPROBANTE DE PRUEBA
+            VER COMPROBANTE DEMO
           </PrimaryButton>
           <PrimaryButton onPress={() => navigation.replace('Home')}>CONTINUAR DEMO</PrimaryButton>
         </View>

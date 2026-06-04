@@ -51,7 +51,7 @@ export function ReceiptDetailScreen({ navigation, route }: Props) {
             onPress={() => void shareProof(payment)}
             variant="secondary"
           >
-            COMPARTIR COMPROBANTE DE PRUEBA
+            COMPARTIR RECIBO DEMO
           </PrimaryButton>
         </View>
       </ScrollView>

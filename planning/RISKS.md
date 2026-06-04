@@ -470,3 +470,9 @@ Open production risks:
 | Risk | Severity | Status | Mitigation |
 |---|---|---|---|
 | Internal technical state names such as `PaymentSuccess`, `succeeded`, `paidAt`, and `paid` badge variants could be reused as visible copy later. | SEV-2 | open | Sprint 014 changed visible mobile copy only; future runtime/refactor work must keep UI labels separate from internal state names. |
+
+## Sprint 015 Mobile Mock Copy QA Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Static QA can miss device-specific text clipping, safe-area, theme, or font-scaling issues. | SEV-2 | open | Sprint 015 documents static fallback and recommends device/simulator screenshot QA before user pilot or provider runtime. |
