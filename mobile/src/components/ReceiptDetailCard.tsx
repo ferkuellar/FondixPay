@@ -12,9 +12,9 @@ type Props = {
 
 const paymentStatusLabels: Record<PaymentDisplayStatus, string> = {
   duplicate_blocked: 'Intento duplicado bloqueado',
-  failed: 'Pago no completado',
-  pending: 'Pendiente de confirmación',
-  succeeded: 'Pago mock guardado',
+  failed: 'Prueba no completada',
+  pending: 'Simulación pendiente',
+  succeeded: 'Simulación guardada',
   timeout: 'En verificación',
 };
 
@@ -47,7 +47,7 @@ export function ReceiptDetailCard({ payment }: Props) {
           <Text style={styles.value}>{payment.paymentMethodLabel ?? 'Método no registrado'}</Text>
         </View>
         <View style={styles.detail}>
-          <Text style={styles.label}>Referencia mock</Text>
+          <Text style={styles.label}>Referencia demo</Text>
           <Text style={styles.value}>{payment.mockReference}</Text>
         </View>
         <View style={styles.detail}>
@@ -62,9 +62,9 @@ export function ReceiptDetailCard({ payment }: Props) {
         ) : null}
       </View>
       <View style={styles.notice}>
-        <Text style={styles.noticeTitle}>Comprobante mock/dev</Text>
+        <Text style={styles.noticeTitle}>Comprobante de prueba</Text>
         <Text style={styles.noticeText}>
-          Este detalle documenta la simulación. No confirma un pago aplicado por proveedor real.
+          Este detalle documenta una simulación. No confirma un pago aplicado por proveedor real.
         </Text>
       </View>
     </View>

@@ -9,10 +9,10 @@ type Props = {
 };
 
 const labels: Record<ReceiptStatus, string> = {
-  generated: 'Comprobante disponible',
-  pending: 'Comprobante pendiente',
-  unavailable: 'Sin comprobante',
-  voided: 'Comprobante anulado',
+  generated: 'Comprobante de prueba',
+  pending: 'Comprobante demo pendiente',
+  unavailable: 'Sin comprobante de prueba',
+  voided: 'Comprobante demo anulado',
 };
 
 export function ReceiptStatusBadge({ status }: Props) {

@@ -14,9 +14,9 @@ type Props = {
 
 const statusLabels: Record<PaymentDisplayStatus, string> = {
   duplicate_blocked: 'Intento duplicado bloqueado',
-  failed: 'Pago no completado',
+  failed: 'Prueba no completada',
   pending: 'Pendiente',
-  succeeded: 'Pagado demo',
+  succeeded: 'Simulación guardada',
   timeout: 'En verificación',
 };
 
@@ -39,7 +39,7 @@ export function TransactionHistoryCard({ payment, onPress }: Props) {
       </View>
       <View style={styles.meta}>
         <ReceiptStatusBadge status={payment.receiptStatus} />
-        {payment.isMock ? <Text style={[styles.mock, { color: theme.fg2 }]}>Mock/dev sin confirmación real de proveedor</Text> : null}
+        {payment.isMock ? <Text style={[styles.mock, { color: theme.fg2 }]}>Demo sin confirmación real de proveedor</Text> : null}
         <Text style={[styles.date, { color: theme.fg3 }]}>{formatDateTime(payment.paidAt)}</Text>
       </View>
     </Pressable>

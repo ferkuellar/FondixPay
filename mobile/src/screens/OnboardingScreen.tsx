@@ -19,9 +19,9 @@ type Slide = {
 const SLIDES: Slide[] = [
   {
     accentColor: colors.service.luz,
-    titlePrefix: 'Paga tus servicios ',
-    titleHighlight: 'fácil, rápido y seguro',
-    body: 'Luz, agua, internet, gas y recargas — todo en un solo lugar, en menos de un minuto.',
+    titlePrefix: 'Gestiona tus servicios ',
+    titleHighlight: 'desde un solo lugar',
+    body: 'Luz, agua, internet, gas y recargas en una experiencia clara mientras el flujo real se prepara.',
   },
   {
     accentColor: colors.service.internet,
@@ -31,9 +31,9 @@ const SLIDES: Slide[] = [
   },
   {
     accentColor: colors.service.celular,
-    titlePrefix: 'Paga en ',
-    titleHighlight: '2 taps, sin filas',
-    body: 'Confirmación en 5 segundos y tu comprobante directo a WhatsApp. Así de simple.',
+    titlePrefix: 'Valida el flujo en ',
+    titleHighlight: 'modo prueba',
+    body: 'En producción podrás recibir comprobantes por canales autorizados cuando el proveedor esté aprobado.',
   },
 ];
 

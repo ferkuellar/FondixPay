@@ -19,8 +19,8 @@ export function ReceiptProofCard({ proof }: Props) {
       <View style={styles.header}>
         <Text style={[styles.provider, { color: theme.fg }]}>{proof.serviceProviderName}</Text>
         <Text style={[styles.service, { color: theme.fg2 }]}>{proof.serviceName}</Text>
-        <Text style={[styles.status, { color: theme.fg }]}>Pago: {statusLabel(proof.paymentStatus)}</Text>
-        <Text style={[styles.status, { color: theme.fg }]}>Servicio: {statusLabel(proof.providerStatus)}</Text>
+        <Text style={[styles.status, { color: theme.fg }]}>Prueba: {statusLabel(proof.paymentStatus)}</Text>
+        <Text style={[styles.status, { color: theme.fg }]}>Estado demo: {statusLabel(proof.providerStatus)}</Text>
         <ReceiptStatusBadge status={proof.receiptStatus} />
       </View>
       <View style={styles.breakdown}>
@@ -32,13 +32,13 @@ export function ReceiptProofCard({ proof }: Props) {
         </View>
       </View>
       <View style={[styles.details, { borderTopColor: theme.divider }]}>
-        <Line label="Tarjeta segura" value={proof.cardLabelSafe ?? 'Metodo seguro no registrado'} />
+        <Line label="Método demo" value={proof.cardLabelSafe ?? 'Método demo no registrado'} />
         <Line label="Referencia servicio" value={proof.serviceReferenceMasked} />
         <Line label="Fecha" value={formatDateTime(proof.issuedAt)} />
       </View>
       <ProofReferenceBlock proof={proof} />
       <View style={[styles.disclaimer, { backgroundColor: `${theme.warning}18` }]}>
-        <Text style={[styles.disclaimerTitle, { color: theme.fg }]}>{proof.isSandbox ? 'Comprobante mock/sandbox' : 'Comprobante mock/dev'}</Text>
+        <Text style={[styles.disclaimerTitle, { color: theme.fg }]}>{proof.isSandbox ? 'Comprobante de prueba sandbox' : 'Comprobante de prueba'}</Text>
         <Text style={[styles.disclaimerText, { color: theme.fg2 }]}>{proof.disclaimer}</Text>
       </View>
     </View>

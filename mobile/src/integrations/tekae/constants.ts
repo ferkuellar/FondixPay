@@ -21,7 +21,7 @@ export const TEKAE_MODE: TekaeMode = 'disabled';
  * Must not reveal "Tekae" as a provider name without product approval.
  */
 export const TEKAE_UNAVAILABLE_MESSAGE =
-  'Servicio en preparación. Muy pronto podrás pagar desde FONDIXPAY.' as const;
+  'Servicio en preparación. La función estará disponible cuando el proveedor aprobado esté listo.' as const;
 
 /**
  * Tekae integration states, in order of progression.

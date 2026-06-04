@@ -22,11 +22,11 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
       <ScrollView contentContainerStyle={styles.scroll}>
         <View style={styles.container}>
         <SuccessIllustration />
-        <Text style={styles.title}>¡Ya quedó pagado!</Text>
+        <Text style={styles.title}>Pago de prueba completado</Text>
         <Text style={styles.body}>
           {payment
-            ? `Tu pago mock/dev de ${payment.providerName} por ${formatMoneyMinor(payment.totalMinor)} se guardó correctamente.`
-            : 'Tu pago se guardó correctamente.'}
+            ? `La simulación de ${payment.providerName} por ${formatMoneyMinor(payment.totalMinor)} se guardó en modo prueba. No hubo operación bancaria real.`
+            : 'La simulación se guardó en modo prueba. No hubo operación bancaria real.'}
         </Text>
         {payment ? (
           <>
@@ -40,39 +40,39 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
                 <Text style={styles.lineValue}>{formatMoneyMinor(payment.feeMinor)}</Text>
               </View>
               <View style={styles.totalLine}>
-                <Text style={styles.totalLabel}>Total pagado</Text>
+                <Text style={styles.totalLabel}>Total simulado</Text>
                 <Text style={styles.totalValue}>{formatMoneyMinor(payment.totalMinor)}</Text>
               </View>
             </View>
             {payment.paymentMethodLabel ? (
               <View style={styles.methodBox}>
-                <Text style={styles.lineLabel}>Método usado</Text>
+                <Text style={styles.lineLabel}>Método demo usado</Text>
                 <Text style={styles.lineValue}>{payment.paymentMethodLabel}</Text>
-                {payment.paymentMethodIsMock ? <Text style={styles.mockCopy}>Tarjeta demo · sin cargo real</Text> : null}
+                {payment.paymentMethodIsMock ? <Text style={styles.mockCopy}>Método de prueba · sin operación bancaria</Text> : null}
               </View>
             ) : null}
-            <Text style={styles.refLabel}>Número de referencia</Text>
+            <Text style={styles.refLabel}>Referencia de prueba</Text>
             <Text style={styles.refValue}>{payment.folio}</Text>
             <View style={styles.proofBox}>
               <View style={styles.proofHeader}>
                 <View style={styles.proofCopy}>
-                  <Text style={styles.proofTitle}>Comprobante mock listo</Text>
+                  <Text style={styles.proofTitle}>Comprobante de prueba listo</Text>
                   <Text style={styles.proofBody}>
-                    Consulta el detalle con estado, desglose y referencias seguras de este pago demo.
+                    Consulta el detalle de esta simulación con desglose y referencias de prueba.
                   </Text>
                 </View>
                 <ReceiptStatusBadge status={payment.receiptStatus} />
               </View>
-              <Text style={styles.mockCopy}>Mock/dev. No es comprobante fiscal ni confirmación productiva.</Text>
+              <Text style={styles.mockCopy}>Documento demo. No tiene validez fiscal ni financiera.</Text>
             </View>
             <View style={styles.whatsappBox}>
               <Text style={styles.whatsappTitle}>
-                {whatsappReceiptEnabled ? 'Comprobante por WhatsApp activado.' : 'WhatsApp opcional'}
+                {whatsappReceiptEnabled ? 'Entrega demo de comprobante' : 'Canales autorizados en producción'}
               </Text>
               <Text style={styles.whatsappBody}>
                 {whatsappReceiptEnabled
-                  ? 'Te enviaremos una copia si el canal está disponible.'
-                  : 'Te enviaremos tu comprobante por WhatsApp si activaste esta opción.'}
+                  ? 'Esta entrega es simulada para demo. No confirma envío por WhatsApp real.'
+                  : 'En producción podrás recibir comprobantes por canales autorizados.'}
               </Text>
             </View>
           </>
@@ -84,9 +84,9 @@ export function PaymentSuccessScreen({ navigation, route }: Props) {
             }
             variant="secondary"
           >
-            VER COMPROBANTE
+            VER COMPROBANTE DE PRUEBA
           </PrimaryButton>
-          <PrimaryButton onPress={() => navigation.replace('Home')}>LISTO</PrimaryButton>
+          <PrimaryButton onPress={() => navigation.replace('Home')}>CONTINUAR DEMO</PrimaryButton>
         </View>
         </View>
       </ScrollView>

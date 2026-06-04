@@ -23,18 +23,18 @@ export function PaymentPendingScreen({ navigation, route }: Props) {
           <View style={[styles.icon, { backgroundColor: `${theme.processing}18` }]}>
             <Feather color={theme.processing} name="loader" size={34} />
           </View>
-          <Text style={[styles.title, { color: theme.fg }]}>Estamos confirmando tu pago</Text>
-          <Text style={[styles.body, { color: theme.fg2 }]}>Aún no podemos confirmar el resultado. No hagas otro pago por ahora.</Text>
+          <Text style={[styles.title, { color: theme.fg }]}>Pago de prueba en revisión</Text>
+          <Text style={[styles.body, { color: theme.fg2 }]}>Esta pantalla simula un estado pendiente. No hay una operación real en proceso.</Text>
         </View>
         <View style={[styles.status, { backgroundColor: `${theme.processing}18`, borderColor: `${theme.processing}55` }]}>
           <Text style={[styles.statusLabel, { color: theme.fg2 }]}>Estado</Text>
-          <Text style={[styles.statusValue, { color: theme.fg }]}>{isTimeout ? 'En verificación' : 'Pendiente de confirmación'}</Text>
-          <Text style={[styles.statusHint, { color: theme.fg2 }]}>Comprobante pendiente hasta que el proveedor confirme.</Text>
+          <Text style={[styles.statusValue, { color: theme.fg }]}>{isTimeout ? 'Simulación en verificación' : 'Simulación pendiente'}</Text>
+          <Text style={[styles.statusHint, { color: theme.fg2 }]}>Comprobante de prueba pendiente. No depende de un proveedor real.</Text>
         </View>
-        <AlertCard tone="warning" title="No hagas otro pago por ahora" message="Te avisaremos cuando tengamos una confirmación segura." />
+        <AlertCard tone="warning" title="Modo prueba" message="No hay operación bancaria real ni confirmación de proveedor en curso." />
         <PaymentRecoverySummary recovery={recovery} />
         <View style={styles.actions}>
-          <PrimaryButton onPress={() => navigation.replace('History')}>Avísame cuando se confirme</PrimaryButton>
+          <PrimaryButton onPress={() => navigation.replace('History')}>VER HISTORIAL DEMO</PrimaryButton>
           <PrimaryButton onPress={() => navigation.navigate('SupportPlaceholder', { recovery })} variant="secondary">
             NECESITO AYUDA
           </PrimaryButton>

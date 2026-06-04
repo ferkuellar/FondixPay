@@ -33,13 +33,13 @@ export function ReceiptCard({ payment, receiptUnavailable }: Props) {
           <Text style={styles.label}>Método</Text>
           <Text style={styles.value}>
             {payment.paymentMethodLabel}
-            {payment.paymentMethodIsMock ? ' · sin cargo real' : ''}
+            {payment.paymentMethodIsMock ? ' · método demo' : ''}
           </Text>
         </View>
       ) : null}
       <Text style={styles.folio}>Folio {payment.folio}</Text>
       <ReceiptStatusBadge status={receiptStatus} />
-      {payment.isMock ? <Text style={styles.unavailable}>Comprobante mock/dev sin confirmación real de proveedor.</Text> : null}
+      {payment.isMock ? <Text style={styles.unavailable}>Comprobante de prueba sin confirmación real de proveedor.</Text> : null}
     </View>
   );
 }

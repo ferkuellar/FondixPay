@@ -44,10 +44,10 @@ export function PaymentSummaryCard({
           <Text style={styles.value}>{formatMoneyMinor(breakdown.feeMinor)}</Text>
         </View>
         <View style={styles.totalLine}>
-          <Text style={styles.totalLabel}>Total final</Text>
+          <Text style={styles.totalLabel}>Total simulado</Text>
           <Text style={styles.totalValue}>{formatMoneyMinor(breakdown.totalMinor)}</Text>
         </View>
-        <Text style={styles.trustCopy}>Verás el total antes de confirmar. No hay cargos ocultos.</Text>
+        <Text style={styles.trustCopy}>Verás el total de prueba antes de continuar. No hay operación bancaria real.</Text>
       </View>
       <View style={styles.divider} />
       <View style={styles.row}>
@@ -59,7 +59,7 @@ export function PaymentSummaryCard({
         <Text style={styles.value}>{reference}</Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.label}>Método de pago</Text>
+        <Text style={styles.label}>Método de prueba</Text>
         <Text style={styles.value}>{paymentMethod}</Text>
         {paymentMethodNote ? <Text style={styles.note}>{paymentMethodNote}</Text> : null}
       </View>

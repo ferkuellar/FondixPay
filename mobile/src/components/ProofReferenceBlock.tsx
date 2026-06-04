@@ -11,7 +11,7 @@ export function ProofReferenceBlock({ proof }: Props) {
   return (
     <View style={styles.block}>
       <Reference label="Referencia interna" value={proof.internalReference} />
-      {proof.providerReference ? <Reference label="Referencia proveedor" value={proof.providerReference} /> : null}
+      {proof.providerReference ? <Reference label="Referencia demo" value={proof.providerReference} /> : null}
       {proof.correlationId ? <Reference label="Correlation ID" value={proof.correlationId} /> : null}
       <Reference label="Payment ID" value={proof.paymentId} />
       {proof.receiptId ? <Reference label="Receipt ID" value={proof.receiptId} /> : null}

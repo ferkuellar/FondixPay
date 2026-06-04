@@ -16,13 +16,13 @@ type Props = NativeStackScreenProps<RootStackParamList, 'PaymentFailed'>;
 function failureMessage(reason: Props['route']['params']['recovery']['reason']) {
   switch (reason) {
     case 'method_unavailable_mock':
-      return 'Tu tarjeta demo no está disponible para este intento.';
+      return 'El método demo no está disponible para esta simulación.';
     case 'insufficient_funds_mock':
-      return 'La tarjeta demo no tiene disponibilidad suficiente para completar la simulación.';
+      return 'Simulación de rechazo para pruebas. No hubo comunicación con ningún banco o procesador real.';
     case 'duplicate_attempt_mock':
-      return 'Detectamos un intento duplicado y bloqueamos el reintento.';
+      return 'Detectamos un intento demo duplicado y bloqueamos el reintento de prueba.';
     default:
-      return 'No pudimos procesar el pago en este momento.';
+      return 'No se completó el pago de prueba en este momento.';
   }
 }
 
@@ -45,15 +45,15 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
           <View style={[styles.icon, { backgroundColor: `${theme.error}18` }]}>
             <Feather color={theme.error} name="x-circle" size={34} />
           </View>
-          <Text style={[styles.title, { color: theme.fg }]}>No pudimos hacer tu pago</Text>
+          <Text style={[styles.title, { color: theme.fg }]}>No se completó el pago de prueba</Text>
           <Text style={[styles.body, { color: theme.fg2 }]}>{failureMessage(recovery.reason)}</Text>
         </View>
         <PaymentRecoverySummary recovery={recovery} />
         {demoPaymentEnabled ? (
           <AlertCard
             tone="info"
-            title="No se cobró nada"
-            message="No se movió dinero de tu cuenta. Puedes intentar de nuevo sin riesgo."
+            title="Simulación sin operación real"
+            message="No se intentó ninguna operación bancaria real. Puedes repetir la prueba cuando quieras."
           />
         ) : (
           <AlertCard tone="info" title={providerUnavailable.title} message={providerUnavailable.message} />
@@ -61,12 +61,12 @@ export function PaymentFailedScreen({ navigation, route }: Props) {
         <View style={styles.actions}>
           {demoPaymentEnabled ? (
             <>
-              <PrimaryButton onPress={retry}>INTENTAR DE NUEVO</PrimaryButton>
+              <PrimaryButton onPress={retry}>INTENTAR SIMULACIÓN DE NUEVO</PrimaryButton>
               <PrimaryButton
                 onPress={() => navigation.navigate('PaymentMethods', { serviceId: recovery.serviceId })}
                 variant="secondary"
               >
-                Usar otro método de pago
+                Usar otro método demo
               </PrimaryButton>
             </>
           ) : null}

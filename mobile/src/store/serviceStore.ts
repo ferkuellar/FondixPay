@@ -71,7 +71,7 @@ export const useServiceStore = create<ServiceState>((set, get) => ({
   markServicePaid: (serviceId) => {
     set((state) => ({
       services: state.services.map((service) =>
-        service.id === serviceId ? { ...service, amountDue: 0, dueText: 'pagado' } : service,
+        service.id === serviceId ? { ...service, amountDue: 0, dueText: 'demo listo' } : service,
       ),
     }));
   },

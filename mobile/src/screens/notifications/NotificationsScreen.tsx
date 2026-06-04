@@ -27,7 +27,7 @@ export function NotificationsScreen() {
         {error ? <ErrorState message={error} /> : null}
         {!isLoading && !error && notifications.length === 0 ? (
           <EmptyState
-            message="Aqui veras confirmaciones, pendientes y comprobantes no disponibles."
+            message="Aqui veras avisos demo, pendientes de prueba y comprobantes de prueba no disponibles."
             title="Sin notificaciones"
           />
         ) : null}

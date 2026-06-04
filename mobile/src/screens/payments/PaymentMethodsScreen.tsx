@@ -37,10 +37,10 @@ export function PaymentMethodsScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>Métodos de pago</Text>
+          <Text style={styles.title}>Métodos demo</Text>
           <Text style={styles.subtitle}>
             {demoPaymentEnabled
-              ? 'Administra métodos demo para validar el flujo sin cargos reales.'
+              ? 'Administra métodos demo para validar el flujo sin operaciones reales.'
               : 'Los métodos de pago estarán disponibles cuando el proveedor transaccional esté aprobado.'}
           </Text>
         </View>

@@ -37,8 +37,8 @@ export function ReceiptDetailScreen({ navigation, route }: Props) {
             <Text style={styles.nextTitle}>Qué hacer ahora</Text>
             <Text style={styles.nextBody}>
               {payment.receiptStatus === 'pending'
-                ? 'Revisa el estado antes de intentar pagar otra vez.'
-                : 'No hay comprobante confirmado para este intento. Usa la referencia mock si necesitas ayuda.'}
+                ? 'Revisa el estado demo antes de repetir la simulación.'
+                : 'No hay comprobante de prueba disponible para este intento. Usa la referencia demo si necesitas ayuda.'}
             </Text>
           </View>
         ) : null}
@@ -51,7 +51,7 @@ export function ReceiptDetailScreen({ navigation, route }: Props) {
             onPress={() => void shareProof(payment)}
             variant="secondary"
           >
-            COMPARTIR COMPROBANTE MOCK
+            COMPARTIR COMPROBANTE DE PRUEBA
           </PrimaryButton>
         </View>
       </ScrollView>
@@ -85,19 +85,19 @@ function toLocalProof(payment: Payment): ReceiptProof {
     isSandbox: false,
     issuedAt: payment.paidAt,
     confirmedAt: payment.status === 'succeeded' ? payment.paidAt : undefined,
-    disclaimer: 'Comprobante mock/dev. No es comprobante fiscal ni confirmacion productiva.',
+    disclaimer: 'Comprobante de prueba. No tiene validez fiscal ni financiera.',
   };
 }
 
 async function shareProof(payment: Payment) {
   await Share.share({
     message: [
-      'FondixPay - comprobante mock/dev',
+      'FondixPay - comprobante de prueba',
       `Servicio: ${payment.providerName} - ${payment.serviceName}`,
-      `Total: ${payment.currency} ${(payment.totalMinor / 100).toFixed(2)}`,
+      `Total simulado: ${payment.currency} ${(payment.totalMinor / 100).toFixed(2)}`,
       `Estado: ${payment.status}`,
       `Referencia: ${payment.folio}`,
-      'No es comprobante fiscal ni confirmacion productiva.',
+      'Documento demo. No tiene validez fiscal ni financiera.',
     ].join('\n'),
   });
 }

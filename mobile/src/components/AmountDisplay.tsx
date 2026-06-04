@@ -8,7 +8,7 @@ type Props = {
   label?: string;
 };
 
-export function AmountDisplay({ amount, label = 'Total a pagar' }: Props) {
+export function AmountDisplay({ amount, label = 'Total simulado' }: Props) {
   const { theme } = useAppTheme();
 
   return (

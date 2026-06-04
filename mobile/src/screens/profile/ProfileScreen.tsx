@@ -13,7 +13,7 @@ import type { RootStackParamList } from '../../types';
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
 type PaymentMethod = {
-  brand: string;
+  badge: string;
   color: string;
   title: string;
   subtitle: string;
@@ -27,17 +27,17 @@ type SavedService = {
 
 const paymentMethods: PaymentMethod[] = [
   {
-    brand: 'BBVA',
+    badge: 'DEMO',
     color: '#0F5CC8',
     isPrimary: true,
-    subtitle: 'Cuenta principal',
-    title: 'Débito •••4291',
+    subtitle: 'Método de prueba principal',
+    title: 'Método demo •••0000',
   },
   {
-    brand: 'Banorte',
+    badge: 'DEMO',
     color: '#A7191D',
-    subtitle: 'Visa · termina en 7720',
-    title: 'Crédito •••7720',
+    subtitle: 'Escenario alterno de prueba',
+    title: 'Método demo •••1111',
   },
 ];
 
@@ -86,7 +86,7 @@ export function ProfileScreen({ navigation }: Props) {
           </Pressable>
         </View>
 
-        <SectionTitle label="PAGO" />
+        <SectionTitle label="PRUEBAS DE PAGO" />
         <View style={[styles.groupCard, { backgroundColor: theme.surface }]}>
           {paymentMethods.map((method, index) => (
             <View
@@ -97,7 +97,7 @@ export function ProfileScreen({ navigation }: Props) {
               ]}
             >
               <View style={[styles.bankLogo, { backgroundColor: method.color }]}>
-                <Text style={styles.bankLogoText}>{method.brand}</Text>
+                <Text style={styles.bankLogoText}>{method.badge}</Text>
               </View>
               <View style={styles.rowCopy}>
                 <Text style={[styles.rowTitle, { color: theme.fg }]}>{method.title}</Text>
@@ -118,7 +118,7 @@ export function ProfileScreen({ navigation }: Props) {
             <View style={styles.softIcon}>
               <Feather color={theme.fg2} name="plus" size={22} />
             </View>
-            <Text style={[styles.actionLabel, { color: theme.fg }]}>Agregar método de pago</Text>
+            <Text style={[styles.actionLabel, { color: theme.fg }]}>Agregar método demo</Text>
             <Feather color={theme.fg2} name="chevron-right" size={21} />
           </Pressable>
         </View>

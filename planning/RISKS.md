@@ -464,3 +464,9 @@ Open production risks:
 | Service-card or history copy could imply an external utility account is current or paid. | SEV-1 | open | Future UI cleanup must separate demo/local state from provider-confirmed state before real runtime. |
 | Historical Prontipagos labels in docs, README, or CRM/Admin copy could confuse future Tekae implementation. | SEV-2 | open | Preserve Prontipagos as permanently removed and schedule a future documentation/UI copy cleanup sprint. |
 | Vercel public landing boundary could be weakened by environment terminology drift. | SEV-1 | mitigated/ongoing | Sprint 013 restates Vercel as landing/front-door only, not backend/API/payment/admin/provider runtime. |
+
+## Sprint 014 Mock Payment UI Copy Cleanup Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Internal technical state names such as `PaymentSuccess`, `succeeded`, `paidAt`, and `paid` badge variants could be reused as visible copy later. | SEV-2 | open | Sprint 014 changed visible mobile copy only; future runtime/refactor work must keep UI labels separate from internal state names. |

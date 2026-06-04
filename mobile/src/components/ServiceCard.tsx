@@ -59,7 +59,7 @@ export function ServiceCard({ service, onPress, onPay }: Props) {
             ]}
             numberOfLines={1}
           >
-            {state === 'paid' ? 'Al corriente' : service.dueText}
+            {state === 'paid' ? 'Simulación al día' : service.dueText}
           </Text>
         </View>
       </View>
@@ -69,14 +69,14 @@ export function ServiceCard({ service, onPress, onPay }: Props) {
         {canPay ? (
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel={`Pagar ${service.alias}`}
+            accessibilityLabel={`Simular pago de ${service.alias}`}
             onPress={onPay}
             hitSlop={8}
           >
-            <Text style={[styles.payLink, { color: theme.primary }]}>Pagar →</Text>
+          <Text style={[styles.payLink, { color: theme.primary }]}>Simular →</Text>
           </Pressable>
         ) : (
-          <Text style={[styles.paidLabel, { color: theme.success }]}>✓ Listo</Text>
+          <Text style={[styles.paidLabel, { color: theme.success }]}>Demo listo</Text>
         )}
       </View>
     </Pressable>

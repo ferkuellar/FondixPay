@@ -19,8 +19,8 @@ const options: Array<{
 }> = [
   {
     type: 'card_mock',
-    title: 'Tarjeta demo',
-    description: 'Simula una tarjeta crédito/débito. No ingreses número real, vencimiento ni CVV.',
+    title: 'Método demo',
+    description: 'Simula un método de pago. No ingreses número real, vencimiento ni CVV.',
   },
 ];
 
@@ -43,10 +43,10 @@ export function AddPaymentMethodMockScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View>
-          <Text style={styles.title}>{demoPaymentEnabled ? 'Agregar tarjeta demo' : 'Métodos de pago no disponibles'}</Text>
+          <Text style={styles.title}>{demoPaymentEnabled ? 'Agregar método demo' : 'Métodos de pago no disponibles'}</Text>
           <Text style={styles.subtitle}>
             {demoPaymentEnabled
-              ? 'Prueba el flujo card-only sin capturar tarjeta, CVV ni datos reales.'
+              ? 'Prueba el flujo sin capturar tarjeta, CVV ni datos reales.'
               : 'El alta de métodos queda bloqueada hasta tener proveedor transaccional aprobado.'}
           </Text>
         </View>

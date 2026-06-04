@@ -17,7 +17,7 @@ const DEMO_SERVICES: ServiceCatalogItem[] = [
     visibleOnMobile: true,
     payableInMobile: true,
     referenceOnly: true,
-    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni confirmacion de Prontipagos.',
+    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni proveedor real activo.',
   },
   {
     id: 'demo-catalog-agua',
@@ -31,7 +31,7 @@ const DEMO_SERVICES: ServiceCatalogItem[] = [
     visibleOnMobile: true,
     payableInMobile: true,
     referenceOnly: true,
-    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni confirmacion de Prontipagos.',
+    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni proveedor real activo.',
   },
   {
     id: 'demo-catalog-internet',
@@ -45,7 +45,7 @@ const DEMO_SERVICES: ServiceCatalogItem[] = [
     visibleOnMobile: true,
     payableInMobile: true,
     referenceOnly: true,
-    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni confirmacion de Prontipagos.',
+    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni proveedor real activo.',
   },
   {
     id: 'demo-catalog-gas',
@@ -59,7 +59,7 @@ const DEMO_SERVICES: ServiceCatalogItem[] = [
     visibleOnMobile: true,
     payableInMobile: true,
     referenceOnly: true,
-    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni confirmacion de Prontipagos.',
+    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni proveedor real activo.',
   },
   {
     id: 'demo-catalog-recarga',
@@ -73,7 +73,7 @@ const DEMO_SERVICES: ServiceCatalogItem[] = [
     visibleOnMobile: true,
     payableInMobile: true,
     referenceOnly: true,
-    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni confirmacion de Prontipagos.',
+    disclaimer: 'Servicio demo. No representa disponibilidad productiva ni proveedor real activo.',
   },
 ];
 

@@ -63,7 +63,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
   if (isPaying) {
     return (
       <Screen>
-        <LoadingState message="Procesando pago..." />
+        <LoadingState message="Simulando pago de prueba..." />
       </Screen>
     );
   }
@@ -113,21 +113,21 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
           <View style={styles.content}>
             <AmountCard
               amountMinor={breakdown.totalMinor}
-              label="Total a pagar"
-              footer="Revisa el monto antes de confirmar. No haremos otro pago automático."
+              label="Total simulado"
+              footer="Revisa el monto de prueba antes de continuar. No se realizará una operación real."
             />
             <PaymentSummaryCard
               alias={service.alias}
               amount={service.amountDue}
               category={service.provider.category}
               paymentMethod={selectedPaymentMethod?.label}
-              paymentMethodNote={selectedPaymentMethod?.isMock ? 'Tarjeta demo · sin cargo real' : undefined}
+              paymentMethodNote={selectedPaymentMethod?.isMock ? 'Método demo · sin operación bancaria' : undefined}
               providerName={service.provider.displayName}
               reference={service.reference}
             />
             <View style={styles.methodSection}>
               <View style={styles.methodHeader}>
-                <Text style={[styles.methodTitle, { color: theme.fg }]}>Método de pago</Text>
+                <Text style={[styles.methodTitle, { color: theme.fg }]}>Método de prueba</Text>
                 {demoPaymentEnabled ? (
                   <PrimaryButton
                     onPress={() => navigation.navigate('PaymentMethods', { serviceId: service.id })}
@@ -146,8 +146,8 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
               ) : demoPaymentEnabled ? (
                 <AlertCard
                   tone="warning"
-                  title="Agrega una tarjeta demo para continuar"
-                  message="No se realizará ningún cargo real. Este paso evita mostrar métodos de pago fantasma."
+                  title="Agrega un método demo para continuar"
+                  message="No se solicitarán datos bancarios reales. Este paso evita mostrar métodos de pago fantasma."
                 />
               ) : (
                 <AlertCard tone="info" title={providerUnavailable.title} message={providerUnavailable.message} />
@@ -155,10 +155,10 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
             </View>
             <AlertCard
               tone="info"
-              title="Tu pago está protegido"
+              title="Simulación protegida"
               message={
                 demoPaymentEnabled
-                  ? 'Confirmaremos el servicio con el proveedor mock. Si WhatsApp no está disponible, tu comprobante seguirá guardado en la app.'
+                  ? 'Validaremos solo el flujo demo. No hay proveedor real, WhatsApp real ni operación bancaria en esta pantalla.'
                   : 'Aún no hay proveedor transaccional activo. No se iniciará ningún pago desde esta pantalla.'
               }
             />
@@ -166,7 +166,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
               <View style={[styles.scenarioSection, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
                 <Text style={[styles.scenarioTitle, { color: theme.fg }]}>Escenario demo</Text>
                 <Text style={[styles.scenarioCopy, { color: theme.fg2 }]}>
-                  Prueba recovery mock sin proveedor real ni cargo real.
+                  Prueba escenarios demo sin proveedor real ni operación bancaria.
                 </Text>
                 <View style={styles.scenarioList}>
                   {(['succeeded', 'failed', 'pending', 'timeout', 'duplicate_blocked'] as const).map((scenario) => (
@@ -188,7 +188,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
                   ))}
                 </View>
                 {duplicateMessage ? (
-                  <Text style={[styles.duplicateText, { color: theme.warning }]}>Ya estamos procesando este pago.</Text>
+                  <Text style={[styles.duplicateText, { color: theme.warning }]}>Ya estamos simulando este intento.</Text>
                 ) : null}
               </View>
             ) : null}
@@ -197,7 +197,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
         <View style={[styles.footer, { backgroundColor: theme.bg, borderTopColor: theme.border }]}>
           {demoPaymentEnabled ? (
             <PrimaryButton disabled={!canPay || isPaying} onPress={pay} variant="success">
-              Confirmar pago
+              Simular pago
             </PrimaryButton>
           ) : (
             <Text style={[styles.footerMessage, { color: theme.fg2 }]}>{providerUnavailable.message}</Text>

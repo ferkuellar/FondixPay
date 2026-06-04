@@ -124,7 +124,7 @@ export const usePaymentStore = create<PaymentState>((set, get) => ({
       totalMinor: recovery.totalMinor,
       currency: recovery.currency,
       feeLabel: 'Comisión FondixPay',
-      feeDescription: 'Comisión demo visible antes de confirmar el pago.',
+      feeDescription: 'Comisión demo visible antes de continuar la simulación.',
       isMock: true,
       paymentMethodLabel: recovery.methodLabel,
       paymentMethodIsMock: true,

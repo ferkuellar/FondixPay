@@ -10,7 +10,7 @@ type Props = {
 
 const filters: Array<[TransactionHistoryFilter, string]> = [
   ['all', 'Todos'],
-  ['succeeded', 'Pagados'],
+  ['succeeded', 'Simulados'],
   ['pending', 'Pendientes'],
   ['failed', 'En revisión'],
 ];

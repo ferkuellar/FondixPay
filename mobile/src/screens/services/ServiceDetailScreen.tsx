@@ -50,7 +50,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
     <Screen>
       <View style={styles.container}>
         <View style={styles.card}>
-          <AmountDisplay amount={breakdown.totalMinor / 100} label="Total final" />
+          <AmountDisplay amount={breakdown.totalMinor / 100} label="Total simulado" />
           <View style={styles.breakdown}>
             <View style={styles.breakdownRow}>
               <Text style={styles.label}>Monto del servicio</Text>
@@ -60,7 +60,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
               <Text style={styles.label}>{breakdown.feeLabel}</Text>
               <Text style={styles.breakdownValue}>{formatMoneyMinor(breakdown.feeMinor)}</Text>
             </View>
-            <Text style={styles.trustCopy}>Te mostraremos siempre la comisión antes de pagar.</Text>
+            <Text style={styles.trustCopy}>Te mostraremos siempre la comisión antes de simular el pago.</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>Número de servicio</Text>
@@ -70,7 +70,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
             <Text style={styles.label}>Periodo</Text>
             <Text style={styles.value}>May 2026</Text>
           </View>
-          <Text style={styles.methodTitle}>Método de pago</Text>
+          <Text style={styles.methodTitle}>Método de prueba</Text>
           {selectedPaymentMethod ? (
             <View style={styles.methodSelected}>
               <View style={styles.radioSelected} />
@@ -85,7 +85,7 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
               <View style={styles.radio} />
               <View style={styles.methodCopy}>
                 <Text style={styles.methodText}>Método pendiente</Text>
-                <Text style={styles.methodDescription}>Agrega una tarjeta demo antes de confirmar.</Text>
+                <Text style={styles.methodDescription}>Agrega un método demo antes de continuar.</Text>
               </View>
             </View>
           )}
@@ -99,18 +99,18 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
             style={styles.methodRow}
           >
             <View style={styles.radio} />
-            <Text style={styles.methodText}>{selectedPaymentMethod ? 'Cambiar tarjeta demo' : 'Agregar tarjeta demo'}</Text>
+            <Text style={styles.methodText}>{selectedPaymentMethod ? 'Cambiar método demo' : 'Agregar método demo'}</Text>
             <Feather color={colors.primary} name="plus" size={18} />
           </Pressable>
         </View>
 
         <Text style={styles.secure}>
-          <Feather color={colors.success} name="shield" size={14} /> No se realiza ningún cargo sin tu confirmación.
+          <Feather color={colors.success} name="shield" size={14} /> Modo prueba: no se realiza una operación real.
         </Text>
 
         <View style={styles.actions}>
           <PrimaryButton disabled={currentService.amountDue <= 0} onPress={pay} variant="primary">
-            Pagar {formatMoneyMinor(breakdown.totalMinor)}
+            Simular pago {formatMoneyMinor(breakdown.totalMinor)}
           </PrimaryButton>
           <SecondaryButton onPress={remove}>Quitar servicio</SecondaryButton>
         </View>

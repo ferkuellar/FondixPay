@@ -22,11 +22,11 @@ export function PaymentRecoverySummary({ recovery }: Props) {
         <Text style={styles.value}>{formatMoneyMinor(recovery.feeMinor)}</Text>
       </View>
       <View style={styles.totalLine}>
-        <Text style={styles.totalLabel}>Total</Text>
+        <Text style={styles.totalLabel}>Total simulado</Text>
         <Text style={styles.totalValue}>{formatMoneyMinor(recovery.totalMinor)}</Text>
       </View>
       <View style={styles.detailLine}>
-        <Text style={styles.label}>Método usado</Text>
+        <Text style={styles.label}>Método demo usado</Text>
         <Text style={styles.value}>{recovery.methodLabel}</Text>
       </View>
     </View>

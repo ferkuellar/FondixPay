@@ -11,7 +11,7 @@ export function PaymentMethodDemoNotice({ compact }: Props) {
   return (
     <View style={[styles.notice, compact && styles.compact]}>
       <Feather color={colors.primary} name="info" size={16} />
-      <Text style={styles.text}>Tarjeta demo. No se realizará ningún cargo real ni ingreses datos reales.</Text>
+      <Text style={styles.text}>Método demo. No ingreses datos reales ni se intentará una operación bancaria.</Text>
     </View>
   );
 }

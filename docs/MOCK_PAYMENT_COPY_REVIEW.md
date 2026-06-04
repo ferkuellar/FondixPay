@@ -58,11 +58,12 @@ For future Tekae runtime, final success language is allowed only after official 
 
 ## Future UI Cleanup Backlog
 
-- Rename or relabel mock user-facing success screens so they do not imply real payment completion.
-- Separate mock local state from provider-confirmed state in future UI copy.
-- Review `PaymentSuccess`, receipt detail, transaction history, service cards, and CRM/Admin reconciliation labels.
+- Sprint 014 completed the mobile user-facing copy cleanup for mock payment success, pending, failed, receipt, history, confirmation, payment method, home, onboarding, and profile payment-method surfaces.
+- Mobile user-facing copy now uses demo, prueba, simulacion, total simulado, and comprobante de prueba language where payment execution could otherwise be misunderstood.
+- Runtime state names such as `PaymentSuccess`, `succeeded`, `paidAt`, and `paid` badge variants remain technical/internal and were not renamed in Sprint 014 to avoid changing navigation, types, state contracts, or payment logic.
+- CRM/Admin reconciliation labels remain future cleanup scope because Sprint 014 is mobile-only.
 - Decide whether internal enum names can remain unchanged while UI copy is corrected, or whether a future runtime sprint should refactor state naming.
-- Review WhatsApp receipt template names and user-facing notification copy after the official provider-confirmed receipt model is approved.
+- Review WhatsApp receipt template names after the official provider-confirmed receipt model is approved.
 
 ## Non-Goals
 
@@ -73,3 +74,13 @@ For future Tekae runtime, final success language is allowed only after official 
 - No migrations.
 - No provider credentials.
 - No Terraform or deployment behavior changes.
+
+## Sprint 014 Cleanup Summary
+
+Sprint 014 changed visible mobile copy only. It did not change backend runtime, mobile payment logic, provider adapters, Tekae runtime, endpoints, webhooks, migrations, `.env` files, Terraform, workflows, or deployment behavior.
+
+Remaining intentional non-copy items:
+
+- Technical route/type names can still include success or paid semantics internally.
+- Tekae shell remains disabled.
+- Provider-confirmed success remains blocked until Sprint 011 contract readiness passes.

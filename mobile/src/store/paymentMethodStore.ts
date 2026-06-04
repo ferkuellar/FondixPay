@@ -17,8 +17,8 @@ type PaymentMethodState = {
 const mockTemplates: Record<PaymentMethodType, Omit<PaymentMethod, 'id' | 'isDefault'>> = {
   card_mock: {
     type: 'card_mock',
-    label: 'Tarjeta demo',
-    description: 'Tarjeta simulada. No ingreses datos reales.',
+    label: 'Método demo',
+    description: 'Método simulado. No ingreses datos reales.',
     displayLast4: '0000',
     isMock: true,
     status: 'active',

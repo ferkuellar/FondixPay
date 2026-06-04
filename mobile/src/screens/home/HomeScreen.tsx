@@ -89,11 +89,11 @@ export function HomeScreen({ navigation }: Props) {
           </Pressable>
         </View>
 
-        {/* ── Total por pagar card ── */}
+        {/* ── Total demo card ── */}
         <View style={styles.section}>
           <View style={[styles.totalCard, { backgroundColor: theme.primary }]}>
             <View style={styles.totalCardGlow} />
-            <Text style={styles.totalLabel}>Total por pagar este mes</Text>
+            <Text style={styles.totalLabel}>Total demo este mes</Text>
             <Text style={styles.totalAmount}>{totalFormatted}</Text>
             {urgentCount > 0 && (
               <View style={styles.urgentRow}>
@@ -106,10 +106,10 @@ export function HomeScreen({ navigation }: Props) {
           </View>
         </View>
 
-        {/* ── Pago rápido grid ── */}
+        {/* ── Simulación rápida grid ── */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: theme.fg }]}>Pago rápido</Text>
+            <Text style={[styles.sectionTitle, { color: theme.fg }]}>Simulación rápida</Text>
             <Pressable onPress={() => navigation.navigate('AddService')}>
               <Text style={[styles.seeAll, { color: theme.primary }]}>Ver todo</Text>
             </Pressable>
@@ -121,7 +121,7 @@ export function HomeScreen({ navigation }: Props) {
                 onPress={() => navigation.navigate('AddService')}
                 style={[styles.quickTile, { backgroundColor: theme.surface }]}
                 accessibilityRole="button"
-                accessibilityLabel={`Pagar ${item.label}`}
+                accessibilityLabel={`Simular ${item.label}`}
               >
                 <View style={[styles.quickIcon, { backgroundColor: `${item.color}22` }]}>
                   <Feather name={item.icon} size={22} color={item.color} />
@@ -137,9 +137,9 @@ export function HomeScreen({ navigation }: Props) {
           <BalanceCard balance={balance} error={accountError} loading={accountLoading} />
         </View>
 
-        {/* ── Por pagar ── */}
+        {/* ── Servicios demo ── */}
         <View style={styles.sectionHeader2}>
-          <Text style={[styles.sectionTitle, { color: theme.fg }]}>Por pagar</Text>
+          <Text style={[styles.sectionTitle, { color: theme.fg }]}>Servicios demo</Text>
           {services.length > 0 && (
             <Text style={[styles.countLabel, { color: theme.fg3 }]}>
               {services.length} servicio{services.length !== 1 ? 's' : ''}
@@ -171,7 +171,7 @@ export function HomeScreen({ navigation }: Props) {
             ))}
             {services.length > 1 && (
               <PrimaryButton onPress={() => navigation.navigate('AddService')}>
-                Pagar los {services.length} · {totalFormatted}
+                Simular {services.length} servicios · {totalFormatted}
               </PrimaryButton>
             )}
           </View>
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // Por pagar header
+  // Servicios demo header
   sectionHeader2: {
     alignItems: 'baseline',
     flexDirection: 'row',

@@ -752,3 +752,31 @@ Operating status:
 Next recommended sprint:
 
 Sprint 014 - Mock Payment UI Copy Cleanup.
+
+## Sprint 014 - Mock Payment UI Copy Cleanup
+
+Current phase: Sprint 014 - Mock Payment UI Copy Cleanup.
+
+Status: COMPLETED. Sprint 014 updated visible mobile mock payment copy so users see demo/prueba/simulacion language instead of wording that could imply real payment execution, bank processing, provider confirmation, WhatsApp delivery, settlement, or production receipt.
+
+Scope completed:
+
+- Mobile visible copy only.
+- Success, pending, failed, receipt, history, confirmation, payment method, home, onboarding, notification empty state, profile payment-method, and service-card copy were reviewed and adjusted.
+- `docs/MOCK_PAYMENT_COPY_REVIEW.md` was updated with Sprint 014 cleanup status.
+- `planning/RISKS.md` records the residual risk that internal technical state names still contain success/paid terminology and must not be reused as visible copy.
+
+Operating status:
+
+- No backend runtime behavior changed.
+- No mobile payment logic changed beyond visible copy/string changes.
+- No migrations changed.
+- No `.env` or secret-bearing files changed.
+- No infrastructure, Terraform, workflow, webhook, endpoint, or deployment behavior changed.
+- Tekae remains disabled and blocked until Sprint 011 contract readiness passes.
+- FONDIXPAY remains a platform/app using Tekae capabilities, not a fintech.
+- Prontipagos remains permanently removed and was not reintroduced in mobile copy.
+
+Next recommended sprint:
+
+Sprint 015 - Mobile Mock Copy QA And Visual Regression Review, or return to Sprint 011 when Tekae contract readiness evidence is available.

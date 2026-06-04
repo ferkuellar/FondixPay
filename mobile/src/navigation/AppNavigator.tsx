@@ -79,17 +79,17 @@ export function AppNavigator() {
           />
           <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Agregar servicio' }} />
           <Stack.Screen name="ServiceDetail" component={ServiceDetailScreen} options={{ title: 'Tu servicio' }} />
-          <Stack.Screen name="ConfirmPayment" component={ConfirmPaymentScreen} options={{ title: 'Confirmar pago' }} />
-          <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} options={{ title: 'Métodos de pago' }} />
+          <Stack.Screen name="ConfirmPayment" component={ConfirmPaymentScreen} options={{ title: 'Simular pago' }} />
+          <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} options={{ title: 'Métodos demo' }} />
           <Stack.Screen
             name="AddPaymentMethodMock"
             component={AddPaymentMethodMockScreen}
-            options={{ title: 'Agregar tarjeta demo' }}
+            options={{ title: 'Agregar método demo' }}
           />
           <Stack.Screen name="Account" component={AccountScreen} options={{ title: 'Cuenta demo' }} />
           <Stack.Screen name="Movements" component={MovementsScreen} options={{ title: 'Movimientos demo' }} />
-          <Stack.Screen name="PaymentFailed" component={PaymentFailedScreen} options={{ title: 'Pago no completado' }} />
-          <Stack.Screen name="PaymentPending" component={PaymentPendingScreen} options={{ title: 'Pago pendiente' }} />
+          <Stack.Screen name="PaymentFailed" component={PaymentFailedScreen} options={{ title: 'Prueba no completada' }} />
+          <Stack.Screen name="PaymentPending" component={PaymentPendingScreen} options={{ title: 'Prueba pendiente' }} />
           <Stack.Screen
             name="SupportPlaceholder"
             component={SupportPlaceholderScreen}
@@ -105,7 +105,7 @@ export function AppNavigator() {
             component={ProviderCallbackScreen}
             options={{ headerBackVisible: false, title: 'Estado de operación' }}
           />
-          <Stack.Screen name="ReceiptDetail" component={ReceiptDetailScreen} options={{ title: 'Detalle' }} />
+          <Stack.Screen name="ReceiptDetail" component={ReceiptDetailScreen} options={{ title: 'Comprobante de prueba' }} />
           <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ title: 'Notificaciones' }} />
           <Stack.Screen name="History" component={HistoryScreen} options={{ title: 'Historial' }} />
           <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil' }} />
