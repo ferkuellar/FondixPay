@@ -839,9 +839,9 @@ Sprint 016 - Mobile Device Screenshot QA, or return to Sprint 011 when Tekae con
 
 ## Sprint 016 - Mobile Device Visual QA Evidence Pack
 
-Current phase: Sprint 016 - Mobile Device Visual QA Evidence Pack.
+Current phase: Sprint 016B - Complete Mobile Device Visual QA Evidence Pack.
 
-Status: INCOMPLETE / BLOCKED PARTIAL. Sprint 016 started Android emulator screenshot QA and captured partial evidence, but did not complete the full payment mock flow evidence pack.
+Status: COMPLETED. Sprint 016B resumed Android emulator screenshot QA and completed the missing mock/dev payment visual evidence pack from Sprint 016.
 
 Scope completed:
 
@@ -850,20 +850,20 @@ Scope completed:
 - The FONDIXPAY mobile app rendered in Expo Go.
 - `docs/MOBILE_DEVICE_VISUAL_QA_EVIDENCE.md` records the QA environment, startup notes, captured evidence, findings, and incomplete acceptance.
 - Screenshots were captured under `docs/qa/sprint-016-mobile-device-visual-qa/`.
+- Sprint 016B captured the missing `PaymentSuccess`, `PaymentFailed`, `ReceiptDetail`, `ServiceDetail`, `AddPaymentMethodMock`, `PaymentPending`, and payment-related alert/scenario evidence.
+- The failed payment recovery action `REINTENTAR PRUEBA` was reachable and returned to `ConfirmPayment`.
 
 Evidence captured:
 
 - Home / services demo dashboard.
 - Confirm payment / mock payment confirmation.
-
-Evidence still missing:
-
-- `ServiceDetail`.
-- `AddPaymentMethodMock`.
-- `PaymentSuccess`.
-- `PaymentFailed`.
-- `ReceiptDetail`.
-- Receipt unavailable or pending state, if reachable without changing runtime logic.
+- Service detail / mock service payment surface.
+- Add payment method mock.
+- Payment success.
+- Payment failed plus recovery action.
+- Receipt detail.
+- Payment pending.
+- Payment-related in-app alert/scenario state.
 
 Operating status:
 
@@ -882,9 +882,10 @@ Operating status:
 
 Result:
 
-- Captured screenshots confirm that the Home and ConfirmPayment visible copy uses demo/prueba/simulado language and does not imply real payment execution, banking action, provider confirmation, Tekae processing, settlement, or production receipt behavior.
-- Sprint 016 cannot be marked complete because success, failure, and receipt visual states were not captured.
+- Captured screenshots confirm that reviewed visible payment copy uses demo/prueba/simulado language and does not imply real payment execution, banking action, provider confirmation, Tekae processing, settlement, WhatsApp delivery, or production receipt behavior.
+- Sprint 016 can now be closed for mock/dev mobile visual QA evidence.
+- Residual copy debt remains on `ReceiptDetail`: visible technical labels `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` should be replaced with Spanish user-facing demo labels in a future copy cleanup, but they are still presented inside a `Comprobante de prueba` context.
 
 Next recommended sprint:
 
-Sprint 016B - Complete Mobile Device Visual QA Evidence Pack, or return to Sprint 011 when Tekae contract readiness evidence is available.
+Return to Sprint 011 when Tekae contract readiness evidence is available, or schedule a narrow receipt-detail copy cleanup if product wants to remove internal English demo status labels before user pilot.

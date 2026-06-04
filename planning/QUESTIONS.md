@@ -85,3 +85,7 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - Should future cleanup change only user-facing copy, or also internal mock status names such as `paid`, `succeeded`, `confirmed`, and `PaymentSuccess`?
 - Should historical Prontipagos references in README, older planning, and CRM/Admin labels be archived, relabeled, or removed in a dedicated cleanup sprint?
 - Should the historical WhatsApp template name `fondix_pago_exitoso` be renamed after the official Tekae receipt/comprobante model is approved?
+
+## Sprint 016B Visual QA Questions
+
+- Should `ReceiptDetail` replace visible internal English demo labels such as `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` with Spanish user-facing labels such as `Prueba registrada` and `Estado demo: registrado` before a user pilot?

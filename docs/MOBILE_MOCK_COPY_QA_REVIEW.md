@@ -70,3 +70,25 @@ Sprint 015 does not enable Tekae, does not create real payment behavior, and doe
 ## Sprint 016 Follow-up
 
 See `docs/MOBILE_DEVICE_VISUAL_QA_EVIDENCE.md` for the partial Android evidence pack. Sprint 016 remains incomplete until the full mock payment flow has device screenshots for success, failure, and receipt states.
+
+## Sprint 016B Follow-up
+
+Sprint 016B completed native Android emulator visual QA for the missing mock/dev payment screens.
+
+Evidence added under `docs/qa/sprint-016-mobile-device-visual-qa/`:
+
+- `03-payment-success.png`
+- `04-payment-failed.png`
+- `05-receipt-detail.png`
+- `06-service-detail.png`
+- `07-add-payment-method-mock.png`
+- `08-payment-pending.png`
+- `10-payment-modal-or-alert.png`
+
+Result:
+
+- Payment success, failure, pending, service detail, add-method mock, receipt detail, and the reachable in-app payment alert/scenario state were visually reviewed.
+- No reviewed screen implied real bank/card/provider/Tekae/WhatsApp/settlement execution.
+- Prontipagos was not present.
+- FONDIXPAY was not described as a fintech.
+- Residual copy debt remains on `ReceiptDetail`: visible technical labels `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` are still understandable as demo/internal status, but should be replaced with Spanish user-facing demo labels in a future copy cleanup.
