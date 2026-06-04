@@ -714,7 +714,7 @@ Do not mark Sprint 012 complete until acceptance criteria are reviewed against `
 
 Current phase: Sprint 013 - Environment Docs Alignment & Mock Payment Copy Cleanup.
 
-Status: IN PROGRESS. Documentation/review execution started. Sprint 013 does not implement code, migrations, credentials, backend runtime changes, mobile runtime changes, payment endpoints, webhook endpoints, Terraform behavior, or production deployment changes.
+Status: COMPLETED. Sprint 013 aligned environment documentation and documented mock payment copy risks. Sprint 013 did not implement code, migrations, credentials, backend runtime changes, mobile runtime changes, payment endpoints, webhook endpoints, Terraform behavior, or production deployment changes.
 
 Active sprint:
 
@@ -732,6 +732,14 @@ Sprint 013 documentation outputs:
 - `docs/MOCK_PAYMENT_COPY_REVIEW.md`
 - Updates to environment, risk, question, and state docs.
 
+Sprint 013 completion notes:
+
+- Environment documentation is aligned.
+- `docs/ENVIRONMENT.md` is the canonical current environment document.
+- `docs/ENVIRONMENTS.md` is retained as a tier matrix/reference, not proof of deployed staging or production.
+- Mock payment copy risks were documented in `docs/MOCK_PAYMENT_COPY_REVIEW.md`.
+- Tekae remains blocked until Sprint 011 contract readiness passes.
+
 Operating status:
 
 - Tekae remains blocked until Sprint 011 contract readiness passes.
@@ -740,3 +748,7 @@ Operating status:
 - Tekae remains the approved provider.
 - Prontipagos remains permanently removed.
 - Mock/dev payment copy remains a runtime cleanup risk until a future approved UI copy sprint changes mobile/admin surfaces.
+
+Next recommended sprint:
+
+Sprint 014 - Mock Payment UI Copy Cleanup.
