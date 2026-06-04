@@ -8,19 +8,25 @@ Users need a simple mobile way to pay domestic services in Mexico without naviga
 
 Open the app, see pending services, pay, and obtain a receipt.
 
-FondixPay permite a usuarios en Mexico pagar servicios domesticos desde una app movil usando exclusivamente tarjeta de credito o debito como metodo de pago del usuario.
+FONDIXPAY permite a usuarios en Mexico acceder a capacidades de pago de servicios domesticos desde una app movil, integrando Tekae como proveedor aprobado.
 
-Prontipagos se usara como agregador para ejecutar el pago del servicio. El procesador/tokenizador de tarjeta sera un proveedor futuro separado hasta que exista decision contractual y tecnica aprobada.
+FONDIXPAY no es una fintech, banco, wallet, procesador de tarjetas, adquirente, procesador SPEI, tokenizador ni core bancario. FONDIXPAY solo embebe capacidades de pago de Tekae y conserva la experiencia de usuario, autenticacion, soporte, notificaciones, historial y CRM.
+
+Prontipagos queda removido permanentemente como proveedor futuro de FONDIXPAY. Sus documentos y codigo historico pueden permanecer como referencia, pero no deben guiar nuevas implementaciones.
 
 No estan dentro del roadmap actual como metodo de pago del usuario:
 
-- SPEI.
-- CoDi.
-- OXXO.
-- Efectivo.
-- Cash-in.
+- SPEI propio.
+- CoDi propio.
+- OXXO propio.
+- Efectivo propio.
+- Cash-in propio.
 - Wallet balance.
-- Transferencia bancaria.
+- Transferencia bancaria propia.
+- Card vault.
+- Tokenizacion propia.
+- Acquiring propio.
+- Core bancario.
 
 ## Users
 
@@ -51,13 +57,13 @@ No estan dentro del roadmap actual como metodo de pago del usuario:
 
 - Service provider: company or biller such as CFE, Telmex, or Telcel.
 - User service: a user-owned service reference or account.
-- Payment: attempt or confirmation of a service payment.
+- Payment: user-facing payment flow mediated by Tekae evidence; FONDIXPAY must not infer success from launch alone.
 - Receipt: proof generated after payment flow.
 - History: user-facing record of previous payments.
 - Notification: message associated with user or payment state.
-- Demo account/balance: mock UX/testing capability only, not a real payment method.
-- Future ledger: accounting foundation before real money movement.
-- Future audit log: immutable trace for sensitive and financial events.
+- Demo account/balance: mock UX/testing capability only, not a real payment method, wallet, or ledger balance.
+- Future audit log: immutable trace for sensitive actions and provider session evidence.
+- Tekae session: backend-generated provider launch session used to open Tekae Business without exposing Tekae credentials to the frontend.
 
 ## Coverage-Aware Service Catalog
 

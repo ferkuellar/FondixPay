@@ -834,11 +834,11 @@ Status: Accepted.
 
 ## Decision — MVP service coverage behavior
 
-| Date | Decision | Reason | Impact |
-|---|---|---|---|
+| Date       | Decision                                                                              | Reason                                                                                       | Impact                                                                                                                        |
+| ---------- | ------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | 2026-05-22 | FONDIXPAY MVP will hide services that are not available in the user's selected state. | Reduces UX noise, avoids failed payment attempts, and keeps the first mobile catalog simple. | Mobile app must request services from backend by state. Unavailable services must not be rendered in the user-facing catalog. |
-| 2026-05-22 | Coverage rules must not be hardcoded in the mobile app or shipped as Excel logic. | Coverage will change over time and must be operationally maintainable. | Coverage must live in backend/database tables and be exposed through API. |
-| 2026-05-22 | Manual state selection has priority over GPS. | Users may pay services for another state and GPS can be inaccurate or denied. | Mobile app must allow user-selected state and persist it in profile. |
+| 2026-05-22 | Coverage rules must not be hardcoded in the mobile app or shipped as Excel logic.     | Coverage will change over time and must be operationally maintainable.                       | Coverage must live in backend/database tables and be exposed through API.                                                     |
+| 2026-05-22 | Manual state selection has priority over GPS.                                         | Users may pay services for another state and GPS can be inaccurate or denied.                | Mobile app must allow user-selected state and persist it in profile.                                                          |
 
 ## WhatsApp receipt channel approved as future non-blocking notification channel
 
@@ -874,6 +874,7 @@ Rules:
 Status:
 
 Approved as future architecture. Not active runtime behavior yet.
+
 ## ADR-111 - Ambiguous payment states require manual review workflow
 
 Decision: Ambiguous payment states such as `card_success_prontipagos_failed`, provider timeout, unavailable receipt, duplicate suspicion, provider unknown, and amount mismatch must be handled through manual review.
@@ -975,6 +976,7 @@ Decision: The public landing must not import, modify, or couple itself to the mo
 Rationale: Commercial front-door work must not destabilize the transactional core or imply production readiness.
 
 Status: Accepted.
+
 ## ADR-125 - Service catalog must be coverage-aware
 
 Decision:
@@ -1054,6 +1056,7 @@ Rationale:
 Safe defaults prevent accidental payment enablement from reference data or incomplete provider mapping.
 
 Status: Accepted.
+
 ## ADR-010G-001 - WhatsApp receipt MVP uses mock provider by default
 
 Decision: Phase 10G implements `fondix_pago_exitoso` through a provider abstraction with `WhatsAppMockProvider` as the only runtime provider.
@@ -1199,3 +1202,15 @@ Decision: The DEV AUTH banner must be visible in internal non-production environ
 Rationale: Internal dev warnings prevent production confusion while avoiding false production warnings.
 
 Status: Accepted.
+
+
+| Date       | Decision                                                                                                                   | Reason                                                                                    | Impact                                                                                                                |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| 2026-06-03 | Prontipagos is permanently removed from FONDIXPAY.                                                                         | Founder decision.                                                                         | All architecture, docs, mocks, reconciliation and support flows must remove Prontipagos references.                   |
+| 2026-06-03 | Tekae is the approved provider for FONDIXPAY.                                                                              | Official Tekae documentation was received and approved for discovery.                     | Future payment/service integration work must assume Tekae unless changed by founder decision.                         |
+| 2026-06-03 | FONDIXPAY is not a fintech.                                                                                                | Business positioning and risk control.                                                    | Public language, architecture and compliance docs must describe FONDIXPAY as a platform/app using Tekae capabilities. |
+| 2026-06-03 | Current Tekae documentation supports SSO launch into Tekae responsive platform, not yet a full payment API implementation. | Manual describes token generation and responsive URL launch.                              | Implementation must not assume direct payment API, webhooks or reconciliation until Tekae confirms.                   |
+| 2026-06-03 | Tekae credentials and token generation must remain backend-only.                                                           | Tekae manual requires backend token generation to avoid exposing credentials to frontend. | Mobile app may request launch session but must never hold Tekae uid/password.                                         |
+| 2026-06-03 | Payment success must not be inferred from launching Tekae.                                                                 | SSO launch only proves user entered provider experience.                                  | Internal states must support pending/unknown/manual review outcomes.                                                  |
+| 2026-06-03 | Sprint 010 is documentation and architecture only.                                                                          | Tekae webhook, reconciliation, transaction query, sandbox, and production connectivity gaps remain unresolved. | No production code, migrations, WebView, webhook endpoint, credential configuration, or runtime payment logic changes are allowed in Sprint 010. |
+| 2026-06-03 | FONDIXPAY must not implement card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, or banking core. | FONDIXPAY embeds Tekae capabilities and is not a fintech/payment infrastructure provider. | Future implementation must broker Tekae access without duplicating Tekae payment infrastructure. |

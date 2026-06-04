@@ -6,6 +6,8 @@ Authentication is mock/dev OTP based. The development OTP is configured as `OTP_
 
 FondixPay is not production financial software yet.
 
+Sprint 010 provider boundary: FONDIXPAY is not a fintech, bank, wallet, card processor, acquirer, SPEI processor, tokenization service, or banking core. Tekae is the approved provider, and FONDIXPAY only embeds Tekae payment capabilities.
+
 ## Rules
 
 - No real secrets in the repository.
@@ -15,6 +17,8 @@ FondixPay is not production financial software yet.
 - Future financial actions must generate audit logs.
 - Real provider webhooks must be authenticated and persisted.
 - User-facing errors must not expose stack traces.
+- Tekae credentials, tokens, and full launch URLs must never be exposed to the frontend or logs.
+- FONDIXPAY must not implement card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, or banking core logic.
 
 ## Current Risk Areas
 
@@ -46,6 +50,24 @@ FondixPay is not production financial software yet.
 ## Not Production Ready
 
 Real financial use is blocked until authentication, authorization, audit, ledger, validation, observability, provider integration, and compliance review are completed.
+
+Under Sprint 010, real Tekae use remains blocked until webhook, transaction query, reconciliation, sandbox, VPN/VPC, and security review details are confirmed.
+
+## Tekae SSO Security
+
+- Backend is the only component allowed to generate Tekae SSO sessions.
+- Tekae `uid`, `password`, provider secrets, and token-generation credentials must live in environment-specific secret management.
+- Mobile must request a FONDIXPAY backend launch session and must not call Tekae token generation directly.
+- Backend responses to mobile must include only session ID, launch URL, expiration, and launch mode.
+- Tekae SSO access tokens are valid for 20 minutes according to current Tekae documentation.
+- Each Tekae token is unique per user/session and a new token must be requested each time the user enters Tekae.
+- Expired Tekae tokens must not be reused.
+- Full Tekae URLs and tokens must be redacted in logs, audit metadata, support tickets, and CRM views.
+- Tekae launch does not equal payment success.
+- Tekae token generation does not equal payment success.
+- Unknown outcomes must remain pending or manual-review states until Tekae evidence exists.
+- Future Tekae webhooks must be signature-verified, replay-protected, idempotent, and redacted before persistence.
+- Production connectivity must account for Tekae VPN/VPC requirements before any launch.
 
 ## Phase 4A Auth & Session Rules
 
@@ -240,9 +262,11 @@ Phase 5F mock recovery UI rules:
 - Mobile Secure Store must not persist PAN, CVV, raw processor credentials, or raw card payloads.
 - Production remains blocked until processor selection, PCI/security review, tokenization, idempotency, audit, recovery, reconciliation, and sandbox validation are accepted.
 
-## Prontipagos Integration Security
+## Superseded Prontipagos Integration Security
 
-- Prontipagos secrets must use environment-specific secret management and never enter source control.
+- Historical Prontipagos guidance is superseded by Sprint 010 Tekae discovery.
+- Do not add new Prontipagos implementation work.
+- Tekae secrets must use environment-specific secret management and never enter source control.
 - Provider authentication mechanism must be confirmed before implementation.
 - Payment execution needs bounded timeout and retry limits.
 - Ambiguous timeout or unknown provider outcome must not be relabeled as success.

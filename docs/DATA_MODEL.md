@@ -27,10 +27,55 @@ This document captures the conceptual model. No migrations are added in Phase 1.
 | WebhookEvent | Received provider webhook payload and processing state |
 | SupportTicket | Support case around user/payment/service |
 | AdminAction | Explicit administrative operation record |
+| TekaeSession | Future safe reference to a backend-generated Tekae SSO launch session |
 
 ## Production Rule
 
 Real payments require ledger, provider attempt tracking, webhook event persistence, reconciliation, and audit logs before launch.
+
+Sprint 010 narrows the payment-provider model: Tekae is the approved provider, and FONDIXPAY must not implement a card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, or banking core.
+
+## Sprint 010 Tekae Proposed Model
+
+Status: proposed only. No migration or runtime model is added in Sprint 010.
+
+### `tekae_sessions`
+
+| Field | Purpose |
+| --- | --- |
+| `id` | Internal session identifier. |
+| `user_id` | FONDIXPAY authenticated user. |
+| `intent` | User intent such as pay service, airtime, or entertainment. |
+| `menu` | Tekae menu value: `null`, `"1"`, `"2"`, or `"3"`. |
+| `categoria` | Optional Tekae category value when confirmed. |
+| `carrier` | Optional Tekae carrier value when confirmed. |
+| `blockview` | Provider launch mode flag. |
+| `status` | Internal Tekae session status. |
+| `launch_url_hash` | Hash of the launch URL; full URL must not be logged. |
+| `expires_at` | Token/session expiration timestamp. |
+| `created_at` | Creation timestamp. |
+| `updated_at` | Last update timestamp. |
+
+### `tekae_session_events`
+
+| Field | Purpose |
+| --- | --- |
+| `id` | Event identifier. |
+| `tekae_session_id` | Related session. |
+| `event_type` | Session requested, token ready, launched, expired, failed, outcome unknown. |
+| `result` | Success, failure, pending, blocked. |
+| `metadata_json` | Redacted metadata only. |
+| `request_id` | Request-level trace ID. |
+| `correlation_id` | Flow-level trace ID if linked to payment/support. |
+| `created_at` | Append timestamp. |
+
+### Model Rules
+
+- Do not store Tekae `uid`, `password`, raw token, full launch URL, or provider secrets.
+- Do not store PAN, CVV, raw card data, card tokens, or raw payment credentials.
+- Do not expose a wallet or ledger balance.
+- Tekae session state is not payment success.
+- Provider evidence, once confirmed by Tekae specs, must be modeled separately from launch state.
 
 ## Ledger and Audit Proposed Model
 
@@ -412,9 +457,9 @@ Rules:
 - Processor tokens and safe display metadata only.
 - Card processor reconciliation is separate from future Prontipagos service-payment reconciliation.
 
-## Prontipagos Sandbox Proposed Model
+## Superseded Prontipagos Sandbox Proposed Model
 
-Status: future/proposed. No migration or runtime model is added in Phase 8B.
+Status: historical/superseded by Sprint 010 Tekae discovery. No new implementation should target Prontipagos.
 
 ### `ServicePaymentAttempt`
 

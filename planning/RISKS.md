@@ -4,6 +4,14 @@ Updated: 2026-05-20
 
 | Risk | Impact | Current Mitigation | Next Action |
 | --- | --- | --- | --- |
+| Tekae SSO launch or token generation could be mistaken for payment success | High / SEV-2 | Sprint 010 separates launch/session states from payment states | Implement pending/manual-review states before any runtime launch |
+| Tekae credentials, tokens, or full launch URLs could leak to frontend, logs, commits, or support views | High / SEV-2 | Backend-only SSO generation and redaction are required | Define secret management, log redaction, support-view redaction, and audit controls before implementation |
+| Tekae webhook specification is missing | High / SEV-2 | Sprint 010 captures webhook gaps | Obtain Tekae webhook/callback contract before payment success or receipt confirmation logic |
+| Tekae reconciliation specification is missing | High / SEV-2 | Sprint 010 captures reconciliation gaps | Obtain Tekae reconciliation or settlement mechanism before production readiness |
+| Tekae transaction query API is missing | High / SEV-2 | Sprint 010 records unknown outcome handling | Obtain status/query API details before implementing recovery, receipt, or manual-review evidence |
+| Tekae production VPN/VPC or allowlist details are unclear | High / SEV-2 | Sprint 010 records production connectivity as blocker | Confirm VPN/VPC topology, allowlists, and environment boundaries before any production connectivity |
+| FONDIXPAY could drift into fintech/payment-processor scope | High / SEV-2 | AGENTS/HARNESS/provider boundaries prohibit card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, and banking core | Reject implementation requests that duplicate Tekae capabilities |
+| Historical Prontipagos/card-processor references could mislead future builders | Medium / SEV-3 | Sprint 010 marks Prontipagos permanently removed and records documentation debt | Create a future documentation cleanup sprint to archive or remove stale historical references |
 | Mock payment flow may be confused with real payment | High | README and docs mark mock/dev status | Keep visible disclaimers in app before any pilot |
 | No formal financial ledger | High | Real payments are out of scope | Design ledger in Phase 7 before money movement |
 | No audit logs for financial actions | High | Audit requirements documented | Implement audit foundation before real payments |

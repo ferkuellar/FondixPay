@@ -2,6 +2,64 @@
 
 Source of truth for Phase 1: `backend/app/main.py`.
 
+## Sprint 010 Tekae API Boundary
+
+Status: proposed future contract only. No Sprint 010 API is implemented.
+
+Tekae is the approved payment/service capability provider. FONDIXPAY must not implement card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, or banking core APIs.
+
+### Future POST `/api/tekae/sessions`
+
+Purpose: create a backend-brokered Tekae SSO launch session.
+
+Auth: required.
+
+Status: proposed, not implemented.
+
+Request concept:
+
+```json
+{
+  "intent": "pay_service",
+  "menu": "2",
+  "categoria": null,
+  "carrier": null,
+  "blockview": true,
+  "metadata": {}
+}
+```
+
+Response concept:
+
+```json
+{
+  "session_id": "uuid",
+  "launch_url": "[REDACTED_TEKAE_URL]",
+  "expires_at": "timestamp",
+  "status": "TEKAE_TOKEN_READY"
+}
+```
+
+Rules:
+
+- Backend is the only component allowed to generate Tekae SSO sessions.
+- Frontend must never receive Tekae `uid`, `password`, secret keys, or provider credentials.
+- Tekae tokens and full URLs must be redacted in logs.
+- Opening Tekae must not mark payment as successful.
+- Unknown outcomes must remain pending or manual-review states.
+
+### Future Tekae Admin/Operations APIs
+
+These are proposed only:
+
+| Endpoint | Purpose | Status |
+|---|---|---|
+| `GET /api/admin/tekae/sessions` | Review safe Tekae session metadata. | future |
+| `GET /api/admin/reconciliation/tekae` | Review Tekae reconciliation summary when specs exist. | future |
+| `POST /api/webhooks/tekae` | Receive Tekae events if Tekae provides signed webhooks. | future |
+
+Implementation is blocked until Tekae webhook, reconciliation, transaction query, sandbox, and production connectivity details are confirmed.
+
 ## `GET /health`
 
 - Purpose: local/dev health check.
@@ -481,7 +539,9 @@ Status: future/proposed for Phase 8A. These endpoints do not exist yet.
 | `POST /card/webhooks/{provider}` | Receive processor event. | provider signature | provider/system | event id/replay required | Signature verification, replay protection, redaction. |
 | `GET /admin/card/reconciliation` | Review card reconciliation summaries. | yes | `FINANCE`, `ADMIN`, `AUDITOR` | n/a | RBAC and audit required. |
 
-## Future Prontipagos / Service Payment APIs
+## Superseded Prontipagos / Service Payment APIs
+
+The following Prontipagos API concepts are historical and superseded by Sprint 010 Tekae discovery. Do not implement new Prontipagos work.
 
 Status: future/proposed. These endpoints do not exist in the current mock/dev backend.
 

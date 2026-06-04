@@ -1,5 +1,33 @@
 # Open Questions
 
+## Sprint 010 Tekae Discovery Questions
+
+- What exact Tekae webhook events exist, if any?
+- Does Tekae provide a transaction query API after SSO launch?
+- What Tekae reconciliation or settlement reports are available?
+- Which identifiers connect a FONDIXPAY Tekae session to a Tekae transaction?
+- What are Tekae terminal success, failure, pending, canceled, timeout, and unknown states?
+- What signature, replay protection, and idempotency requirements apply to Tekae callbacks or webhooks?
+- What production VPN/VPC topology does Tekae require?
+- What sandbox Swagger, base URL, and credentials are available?
+- What is the supported token/session expiration behavior beyond the documented 20-minute TTL?
+- Which Tekae errors are safe to show to users after translation?
+- Which Tekae evidence is sufficient to mark a payment successful?
+- Which Tekae evidence is sufficient to generate a receipt?
+- What exact sandbox URL should FONDIXPAY use?
+- Which Tekae provider transaction/reference fields must FONDIXPAY persist safely?
+- What receipt/comprobante retrieval rules does Tekae support after SSO launch?
+- Which fields connect a Tekae receipt/comprobante to a FONDIXPAY session, user, service, and payment record?
+
+## Sprint 010 Documentation Debt Follow-Up
+
+- Clean or archive historical Prontipagos/card-processor references that predate the Tekae provider decision.
+- Preserve the durable decision that Prontipagos is permanently removed while avoiding broad historical cleanup inside Sprint 010.
+
+## Historical Questions
+
+The following questions predate Sprint 010 and may need cleanup because Prontipagos/card-processor assumptions are superseded by Tekae.
+
 - Will FondixPay only pay services, or will it also keep demo account/balance UX for testing without making it a payment method?
 - Will the MVP handle only direct card payments while balance remains demo/non-payable?
 - Which card processor will be used in Mexico?

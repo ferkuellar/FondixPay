@@ -102,6 +102,7 @@ Commercial production with real money is blocked by remaining UX/Product critica
 Internal validation without real money remains allowed.
 
 Prontipagos is not integrated. It is the next separate sandbox design leg after the card processor sandbox design. Phase 8A does not integrate it.
+
 # Phase 5E — Payment Method UX Mock Implementation
 
 - Current phase: Phase 5E — Payment Method UX Mock Implementation.
@@ -246,6 +247,7 @@ WhatsApp receipt delivery has been approved as a future non-blocking notificatio
 - `mobile/`, `backend/`, and `admin/` runtime modules remain unchanged by this phase.
 - Commercial production remains blocked.
 - Next recommended phase: Phase 10E - Coverage-Aware Service Catalog Design, or Phase AWS-1 - Terraform Foundation if infrastructure is prioritized.
+
 ## Current Phase - Phase 10E - Coverage-Aware Service Catalog Design
 
 FondixPay is currently in Phase 10E: Coverage-Aware Service Catalog Design.
@@ -305,6 +307,7 @@ Operating status:
 Next recommended phase:
 
 Fase AWS-1 - Terraform Foundation, or Fase 11 - Audit, Fraud & Chargeback Readiness depending on active roadmap priority.
+
 ## Phase 10G State - WhatsApp Payment Receipt MVP
 
 Implemented:
@@ -589,3 +592,66 @@ Operating status:
 Next recommended phase:
 
 Tekae discovery closure: obtain official Tekae documentation, sandbox credentials, callback/webhook contract, transaction-state model, security requirements, and product/security approval before implementing any runtime integration.
+
+
+# Project State
+
+## Current Status
+
+FONDIXPAY has moved from the previous Prontipagos assumption to Tekae as the approved provider.
+
+Tekae documentation has been received and reviewed for discovery. Current documentation describes Tekae Business SSO access through backend-generated token and responsive URL launch.
+
+The immediate phase is Sprint 010 — Tekae Discovery.
+
+## Active Sprint
+
+planning/sprints/010-tekae-discovery/
+
+## Current Focus
+
+- Document Tekae integration model.
+- Define secure App → Backend → Tekae flow.
+- Define transaction/session states.
+- Identify webhook and reconciliation gaps.
+- Capture open questions for Tekae.
+- Avoid implementation until requirements and acceptance criteria are approved.
+
+## Sprint 010 Execution Scope
+
+Sprint 010 is documentation and architecture only.
+
+Allowed:
+
+- Tekae discovery documentation.
+- Architecture, API, data model, security, reconciliation, transaction-state, risk, question, and decision updates.
+- Superseding historical Prontipagos/card-processor assumptions in documentation.
+
+Not allowed:
+
+- Production code.
+- Runtime payment logic changes.
+- Mobile WebView implementation.
+- Webhook endpoint implementation.
+- Database migrations.
+- Tekae credential configuration.
+- Real payment execution.
+
+## Blockers
+
+- Tekae sandbox URL not yet provided.
+- Tekae Swagger/API docs not yet provided.
+- Tekae test credentials not yet provided.
+- Tekae webhook specification not yet provided.
+- Tekae reconciliation specification not yet provided.
+- Tekae transaction query API not yet provided.
+- Production VPN/VPC details not yet clarified.
+- Sandbox Swagger and credentials still needed.
+- Tekae provider transaction/reference fields not yet confirmed.
+- Tekae receipt/comprobante retrieval rules not yet confirmed.
+
+## Sprint 010 Documentation Debt
+
+Historical Prontipagos and card-processor references remain in older planning, backlog, and sprint documents. Sprint 010 preserves the durable decision that Prontipagos is permanently removed, but it does not perform a broad historical cleanup unless references are directly touched by Tekae Discovery.
+
+Recommended follow-up: create a future documentation cleanup sprint to archive, label, or remove stale Prontipagos/card-processor assumptions across historical docs.

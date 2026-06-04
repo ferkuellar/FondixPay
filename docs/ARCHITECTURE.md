@@ -14,6 +14,8 @@ The repository contains an existing MVP mock/dev implementation. It is not produ
 
 No real payment provider is integrated. The current integration is a mock that simulates balance lookup, service payment, and receipt generation.
 
+Sprint 010 updates the target provider architecture: Tekae is the approved payment/service capability provider. FONDIXPAY is not a fintech, bank, wallet, card processor, acquirer, SPEI processor, tokenization service, or banking core. FONDIXPAY only embeds Tekae payment capabilities through approved integration boundaries.
+
 ## Mobile Architecture
 
 - Expo.
@@ -57,6 +59,39 @@ Other current pieces:
 - `/health` endpoint.
 - CORS configured from settings.
 
+## Sprint 010 Tekae Target Architecture
+
+The approved discovery architecture is:
+
+```txt
+FONDIXPAY Mobile App -> FONDIXPAY Backend -> Tekae SSO URL -> Tekae Business
+```
+
+Backend responsibilities:
+
+- Authenticate and authorize the FONDIXPAY user.
+- Generate Tekae SSO sessions using backend-held credentials.
+- Store only safe internal session references and audit metadata.
+- Return only a minimal mobile launch payload.
+- Redact Tekae credentials, tokens, and full launch URLs from logs.
+
+Mobile responsibilities:
+
+- Request a Tekae launch session from the backend.
+- Open the Tekae URL when provided.
+- Treat Tekae launch as provider handoff, not payment success.
+- Show pending/unknown/support states when provider evidence is missing.
+
+Forbidden FONDIXPAY architecture:
+
+- Card vault.
+- Wallet.
+- Ledger balance.
+- Tokenization.
+- Acquiring.
+- SPEI processor.
+- Banking core.
+
 ## Key Backend Entry Point
 
 `backend/app/main.py`:
@@ -87,4 +122,5 @@ Other current pieces:
 - Payment provider selection.
 - Observability.
 - Production environment strategy.
+- Tekae webhook, transaction query, reconciliation, sandbox, and production VPN/VPC details.
 
