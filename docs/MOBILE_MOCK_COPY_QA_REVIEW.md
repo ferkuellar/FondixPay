@@ -59,9 +59,14 @@ These are copy-only changes. No payment logic changed.
 ## Residual Risk
 
 - Device/simulator/browser screenshot QA remains recommended before any user pilot.
+- Sprint 016 started Android emulator screenshot QA and captured Home plus ConfirmPayment, but success, failure, and receipt screens still need device evidence.
 - Internal technical names such as `PaymentSuccess`, `succeeded`, `paidAt`, and `paid` remain unchanged by design.
 - Some historical docs/admin references remain outside Sprint 015 scope.
 
 ## Decision Boundary
 
 Sprint 015 does not enable Tekae, does not create real payment behavior, and does not prove production readiness.
+
+## Sprint 016 Follow-up
+
+See `docs/MOBILE_DEVICE_VISUAL_QA_EVIDENCE.md` for the partial Android evidence pack. Sprint 016 remains incomplete until the full mock payment flow has device screenshots for success, failure, and receipt states.

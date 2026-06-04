@@ -476,3 +476,10 @@ Open production risks:
 | Risk | Severity | Status | Mitigation |
 |---|---|---|---|
 | Static QA can miss device-specific text clipping, safe-area, theme, or font-scaling issues. | SEV-2 | open | Sprint 015 documents static fallback and recommends device/simulator screenshot QA before user pilot or provider runtime. |
+
+## Sprint 016 Mobile Device Visual QA Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Partial device QA could be mistaken for complete mobile visual signoff. | SEV-2 | open | Sprint 016 evidence documents only captured Home and ConfirmPayment; do not mark visual QA complete until success, failure, and receipt states are captured on device. |
+| Expo Go/version or local port friction could block repeatable mobile QA. | SEV-2 | open | Record the emulator, Expo, port, and screenshot method; future sprint should normalize a repeatable visual QA command before user pilot. |

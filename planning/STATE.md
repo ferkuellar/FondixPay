@@ -836,3 +836,55 @@ Validation status:
 Next recommended sprint:
 
 Sprint 016 - Mobile Device Screenshot QA, or return to Sprint 011 when Tekae contract readiness evidence is available.
+
+## Sprint 016 - Mobile Device Visual QA Evidence Pack
+
+Current phase: Sprint 016 - Mobile Device Visual QA Evidence Pack.
+
+Status: INCOMPLETE / BLOCKED PARTIAL. Sprint 016 started Android emulator screenshot QA and captured partial evidence, but did not complete the full payment mock flow evidence pack.
+
+Scope completed:
+
+- Android emulator `emulator-5554` was available through ADB.
+- Expo Go package `host.exp.exponent` was present on the emulator.
+- The FONDIXPAY mobile app rendered in Expo Go.
+- `docs/MOBILE_DEVICE_VISUAL_QA_EVIDENCE.md` records the QA environment, startup notes, captured evidence, findings, and incomplete acceptance.
+- Screenshots were captured under `docs/qa/sprint-016-mobile-device-visual-qa/`.
+
+Evidence captured:
+
+- Home / services demo dashboard.
+- Confirm payment / mock payment confirmation.
+
+Evidence still missing:
+
+- `ServiceDetail`.
+- `AddPaymentMethodMock`.
+- `PaymentSuccess`.
+- `PaymentFailed`.
+- `ReceiptDetail`.
+- Receipt unavailable or pending state, if reachable without changing runtime logic.
+
+Operating status:
+
+- No backend runtime behavior changed.
+- No mobile runtime behavior changed.
+- No payment logic changed.
+- No provider adapter changed.
+- No Tekae runtime was enabled.
+- No payment endpoint or webhook was created.
+- No migrations changed.
+- No `.env` or secret-bearing files changed.
+- No infrastructure, Terraform, workflow, or deployment behavior changed.
+- Tekae remains disabled and blocked until Sprint 011 contract readiness passes.
+- FONDIXPAY remains a platform/app using Tekae capabilities, not a fintech.
+- Prontipagos remains permanently removed.
+
+Result:
+
+- Captured screenshots confirm that the Home and ConfirmPayment visible copy uses demo/prueba/simulado language and does not imply real payment execution, banking action, provider confirmation, Tekae processing, settlement, or production receipt behavior.
+- Sprint 016 cannot be marked complete because success, failure, and receipt visual states were not captured.
+
+Next recommended sprint:
+
+Sprint 016B - Complete Mobile Device Visual QA Evidence Pack, or return to Sprint 011 when Tekae contract readiness evidence is available.
