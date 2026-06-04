@@ -96,3 +96,28 @@ Rollback/destruction remains manual:
 4. Do not run `terraform destroy` without explicit human approval.
 
 Vercel remains approved only for `landing/`. Backend/API, CRM/Admin, payment processing, ledger/audit, reconciliation, provider credentials, and production secrets must not be deployed through the landing pipeline.
+
+## Sprint 012 Dev Readiness Deployment Boundary
+
+Sprint 012 does not change deployment behavior.
+
+Current deployment readiness:
+
+- Local backend and mobile commands are documented above.
+- Docker local supports PostgreSQL plus backend.
+- AWS Terraform is dev-only.
+- Optional EC2 compute is disabled by default.
+- Staging and production are not implemented.
+- CI validates backend, mobile, admin, landing boundary, and Terraform, but CI success does not authorize Tekae runtime or production launch.
+
+Backend hosting direction:
+
+- Current active development remains local/Docker.
+- Future dev backend hosting may use the minimal AWS dev foundation only after plan review and explicit approval.
+- Future staging requires a separate approved Terraform environment and deployment plan.
+- Backend/API/payment/admin runtime must not be hosted through the public landing/Vercel boundary.
+
+Tekae deployment boundary:
+
+- Tekae runtime deployment remains blocked until Sprint 011 contract readiness passes.
+- No Tekae credentials, provider URLs, webhook secrets, payment execution, transaction query, reconciliation, or production VPN/VPC connectivity are configured in Sprint 012.

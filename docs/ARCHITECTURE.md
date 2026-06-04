@@ -124,3 +124,22 @@ Forbidden FONDIXPAY architecture:
 - Production environment strategy.
 - Tekae webhook, transaction query, reconciliation, sandbox, and production VPN/VPC details.
 
+## Sprint 012 Dev Readiness Boundary
+
+Sprint 012 prepares internal readiness while Tekae contract closure remains externally blocked.
+
+Current backend hosting posture:
+
+- Local/Docker remains the current operational development path.
+- The AWS Terraform foundation is dev-only and minimal.
+- Current Terraform supports a dev VPC/public subnet foundation, optional EC2 compute disabled by default, storage, and budget alerts.
+- Current Terraform does not implement staging, production, RDS, ECS/Fargate, load balancers, NAT Gateway, WAF, or production Tekae connectivity.
+
+Architecture rules:
+
+- Do not infer production readiness from dev readiness.
+- Do not infer Tekae runtime readiness from CI, Terraform validation, or local mock payment behavior.
+- Keep public landing separate from backend/API/payment/admin runtime. Vercel may host the public landing only.
+- Keep mock/dev payment flows separate from future Tekae provider-confirmed flows.
+- Keep Tekae runtime blocked until Sprint 011 contract readiness passes.
+

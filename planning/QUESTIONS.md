@@ -63,3 +63,16 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - Should the chatbot public endpoint use IP/session rate limiting in app middleware, edge middleware, or both?
 - Will an AI provider be approved later, or should Phase 10X.2 remain FAQ/rule-only?
 - What retention period applies to masked chatbot conversations and fallback records?
+
+## Sprint 012 Dev Readiness Internal Questions
+
+- Should the first shared dev backend run only through local/Docker plus CI, or should the optional AWS dev EC2 host be enabled later?
+- If AWS dev compute is enabled, which CIDRs may access SSH and backend port `8000`?
+- Should future staging use ECS/RDS as described in older environment strategy, or a cheaper intermediate design?
+- Which document should become the canonical environment source: `docs/ENVIRONMENTS.md`, `docs/ENVIRONMENT.md`, or both with different purposes?
+- Which mock payment success screens or copy blocks must be reviewed before real Tekae runtime is approved?
+- Which historical Prontipagos/card processor docs should be archived, labeled historical, or cleaned in a future documentation cleanup sprint?
+- Which secret scanning command or tool should become the standard local validation step?
+- Which owner approves transition from mock/provider-disabled mode to Tekae sandbox mode after Sprint 011 passes?
+- Which support channel should users see while Tekae remains blocked and payment runtime is unavailable?
+- Should `.env.example` remove historical Prontipagos/card placeholders in a future cleanup sprint, or keep them labeled as superseded until runtime cleanup?

@@ -655,3 +655,57 @@ Not allowed:
 Historical Prontipagos and card-processor references remain in older planning, backlog, and sprint documents. Sprint 010 preserves the durable decision that Prontipagos is permanently removed, but it does not perform a broad historical cleanup unless references are directly touched by Tekae Discovery.
 
 Recommended follow-up: create a future documentation cleanup sprint to archive, label, or remove stale Prontipagos/card-processor assumptions across historical docs.
+
+## Sprint 012 - Dev Readiness & App Cleanup While Tekae Is Blocked
+
+Current phase: Sprint 012 - Dev Readiness & App Cleanup While Tekae Is Blocked.
+
+Status: IN PROGRESS. Documentation/readiness execution started. Sprint 012 does not implement code, migrations, credentials, backend runtime changes, mobile runtime changes, payment endpoints, webhook endpoints, AWS resource creation, or production deployment changes.
+
+Active sprint:
+
+- `planning/sprints/012-dev-readiness-app-cleanup-while-tekae-blocked/`
+
+Sprint 012 objective:
+
+- Prepare FONDIXPAY for future Tekae runtime integration while Sprint 011 remains externally blocked by missing Tekae contract evidence.
+- Document dev readiness, environment strategy, AWS/dev direction, mock/provider boundaries, security hygiene, app copy risk, and cleanup debt.
+
+Sprint 012 operating rules:
+
+- Tekae remains blocked until Sprint 011 contract readiness passes.
+- `TEKAE_ENABLED=false` and `TEKAE_MODE=disabled` remain required.
+- FONDIXPAY remains a platform/app using Tekae capabilities, not a fintech.
+- Tekae remains the approved provider.
+- Prontipagos remains permanently removed.
+- Historical Prontipagos/card processor references remain documentation debt unless touched by an approved cleanup sprint.
+
+Sprint 012 documentation outputs started:
+
+- `docs/DEV_READINESS.md`
+- `docs/ENVIRONMENT.md`
+- Updates to architecture, API, deployment, security, risks, questions, and state docs.
+
+Current internal blockers:
+
+- Staging infrastructure is not implemented.
+- Current AWS Terraform is dev-only and minimal.
+- Current Terraform optional compute is disabled by default.
+- Older environment strategy references ECS/RDS targets while current Terraform implements lower-cost dev primitives; this needs future reconciliation before staging.
+- App copy/payment success language still needs future review before real provider runtime.
+
+External Tekae blockers remain:
+
+- Sandbox URL.
+- Swagger/OpenAPI.
+- Test credentials.
+- Webhook specification or official no-webhook model.
+- Transaction status/query API.
+- Reconciliation mechanism.
+- Production VPN/VPC or allowlist details.
+- Provider transaction/reference fields.
+- Receipt/comprobante retrieval rules.
+- Support/escalation process.
+- Security requirements.
+
+Do not mark Sprint 012 complete until acceptance criteria are reviewed against `planning/sprints/012-dev-readiness-app-cleanup-while-tekae-blocked/acceptance.md`.

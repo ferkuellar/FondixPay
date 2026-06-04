@@ -53,6 +53,22 @@ Real financial use is blocked until authentication, authorization, audit, ledger
 
 Under Sprint 010, real Tekae use remains blocked until webhook, transaction query, reconciliation, sandbox, VPN/VPC, and security review details are confirmed.
 
+## Sprint 012 Dev Readiness Security
+
+Sprint 012 is documentation/readiness only and does not configure credentials.
+
+Security rules for dev readiness:
+
+- Do not commit `.env` files.
+- Do not commit Tekae credentials, AWS keys, API keys, provider passwords, access tokens, private URLs, Terraform state, Terraform plans, or generated backend override files.
+- Keep `TEKAE_ENABLED=false` and `TEKAE_MODE=disabled` until Sprint 011 contract readiness passes and explicit approval exists.
+- Treat Tekae SSO tokens and full launch URLs as sensitive operational values.
+- Do not expose Tekae credentials, tokens, full launch URLs, provider payloads, PAN, CVV, OTPs, secrets, or password-like values in frontend, logs, support views, CRM views, commits, or documentation examples.
+- Mock/dev payment states must be clearly separated from provider-confirmed payment states.
+- Landing/Vercel must remain outside backend financial runtime, admin runtime, reconciliation, provider credentials, and secrets.
+
+Sprint 012 validation should confirm no backend/mobile runtime files, migrations, `.env` files, payment endpoints, webhook endpoints, or production deployment behavior changed.
+
 ## Tekae SSO Security
 
 - Backend is the only component allowed to generate Tekae SSO sessions.

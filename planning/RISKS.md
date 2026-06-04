@@ -441,3 +441,16 @@ Open production risks:
 | `Bot de Landing` could become an overloaded support desk. | SEV-2 | mitigated | `Bot de Landing` remains config/metrics; Chat Operations owns ticket and escalation workflows. |
 | Sidebar navigation could drift from approved CRM module structure. | SEV-2 | mitigated | Chat Operations is reachable internally but `Chat console` was not restored to the sidebar. |
 | Deterministic classification false positives/negatives. | SEV-2 | open | Classifier is explainable and manual override is available for authorized roles. Future tuning should use reviewed outcomes. |
+
+## Sprint 012 Dev Readiness And App Cleanup Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Dev readiness could be mistaken for production readiness. | SEV-1 | open | Sprint 012 docs state readiness is documentation-only and does not authorize runtime provider execution or production launch. |
+| Tekae runtime could be enabled before Sprint 011 contract readiness passes. | SEV-1 | open | Keep `TEKAE_ENABLED=false`, `TEKAE_MODE=disabled`, and require Sprint 011 evidence before implementation. |
+| Mock payment success copy could be misread as provider-confirmed success. | SEV-1 | open | Document copy review as future cleanup; token generation, URL launch, and mock success must not equal real payment success. |
+| Current AWS dev foundation could be mistaken for staging or production infrastructure. | SEV-1 | open | Docs state Terraform is dev-only, optional compute is disabled, staging is not implemented, and production remains blocked. |
+| Historical Prontipagos/card processor references could confuse future implementation. | SEV-2 | open | Treat stale references as documentation debt; preserve durable decision that Prontipagos is permanently removed. |
+| Environment placeholders could be filled with real secrets in source control. | SEV-1 | open | Secret hygiene rules require real values to live in environment-specific secret stores, never committed files. |
+| CI passing could be mistaken for Tekae readiness. | SEV-2 | open | Docs state CI validates local code quality only and does not prove provider contract readiness. |
+| Landing/Vercel boundary could drift into backend or payment runtime. | SEV-1 | open | Deployment/security docs keep Vercel landing-only and prohibit backend/API/payment/admin/provider credential runtime there. |

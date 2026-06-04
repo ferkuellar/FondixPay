@@ -2,6 +2,23 @@
 
 Source of truth for Phase 1: `backend/app/main.py`.
 
+## Sprint 012 Dev Readiness API Boundary
+
+Status: documentation/readiness only. No Sprint 012 API is implemented.
+
+Sprint 012 does not add backend endpoints, mobile runtime calls, webhook endpoints, migrations, provider sessions, or payment execution.
+
+Current API posture:
+
+- Existing `/payments` and `/receipts` behavior remains mock/dev unless a later approved runtime sprint changes it.
+- Future Tekae session, status, webhook, reconciliation, receipt, or support APIs remain blocked until Sprint 011 contract readiness passes.
+- CI/typecheck readiness does not prove provider readiness.
+- Mock success must not be documented or consumed as provider-confirmed payment success.
+
+API documentation rule:
+
+- Any future Tekae endpoint must be marked proposed/blocked until official Tekae API, webhook/status, reconciliation, reference/folio, and receipt contracts are available.
+
 ## Sprint 010 Tekae API Boundary
 
 Status: proposed future contract only. No Sprint 010 API is implemented.
