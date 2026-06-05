@@ -545,3 +545,19 @@ Rules:
 - Tekae must receive only approved service/session fields, never raw user coordinates.
 - Backend profile state changes, if implemented, must be authenticated, user-bound, and auditable.
 - Public coverage data remains commercial/reference and must not authorize payment execution.
+
+## Sprint 026 Tekae Confidential Materials Handling
+
+Tekae confidential materials must remain outside the repository. Do not commit NDA files, manuals, real catalog workbooks, credentials, tokens, UID/password values, production URLs, screenshots with real provider data, or raw provider catalog rows. Use sanitized examples and derived notes only.
+
+Confidential Tekae materials include at minimum:
+
+- NDA and contractual documents.
+- Provider manuals and confidential technical documentation.
+- Real catalog files, raw catalog rows, and production exports.
+- Credentials, `uid`, `password`, `accessToken`, `refreshToken`, and token material.
+- Sensitive endpoint URLs, production URLs, and launch URLs.
+- Commercial terms and provider-internal identifiers.
+- Screenshots or evidence containing real provider/customer/credential data.
+
+Allowed repository content is limited to derived non-sensitive architecture, security, integration, validation, and operational notes. Any future use of confidential Tekae content must happen from an approved external source of truth and must preserve redaction, least privilege, and no-commit controls.

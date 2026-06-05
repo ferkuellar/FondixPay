@@ -1431,3 +1431,11 @@ Decision: Catalog normalization for MVP remains state-based; city/municipality c
 Rationale: Sprint 020 established state-level filtering as the MVP boundary, and Sprint 021 preserves that boundary for catalog normalization.
 
 Status: Accepted in Sprint 021.
+
+## ADR-177 - Tekae Confidential Materials Stay External
+
+Decision: Tekae NDA is in place. Tekae-provided documents, manuals, real catalog files, credentials, provider identifiers, commercial terms, URLs, token material, and integration materials are confidential external references. They must not be committed to the repository. Only derived non-sensitive implementation notes may be documented.
+
+Rationale: Tekae materials can contain contractual, commercial, provider, security, credential, token, URL, catalog, and operational information that must remain controlled outside source control.
+
+Status: Accepted in Sprint 026.

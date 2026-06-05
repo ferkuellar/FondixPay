@@ -48,3 +48,11 @@ Updated: 2026-05-27
 | GET /service-catalog | API Endpoint | Backend | Return only mobile-payable services | Implemented in Phase 10F | Mobile Add Service catalog source | No | Implemented | Conservative seed currently returns no payable services |
 | PATCH /api/me/location-state | API Endpoint | Backend | Save/change user selected state | Planned | Mobile profile/location setting | Yes | Planned | Must audit user state changes |
 | Support Service Coverage View | Support Console Feature | Admin/support console | Let support see if a service is available in a user's state | Candidate for Phase 10D | Helps answer “why can’t I see/pay this service?” | Yes | Candidate | Read-only visibility only during 10D |
+
+# File Inventory Update - Sprint 026 Confidential External References
+
+| Item | Type | Source | Purpose | Current Use | Future Use | Sensitive? | Status | Notes |
+|---|---|---|---|---|---|---|---|---|
+| Tekae NDA | External confidential reference | Tekae / business owner | Contractual confidentiality control | Stored outside repository | Reference for provider-governed implementation work | Yes | External / not committed | Do not copy into repo; document only derived non-sensitive notes. |
+| Tekae manuals and technical documents | External confidential reference | Tekae | Integration understanding | Stored outside repository | Backend-only integration design and implementation after approval | Yes | External / not committed | Do not commit manuals, screenshots with real data, credentials, URLs, tokens, or raw provider payloads. |
+| Real Tekae catalog files | External confidential reference | Tekae | Provider catalog and mapping source | Stored outside repository | Future normalized catalog import after approval | Yes | External / not committed | Do not commit workbooks, raw rows, provider identifiers, or production catalog exports. |

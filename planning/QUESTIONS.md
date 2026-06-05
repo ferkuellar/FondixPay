@@ -148,3 +148,12 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - What is the source of truth for catalog versioning?
 - What validation threshold is required before exposing normalized services in STAGING?
 - Should future APIs expose only `MX-*` codes, or accept both canonical `MX-*` and current short codes during migration?
+
+## Sprint 026 Mobile Dependency And Tekae NDA Questions
+
+- What Expo SDK version should be the next approved mobile dependency remediation target?
+- Should mobile dependency audit become a CI warning, a blocking release gate, or a manual release checklist item?
+- Who approves Expo/React Native upgrade risk before changing package versions?
+- Which Tekae materials may be summarized as derived non-sensitive notes, and who approves those summaries?
+- What secure external location is the official source of truth for the Tekae NDA, manuals, real catalog files, and other confidential provider materials?
+- Should confidential Tekae material access be logged or reviewed before STAGING/PROD implementation work?

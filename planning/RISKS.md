@@ -552,3 +552,11 @@ Open production risks:
 |---|---|---|---|
 | Mobile demo filtering could be mistaken for real provider coverage. | SEV-2 | mitigated/ongoing | Sprint 025 uses safe demo copy and states that final coverage is validated before production. |
 | Public mobile catalog API does not yet provide canonical `MX-*` `coverageStates`. | SEV-2 | open | Sprint 025 keeps filtering mobile/local and tolerates optional future fields; backend-owned coverage remains future work. |
+
+## Sprint 026 Mobile Dependency And Tekae Confidentiality Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Mobile dependency audit findings could be remediated with a breaking Expo SDK jump. | SEV-2 | open | Sprint 026 documents that `npm audit fix --force` points to Expo 56 and requires a dedicated Expo-compatible remediation sprint. |
+| Expo CLI/config transitive vulnerabilities could affect developer or CI build tooling. | SEV-2 | open | Treat findings as tooling risk, restrict untrusted inputs, and plan a controlled dependency upgrade. |
+| Tekae NDA, manuals, real catalog files, credentials, URLs, or token material could be accidentally committed. | SEV-1 | mitigated/ongoing | Sprint 026 records Tekae materials as confidential external references, updates security docs, and adds generic ignore patterns for sensitive file types and private sample/reference folders. |

@@ -224,6 +224,7 @@ User-facing taxonomy must remain FONDIXPAY-owned. Provider identifiers and raw c
 - Catalog import logs must redact file paths, raw rows, provider payloads, and any sensitive operational data.
 - GPS/location privacy rules from Sprint 020 still apply: state code is enough by default, raw coordinates must not be logged, persisted, sent to Tekae, or exposed in support/CRM.
 - Production import source and catalog versioning must be auditable before PROD exposure.
+- Sprint 026 adds that the real Tekae catalog, manuals, NDA, provider identifiers, credentials, tokens, sensitive URLs, screenshots with real provider data, and raw catalog rows are confidential external references and must not be copied into the repository. Only derived non-sensitive normalization rules and sanitized examples may be documented.
 
 ## Future Parser And Import Plan
 

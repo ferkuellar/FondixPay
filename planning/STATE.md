@@ -1128,3 +1128,23 @@ Decision boundary:
 - Sprint 025 is mobile-only and does not change backend, API endpoints, database schema, migrations, payment logic, provider calls, Tekae runtime, SSO, token generation, webhooks, `.env`, secrets, infrastructure, deployment, workflows, Vercel, Prontipagos, GPS permission behavior, reverse geocoding, coordinate handling, or real catalog production sources.
 - The current public mobile catalog API still does not require `coverageMode` or `coverageStates`; mobile mapping only tolerates optional future fields.
 - Demo filtering prepares coverage-aware behavior and does not prove real provider availability or production coverage.
+
+## Sprint 026 - Mobile Dependency Audit Review + Tekae NDA Handling Update
+
+Current phase: Sprint 026 - Mobile Dependency Audit Review + Tekae NDA Handling Update.
+
+Status: COMPLETED as analysis/documentation only.
+
+Scope completed:
+
+- Ran the approved mobile dependency audit commands and documented findings in `docs/MOBILE_DEPENDENCY_AUDIT.md`.
+- Classified reported mobile vulnerabilities by severity, direct/transitive path, practical runtime/tooling impact, exploitability, recommended action, and remediation risk.
+- Confirmed the audit findings are concentrated in Expo CLI/config/build tooling transitive packages and that blind remediation points toward a breaking Expo SDK upgrade.
+- Documented that Tekae NDA is in place and that Tekae-provided materials are confidential external references.
+- Updated decisions, risks, questions, file inventory, security docs, Tekae readiness docs, and catalog normalization docs with confidentiality controls.
+- Added generic `.gitignore` protections for confidential/raw external files and private sample/reference folders.
+
+Decision boundary:
+
+- No `npm audit fix`, `npm audit fix --force`, `npm update`, `npm install`, `npx expo install`, dependency removal, manual version edit, package-lock edit, Expo SDK change, React Native change, mobile runtime change, backend runtime change, payment change, GPS/location change, service filtering change, Tekae runtime, SSO, token generation, `.env`, secret, infrastructure, deployment, workflow, real Tekae catalog source, NDA copy, manual copy, credential copy, token copy, or raw Tekae data copy was added.
+- Tekae NDA, manuals, real catalog files, credentials, token material, sensitive URLs, commercial terms, and provider-internal materials remain outside the repository.

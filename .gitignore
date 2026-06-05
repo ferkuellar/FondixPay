@@ -15,6 +15,21 @@ build/
 .DS_Store
 .vscode
 
+# Confidential and raw external materials
+*.pdf
+*.docx
+*.xlsx
+*.xls
+*.csv
+*.pem
+*.key
+*.p12
+*.crt
+samples/raw/
+samples/private/
+references/private/
+references/confidential/
+
 # Terraform local files
 **/.terraform/
 *.tfstate
