@@ -25,24 +25,26 @@ Status: proposed future contract only. No Sprint 010 API is implemented.
 
 Tekae is the approved payment/service capability provider. FONDIXPAY must not implement card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, or banking core APIs.
 
-### Future POST `/api/tekae/sessions`
+### Future POST `/api/payments/tekae/session`
 
-Purpose: create a backend-brokered Tekae SSO launch session.
+Purpose: create a backend-brokered Tekae responsive launch session for an authenticated user.
 
 Auth: required.
 
-Status: proposed, not implemented.
+Status: proposed, not implemented. Sprint 019 documents readiness only and does not create this endpoint.
 
 Request concept:
 
 ```json
 {
-  "intent": "pay_service",
-  "menu": "2",
-  "categoria": null,
-  "carrier": null,
+  "intent": "open_tekae_tool",
+  "user_service_id": "optional-internal-id",
+  "menu": "optional-tekae-menu",
+  "categoria": "optional-tekae-category",
+  "carrier": "optional-tekae-carrier",
   "blockview": true,
-  "metadata": {}
+  "redirect": "optional-approved-return-url",
+  "idempotency_key": "client-or-backend-generated-key"
 }
 ```
 
@@ -50,20 +52,24 @@ Response concept:
 
 ```json
 {
-  "session_id": "uuid",
-  "launch_url": "[REDACTED_TEKAE_URL]",
+  "session_id": "internal-session-id",
+  "launch_url": "[REDACTED_SHORT_LIVED_TEKAE_URL]",
   "expires_at": "timestamp",
-  "status": "TEKAE_TOKEN_READY"
+  "launch_mode": "browser_or_webview_or_redirect",
+  "status": "session_ready"
 }
 ```
 
 Rules:
 
-- Backend is the only component allowed to generate Tekae SSO sessions.
-- Frontend must never receive Tekae `uid`, `password`, secret keys, or provider credentials.
-- Tekae tokens and full URLs must be redacted in logs.
+- Backend is the only component allowed to call Tekae token endpoints or build the responsive access URL.
+- Backend validates authenticated user, environment, eligibility/role, duplicate-flow protection, and audit context before calling Tekae.
+- Backend calls Tekae `POST /tokens/cipherData`, then `POST /tokens/generateTokenCiphered`, then builds the short-lived responsive URL.
+- Frontend/mobile/admin must never receive Tekae `uid`, `password`, secret keys, provider credentials, raw `accessToken`, or raw provider errors.
+- Tekae tokens and full URLs must be redacted in logs, analytics, screenshots, crash reports, support tickets, CRM views, and audit metadata.
 - Opening Tekae must not mark payment as successful.
 - Unknown outcomes must remain pending or manual-review states.
+- Rate limiting, idempotency/duplicate protection, bounded timeouts, safe error mapping, and audit events are required before runtime.
 
 ### Future Tekae Admin/Operations APIs
 

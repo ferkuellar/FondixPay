@@ -1263,3 +1263,59 @@ Decision: Vercel is approved only for the public static landing page. It must no
 Rationale: Public commercial hosting and financial/payment operations are different risk classes and must remain separated.
 
 Status: Accepted in Sprint 018.
+
+## ADR-156 - Tekae Readiness Pack Is Canonical Pre-Implementation Gate
+
+Decision: `docs/TEKAE_INTEGRATION_READINESS.md` is the canonical Tekae pre-implementation readiness pack.
+
+Rationale: Tekae token flow, access URL handling, security boundaries, proposed session endpoint, environment gates, and open questions need one current source before runtime work begins.
+
+Status: Accepted in Sprint 019.
+
+## ADR-157 - Tekae Integration Remains Disabled Until Approved Implementation Sprint
+
+Decision: Tekae runtime remains disabled until a later approved implementation sprint explicitly changes runtime behavior.
+
+Rationale: Readiness documentation is not the same as provider implementation, credential configuration, endpoint creation, webhook handling, or production approval.
+
+Status: Accepted in Sprint 019.
+
+## ADR-158 - Tekae Token And Session Generation Is Backend-Only
+
+Decision: Tekae token/session generation must happen only in the FONDIXPAY backend using server-side credentials.
+
+Rationale: Tekae `uid`, `password`, provider credentials, `accessToken`, and access URL construction are sensitive operations that must not enter mobile/frontend/admin bundles.
+
+Status: Accepted in Sprint 019.
+
+## ADR-159 - Mobile Receives Only Approved Short-Lived Tekae Session URL
+
+Decision: Mobile may receive only an approved short-lived Tekae launch URL/session from the backend after authentication, eligibility, environment, duplicate-flow, and audit checks.
+
+Rationale: Mobile needs a launch handoff, not provider credentials or token-generation authority.
+
+Status: Accepted in Sprint 019.
+
+## ADR-160 - STAGING Is First Tekae Sandbox Validation Target
+
+Decision: Tekae sandbox/test validation belongs first in STAGING, not DEV or PROD.
+
+Rationale: Sandbox provider behavior must be separated from local mock shortcuts and production real-user operations.
+
+Status: Accepted in Sprint 019.
+
+## ADR-161 - Tekae PROD Is Blocked Until Security, Network, Audit, Rollback, Observability, And Ownership Are Approved
+
+Decision: Tekae production runtime is blocked until production credentials, VPN/VPC or approved secure network path, backend token flow, audit, rollback, observability, support process, and operational ownership are approved.
+
+Rationale: Production token generation and provider launch affect real users and require explicit operational controls.
+
+Status: Accepted in Sprint 019.
+
+## ADR-162 - Tekae User-Facing Errors Must Be Safe
+
+Decision: Raw Tekae errors must not be shown to users; future runtime must map provider errors to safe user-facing copy and redacted operational details.
+
+Rationale: Raw provider errors can leak sensitive implementation details, confuse users, and create support/security risk.
+
+Status: Accepted in Sprint 019.

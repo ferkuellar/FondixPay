@@ -101,3 +101,20 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - What observability/logging provider will be used?
 - What is the rollback strategy for backend and mobile releases?
 - What is the production support owner and escalation path?
+
+## Sprint 019 Tekae Readiness Questions
+
+- Who owns obtaining Tekae sandbox credentials and swagger/test URL?
+- What are the exact Tekae sandbox base URLs?
+- What are the exact Tekae production base URLs?
+- What is the approved mobile rendering strategy: WebView, browser, redirect, embed, or another option?
+- What secure network path is required for PROD token generation: VPN, VPC, private connectivity, allowlist, or other?
+- Which `UserCustomer` identifier should FONDIXPAY send, and what PII constraints apply?
+- What exact Tekae error response formats must be mapped?
+- What timeout and retry recommendations does Tekae provide for `cipherData` and `generateTokenCiphered`?
+- Does FONDIXPAY need to store provider session metadata, and if yes which redacted fields?
+- Which audit fields are required for Tekae session creation attempts?
+- What support process applies to failed, expired, duplicate, maintenance, unavailable, or invalid-config sessions?
+- Which branding/personalization settings should FONDIXPAY request: colors, logo, banners, chat URL, FAQ link, promo field, cobranding receipt?
+- Is the Tekae receipt/comprobante sufficient, or does FONDIXPAY also need an internal receipt/proof?
+- How should catalog coverage by state, national service, `menu`, `categoria`, and `carrier` map to Tekae launch parameters?

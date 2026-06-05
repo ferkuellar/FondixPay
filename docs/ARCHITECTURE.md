@@ -92,6 +92,15 @@ Forbidden FONDIXPAY architecture:
 - SPEI processor.
 - Banking core.
 
+
+## Sprint 019 Tekae Readiness Architecture
+
+`docs/TEKAE_INTEGRATION_READINESS.md` is the canonical pre-implementation readiness pack for Tekae.
+
+Future Tekae architecture remains backend-brokered: mobile requests a FONDIXPAY backend session, backend validates auth/environment/eligibility/duplicate-flow controls, backend calls Tekae token endpoints, backend builds the short-lived responsive URL, and mobile opens the approved launch strategy.
+
+No Sprint 019 architecture change enables Tekae runtime. The conceptual `POST /api/payments/tekae/session` endpoint remains proposed/not implemented. Tekae launch/session creation must not mark a payment successful, generate production receipt proof, mutate ledger/reconciliation state, or bypass provider evidence rules.
+
 ## Key Backend Entry Point
 
 `backend/app/main.py`:
@@ -142,4 +151,3 @@ Architecture rules:
 - Keep public landing separate from backend/API/payment/admin runtime. Vercel may host the public landing only.
 - Keep mock/dev payment flows separate from future Tekae provider-confirmed flows.
 - Keep Tekae runtime blocked until Sprint 011 contract readiness passes.
-

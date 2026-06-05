@@ -936,3 +936,34 @@ Decision boundary:
 Next recommended sprint:
 
 Sprint 019 - Tekae Integration Readiness Pack, or Sprint 020 - Service Coverage + Geolocation Design after the environment model is accepted.
+
+## Sprint 019 - Tekae Integration Readiness Pack
+
+Current phase: Sprint 019 - Tekae Integration Readiness Pack.
+
+Status: COMPLETED as documentation and planning only.
+
+Scope completed:
+
+- `docs/TEKAE_INTEGRATION_READINESS.md` was created as the canonical Tekae readiness pack.
+- The readiness pack documents the responsive URL flow, backend-only token/session generation, Tekae token endpoint sequence, access token lifecycle, environment gates, security rules, proposed session API contract, error states, branding/personalization readiness, operational checklist, and open questions.
+- `docs/ARCHITECTURE.md`, `docs/SECURITY.md`, `docs/API.md`, and `docs/ENVIRONMENTS.md` now point to the Sprint 019 readiness boundary.
+- Planning decisions, risks, and open questions were updated for Tekae readiness.
+
+Decision boundary:
+
+- No backend runtime behavior changed.
+- No mobile runtime behavior changed.
+- No payment logic changed.
+- No provider adapter changed.
+- No Tekae runtime was enabled.
+- No endpoint or webhook was created.
+- No migration changed.
+- No `.env` file or secret-bearing file was created or modified.
+- No infrastructure, Terraform, workflow, deployment, domain, DNS, or Vercel behavior changed.
+- `POST /api/payments/tekae/session` remains proposed/not implemented.
+- Tekae remains disabled until a later approved implementation sprint.
+
+Next recommended sprint:
+
+Sprint 020 - Service Coverage + Geolocation Design, or a Tekae implementation sprint only after sandbox credentials, exact URLs, secure network path, rendering strategy, audit fields, support process, and operational ownership are approved.

@@ -495,3 +495,18 @@ Open production risks:
 | Tekae production requires VPN/VPC or approved secure network path for token generation. | SEV-1 | open | PROD Tekae is blocked until network path, credentials, backend token flow, security, audit, and operations approvals pass. |
 | Landing page and core payment/backend responsibilities could drift together. | SEV-1 | mitigated/ongoing | Vercel remains landing-only and must not host backend/API/payment/admin/provider runtime or secrets. |
 | Geolocation/service coverage design could ignore environment-specific catalog data and test coverage. | SEV-2 | open | Sprint 018 documents DEV fixture data, STAGING test/provider-sandbox catalog data, and PROD approved provider-backed payable data as separate concerns. |
+
+## Sprint 019 Tekae Integration Readiness Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Provider credentials exposed if the backend-only boundary is violated. | SEV-1 | open | Sprint 019 documents backend-only Tekae token/session generation and forbids credentials in mobile/frontend/admin/public env. |
+| Token or access URL leaks through logs, screenshots, analytics, crash reports, support tickets, or CRM views. | SEV-1 | open | `accessToken` and full responsive URLs must be redacted everywhere except immediate launch handoff. |
+| Production token generation blocked by Tekae VPN/VPC or secure network requirements. | SEV-1 | open | PROD remains blocked until VPN/VPC or approved secure network path is confirmed. |
+| Sandbox behavior may differ from production behavior. | SEV-2 | open | STAGING sandbox evidence must not be treated as production approval. |
+| Responsive URL, WebView, browser, redirect, or embed strategy creates navigation/support edge cases. | SEV-2 | open | Rendering strategy remains an open product/security decision before implementation. |
+| Raw provider errors could confuse or alarm users. | SEV-2 | open | Future runtime must map raw Tekae errors to safe user-facing copy. |
+| Token expiration may interrupt the user flow. | SEV-2 | open | Access token is approximately 20 minutes; backend must request a new token each entry and handle expiration safely. |
+| Environment mismatch could route sandbox users to production or production users to sandbox. | SEV-1 | open | Environment gates require DEV disabled, STAGING sandbox/test, and PROD production-only after approval. |
+| Catalog/service coverage may not align with geolocation rules or Tekae `menu`/`categoria`/`carrier`. | SEV-2 | open | Future implementation must confirm catalog/state/national-service mapping before launch. |
+| Personalization/cobranding may affect UX consistency and support expectations. | SEV-3 | open | Header/menu/button colors, logo, banners, chat, FAQ, promo, and cobranding receipt settings require product review. |

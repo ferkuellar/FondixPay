@@ -85,6 +85,22 @@ Sprint 012 validation should confirm no backend/mobile runtime files, migrations
 - Future Tekae webhooks must be signature-verified, replay-protected, idempotent, and redacted before persistence.
 - Production connectivity must account for Tekae VPN/VPC requirements before any launch.
 
+
+## Sprint 019 Tekae Readiness Security
+
+`docs/TEKAE_INTEGRATION_READINESS.md` is the canonical Tekae readiness security source for the future session launch flow.
+
+Additional Sprint 019 rules:
+
+- Tekae `uid` and `password` are server-side secrets only and must never enter mobile, admin, landing, public env vars, committed files, support notes, logs, screenshots, analytics, or crash reports.
+- Mobile/frontend/admin may receive only an approved short-lived access URL/session from the backend after authentication, eligibility, environment, duplicate-flow, and audit checks pass.
+- `accessToken` and full Tekae responsive URLs are sensitive and must be redacted everywhere except the immediate launch handoff.
+- `refreshToken` remains internal to Tekae unless Tekae explicitly requires use and architecture/security approve it.
+- `UserCustomer` must be a safe identifier and must avoid unnecessary PII.
+- PROD token generation is blocked until Tekae VPN/VPC or another approved secure network path is confirmed.
+- Raw Tekae errors must map to safe user-facing messages and redacted operational details.
+- Every session creation attempt must create auditable safe metadata.
+
 ## Phase 4A Auth & Session Rules
 
 Current auth remains phone + OTP + access token. The implementation is still mock/dev for OTP delivery: no real SMS provider is integrated and the development OTP remains `123456` for local work.

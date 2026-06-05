@@ -186,6 +186,19 @@ Tekae examples:
 - Tekae launch/session creation is not payment success.
 - Tekae success, failure, pending, timeout, reconciliation, and receipt evidence must be defined before runtime behavior changes.
 
+
+## Sprint 019 Tekae Readiness Rules
+
+`docs/TEKAE_INTEGRATION_READINESS.md` is the canonical Tekae readiness pack for environment-specific provider launch rules.
+
+Environment-specific Tekae readiness:
+
+- DEV: Tekae disabled, no credentials, no token generation, no real provider launch, mock/demo only.
+- STAGING: first target for Tekae sandbox/test validation after readiness approval; requires sandbox credentials, exact sandbox base URLs, secret management, audit/log redaction, and no real users or real money.
+- PROD: blocked until production credentials, VPN/VPC or approved secure network path, backend token flow, audit, rollback, observability, support, and operational ownership are approved.
+
+Mobile/frontend/admin bundles must never contain Tekae `uid`, `password`, provider credentials, `accessToken`, or full responsive access URLs in any environment.
+
 ## Vercel / Landing Page Boundary
 
 Vercel is approved only for the public static landing page under `landing/`.
