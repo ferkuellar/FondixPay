@@ -148,7 +148,7 @@ export const useServiceCatalogStore = create<ServiceCatalogState>((set) => ({
       }
 
       set({
-        error: 'Mostramos servicios demo porque no pudimos cargar el catalogo.',
+        error: undefined,
         isUsingDemoFallback: true,
         services: DEMO_SERVICES,
       });
