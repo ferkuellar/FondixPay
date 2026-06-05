@@ -151,3 +151,11 @@ Architecture rules:
 - Keep public landing separate from backend/API/payment/admin runtime. Vercel may host the public landing only.
 - Keep mock/dev payment flows separate from future Tekae provider-confirmed flows.
 - Keep Tekae runtime blocked until Sprint 011 contract readiness passes.
+
+## Sprint 020 Service Coverage And Geolocation Architecture
+
+`docs/SERVICE_COVERAGE_GEOLOCATION_DESIGN.md` is the canonical design for future state-based service visibility and geolocation/manual fallback behavior.
+
+Architecture direction: mobile obtains a user-selected or GPS-derived state, backend owns normalized coverage rules, backend returns state-eligible services plus national services, and mobile displays only the backend-approved catalog. GPS is used only to infer state and must not be treated as payment evidence, provider eligibility, or continuous tracking.
+
+Sprint 020 does not implement GPS, reverse geocoding, endpoint changes, migrations, Tekae mapping, payment logic, or runtime filtering changes.

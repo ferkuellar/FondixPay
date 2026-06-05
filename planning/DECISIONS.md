@@ -1319,3 +1319,75 @@ Decision: Raw Tekae errors must not be shown to users; future runtime must map p
 Rationale: Raw provider errors can leak sensitive implementation details, confuse users, and create support/security risk.
 
 Status: Accepted in Sprint 019.
+
+## ADR-163 - Service Visibility Is Coverage-Aware
+
+Decision: FONDIXPAY service visibility will be coverage-aware and backend-owned.
+
+Rationale: Users should only see services available for their selected/detected state plus national services, and mobile must not hardcode coverage rules.
+
+Status: Accepted in Sprint 020.
+
+## ADR-164 - MVP Coverage Filtering Is State-Based
+
+Decision: MVP filtering is state-based, not city-level.
+
+Rationale: State-level filtering provides enough coverage control for the first implementation while keeping city/municipality complexity future-scoped.
+
+Status: Accepted in Sprint 020.
+
+## ADR-165 - National Services Use MX-ALL Or NATIONAL
+
+Decision: National services are represented by `MX-ALL` or `coverageMode=NATIONAL` and must appear for every Mexican state unless disabled.
+
+Rationale: National coverage needs explicit logic so nationwide services are not hidden by state filtering.
+
+Status: Accepted in Sprint 020.
+
+## ADR-166 - GPS Is Used Only To Infer State
+
+Decision: GPS may be used only to infer the user's state for service availability.
+
+Rationale: FONDIXPAY does not need continuous tracking or raw coordinates for payments or provider launch.
+
+Status: Accepted in Sprint 020.
+
+## ADR-167 - Manual State Selection Is Required Fallback And Override
+
+Decision: Manual state selection is required when GPS is denied/unavailable and overrides GPS for browsing until the user changes it.
+
+Rationale: Users may need to pay services outside their current physical location and GPS can be inaccurate or unavailable.
+
+Status: Accepted in Sprint 020.
+
+## ADR-168 - Raw GPS Coordinates Must Not Be Logged Or Sent To Tekae
+
+Decision: Raw GPS coordinates must not be logged, persisted by default, or sent to Tekae.
+
+Rationale: State-level service coverage can be handled with minimal location data, reducing privacy and security risk.
+
+Status: Accepted in Sprint 020.
+
+## ADR-169 - DEV May Use Mock State Fixtures
+
+Decision: DEV may use mock state fixtures, manual selector data, and labeled demo catalog behavior.
+
+Rationale: Local validation needs repeatable fixtures without real user location or provider credentials.
+
+Status: Accepted in Sprint 020.
+
+## ADR-170 - STAGING Validates Coverage With Test Or Sandbox Catalog Data
+
+Decision: STAGING validates service coverage using test fixtures or sandbox catalog mapping, not production data.
+
+Rationale: Preproduction validation must exercise realistic coverage behavior without real users, real money, or production provider credentials.
+
+Status: Accepted in Sprint 020.
+
+## ADR-171 - PROD Uses Real Coverage Data Only After Release Gates
+
+Decision: PROD may use real coverage data only after release gates approve provider-backed catalog source, privacy rules, support visibility, operations, and rollback.
+
+Rationale: Wrong production coverage can hide valid services or expose unavailable services to real users.
+
+Status: Accepted in Sprint 020.

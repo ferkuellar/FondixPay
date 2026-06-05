@@ -510,3 +510,17 @@ Open production risks:
 | Environment mismatch could route sandbox users to production or production users to sandbox. | SEV-1 | open | Environment gates require DEV disabled, STAGING sandbox/test, and PROD production-only after approval. |
 | Catalog/service coverage may not align with geolocation rules or Tekae `menu`/`categoria`/`carrier`. | SEV-2 | open | Future implementation must confirm catalog/state/national-service mapping before launch. |
 | Personalization/cobranding may affect UX consistency and support expectations. | SEV-3 | open | Header/menu/button colors, logo, banners, chat, FAQ, promo, and cobranding receipt settings require product review. |
+
+## Sprint 020 Service Coverage And Geolocation Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Incorrect state detection may hide valid services or show unavailable services. | SEV-2 | open | Require manual override, state selector validation, and STAGING fixture tests. |
+| GPS permission denial could reduce conversion if manual fallback is weak. | SEV-2 | open | Manual selector is required fallback and must be available before browsing blocks users. |
+| Catalog coverage data may be incomplete or stale. | SEV-2 | open | Define source of truth, review cadence, sync metadata, and support/admin visibility before PROD. |
+| Tekae catalog categories/carriers may not map cleanly to FONDIXPAY service taxonomy. | SEV-2 | open | Keep Tekae `menu`/`categoria`/`carrier` mapping backend/admin-controlled and blocked until confirmed. |
+| National services could be accidentally hidden if `MX-ALL` or `NATIONAL` logic is wrong. | SEV-2 | open | Test national services across all STAGING state fixtures. |
+| Raw location data could create privacy risk if logged or over-collected. | SEV-1 | open | Store state code only by default; prohibit raw coordinate logging and Tekae sharing. |
+| City-level expectations could exceed MVP state-level design. | SEV-3 | open | Document city/municipality filtering as future and use state-level MVP boundary. |
+| Environment catalog mismatch could cause STAGING results to differ from PROD. | SEV-2 | open | Keep DEV/STAGING/PROD catalog sources isolated and document release gates. |
+| Current short-code state implementation could drift from canonical `MX-*` taxonomy. | SEV-2 | open | Future implementation must normalize or migrate state codes deliberately. |

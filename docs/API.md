@@ -923,3 +923,23 @@ Rules:
 - `SEV-1` and `SEV-2` conversations must require ticket/human review and must not be auto-closed by AI.
 - Public chatbot responses continue to use safe routing and do not reveal ticket, customer, payment, receipt, balance, or transaction internals.
 - Admin operation audit events are emitted with actor, role, permission, entity, result, and safe metadata.
+
+## Sprint 020 Future Coverage And Location APIs
+
+Status: proposed/not implemented unless explicitly marked as existing. Sprint 020 documents contracts only and does not create endpoints.
+
+Current related endpoint: `GET /service-catalog?state_code={code}` exists and accepts short state codes such as `CHH`. Future implementation must decide whether to evolve this endpoint or add canonical `/api/catalog/*` endpoints with `MX-*` state codes.
+
+| Endpoint | Purpose | Status | Notes |
+|---|---|---|---|
+| `GET /api/catalog/services?state=MX-CHH` | Return services available for selected/detected state plus national services. | proposed/not implemented | Include `NATIONAL`/`MX-ALL` and state-matching services; exclude disabled/unavailable local services. Auth/audit TBD. |
+| `GET /api/catalog/states` | Return supported Mexico states, names, canonical codes, and availability status. | proposed/not implemented | Used by manual selector and validation. |
+| `PATCH /api/users/me/location-preference` | Persist user's manual selected state if backend profile storage is approved. | proposed/not implemented | Auth required, user-bound, audit required if server-side. Stores state code, not raw coordinates. |
+| `POST /api/location/resolve-state` | Resolve coordinates to state code if backend reverse geocoding is approved. | proposed/not implemented | Must not log raw coordinates or send them to Tekae; rate limiting required. |
+
+Rules:
+
+- National services must appear for every valid Mexican state unless disabled.
+- Unknown location must not pretend coverage is known.
+- Manual selected state must override GPS for browsing until changed.
+- Raw coordinates must not be returned, logged, persisted, or shared with Tekae by default.

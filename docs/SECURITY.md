@@ -531,3 +531,17 @@ Remaining blockers:
 - Stored messages and notes must not contain PAN, CVV, OTPs, passwords, provider secrets, raw provider payloads, or raw provider errors.
 - The operational console does not mutate payments, receipts, ledger entries, Prontipagos states, card processor states, or settlement records.
 - The DEV AUTH warning banner is shown in non-production internal environments and is hidden in `PRODUCTION` unless explicitly re-enabled by configuration.
+
+## Sprint 020 Location Privacy And Coverage Security
+
+`docs/SERVICE_COVERAGE_GEOLOCATION_DESIGN.md` is the canonical location/privacy design for service coverage.
+
+Rules:
+
+- GPS may be used only to infer state for service availability.
+- Manual state selection must remain available when GPS is denied, unavailable, inaccurate, or not desired.
+- Store/use state code by default, not raw coordinates.
+- Raw GPS coordinates must not be logged, persisted, sent to Tekae, included in analytics, crash reports, support tickets, CRM views, screenshots, or audit metadata unless a future privacy/security approval explicitly allows it.
+- Tekae must receive only approved service/session fields, never raw user coordinates.
+- Backend profile state changes, if implemented, must be authenticated, user-bound, and auditable.
+- Public coverage data remains commercial/reference and must not authorize payment execution.

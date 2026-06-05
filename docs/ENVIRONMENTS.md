@@ -270,3 +270,13 @@ PROD gate:
 The open questions are tracked in `planning/QUESTIONS.md`. Sprint 018 keeps unresolved platform choices open rather than pretending they are decided.
 
 Current blockers include cloud provider/account ownership, Tekae sandbox ownership, production domain/API domain strategy, STAGING/PROD secret manager, database platform per environment, mobile build profiles, observability provider, rollback strategy, and production support/escalation ownership.
+
+## Sprint 020 Coverage And Geolocation Environment Rules
+
+`docs/SERVICE_COVERAGE_GEOLOCATION_DESIGN.md` defines the future coverage/geolocation behavior for DEV, STAGING, and PROD.
+
+- DEV: mock location, manual state selector, fake GPS/state fixtures, mock catalog/demo fallback, and Tekae disabled are allowed when clearly labeled.
+- STAGING: validate geolocation, denied/unavailable GPS, manual fallback, national services, and state coverage with test/sandbox catalog data. Tekae sandbox remains allowed only after readiness approval.
+- PROD: use real coverage data and approved location permission copy only after release gates. Do not log raw coordinates. Do not put provider credentials in mobile. Tekae production remains blocked until network/security/operational approval.
+
+Environment catalog data must remain isolated so DEV fixtures, STAGING test/sandbox catalog data, and PROD approved provider-backed payable data cannot be confused.

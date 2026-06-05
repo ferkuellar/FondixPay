@@ -118,3 +118,18 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - Which branding/personalization settings should FONDIXPAY request: colors, logo, banners, chat URL, FAQ link, promo field, cobranding receipt?
 - Is the Tekae receipt/comprobante sufficient, or does FONDIXPAY also need an internal receipt/proof?
 - How should catalog coverage by state, national service, `menu`, `categoria`, and `carrier` map to Tekae launch parameters?
+
+## Sprint 020 Service Coverage And Geolocation Questions
+
+- What source of truth will define service coverage by state?
+- Who owns Tekae catalog normalization?
+- Does Tekae provide explicit state coverage per service, or must FONDIXPAY define it?
+- Should unsupported states show national services only or block service browsing?
+- Should users be allowed to manually override GPS state? Sprint 020 design answer: yes; implementation approval remains future.
+- Should selected state be stored locally only or in backend profile?
+- What reverse geocoding provider will be used?
+- What location permission copy is approved?
+- Should city-level filtering be required later for metro areas like Torreon/Gomez Palacio?
+- How often will catalog coverage be reviewed or synchronized?
+- How will national services be tested in STAGING?
+- Should future APIs expose only `MX-*` codes, or accept both canonical `MX-*` and existing short codes during migration?

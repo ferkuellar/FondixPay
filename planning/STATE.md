@@ -967,3 +967,34 @@ Decision boundary:
 Next recommended sprint:
 
 Sprint 020 - Service Coverage + Geolocation Design, or a Tekae implementation sprint only after sandbox credentials, exact URLs, secure network path, rendering strategy, audit fields, support process, and operational ownership are approved.
+
+## Sprint 020 - Service Coverage + Geolocation Design
+
+Current phase: Sprint 020 - Service Coverage + Geolocation Design.
+
+Status: COMPLETED as documentation and planning only.
+
+Scope completed:
+
+- `docs/SERVICE_COVERAGE_GEOLOCATION_DESIGN.md` was created as the canonical coverage/geolocation design.
+- State-based MVP filtering, national services, `MX-*` taxonomy, GPS permission flow, manual fallback, unknown/unsupported location behavior, privacy rules, environment behavior, future data model, future API contracts, mobile UX proposal, backend responsibilities, Tekae mapping considerations, validation plan, risks, questions, and future acceptance criteria were documented.
+- `docs/ARCHITECTURE.md`, `docs/API.md`, `docs/SECURITY.md`, and `docs/ENVIRONMENTS.md` were updated with Sprint 020 references/rules.
+- Planning decisions, risks, and open questions were updated for service coverage and geolocation.
+
+Decision boundary:
+
+- No runtime geolocation was implemented.
+- No Expo Location dependency was installed.
+- No reverse geocoding was implemented.
+- No service filtering runtime was changed.
+- No backend endpoint was created or modified.
+- No database migration was created.
+- No Tekae runtime behavior was activated.
+- No payment logic changed.
+- No provider adapter changed.
+- No `.env` file or secret-bearing file was created or modified.
+- No infrastructure, Terraform, workflow, deployment, domain, DNS, or Vercel behavior changed.
+
+Next recommended sprint:
+
+Implement service coverage/geolocation only after the source of truth, state-code normalization strategy, reverse geocoding provider, permission copy, storage decision, STAGING fixtures, and support/operations visibility are approved.
