@@ -247,3 +247,9 @@ Sprint 019 does not change:
 - `.env` secret values.
 - Infrastructure, workflow, deployment, domain, DNS, or Vercel behavior.
 - Screenshots or emulator evidence.
+
+## Sprint 021 Catalog Normalization Prerequisite
+
+`docs/TEKAE_CATALOG_NORMALIZATION_DESIGN.md` is the canonical catalog normalization prerequisite for future Tekae-backed service visibility and launch validation.
+
+Before any Tekae runtime implementation uses catalog data, FONDIXPAY must normalize Tekae catalog rows into internal service records, preserve Tekae `menu`/`categoria`/`carrier` as provider metadata, validate `coverageMode` and `coverageStates`, and block unknown coverage from user-facing exposure until reviewed. Sprint 021 does not activate Tekae or implement parser/import/runtime behavior.

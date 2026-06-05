@@ -133,3 +133,18 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - How often will catalog coverage be reviewed or synchronized?
 - How will national services be tested in STAGING?
 - Should future APIs expose only `MX-*` codes, or accept both canonical `MX-*` and existing short codes during migration?
+
+## Sprint 021 Tekae Catalog Normalization Questions
+
+- Is `C:\Users\ferna\OneDrive\Escritorio\FondixPayDocs\fondixpay_tekae_catalog_normalized.xlsx` the official Tekae catalog file, or a FONDIXPAY-normalized planning artifact?
+- What are the official Tekae catalog columns and stable identifiers?
+- Is `tekae_product_number` globally stable and unique enough for provider mapping?
+- Does Tekae provide explicit state coverage per service?
+- Who owns manual coverage assignment when Tekae coverage is missing?
+- Is `MX-ALL` the approved stored representation for national services, or should `NATIONAL` be canonical with `MX-ALL` as an API convention?
+- What internal categories should FONDIXPAY expose to users at launch?
+- Should FONDIXPAY store logo/icon mapping per service?
+- How often will the Tekae catalog be refreshed?
+- What is the source of truth for catalog versioning?
+- What validation threshold is required before exposing normalized services in STAGING?
+- Should future APIs expose only `MX-*` codes, or accept both canonical `MX-*` and current short codes during migration?

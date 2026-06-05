@@ -943,3 +943,20 @@ Rules:
 - Unknown location must not pretend coverage is known.
 - Manual selected state must override GPS for browsing until changed.
 - Raw coordinates must not be returned, logged, persisted, or shared with Tekae by default.
+
+## Sprint 021 Proposed Catalog Normalization APIs
+
+Sprint 021 documents future catalog normalization only. No endpoint is created or modified.
+
+Proposed/not implemented future API implications:
+
+| API | Purpose | Status |
+|---|---|---|
+| `GET /api/catalog/services?state=MX-CHH` | Return active normalized services for a selected/detected state plus national services. | Proposed/not implemented |
+| `GET /api/catalog/services/{serviceId}` | Return one approved normalized service record. | Proposed/not implemented |
+| `POST /api/admin/catalog/imports/tekae` | Admin-only Tekae catalog import after schema validation. | Proposed/not implemented |
+| `GET /api/admin/catalog/imports` | Admin-only import history and validation status. | Proposed/not implemented |
+| `GET /api/admin/catalog/review-queue` | Admin-only review queue for unknown coverage/category/mapping rows. | Proposed/not implemented |
+| `PATCH /api/admin/catalog/items/{serviceId}` | Admin-only correction for category, coverage, logo, or active state. | Proposed/not implemented |
+
+Compatibility note: current runtime still exposes `GET /service-catalog?state_code={code}` and uses short state codes such as `CHH`. Future API work must decide whether to normalize that endpoint, add an `/api/catalog/services` facade, or accept both existing short codes and canonical `MX-*` during migration.

@@ -998,3 +998,37 @@ Decision boundary:
 Next recommended sprint:
 
 Implement service coverage/geolocation only after the source of truth, state-code normalization strategy, reverse geocoding provider, permission copy, storage decision, STAGING fixtures, and support/operations visibility are approved.
+
+## Sprint 021 - Tekae Catalog Coverage Normalization Design
+
+Current phase: Sprint 021 - Tekae Catalog Coverage Normalization Design.
+
+Status: COMPLETED as documentation and planning only.
+
+Scope completed:
+
+- `docs/TEKAE_CATALOG_NORMALIZATION_DESIGN.md` was created as the canonical Tekae catalog normalization design.
+- The design documents read-only catalog workbook metadata, normalized `ServiceCatalogItem` fields, Tekae `menu`/`categoria`/`carrier` provider metadata, coverage modes, `coverageStates`, `MX-ALL` / `NATIONAL` handling, unknown coverage review behavior, internal taxonomy, environment behavior, data privacy/security rules, proposed future parser/import plan, proposed future API implications, validation plan, open questions, and future implementation acceptance criteria.
+- `docs/SERVICE_COVERAGE_GEOLOCATION_DESIGN.md`, `docs/TEKAE_INTEGRATION_READINESS.md`, `docs/API.md`, and `docs/ARCHITECTURE.md` were updated with Sprint 021 references and proposed/not implemented boundaries.
+- Planning decisions, risks, and open questions were updated for Tekae catalog normalization.
+
+Decision boundary:
+
+- No catalog parser or import implementation was added.
+- No normalized catalog output file was generated.
+- No runtime service filtering was implemented.
+- No geolocation behavior was implemented.
+- No Tekae runtime behavior was activated.
+- No backend runtime behavior changed.
+- No mobile runtime behavior changed.
+- No payment logic changed.
+- No provider adapter changed.
+- No endpoint or webhook was created or modified.
+- No database migration was created.
+- No `.env` file or secret-bearing file was created or modified.
+- No infrastructure, Terraform, workflow, deployment, domain, DNS, or Vercel behavior changed.
+- No raw catalog workbook was copied into the repository.
+
+Next recommended sprint:
+
+Implement catalog ingestion only after official catalog ownership, stable Tekae identifiers, state-code compatibility, `MX-ALL` / `NATIONAL` convention, manual review ownership, STAGING validation threshold, and production import approval are decided.

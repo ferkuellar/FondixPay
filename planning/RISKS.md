@@ -524,3 +524,17 @@ Open production risks:
 | City-level expectations could exceed MVP state-level design. | SEV-3 | open | Document city/municipality filtering as future and use state-level MVP boundary. |
 | Environment catalog mismatch could cause STAGING results to differ from PROD. | SEV-2 | open | Keep DEV/STAGING/PROD catalog sources isolated and document release gates. |
 | Current short-code state implementation could drift from canonical `MX-*` taxonomy. | SEV-2 | open | Future implementation must normalize or migrate state codes deliberately. |
+
+## Sprint 021 Tekae Catalog Coverage Normalization Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Tekae catalog may not include explicit state coverage. | SEV-2 | open | Route missing coverage to `UNKNOWN_REVIEW_REQUIRED` and require manual review before exposure. |
+| Manual coverage assignment may introduce data quality errors. | SEV-2 | open | Require review ownership, validation reports, and STAGING fixture checks before runtime import. |
+| Raw Tekae categories may not map cleanly to FONDIXPAY categories. | SEV-2 | open | Keep FONDIXPAY taxonomy internal and mark unmapped rows review-required. |
+| National services may be hidden or overexposed if `MX-ALL` handling is inconsistent. | SEV-2 | open | Validate `NATIONAL` / `MX-ALL` behavior across all sample states. |
+| Unknown coverage could be accidentally exposed to users. | SEV-1 | open | Default unknown coverage to not user-facing and require explicit approval to expose. |
+| Catalog updates may break mappings if schema changes. | SEV-2 | open | Validate required headers and source catalog version before import. |
+| Provider-specific identifiers could leak into user-facing UI. | SEV-2 | open | Store Tekae `menu`/`categoria`/`carrier` as provider metadata and require reviewed display fields. |
+| Large catalog size may require indexing/search optimization later. | SEV-3 | open | Treat search/indexing as future implementation work after catalog size and query patterns are known. |
+| Current short-code state implementation could conflict with canonical `MX-*` catalog data. | SEV-2 | open | Future implementation must deliberately map, accept, or migrate state codes before runtime filtering changes. |

@@ -427,3 +427,9 @@ Future implementation validation should cover:
 - DEV, STAGING, and PROD behavior follow this document and `docs/ENVIRONMENTS.md`.
 - No provider launch happens without service coverage and Tekae mapping validation.
 - Automated tests cover national, state, unknown, denied, unavailable, and environment fixture behavior.
+
+## Sprint 021 Catalog Normalization Dependency
+
+`docs/TEKAE_CATALOG_NORMALIZATION_DESIGN.md` is the canonical Sprint 021 design for turning Tekae catalog rows into normalized FONDIXPAY service records.
+
+Future service coverage/geolocation implementation depends on that normalization layer for provider mapping, `coverageMode`, `coverageStates`, national-service handling, unknown coverage review, and state-code compatibility. Sprint 021 does not change runtime geolocation, service filtering, endpoint behavior, migrations, Tekae runtime, or payment/provider logic.

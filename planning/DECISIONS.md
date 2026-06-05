@@ -1391,3 +1391,43 @@ Decision: PROD may use real coverage data only after release gates approve provi
 Rationale: Wrong production coverage can hide valid services or expose unavailable services to real users.
 
 Status: Accepted in Sprint 020.
+
+## ADR-172 - FONDIXPAY Uses An Internal Normalized Service Catalog
+
+Decision: FONDIXPAY will use an internal normalized service catalog model instead of exposing raw Tekae catalog structure directly to mobile UI or business logic.
+
+Rationale: Provider catalog fields can change, may not match user-facing taxonomy, and should not become primary business concepts.
+
+Status: Accepted in Sprint 021.
+
+## ADR-173 - Tekae Catalog Identifiers Are Provider Metadata
+
+Decision: Tekae `menu`, `categoria`, `carrier`, and provider product identifiers must be preserved as provider mapping metadata.
+
+Rationale: Future Tekae launch/session construction may need those values, but user-facing service taxonomy should remain FONDIXPAY-owned.
+
+Status: Accepted in Sprint 021.
+
+## ADR-174 - Coverage Filtering Depends On Normalized Coverage Fields
+
+Decision: Future coverage-aware filtering depends on normalized `coverageMode` and `coverageStates`, not raw Tekae category or carrier structure.
+
+Rationale: State availability and provider navigation are separate concerns and must be validated independently.
+
+Status: Accepted in Sprint 021.
+
+## ADR-175 - Unknown Catalog Coverage Requires Review
+
+Decision: Unknown catalog coverage must be marked `UNKNOWN_REVIEW_REQUIRED` and must not be treated as national by default.
+
+Rationale: Overexposing unavailable services can create failed payment flows and support risk.
+
+Status: Accepted in Sprint 021.
+
+## ADR-176 - Catalog MVP Coverage Remains State-Based
+
+Decision: Catalog normalization for MVP remains state-based; city/municipality coverage remains future scope.
+
+Rationale: Sprint 020 established state-level filtering as the MVP boundary, and Sprint 021 preserves that boundary for catalog normalization.
+
+Status: Accepted in Sprint 021.

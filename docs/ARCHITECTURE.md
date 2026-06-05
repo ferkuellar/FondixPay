@@ -159,3 +159,11 @@ Architecture rules:
 Architecture direction: mobile obtains a user-selected or GPS-derived state, backend owns normalized coverage rules, backend returns state-eligible services plus national services, and mobile displays only the backend-approved catalog. GPS is used only to infer state and must not be treated as payment evidence, provider eligibility, or continuous tracking.
 
 Sprint 020 does not implement GPS, reverse geocoding, endpoint changes, migrations, Tekae mapping, payment logic, or runtime filtering changes.
+
+## Sprint 021 Tekae Catalog Normalization Architecture
+
+`docs/TEKAE_CATALOG_NORMALIZATION_DESIGN.md` is the canonical Sprint 021 design for the future catalog normalization layer.
+
+The target architecture keeps raw Tekae catalog structure behind a FONDIXPAY-owned normalized service catalog. Tekae `menu`, `categoria`, and `carrier` values are provider mapping metadata, while mobile and business logic consume internal fields such as category, display name, `coverageMode`, `coverageStates`, and active/payable status.
+
+Sprint 021 does not implement parser scripts, import jobs, backend models, migrations, endpoints, mobile filtering, Tekae launch, provider calls, or payment behavior. It only documents the future layer needed before coverage-aware Tekae runtime can be approved.
