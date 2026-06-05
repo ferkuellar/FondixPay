@@ -12,9 +12,11 @@ import { Screen } from '../../components/Screen';
 import { ServiceIconBadge } from '../../components/ServiceIconBadge';
 import { TextInput } from '../../components/TextInput';
 import { useServiceCatalogStore } from '../../store/serviceCatalogStore';
+import { useStatePreferenceStore } from '../../store/statePreferenceStore';
 import { useServiceStore } from '../../store/serviceStore';
 import type { Provider, RootStackParamList, ServiceCatalogItem } from '../../types';
 import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
+import { filterServicesBySelectedState } from '../../utils/serviceCoverageFilter';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddService'>;
 type Step = 'list' | 'number' | 'confirm';
@@ -27,6 +29,9 @@ export function AddServiceScreen({ navigation }: Props) {
   const isLoading = useServiceCatalogStore((state) => state.isLoading);
   const services = useServiceCatalogStore((state) => state.services);
   const addService = useServiceStore((state) => state.addService);
+  const hasHydratedStatePreference = useStatePreferenceStore((state) => state.hasHydrated);
+  const restoreSelectedState = useStatePreferenceStore((state) => state.restoreSelectedState);
+  const selectedState = useStatePreferenceStore((state) => state.selectedState);
 
   const [step, setStep] = useState<Step>('list');
   const [serviceId, setServiceId] = useState<string>();
@@ -35,11 +40,19 @@ export function AddServiceScreen({ navigation }: Props) {
   const [showSavedTip, setShowSavedTip] = useState(false);
   const [validating, setValidating] = useState(false);
 
-  const selectedService = services.find((service) => service.id === serviceId);
+  const selectedStateCode = hasHydratedStatePreference ? selectedState.code : undefined;
+  const filteredServices = filterServicesBySelectedState(services, selectedStateCode);
+  const selectedService = filteredServices.find((service) => service.id === serviceId);
 
   useEffect(() => {
     fetchServices();
   }, [fetchServices]);
+
+  useEffect(() => {
+    if (!hasHydratedStatePreference) {
+      void restoreSelectedState();
+    }
+  }, [hasHydratedStatePreference, restoreSelectedState]);
 
   function selectService(service: ServiceCatalogItem) {
     if (!service.payableInMobile) return;
@@ -89,25 +102,47 @@ export function AddServiceScreen({ navigation }: Props) {
             <Text style={[styles.title, { color: theme.fg }]}>Agregar servicio</Text>
             <TextInput placeholder="Buscar CFE, agua, internet..." />
             <Text style={[styles.subtitle, { color: theme.fg2 }]}>
-              Proveedores soportados en esta versión: CFE, agua, internet, recargas y gas.
+              Elige tu estado para preparar servicios disponibles. La cobertura final se validará antes de producción.
             </Text>
+            <View style={[styles.stateContext, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+              <Text style={[styles.stateContextTitle, { color: theme.fg }]}>
+                {selectedStateCode ? `Estado seleccionado: ${selectedState.name}` : 'Elige tu estado para preparar servicios disponibles.'}
+              </Text>
+              <Text style={[styles.stateContextText, { color: theme.fg2 }]}>
+                {selectedStateCode
+                  ? 'Mostrando servicios disponibles para tu estado en modo demo.'
+                  : 'Puedes elegirlo desde Inicio o Perfil. No indica cobertura real activa.'}
+              </Text>
+            </View>
             {isUsingDemoFallback ? (
               <AlertCard
                 tone="info"
                 title="Servicios demo disponibles"
-                message="Estos servicios sirven para validar el flujo mock. No indican disponibilidad productiva ni proveedor real activo."
+                message={
+                  selectedStateCode
+                    ? `Mostrando servicios disponibles para tu estado en modo demo: ${selectedState.name}.`
+                    : 'Elige tu estado para preparar servicios disponibles. No indica cobertura real activa.'
+                }
               />
             ) : null}
             <View style={styles.list}>
-              {services.length === 0 ? (
+              {!selectedStateCode ? (
                 <View style={[styles.emptyCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
-                  <Text style={[styles.emptyTitle, { color: theme.fg }]}>Aún no tenemos servicios disponibles para tu ubicación.</Text>
+                  <Text style={[styles.emptyTitle, { color: theme.fg }]}>Elige tu estado para preparar servicios disponibles.</Text>
                   <Text style={[styles.emptyText, { color: theme.fg2 }]}>
-                    Estamos habilitando servicios conforme se confirme la cobertura operativa del proveedor.
+                    La cobertura final se validará antes de producción.
                   </Text>
                 </View>
               ) : null}
-              {services.map((service) => (
+              {selectedStateCode && filteredServices.length === 0 ? (
+                <View style={[styles.emptyCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+                  <Text style={[styles.emptyTitle, { color: theme.fg }]}>Por ahora no hay servicios disponibles para este estado.</Text>
+                  <Text style={[styles.emptyText, { color: theme.fg2 }]}>
+                    La cobertura final se validará antes de producción.
+                  </Text>
+                </View>
+              ) : null}
+              {filteredServices.map((service) => (
                 <Pressable key={service.id} onPress={() => selectService(service)} style={[styles.listItem, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                   <ServiceIconBadge category={service.category} />
                   <Text style={[styles.listLabel, { color: theme.fg }]}>
@@ -308,6 +343,22 @@ const styles = StyleSheet.create({
     gap: spacing.lg,
     padding: spacing.xl,
     paddingBottom: spacing.xxxl,
+  },
+  stateContext: {
+    borderColor: colors.border,
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    gap: spacing.xs,
+    padding: spacing.md,
+  },
+  stateContextText: {
+    ...typography.bodySmall,
+    color: colors.textSecondary,
+  },
+  stateContextTitle: {
+    ...typography.body,
+    color: colors.textPrimary,
+    fontWeight: '800',
   },
   subtitle: {
     ...typography.body,

@@ -545,3 +545,10 @@ Open production risks:
 |---|---|---|---|
 | Native permission behavior may differ between Expo Go, development builds, Android, and iOS. | SEV-2 | open | Sprint 024 uses foreground-only permission copy and manual fallback; future device QA should validate granted, denied, failed, and unresolved paths before pilot or release. |
 | Reverse geocoding may return unsupported or localized region names. | SEV-2 | open | Sprint 024 maps only approved `MX-*` states and falls back to manual selection when region resolution is unknown. |
+
+## Sprint 025 Coverage-Aware Service Filtering Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Mobile demo filtering could be mistaken for real provider coverage. | SEV-2 | mitigated/ongoing | Sprint 025 uses safe demo copy and states that final coverage is validated before production. |
+| Public mobile catalog API does not yet provide canonical `MX-*` `coverageStates`. | SEV-2 | open | Sprint 025 keeps filtering mobile/local and tolerates optional future fields; backend-owned coverage remains future work. |

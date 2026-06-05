@@ -172,6 +172,8 @@ export type CoverageStatus =
 
 export type ProviderCapabilityStatus = 'confirmed' | 'pending' | 'rejected' | 'unavailable' | 'unknown' | 'to_confirm';
 
+export type CoverageMode = 'NATIONAL' | 'STATE' | 'CITY_FUTURE' | 'DISABLED' | 'UNKNOWN_REVIEW_REQUIRED';
+
 export type ServiceCategory = {
   id: number;
   code: string;
@@ -187,7 +189,12 @@ export type ServiceCatalogItem = {
   iconKey: string;
   description?: string;
   isNational: boolean;
+  coverageMode?: CoverageMode;
+  coverageStates?: string[];
+  isActive?: boolean;
+  isUserFacing?: boolean;
   coverageStatus: CoverageStatus;
+  providerCapabilityStatus?: ProviderCapabilityStatus;
   visibleOnMobile: boolean;
   payableInMobile: boolean;
   referenceOnly: boolean;

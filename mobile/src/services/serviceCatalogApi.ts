@@ -16,7 +16,12 @@ type ServiceCatalogItemResponse = {
   icon_key: string;
   description?: string;
   is_national: boolean;
+  coverage_mode?: ServiceCatalogItem['coverageMode'];
+  coverage_states?: string[];
+  is_active?: boolean;
+  is_user_facing?: boolean;
   coverage_status: ServiceCatalogItem['coverageStatus'];
+  provider_capability_status?: ServiceCatalogItem['providerCapabilityStatus'];
   visible_on_mobile: boolean;
   payable_in_mobile: boolean;
   reference_only: boolean;
@@ -83,7 +88,12 @@ function mapServiceCatalogItem(item: ServiceCatalogItemResponse): ServiceCatalog
     iconKey: item.icon_key,
     description: item.description,
     isNational: item.is_national,
+    coverageMode: item.coverage_mode,
+    coverageStates: item.coverage_states,
+    isActive: item.is_active,
+    isUserFacing: item.is_user_facing,
     coverageStatus: item.coverage_status,
+    providerCapabilityStatus: item.provider_capability_status,
     visibleOnMobile: item.visible_on_mobile,
     payableInMobile: item.payable_in_mobile,
     referenceOnly: item.reference_only,
@@ -116,4 +126,3 @@ function mapCoverageMapState(state: CoverageMapStateResponse): CoverageMapState 
     disclaimer: state.disclaimer,
   };
 }
-

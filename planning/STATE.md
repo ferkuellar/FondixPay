@@ -1107,3 +1107,24 @@ Decision boundary:
 - Manual override remains available after GPS detection and changes the source back to `manual`.
 - No service filtering or coverage-aware catalog filtering was implemented.
 - No backend endpoint, API contract, database persistence, migration, Tekae runtime, SSO, token generation, provider call, payment flow, webhook, `.env`, secret, infrastructure, deployment, workflow, Vercel, Prontipagos, or core transaction behavior changed.
+
+## Sprint 025 - Coverage-Aware Service Filtering
+
+Current phase: Sprint 025 - Coverage-Aware Service Filtering.
+
+Status: IMPLEMENTED as mobile-only demo/local service filtering.
+
+Scope completed:
+
+- Added a pure mobile service coverage filter using the existing selected `MX-*` state preference.
+- National demo services appear for every selected state.
+- State-specific demo services appear only when their synthetic `coverageStates` includes the selected state.
+- Unknown, disabled, inactive, rejected, and not-user-facing services are excluded from the active mobile list.
+- The Add Service screen now shows the existing state selector and safe demo copy for state-aware service availability.
+- Demo service metadata was extended with synthetic `coverageMode` and `coverageStates` only.
+
+Decision boundary:
+
+- Sprint 025 is mobile-only and does not change backend, API endpoints, database schema, migrations, payment logic, provider calls, Tekae runtime, SSO, token generation, webhooks, `.env`, secrets, infrastructure, deployment, workflows, Vercel, Prontipagos, GPS permission behavior, reverse geocoding, coordinate handling, or real catalog production sources.
+- The current public mobile catalog API still does not require `coverageMode` or `coverageStates`; mobile mapping only tolerates optional future fields.
+- Demo filtering prepares coverage-aware behavior and does not prove real provider availability or production coverage.
