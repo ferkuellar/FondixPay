@@ -107,3 +107,10 @@ Sprint 016B completes the Sprint 016 missing evidence pack. Sprint 016 can now b
 - No Tekae runtime was enabled.
 - Prontipagos was not reintroduced.
 - FONDIXPAY was not described as a fintech.
+
+
+## Sprint 017 Follow-up
+
+Sprint 017 closed the ReceiptDetail residual copy debt recorded in Sprint 016B. The visible proof rows no longer expose internal English demo status labels such as `Prueba: Succeeded` or `Estado Demo: Mock Succeeded`; they now use Spanish demo-facing labels.
+
+No new screenshot evidence was captured in Sprint 017. This was a copy-only follow-up with no backend, payment logic, provider, Tekae runtime, endpoint, webhook, migration, environment, infrastructure, workflow, deployment, or screenshot changes.

@@ -483,4 +483,4 @@ Open production risks:
 |---|---|---|---|
 | Partial device QA could be mistaken for complete mobile visual signoff. | SEV-2 | mitigated | Sprint 016B captured the missing success, failure, pending, service detail, add-method, receipt detail, and payment alert/scenario evidence on Android emulator. |
 | Expo Go/version or local port friction could block repeatable mobile QA. | SEV-2 | open | Record the emulator, Expo, port, and screenshot method; future sprint should normalize a repeatable visual QA command before user pilot. |
-| Receipt detail exposes internal English demo status labels. | SEV-3 | open | `ReceiptDetail` remains clearly titled `Comprobante de prueba`, but `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` should be replaced with Spanish user-facing demo labels in a future copy cleanup. |
+| Receipt detail exposes internal English demo status labels. | SEV-3 | mitigated | Sprint 017 replaced the visible ReceiptDetail proof labels with Spanish demo copy such as `Prueba: registrada` and `Estado demo: registrado`; internal status values remain unchanged. |

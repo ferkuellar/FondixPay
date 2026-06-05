@@ -55,8 +55,23 @@ function Line({ label, value }: { label: string; value: string }) {
   );
 }
 
+const receiptProofStatusLabels: Record<string, string> = {
+  confirmed: 'registrado',
+  duplicate_blocked: 'intento duplicado',
+  failed: 'no completada',
+  generated: 'registrado',
+  mock_succeeded: 'registrado',
+  pending: 'pendiente',
+  review: 'en revision',
+  succeeded: 'registrada',
+  timeout: 'pendiente',
+  unavailable: 'no disponible',
+  voided: 'no disponible',
+};
+
 function statusLabel(status: string) {
-  return status.replaceAll('_', ' ');
+  const normalizedStatus = status.trim().toLowerCase();
+  return receiptProofStatusLabels[normalizedStatus] ?? normalizedStatus.replaceAll('_', ' ');
 }
 
 const styles = StyleSheet.create({
@@ -105,7 +120,6 @@ const styles = StyleSheet.create({
   status: {
     ...typography.bodySmall,
     fontWeight: '700',
-    textTransform: 'capitalize',
   },
   totalLabel: {
     ...typography.body,

@@ -88,4 +88,4 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 
 ## Sprint 016B Visual QA Questions
 
-- Should `ReceiptDetail` replace visible internal English demo labels such as `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` with Spanish user-facing labels such as `Prueba registrada` and `Estado demo: registrado` before a user pilot?
+- Should `ReceiptDetail` replace visible internal English demo labels such as `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` with Spanish user-facing labels such as `Prueba registrada` and `Estado demo: registrado` before a user pilot? Sprint 017 answer: yes. The visible ReceiptDetail proof labels were polished to Spanish demo copy before pilot, without renaming internal states.

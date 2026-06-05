@@ -889,3 +889,18 @@ Result:
 Next recommended sprint:
 
 Return to Sprint 011 when Tekae contract readiness evidence is available, or schedule a narrow receipt-detail copy cleanup if product wants to remove internal English demo status labels before user pilot.
+
+
+## Sprint 017 - Receipt Detail Demo Label Copy Polish
+
+Current phase: Sprint 017 - Receipt Detail Demo Label Copy Polish.
+
+Status: COMPLETED. ReceiptDetail visible demo status labels were polished from internal English values to Spanish user-facing demo copy.
+
+Implementation summary:
+
+- `ReceiptProofCard` now maps receipt proof status values to Spanish display-only labels for the visible `Prueba` and `Estado demo` rows.
+- Internal payment, provider, receipt, and proof status values were not renamed.
+- No payment logic, state transitions, backend, provider adapter, Tekae runtime, endpoints, webhooks, migrations, environment files, infrastructure, workflows, deployment behavior, or screenshots changed.
+
+Sprint 017 closes the Sprint 016B residual ReceiptDetail copy debt. The app remains mock/dev only and this sprint does not prove production readiness.

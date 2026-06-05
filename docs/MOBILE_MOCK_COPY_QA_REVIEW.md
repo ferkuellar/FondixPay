@@ -92,3 +92,10 @@ Result:
 - Prontipagos was not present.
 - FONDIXPAY was not described as a fintech.
 - Residual copy debt remains on `ReceiptDetail`: visible technical labels `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` are still understandable as demo/internal status, but should be replaced with Spanish user-facing demo labels in a future copy cleanup.
+
+
+## Sprint 017 Follow-up
+
+Sprint 017 resolved the ReceiptDetail residual copy debt from Sprint 016B. The active receipt proof UI now maps internal demo statuses to Spanish visible labels for `Prueba` and `Estado demo`, while keeping internal state names unchanged.
+
+No payment logic, provider behavior, backend, endpoint, webhook, migration, `.env`, Terraform, workflow, deployment behavior, or screenshots changed.
