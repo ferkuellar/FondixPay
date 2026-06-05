@@ -1080,3 +1080,30 @@ Decision boundary:
 - No database persistence or migration was added.
 - No GPS, Expo Location dependency, permission prompt, reverse geocoding, city detection, coordinate storage, or location tracking was added.
 - No mobile payment flow, payment logic, provider call, Tekae runtime, SSO, token generation, webhook, `.env`, secret, infrastructure, deployment, workflow, Vercel, Prontipagos, or raw catalog/workbook handling was added.
+
+## Sprint 024 - GPS Permission + Manual Fallback Implementation
+
+Current phase: Sprint 024 - GPS Permission + Manual Fallback Implementation.
+
+Status: IMPLEMENTED as mobile-only optional foreground GPS state suggestion with manual fallback.
+
+Scope completed:
+
+- Added Expo foreground location support through `expo-location`.
+- Added a small mobile state resolver that maps reverse-geocoded Mexican state names to approved `MX-*` state codes.
+- Extended the local mobile state preference store to persist selected state code, state name, source (`manual`, `gps`, or `unknown`), and timestamp only.
+- Updated the mobile state selector card with an explicit `Usar mi ubicación` action.
+- Added denied, failed, unresolved, and resolved GPS UI feedback while keeping manual state selection visible.
+- Kept Home and Profile using the same reusable selector card from Sprint 023.
+- Added user-facing copy that GPS only suggests the state and that the state will be used for future service availability behavior.
+
+Decision boundary:
+
+- Location permission is foreground-only and triggered only by explicit user action.
+- No permission request runs silently on app launch.
+- No background location, continuous tracking, geofencing, city detection, or exact coverage claim was added.
+- Raw latitude/longitude are not persisted in Zustand, SecureStore, AsyncStorage, docs, backend, API payloads, or logs.
+- Coordinates are not sent to backend, Tekae, analytics, or provider flows.
+- Manual override remains available after GPS detection and changes the source back to `manual`.
+- No service filtering or coverage-aware catalog filtering was implemented.
+- No backend endpoint, API contract, database persistence, migration, Tekae runtime, SSO, token generation, provider call, payment flow, webhook, `.env`, secret, infrastructure, deployment, workflow, Vercel, Prontipagos, or core transaction behavior changed.

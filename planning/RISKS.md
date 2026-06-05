@@ -538,3 +538,10 @@ Open production risks:
 | Provider-specific identifiers could leak into user-facing UI. | SEV-2 | open | Store Tekae `menu`/`categoria`/`carrier` as provider metadata and require reviewed display fields. |
 | Large catalog size may require indexing/search optimization later. | SEV-3 | open | Treat search/indexing as future implementation work after catalog size and query patterns are known. |
 | Current short-code state implementation could conflict with canonical `MX-*` catalog data. | SEV-2 | open | Future implementation must deliberately map, accept, or migrate state codes before runtime filtering changes. |
+
+## Sprint 024 GPS Permission + Manual Fallback Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Native permission behavior may differ between Expo Go, development builds, Android, and iOS. | SEV-2 | open | Sprint 024 uses foreground-only permission copy and manual fallback; future device QA should validate granted, denied, failed, and unresolved paths before pilot or release. |
+| Reverse geocoding may return unsupported or localized region names. | SEV-2 | open | Sprint 024 maps only approved `MX-*` states and falls back to manual selection when region resolution is unknown. |
