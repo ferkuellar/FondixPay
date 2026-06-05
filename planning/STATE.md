@@ -1032,3 +1032,25 @@ Decision boundary:
 Next recommended sprint:
 
 Implement catalog ingestion only after official catalog ownership, stable Tekae identifiers, state-code compatibility, `MX-ALL` / `NATIONAL` convention, manual review ownership, STAGING validation threshold, and production import approval are decided.
+
+## Sprint 022 - Tekae Catalog Coverage Normalization Implementation
+
+Current phase: Sprint 022 - Tekae Catalog Coverage Normalization Implementation.
+
+Status: IMPLEMENTED for backend/local pure normalization only.
+
+Scope completed:
+
+- Added a pure backend Tekae catalog row normalizer under `backend/app/modules/service_catalog/tekae_normalizer.py`.
+- Added synthetic unit tests under `backend/tests/test_tekae_catalog_normalizer.py`.
+- The normalizer validates required catalog columns, preserves Tekae `menu`, `categoria`, and `carrier` as provider metadata, normalizes compatible short state codes to canonical `MX-*`, handles `MX-ALL` / `NATIONAL`, marks unknown coverage as `UNKNOWN_REVIEW_REQUIRED`, and keeps disabled/rejected rows non-user-facing.
+
+Decision boundary:
+
+- No real Excel workbook was copied, committed, transformed, or used as committed output.
+- No raw catalog rows were committed.
+- No endpoint was created or modified.
+- No database persistence or migration was added.
+- No mobile runtime behavior changed.
+- No GPS or service filtering runtime changed.
+- No Tekae runtime, SSO, token generation, payment session, provider call, payment logic, webhook, `.env`, secret, infrastructure, deployment, workflow, Vercel, or Prontipagos work was added.
