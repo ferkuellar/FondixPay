@@ -1174,3 +1174,27 @@ Decision boundary:
 - No parser/import implementation or normalized output artifact was added.
 - No payment logic, Tekae runtime, SSO, token generation, provider call, webhook, `.env`, secret, dependency, infrastructure, workflow, deployment, Vercel, or production data behavior changed.
 - No Tekae NDA, manuals, workbook, real catalog rows, credentials, tokens, sensitive URLs, commercial terms, or provider-internal materials were copied into the repository.
+
+## Sprint 028 - Public Catalog Coverage API Implementation
+
+Current phase: Sprint 028 - Public Catalog Coverage API Implementation.
+
+Status: IMPLEMENTED as a backward-compatible public `/service-catalog` coverage projection.
+
+Scope completed:
+
+- Extended the existing `GET /service-catalog` endpoint to emit a sanitized public `coverage` object.
+- Public national services now project as `coverage.mode = "NATIONAL"` and `coverage.states = []`.
+- Public state-specific services now project as `coverage.mode = "STATE"` with canonical `MX-*` state codes.
+- Legacy `state_code` input such as `CHH` remains accepted while canonical input such as `MX-CHH` is also accepted.
+- Current stored short state codes remain unchanged and are normalized only at the API boundary.
+- Public catalog responses exclude unknown, disabled, unavailable, inactive, rejected, not-user-facing, or unconfirmed-capability services from available mobile results.
+- Mobile API mapping now tolerates the backend `coverage` object while preserving existing demo fallback and UI behavior.
+- Synthetic backend tests cover national/state coverage, short-code normalization, `MX-ALL` non-exposure, hidden services, confidentiality redaction, and current mobile-required fields.
+
+Decision boundary:
+
+- No new endpoint was created.
+- No database schema, migration, or stored state-code change was added.
+- No real Tekae catalog import, workbook usage, NDA/manual copy, raw catalog rows, provider credential, token, production URL, commercial terms, or confidential provider metadata was added.
+- No Tekae runtime, SSO, token generation, provider call, payment flow, payment logic, webhook, `.env`, secret, dependency, infrastructure, deployment, workflow, GPS/location behavior, large mobile redesign, or Prontipagos work was added.

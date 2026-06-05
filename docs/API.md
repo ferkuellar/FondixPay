@@ -993,4 +993,20 @@ Possible future endpoint shape remains proposed/not implemented:
 | Endpoint | Purpose | Status |
 |---|---|---|
 | `GET /api/catalog/services?state=MX-CHH` | Return mobile-safe active services for a canonical state plus national services. | Proposed/not implemented |
-| `GET /service-catalog?state_code=MX-CHH` | Compatibility evolution of the current endpoint if chosen by implementation sprint. | Proposed/not implemented |
+| `GET /service-catalog?state_code=MX-CHH` | Compatibility evolution of the current endpoint using canonical public coverage projection. | Implemented in Sprint 028 |
+
+## Sprint 028 Public Catalog Coverage API Implementation
+
+Sprint 028 extends the existing `GET /service-catalog` endpoint. No new endpoint is created.
+
+Implemented behavior:
+
+- `state_code` accepts current short codes such as `CHH` and canonical codes such as `MX-CHH`.
+- Public service responses include a sanitized `coverage` object.
+- National services return `coverage.mode = "NATIONAL"` and `coverage.states = []`.
+- State-specific services return `coverage.mode = "STATE"` and canonical `MX-*` values in `coverage.states`.
+- `MX-ALL` remains internal/import compatibility only and is not emitted publicly.
+- Unknown, unavailable, disabled, rejected, inactive, or not-user-facing services are excluded from the public mobile catalog.
+- Tekae `menu`, `categoria`, `carrier`, provider service codes, raw provider payloads, credentials, tokens, URLs, commercial terms, and confidential provider material remain internal-only.
+
+No database migration, table schema change, stored state-code migration, Tekae runtime, provider call, payment logic, webhook, `.env`, dependency, infrastructure, workflow, deployment, or real catalog import was added.

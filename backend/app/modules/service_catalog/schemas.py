@@ -36,6 +36,12 @@ class ServiceCoverageByStateRead(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class PublicServiceCoverageRead(BaseModel):
+    mode: str
+    states: list[str] = Field(default_factory=list)
+    label: str | None = None
+
+
 class ServiceCatalogItemRead(BaseModel):
     id: int
     display_name: str
@@ -48,6 +54,7 @@ class ServiceCatalogItemRead(BaseModel):
     visible_on_mobile: bool
     payable_in_mobile: bool
     reference_only: bool = True
+    coverage: PublicServiceCoverageRead
     disclaimer: str
 
 
@@ -115,4 +122,3 @@ class ServicePayableValidationRead(BaseModel):
     state_code: str | None = None
     payable: bool
     reasons: list[str] = Field(default_factory=list)
-

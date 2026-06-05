@@ -16,6 +16,7 @@ type ServiceCatalogItemResponse = {
   icon_key: string;
   description?: string;
   is_national: boolean;
+  coverage?: ServiceCatalogItem['coverage'];
   coverage_mode?: ServiceCatalogItem['coverageMode'];
   coverage_states?: string[];
   is_active?: boolean;
@@ -88,8 +89,9 @@ function mapServiceCatalogItem(item: ServiceCatalogItemResponse): ServiceCatalog
     iconKey: item.icon_key,
     description: item.description,
     isNational: item.is_national,
-    coverageMode: item.coverage_mode,
-    coverageStates: item.coverage_states,
+    coverage: item.coverage,
+    coverageMode: item.coverage?.mode ?? item.coverage_mode,
+    coverageStates: item.coverage?.states ?? item.coverage_states,
     isActive: item.is_active,
     isUserFacing: item.is_user_facing,
     coverageStatus: item.coverage_status,

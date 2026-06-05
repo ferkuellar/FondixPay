@@ -48,7 +48,7 @@ def list_service_catalog(
 def get_service_catalog_item(service_id: int, db: Session = Depends(get_db)) -> ServiceCatalogItemRead:
     item = services.get_service_catalog_item(db, service_id)
     validation = services.validate_service_is_payable(db, service_id)
-    if not validation.payable:
+    if not validation.payable or not services.is_public_catalog_item_available(item):
         # Public/mobile detail is intentionally strict: unpayable services are not selectable.
         from fastapi import HTTPException
 
@@ -203,4 +203,3 @@ def seed_admin_service_catalog(
     services.audit_catalog_event(db, event_type="service_catalog.seeded", actor_id=current_user.id, metadata=result)
     db.commit()
     return {"status": "ok", **result, "disclaimer": PUBLIC_COVERAGE_DISCLAIMER}
-

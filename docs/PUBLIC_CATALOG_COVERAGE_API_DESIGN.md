@@ -1,6 +1,6 @@
 # Public Catalog Coverage API Design
 
-Status: Sprint 027 canonical design. Documentation and planning only; no endpoint, runtime behavior, database schema, migration, mobile code, backend code, payment logic, Tekae runtime, provider call, `.env`, infrastructure, workflow, deployment, or production data import is implemented by this file.
+Status: Sprint 027 canonical design with Sprint 028 implementation update. Sprint 028 implements the public coverage projection on the existing `/service-catalog` endpoint only; no database schema, migration, Tekae runtime, provider call, payment logic, `.env`, infrastructure, workflow, deployment, or production data import is implemented by this file.
 
 ## Objective
 
@@ -51,8 +51,26 @@ Implemented mobile context:
 
 Design gap:
 
-- Backend-owned public coverage fields are not yet canonical or implemented.
-- Mobile should eventually stop relying on local/demo coverage metadata and consume a sanitized backend response.
+- Sprint 028 closes the backend-owned public coverage projection gap for `/service-catalog`.
+- Mobile can now tolerate the sanitized backend `coverage` response while keeping the existing demo fallback until backend-backed payable catalog data is approved.
+
+## Sprint 028 Implementation Update
+
+Implemented endpoint:
+
+```text
+GET /service-catalog?state_code=MX-CHH
+```
+
+Sprint 028 implementation decisions:
+
+- The existing `/service-catalog` endpoint was extended backward-compatibly instead of adding `/api/catalog/services`.
+- Legacy input such as `state_code=CHH` remains accepted.
+- Canonical input such as `state_code=MX-CHH` is accepted and normalized at the API boundary.
+- Public responses emit `coverage.mode = "NATIONAL"` with `coverage.states = []` for national services.
+- Public responses emit `coverage.mode = "STATE"` with canonical `MX-*` codes for state-specific services.
+- `MX-ALL`, short codes, provider capability internals, and Tekae metadata remain out of the public response.
+- Current stored short state codes remain unchanged; migration to canonical stored `MX-*` remains future scope.
 
 ## Target Public API Contract
 

@@ -174,6 +174,12 @@ export type ProviderCapabilityStatus = 'confirmed' | 'pending' | 'rejected' | 'u
 
 export type CoverageMode = 'NATIONAL' | 'STATE' | 'CITY_FUTURE' | 'DISABLED' | 'UNKNOWN_REVIEW_REQUIRED';
 
+export type PublicServiceCoverage = {
+  mode: 'NATIONAL' | 'STATE';
+  states: string[];
+  label?: string;
+};
+
 export type ServiceCategory = {
   id: number;
   code: string;
@@ -189,6 +195,7 @@ export type ServiceCatalogItem = {
   iconKey: string;
   description?: string;
   isNational: boolean;
+  coverage?: PublicServiceCoverage;
   coverageMode?: CoverageMode;
   coverageStates?: string[];
   isActive?: boolean;

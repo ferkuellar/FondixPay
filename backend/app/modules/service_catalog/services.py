@@ -13,6 +13,13 @@ from app.modules.service_catalog.constants import (
     STATE_NAMES,
 )
 from app.modules.service_catalog.models import ServiceCatalogItem
+from app.modules.service_catalog.public_catalog_mapper import (
+    is_public_catalog_item_available,
+    matches_public_state,
+    normalize_public_state_code,
+    public_coverage_for_item,
+    storage_state_code_for_public_input,
+)
 from app.modules.service_catalog.schemas import (
     CoverageMapResponse,
     CoverageMapServiceRead,
@@ -171,13 +178,20 @@ def list_mobile_services(
     include_unavailable: bool = False,
 ) -> list[ServiceCatalogItemRead]:
     ensure_seeded(db)
+    canonical_state_code = normalize_public_state_code(state_code) if state_code else None
+    if state_code and canonical_state_code is None:
+        return []
     items = repository.list_mobile_payable_services(
         db,
-        state_code=state_code,
+        state_code=None,
         category=category,
         include_unavailable=include_unavailable,
     )
-    return [serialize_public_item(item) for item in items]
+    return [
+        serialize_public_item(item)
+        for item in items
+        if is_public_catalog_item_available(item) and matches_public_state(item, canonical_state_code)
+    ]
 
 
 def get_service_catalog_item(db: Session, item_id: int) -> ServiceCatalogItem:
@@ -195,8 +209,12 @@ def validate_service_is_payable(db: Session, service_id: int, state_code: str | 
         reasons.append("payable_in_mobile is false")
     if item.coverage_status != CoverageStatus.AVAILABLE.value:
         reasons.append(f"coverage_status is {item.coverage_status}")
-    if state_code:
-        state_status = next((coverage.coverage_status for coverage in item.coverage_states if coverage.state_code == state_code.upper()), None)
+    storage_state_code = storage_state_code_for_public_input(state_code)
+    if state_code and not item.is_national:
+        state_status = next(
+            (coverage.coverage_status for coverage in item.coverage_states if coverage.state_code == storage_state_code),
+            None,
+        )
         if state_status != CoverageStatus.AVAILABLE.value:
             reasons.append(f"state coverage is {state_status or 'missing'}")
     confirmed_capabilities = [
@@ -212,6 +230,7 @@ def validate_service_is_payable(db: Session, service_id: int, state_code: str | 
 
 
 def serialize_public_item(item: ServiceCatalogItem) -> ServiceCatalogItemRead:
+    coverage = public_coverage_for_item(item)
     return ServiceCatalogItemRead(
         id=item.id,
         display_name=item.display_name,
@@ -224,6 +243,11 @@ def serialize_public_item(item: ServiceCatalogItem) -> ServiceCatalogItemRead:
         visible_on_mobile=item.visible_on_mobile,
         payable_in_mobile=item.payable_in_mobile,
         reference_only=not item.payable_in_mobile,
+        coverage={
+            "mode": coverage.mode,
+            "states": coverage.states,
+            "label": coverage.label,
+        },
         disclaimer=PUBLIC_COVERAGE_DISCLAIMER,
     )
 
@@ -304,4 +328,3 @@ def audit_catalog_event(db: Session, *, event_type: str, actor_id: int | str | N
         entity_id=entity_id,
         metadata=metadata,
     )
-
