@@ -1198,3 +1198,25 @@ Decision boundary:
 - No database schema, migration, or stored state-code change was added.
 - No real Tekae catalog import, workbook usage, NDA/manual copy, raw catalog rows, provider credential, token, production URL, commercial terms, or confidential provider metadata was added.
 - No Tekae runtime, SSO, token generation, provider call, payment flow, payment logic, webhook, `.env`, secret, dependency, infrastructure, deployment, workflow, GPS/location behavior, large mobile redesign, or Prontipagos work was added.
+
+## Sprint 029 - Mobile Public Coverage API Consumption
+
+Current phase: Sprint 029 - Mobile Public Coverage API Consumption.
+
+Status: IMPLEMENTED as a narrow mobile filtering update.
+
+Scope completed:
+
+- Mobile service filtering now prioritizes the backend-backed public `coverage` object when present and valid.
+- `coverage.mode = "NATIONAL"` shows a service for every selected state.
+- `coverage.mode = "STATE"` shows a service only when `coverage.states` contains the selected canonical `MX-*` state.
+- Existing local/demo fallback through `coverageMode` and `coverageStates` remains available when backend coverage is missing or incomplete.
+- Existing safety exclusions remain in place for unknown, disabled, inactive, rejected, unavailable, and not-user-facing services.
+
+Decision boundary:
+
+- No GPS/location behavior changed.
+- No mobile UI redesign, new screen, or selector behavior changed.
+- No payment flow or payment logic changed.
+- No backend endpoint, database schema, migration, Tekae runtime, SSO, token generation, provider call, `.env`, secret, dependency, infrastructure, deployment, workflow, real catalog import, workbook use, NDA/manual copy, or confidential provider material was added.
+- Demo/local fallback remains intentionally in place until backend-backed payable catalog data is approved for broader use.

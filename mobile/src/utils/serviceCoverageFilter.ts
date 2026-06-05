@@ -20,8 +20,7 @@ export function filterServicesBySelectedState(
 
   return services.filter((service) => {
     if (!isUserFacingService(service)) return false;
-    if (isNationalService(service)) return true;
-    return service.coverageMode === 'STATE' && service.coverageStates?.includes(selectedStateCode);
+    return matchesSelectedState(service, selectedStateCode);
   });
 }
 
@@ -36,4 +35,30 @@ function isUserFacingService(service: ServiceCatalogItem) {
 
 function isNationalService(service: ServiceCatalogItem) {
   return service.isNational || service.coverageMode === 'NATIONAL' || service.coverageStates?.includes('MX-ALL');
+}
+
+function matchesSelectedState(service: ServiceCatalogItem, selectedStateCode: string) {
+  const backendCoverageMatch = matchBackendCoverage(service, selectedStateCode);
+  if (backendCoverageMatch !== undefined) return backendCoverageMatch;
+
+  if (isNationalService(service)) return true;
+  return service.coverageMode === 'STATE' && service.coverageStates?.includes(selectedStateCode);
+}
+
+function matchBackendCoverage(service: ServiceCatalogItem, selectedStateCode: string) {
+  const coverage = service.coverage;
+  if (!coverage) return undefined;
+
+  if (coverage.mode === 'NATIONAL') return true;
+  if (coverage.mode !== 'STATE') return undefined;
+
+  const states = coverage.states ?? [];
+  if (!states.length || states.some((stateCode) => !isCanonicalMexicoStateCode(stateCode))) {
+    return undefined;
+  }
+  return states.includes(selectedStateCode);
+}
+
+function isCanonicalMexicoStateCode(stateCode: string) {
+  return /^MX-[A-Z]{3}$/.test(stateCode);
 }
