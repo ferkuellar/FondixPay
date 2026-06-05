@@ -184,7 +184,7 @@ Copy rule:
 ## Internal Blockers
 
 - `docs/ENVIRONMENT.md` and this readiness snapshot were created in Sprint 012 and should be reviewed before execution starts.
-- Sprint 013 reconciles `docs/ENVIRONMENTS.md` with `docs/ENVIRONMENT.md`: `ENVIRONMENT.md` is the canonical current-state strategy, and `ENVIRONMENTS.md` is the tier matrix. Current Terraform remains a cheaper dev foundation with optional EC2 and no RDS/ECS.
+- Sprint 013 reconciled `docs/ENVIRONMENTS.md` with `docs/ENVIRONMENT.md`. Sprint 018 supersedes the canonical relationship: `docs/ENVIRONMENTS.md` is now canonical and `docs/ENVIRONMENT.md` is a pointer. Current Terraform remains a cheaper dev foundation with optional EC2 and no RDS/ECS.
 - Historical Prontipagos/card processor references remain in older docs and code paths as documentation/runtime debt. Sprint 012 does not perform broad cleanup.
 - App copy and mock success screens need future review before real provider flow.
 
@@ -207,3 +207,24 @@ Copy rule:
 Sprint 012 improves readiness only.
 
 It does not mark the product production-ready, does not enable Tekae, and does not authorize payment runtime.
+
+## Sprint 018 Environment Strategy Formalization
+
+Sprint 018 promotes `docs/ENVIRONMENTS.md` to the canonical DEV / STAGING / PROD strategy.
+
+DEV remains mock/demo only:
+
+- Local Expo/mobile, local or isolated dev backend, and local/dev database are allowed.
+- Real users, real money, production credentials, Tekae runtime, and production data are prohibited.
+- Debug logs are acceptable only when they do not expose secrets, OTPs, tokens, full phone numbers, provider payloads, PAN, or CVV.
+
+STAGING remains future preproduction:
+
+- It is the only environment where Tekae sandbox/test credentials may be used, and only after Sprint 019 readiness approval.
+- It must use separate backend, database, secrets, CORS, logs, audit behavior, and test data.
+
+PROD remains blocked:
+
+- Production requires approved backend, database, secrets, monitoring, backup/restore, rollback, support ownership, and Tekae production security/network approval before any real provider runtime.
+
+Sprint 018 does not create infrastructure, workflows, secrets, runtime behavior, endpoints, webhooks, migrations, or deployments.

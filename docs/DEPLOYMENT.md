@@ -121,3 +121,20 @@ Tekae deployment boundary:
 
 - Tekae runtime deployment remains blocked until Sprint 011 contract readiness passes.
 - No Tekae credentials, provider URLs, webhook secrets, payment execution, transaction query, reconciliation, or production VPN/VPC connectivity are configured in Sprint 012.
+
+## Sprint 018 Environment Deployment Boundary
+
+Canonical environment strategy: `docs/ENVIRONMENTS.md`.
+
+Deployment boundaries:
+
+- DEV: local/Docker and future controlled dev backend only. Mock/demo behavior only; Tekae disabled.
+- STAGING: future preproduction release rehearsal. Tekae sandbox/test may be configured only after Sprint 019 readiness approval. No real users or real money.
+- PROD: future real-user environment. Tekae production credentials and token generation require approved secure network path, backend-only token flow, audit, security, operations, support, and rollback controls.
+
+Vercel boundary:
+
+- Vercel may host only the public static landing page under `landing/`.
+- Backend/API, CRM/Admin, payment processing, reconciliation, ledger/audit workloads, provider credentials, Tekae token generation, and backend secrets must not be deployed through Vercel.
+
+Sprint 018 does not add or change CI/CD workflows, Terraform, infrastructure, deployment commands, domains, DNS, provider configuration, `.env` files, or runtime behavior.

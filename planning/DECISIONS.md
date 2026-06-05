@@ -1215,3 +1215,51 @@ Status: Accepted.
 | 2026-06-03 | Sprint 010 is documentation and architecture only.                                                                          | Tekae webhook, reconciliation, transaction query, sandbox, and production connectivity gaps remain unresolved. | No production code, migrations, WebView, webhook endpoint, credential configuration, or runtime payment logic changes are allowed in Sprint 010. |
 | 2026-06-03 | FONDIXPAY must not implement card vault, wallet, ledger balance, tokenization, acquiring, SPEI processor, or banking core. | FONDIXPAY embeds Tekae capabilities and is not a fintech/payment infrastructure provider. | Future implementation must broker Tekae access without duplicating Tekae payment infrastructure. |
 | 2026-06-03 | While Tekae contract closure remains externally blocked, FONDIXPAY will proceed with a non-payment Dev Readiness & App Cleanup sprint. | Tekae runtime implementation is blocked until Tekae provides the complete technical/operational contract, but infrastructure readiness, mock/provider separation, environment hygiene, CI validation, and documentation cleanup can safely advance. | The next practical sprint may improve dev readiness and remove ambiguity, but must not implement real Tekae payment runtime behavior. |
+
+## ADR-150 - DEV / STAGING / PROD Is Official Environment Strategy
+
+Decision: FONDIXPAY uses DEV / STAGING / PROD as the official environment strategy, with `docs/ENVIRONMENTS.md` as the canonical environment document.
+
+Rationale: Tekae readiness, mobile build profiles, backend deployment, database separation, secrets, observability, support, and release promotion need one durable environment model.
+
+Status: Accepted in Sprint 018.
+
+## ADR-151 - DEV Is Mock/Demo Only
+
+Decision: DEV is mock/demo only and must not use production credentials, production data, real payment behavior, or Tekae production access.
+
+Rationale: Development must remain safe, reversible, and isolated from real users and money movement.
+
+Status: Accepted in Sprint 018.
+
+## ADR-152 - STAGING Owns Sandbox Provider Integration And Release Rehearsal
+
+Decision: STAGING is the only environment for preproduction release rehearsal and future Tekae sandbox/test integration after Sprint 019 readiness approval.
+
+Rationale: Sandbox provider validation must be isolated from DEV shortcuts and PROD real-user operations.
+
+Status: Accepted in Sprint 018.
+
+## ADR-153 - PROD Owns Real Users And Production Provider Credentials
+
+Decision: PROD is the only environment for real users, production data, production provider credentials, and production operations after all approval gates pass.
+
+Rationale: Production credentials and real user operations require stronger network, secret, audit, support, monitoring, backup, and rollback controls.
+
+Status: Accepted in Sprint 018.
+
+## ADR-154 - Tekae Token Generation Is Backend-Controlled
+
+Decision: Tekae token generation must remain backend-controlled. Mobile, admin, landing, and frontend code must never generate, store, log, or expose production Tekae credentials or access tokens.
+
+Rationale: Tekae credentials and tokens are sensitive provider secrets and must not enter user-facing bundles or public hosting surfaces.
+
+Status: Accepted in Sprint 018.
+
+## ADR-155 - Vercel Remains Landing-Only
+
+Decision: Vercel is approved only for the public static landing page. It must not host core transactional logic, backend APIs, payment processing, reconciliation, admin workflows, provider credentials, Tekae token generation, or backend secrets.
+
+Rationale: Public commercial hosting and financial/payment operations are different risk classes and must remain separated.
+
+Status: Accepted in Sprint 018.

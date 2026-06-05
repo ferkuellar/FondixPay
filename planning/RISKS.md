@@ -484,3 +484,14 @@ Open production risks:
 | Partial device QA could be mistaken for complete mobile visual signoff. | SEV-2 | mitigated | Sprint 016B captured the missing success, failure, pending, service detail, add-method, receipt detail, and payment alert/scenario evidence on Android emulator. |
 | Expo Go/version or local port friction could block repeatable mobile QA. | SEV-2 | open | Record the emulator, Expo, port, and screenshot method; future sprint should normalize a repeatable visual QA command before user pilot. |
 | Receipt detail exposes internal English demo status labels. | SEV-3 | mitigated | Sprint 017 replaced the visible ReceiptDetail proof labels with Spanish demo copy such as `Prueba: registrada` and `Estado demo: registrado`; internal status values remain unchanged. |
+
+## Sprint 018 Environment Strategy Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Environment confusion could mix mock/dev behavior with production expectations. | SEV-1 | open | `docs/ENVIRONMENTS.md` is canonical and separates DEV, STAGING, and PROD rules. |
+| Provider credentials could be placed in frontend or committed if environment strategy is unclear. | SEV-1 | open | Sprint 018 documents backend-only Tekae token generation and secrets-store-only provider credentials. |
+| STAGING not matching PROD could hide integration failures until late. | SEV-2 | open | STAGING is defined as release rehearsal with separate backend, database, secrets, CORS, logs, audit behavior, and rollback validation. |
+| Tekae production requires VPN/VPC or approved secure network path for token generation. | SEV-1 | open | PROD Tekae is blocked until network path, credentials, backend token flow, security, audit, and operations approvals pass. |
+| Landing page and core payment/backend responsibilities could drift together. | SEV-1 | mitigated/ongoing | Vercel remains landing-only and must not host backend/API/payment/admin/provider runtime or secrets. |
+| Geolocation/service coverage design could ignore environment-specific catalog data and test coverage. | SEV-2 | open | Sprint 018 documents DEV fixture data, STAGING test/provider-sandbox catalog data, and PROD approved provider-backed payable data as separate concerns. |

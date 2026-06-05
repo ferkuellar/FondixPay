@@ -904,3 +904,35 @@ Implementation summary:
 - No payment logic, state transitions, backend, provider adapter, Tekae runtime, endpoints, webhooks, migrations, environment files, infrastructure, workflows, deployment behavior, or screenshots changed.
 
 Sprint 017 closes the Sprint 016B residual ReceiptDetail copy debt. The app remains mock/dev only and this sprint does not prove production readiness.
+
+## Sprint 018 - Environment Strategy Formalization
+
+Current phase: Sprint 018 - Environment Strategy Formalization: DEV / STAGING / PROD.
+
+Status: COMPLETED as documentation and planning only.
+
+Scope completed:
+
+- `docs/ENVIRONMENTS.md` is now the canonical DEV / STAGING / PROD environment strategy.
+- `docs/ENVIRONMENT.md` is now a short pointer to the canonical strategy.
+- DEV is documented as mock/demo only with no real users, no real money, no production credentials, and Tekae disabled.
+- STAGING is documented as the future preproduction, QA, release rehearsal, and Tekae sandbox/test environment after Sprint 019 readiness approval.
+- PROD is documented as the future real-user production environment with strict secrets, monitoring, backup, rollback, support, audit, and provider controls.
+- Vercel is reaffirmed as public landing page only.
+- Planning decisions, risks, and open questions were updated for environment separation.
+
+Decision boundary:
+
+- No backend runtime behavior changed.
+- No mobile runtime behavior changed.
+- No payment logic changed.
+- No provider adapter changed.
+- No Tekae runtime was enabled.
+- No endpoint or webhook was created.
+- No migration changed.
+- No `.env` file or secret-bearing file was created or modified.
+- No infrastructure, Terraform, workflow, deployment, domain, DNS, or Vercel behavior changed.
+
+Next recommended sprint:
+
+Sprint 019 - Tekae Integration Readiness Pack, or Sprint 020 - Service Coverage + Geolocation Design after the environment model is accepted.

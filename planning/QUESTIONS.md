@@ -69,7 +69,7 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - Should the first shared dev backend run only through local/Docker plus CI, or should the optional AWS dev EC2 host be enabled later?
 - If AWS dev compute is enabled, which CIDRs may access SSH and backend port `8000`?
 - Should future staging use ECS/RDS as described in older environment strategy, or a cheaper intermediate design?
-- Which document should become the canonical environment source: `docs/ENVIRONMENTS.md`, `docs/ENVIRONMENT.md`, or both with different purposes?
+- Which document should become the canonical environment source: `docs/ENVIRONMENTS.md`, `docs/ENVIRONMENT.md`, or both with different purposes? Sprint 018 answer: `docs/ENVIRONMENTS.md` is canonical; `docs/ENVIRONMENT.md` is a pointer.
 - Which mock payment success screens or copy blocks must be reviewed before real Tekae runtime is approved?
 - Which historical Prontipagos/card processor docs should be archived, labeled historical, or cleaned in a future documentation cleanup sprint?
 - Which secret scanning command or tool should become the standard local validation step?
@@ -79,7 +79,7 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 
 ## Sprint 013 Environment And Mock Copy Questions
 
-- Should `docs/ENVIRONMENT.md` remain the canonical current-state environment source while `docs/ENVIRONMENTS.md` remains the tier matrix?
+- Should `docs/ENVIRONMENT.md` remain the canonical current-state environment source while `docs/ENVIRONMENTS.md` remains the tier matrix? Sprint 018 answer: no. `docs/ENVIRONMENTS.md` is canonical; `docs/ENVIRONMENT.md` is a pointer.
 - Should future staging target ECS/RDS, optional EC2, or another lower-cost design after dev apply is validated?
 - Which exact mobile payment copy should be changed first: success screen title, service-card status, transaction history status, receipt detail status, or WhatsApp receipt messaging?
 - Should future cleanup change only user-facing copy, or also internal mock status names such as `paid`, `succeeded`, `confirmed`, and `PaymentSuccess`?
@@ -89,3 +89,15 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 ## Sprint 016B Visual QA Questions
 
 - Should `ReceiptDetail` replace visible internal English demo labels such as `Prueba: Succeeded` and `Estado Demo: Mock Succeeded` with Spanish user-facing labels such as `Prueba registrada` and `Estado demo: registrado` before a user pilot? Sprint 017 answer: yes. The visible ReceiptDetail proof labels were polished to Spanish demo copy before pilot, without renaming internal states.
+
+## Sprint 018 Environment Strategy Questions
+
+- What cloud provider/account will host backend DEV, STAGING, and PROD?
+- Will STAGING use Tekae sandbox credentials, and who owns obtaining them?
+- What is the final production domain/API domain strategy?
+- What secrets manager will be used for STAGING and PROD?
+- What database platform will be used for each environment?
+- What mobile build profiles will map to DEV/STAGING/PROD?
+- What observability/logging provider will be used?
+- What is the rollback strategy for backend and mobile releases?
+- What is the production support owner and escalation path?
