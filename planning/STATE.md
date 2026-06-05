@@ -1054,3 +1054,29 @@ Decision boundary:
 - No mobile runtime behavior changed.
 - No GPS or service filtering runtime changed.
 - No Tekae runtime, SSO, token generation, payment session, provider call, payment logic, webhook, `.env`, secret, infrastructure, deployment, workflow, Vercel, or Prontipagos work was added.
+
+## Sprint 023 - Mobile State Selector Mock Implementation
+
+Current phase: Sprint 023 - Mobile State Selector Mock Implementation.
+
+Status: IMPLEMENTED as mobile-only local mock state selection.
+
+Scope completed:
+
+- Added canonical mock Mexico state options for the mobile selector using `MX-*` codes.
+- Added a local mobile state preference store that follows the existing Zustand + SecureStore app pattern.
+- Added a simple reusable mobile state selector card.
+- Displayed the selected state on Home and Profile.
+- Allowed users to change the selected state manually.
+- User-facing copy states that this prepares future service availability behavior and does not claim real filtering is active.
+
+Decision boundary:
+
+- `MX-ALL` remains an internal national coverage concept and is not a selectable user state.
+- The selected state is a local UX preference for future availability behavior, not sensitive financial data.
+- No service filtering was implemented.
+- No service catalog API behavior changed.
+- No backend endpoint was created or modified.
+- No database persistence or migration was added.
+- No GPS, Expo Location dependency, permission prompt, reverse geocoding, city detection, coordinate storage, or location tracking was added.
+- No mobile payment flow, payment logic, provider call, Tekae runtime, SSO, token generation, webhook, `.env`, secret, infrastructure, deployment, workflow, Vercel, Prontipagos, or raw catalog/workbook handling was added.

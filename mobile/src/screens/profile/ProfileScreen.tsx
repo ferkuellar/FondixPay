@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-nat
 
 import { BottomTabBar } from '../../components/BottomTabBar';
 import { Screen } from '../../components/Screen';
+import { StateSelectorCard } from '../../components/StateSelectorCard';
 import { useAuthStore } from '../../store/authStore';
 import { useNotificationPreferencesStore } from '../../store/notificationPreferencesStore';
 import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
@@ -145,6 +146,9 @@ export function ProfileScreen({ navigation }: Props) {
             </Pressable>
           ))}
         </View>
+
+        <SectionTitle label="ESTADO PARA SERVICIOS" />
+        <StateSelectorCard />
 
         <SectionTitle label="AJUSTES" />
         <View style={[styles.groupCard, { backgroundColor: theme.surface }]}>

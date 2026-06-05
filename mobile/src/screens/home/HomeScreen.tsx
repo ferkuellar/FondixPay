@@ -9,6 +9,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { ServiceCard } from '../../components/ServiceCard';
+import { StateSelectorCard } from '../../components/StateSelectorCard';
 import { useAccountStore } from '../../store/accountStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
@@ -130,6 +131,10 @@ export function HomeScreen({ navigation }: Props) {
               </Pressable>
             ))}
           </View>
+        </View>
+
+        <View style={styles.section}>
+          <StateSelectorCard />
         </View>
 
         {/* ── Balance card ── */}
