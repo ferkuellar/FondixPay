@@ -1120,7 +1120,7 @@ Scope completed:
 - National demo services appear for every selected state.
 - State-specific demo services appear only when their synthetic `coverageStates` includes the selected state.
 - Unknown, disabled, inactive, rejected, and not-user-facing services are excluded from the active mobile list.
-- The Add Service screen now shows the existing state selector and safe demo copy for state-aware service availability.
+- The Services demo screen now shows the selected state context and safe demo copy for state-aware service availability.
 - Demo service metadata was extended with synthetic `coverageMode` and `coverageStates` only.
 
 Decision boundary:

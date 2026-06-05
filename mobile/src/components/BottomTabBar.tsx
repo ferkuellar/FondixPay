@@ -16,7 +16,7 @@ type TabItem = {
 
 const TABS: TabItem[] = [
   { key: 'Home', label: 'Inicio', icon: 'home' },
-  { key: 'AddService', label: 'Pagar', icon: 'credit-card' },
+  { key: 'AddService', label: 'Servicios', icon: 'grid' },
   { key: 'History', label: 'Historial', icon: 'clock' },
   { key: 'Profile', label: 'Cuenta', icon: 'user' },
 ];

@@ -99,7 +99,7 @@ export function AddServiceScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         {step === 'list' ? (
           <>
-            <Text style={[styles.title, { color: theme.fg }]}>Agregar servicio</Text>
+            <Text style={[styles.title, { color: theme.fg }]}>Servicios demo</Text>
             <TextInput placeholder="Buscar CFE, agua, internet..." />
             <Text style={[styles.subtitle, { color: theme.fg2 }]}>
               Elige tu estado para preparar servicios disponibles. La cobertura final se validará antes de producción.
@@ -126,6 +126,11 @@ export function AddServiceScreen({ navigation }: Props) {
               />
             ) : null}
             <View style={styles.list}>
+              {selectedStateCode ? (
+                <Text style={[styles.listHint, { color: theme.fg2 }]}>
+                  {filteredServices.length} servicio{filteredServices.length !== 1 ? 's' : ''} demo para {selectedState.name}
+                </Text>
+              ) : null}
               {!selectedStateCode ? (
                 <View style={[styles.emptyCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
                   <Text style={[styles.emptyTitle, { color: theme.fg }]}>Elige tu estado para preparar servicios disponibles.</Text>
@@ -319,6 +324,11 @@ const styles = StyleSheet.create({
   },
   list: {
     gap: spacing.md,
+  },
+  listHint: {
+    ...typography.caption,
+    fontWeight: '800',
+    textTransform: 'uppercase',
   },
   listItem: {
     alignItems: 'center',

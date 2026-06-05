@@ -77,7 +77,7 @@ export function AppNavigator() {
               headerShown: false,
             }}
           />
-          <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Agregar servicio' }} />
+          <Stack.Screen name="AddService" component={AddServiceScreen} options={{ title: 'Servicios demo' }} />
           <Stack.Screen name="ServiceDetail" component={ServiceDetailScreen} options={{ title: 'Tu servicio' }} />
           <Stack.Screen name="ConfirmPayment" component={ConfirmPaymentScreen} options={{ title: 'Simular pago' }} />
           <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} options={{ title: 'Métodos demo' }} />
