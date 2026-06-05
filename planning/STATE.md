@@ -1148,3 +1148,29 @@ Decision boundary:
 
 - No `npm audit fix`, `npm audit fix --force`, `npm update`, `npm install`, `npx expo install`, dependency removal, manual version edit, package-lock edit, Expo SDK change, React Native change, mobile runtime change, backend runtime change, payment change, GPS/location change, service filtering change, Tekae runtime, SSO, token generation, `.env`, secret, infrastructure, deployment, workflow, real Tekae catalog source, NDA copy, manual copy, credential copy, token copy, or raw Tekae data copy was added.
 - Tekae NDA, manuals, real catalog files, credentials, token material, sensitive URLs, commercial terms, and provider-internal materials remain outside the repository.
+
+## Sprint 027 - Public Catalog Coverage API Design
+
+Current phase: Sprint 027 - Public Catalog Coverage API Design.
+
+Status: COMPLETED as documentation and planning only.
+
+Scope completed:
+
+- Created `docs/PUBLIC_CATALOG_COVERAGE_API_DESIGN.md` as the canonical future public/mobile catalog coverage API design.
+- Defined the future sanitized public catalog coverage response, including `coverage.mode`, `coverage.states`, public fields, internal-only fields, synthetic JSON examples, STAGING validation plan, migration plan, risks, questions, and future implementation acceptance criteria.
+- Decided public national services use `coverage.mode = "NATIONAL"` and `coverage.states = []`.
+- Decided `MX-ALL` remains internal/import compatibility only and is not user-selectable.
+- Decided public state services use `coverage.mode = "STATE"` and canonical `MX-*` state codes only.
+- Documented that legacy short-code input such as `CHH` may be accepted temporarily in a future implementation, but public responses must emit canonical `MX-*`.
+- Updated API, architecture, security, Tekae catalog normalization, decisions, risks, and questions with Sprint 027 references.
+
+Decision boundary:
+
+- No endpoint was created or modified.
+- No backend runtime behavior changed.
+- No mobile runtime behavior changed.
+- No database schema or migration was added.
+- No parser/import implementation or normalized output artifact was added.
+- No payment logic, Tekae runtime, SSO, token generation, provider call, webhook, `.env`, secret, dependency, infrastructure, workflow, deployment, Vercel, or production data behavior changed.
+- No Tekae NDA, manuals, workbook, real catalog rows, credentials, tokens, sensitive URLs, commercial terms, or provider-internal materials were copied into the repository.

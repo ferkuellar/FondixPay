@@ -1439,3 +1439,35 @@ Decision: Tekae NDA is in place. Tekae-provided documents, manuals, real catalog
 Rationale: Tekae materials can contain contractual, commercial, provider, security, credential, token, URL, catalog, and operational information that must remain controlled outside source control.
 
 Status: Accepted in Sprint 026.
+
+## ADR-178 - Public Catalog Coverage API Uses Canonical MX Codes
+
+Decision: Future public/mobile catalog coverage API responses must emit canonical `MX-*` state codes only.
+
+Rationale: Mobile selected-state behavior already uses `MX-*`; public short-code leakage would break filtering and keep frontend behavior coupled to legacy backend storage.
+
+Status: Accepted in Sprint 027.
+
+## ADR-179 - Public National Coverage Uses NATIONAL With Empty States
+
+Decision: Public national service coverage is represented as `coverage.mode = "NATIONAL"` and `coverage.states = []`. `MX-ALL` remains internal/import compatibility only and must not be exposed as a user-selectable state.
+
+Rationale: `NATIONAL` expresses the business rule directly. Treating `MX-ALL` like a state would confuse user selection and mobile filtering.
+
+Status: Accepted in Sprint 027.
+
+## ADR-180 - Tekae Provider Metadata Is Internal-Only In Public Catalog APIs
+
+Decision: Tekae `menu`, `categoria`, `carrier`, provider IDs, `sourceProviderServiceId`, raw payloads, source row IDs, credentials, token material, production URLs, commercial terms, and NDA/confidential provider material must not be exposed by public/mobile catalog APIs.
+
+Rationale: Provider metadata is needed for backend/admin mapping and future launch construction, but it is not FONDIXPAY public taxonomy and may be confidential.
+
+Status: Accepted in Sprint 027.
+
+## ADR-181 - Legacy State Short Codes Are Temporary Input Compatibility Only
+
+Decision: Future backend catalog APIs may temporarily accept legacy short codes such as `CHH`, but must normalize them at the API boundary and emit only canonical `MX-*` in public responses.
+
+Rationale: Current backend tables use short codes. A compatibility window reduces migration risk, while canonical public output prevents new short-code dependency.
+
+Status: Accepted in Sprint 027.

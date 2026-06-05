@@ -167,3 +167,25 @@ Sprint 020 does not implement GPS, reverse geocoding, endpoint changes, migratio
 The target architecture keeps raw Tekae catalog structure behind a FONDIXPAY-owned normalized service catalog. Tekae `menu`, `categoria`, and `carrier` values are provider mapping metadata, while mobile and business logic consume internal fields such as category, display name, `coverageMode`, `coverageStates`, and active/payable status.
 
 Sprint 021 does not implement parser scripts, import jobs, backend models, migrations, endpoints, mobile filtering, Tekae launch, provider calls, or payment behavior. It only documents the future layer needed before coverage-aware Tekae runtime can be approved.
+
+## Sprint 027 Public Catalog Coverage API Architecture
+
+`docs/PUBLIC_CATALOG_COVERAGE_API_DESIGN.md` is the canonical Sprint 027 design for the future public/mobile catalog coverage API projection.
+
+Target architecture:
+
+```text
+Normalized Backend Catalog -> Sanitized Public Catalog Projection -> Mobile Service Discovery
+```
+
+The backend remains the owner of catalog coverage rules. Mobile should eventually consume backend-provided `coverage.mode` and `coverage.states` instead of relying on local/demo coverage metadata.
+
+Public projection rules:
+
+- Expose only FONDIXPAY business fields and sanitized coverage fields.
+- Represent national services as `coverage.mode = "NATIONAL"` with `coverage.states = []`.
+- Represent state services as `coverage.mode = "STATE"` with canonical `MX-*` state codes.
+- Keep `MX-ALL` internal/import-only.
+- Keep Tekae `menu`, `categoria`, `carrier`, provider IDs, source row IDs, raw payloads, credentials, tokens, production URLs, commercial terms, and confidential provider material outside public/mobile responses.
+
+Sprint 027 does not implement the projection, endpoint, schema, migration, mobile integration, Tekae runtime, or payment behavior.

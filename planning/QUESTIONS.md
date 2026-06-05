@@ -157,3 +157,12 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - Which Tekae materials may be summarized as derived non-sensitive notes, and who approves those summaries?
 - What secure external location is the official source of truth for the Tekae NDA, manuals, real catalog files, and other confidential provider materials?
 - Should confidential Tekae material access be logged or reviewed before STAGING/PROD implementation work?
+
+## Sprint 027 Public Catalog Coverage API Questions
+
+- Should the future implementation add `GET /api/catalog/services?state=MX-CHH` or evolve the existing `GET /service-catalog?state_code=MX-CHH` endpoint?
+- What exact database migration will replace current short `state_code` storage with canonical `MX-*` storage?
+- Who approves the removal of legacy short-code input compatibility after migration?
+- What final FONDIXPAY service category taxonomy should be public at launch?
+- What STAGING validation threshold is required before mobile stops depending on local/demo coverage metadata?
+- Which support/admin view should explain hidden service reasons without exposing Tekae provider metadata?

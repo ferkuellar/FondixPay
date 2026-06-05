@@ -334,3 +334,16 @@ A future implementation sprint is ready only when:
 - No raw Tekae identifiers leak into primary mobile UI taxonomy.
 - No provider credential, token, access URL, or secret is present in catalog artifacts.
 - Tekae runtime remains blocked unless a separate approved sprint enables it.
+
+## Sprint 027 Public API Projection Follow-Up
+
+`docs/PUBLIC_CATALOG_COVERAGE_API_DESIGN.md` extends this normalization design with the future public/mobile API projection.
+
+Sprint 027 decisions:
+
+- Public national coverage is `coverage.mode = "NATIONAL"` with `coverage.states = []`.
+- `MX-ALL` remains internal/import compatibility only and must not be user-selectable.
+- Public state coverage is `coverage.mode = "STATE"` with canonical `MX-*` codes.
+- Public API responses must not expose Tekae `menu`, `categoria`, `carrier`, provider IDs, `sourceProviderServiceId`, raw provider payloads, source row IDs, credentials, token material, production URLs, commercial terms, or NDA/confidential material.
+- Legacy short codes such as `CHH` may be accepted temporarily by future backend compatibility logic, but public responses must emit canonical `MX-*` only.
+- Unknown, disabled, inactive, rejected, and not-user-facing services must not be exposed as available.

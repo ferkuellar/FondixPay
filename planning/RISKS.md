@@ -560,3 +560,14 @@ Open production risks:
 | Mobile dependency audit findings could be remediated with a breaking Expo SDK jump. | SEV-2 | open | Sprint 026 documents that `npm audit fix --force` points to Expo 56 and requires a dedicated Expo-compatible remediation sprint. |
 | Expo CLI/config transitive vulnerabilities could affect developer or CI build tooling. | SEV-2 | open | Treat findings as tooling risk, restrict untrusted inputs, and plan a controlled dependency upgrade. |
 | Tekae NDA, manuals, real catalog files, credentials, URLs, or token material could be accidentally committed. | SEV-1 | mitigated/ongoing | Sprint 026 records Tekae materials as confidential external references, updates security docs, and adds generic ignore patterns for sensitive file types and private sample/reference folders. |
+
+## Sprint 027 Public Catalog Coverage API Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Public catalog responses could leak legacy short state codes such as `CHH`. | SEV-2 | open | Sprint 027 requires canonical `MX-*` output and future validation preventing short-code response leakage. |
+| `MX-ALL` could be exposed as a user-selectable state. | SEV-2 | mitigated by design | Sprint 027 decides public national coverage is `NATIONAL` with empty `states`; `MX-ALL` is internal/import-only. |
+| Unknown, disabled, inactive, rejected, or not-user-facing services could be exposed as available. | SEV-1 | open | Sprint 027 requires these states to be omitted or mapped only to safe `UNAVAILABLE` behavior. |
+| Tekae provider metadata could leak through reused admin schemas. | SEV-1 | open | Sprint 027 defines Tekae `menu`, `categoria`, `carrier`, provider IDs, raw payloads, credentials, URLs, and commercial terms as internal-only. |
+| Mobile may keep depending on demo/local coverage metadata if backend-owned public coverage is delayed. | SEV-2 | open | Future implementation must make backend coverage authoritative before removing demo fallback dependency. |
+| Short-code compatibility could become permanent migration debt. | SEV-2 | open | Sprint 027 documents short-code compatibility as temporary input-only behavior and requires a future migration/validation plan. |

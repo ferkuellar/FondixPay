@@ -960,3 +960,37 @@ Proposed/not implemented future API implications:
 | `PATCH /api/admin/catalog/items/{serviceId}` | Admin-only correction for category, coverage, logo, or active state. | Proposed/not implemented |
 
 Compatibility note: current runtime still exposes `GET /service-catalog?state_code={code}` and uses short state codes such as `CHH`. Future API work must decide whether to normalize that endpoint, add an `/api/catalog/services` facade, or accept both existing short codes and canonical `MX-*` during migration.
+
+## Sprint 027 Public Catalog Coverage API Design
+
+`docs/PUBLIC_CATALOG_COVERAGE_API_DESIGN.md` is the canonical Sprint 027 design for the future public/mobile catalog coverage contract. Sprint 027 is documentation/design only and does not create or modify any endpoint.
+
+Future public catalog responses must expose a sanitized `coverage` object for mobile consumption:
+
+```json
+{
+  "coverage": {
+    "mode": "NATIONAL",
+    "states": [],
+    "label": "Disponible a nivel nacional"
+  }
+}
+```
+
+Public decisions:
+
+- Public `coverage.mode` is limited to `NATIONAL` or `STATE`.
+- National services use `coverage.mode = "NATIONAL"` and `coverage.states = []`.
+- State-specific services use `coverage.mode = "STATE"` and canonical `MX-*` codes in `coverage.states`.
+- Public API responses must emit canonical `MX-*` codes only.
+- `MX-ALL` is internal/import compatibility only and must not appear as a user-selectable state.
+- Legacy short-code inputs such as `CHH` may be accepted temporarily by a future implementation, but must be normalized before response.
+- `UNKNOWN_REVIEW_REQUIRED`, `DISABLED`, inactive, rejected, and not-user-facing services must not be exposed as available.
+- Tekae `menu`, `categoria`, `carrier`, provider IDs, `sourceProviderServiceId`, raw provider payloads, source row IDs, credentials, token material, production URLs, commercial terms, and NDA/confidential material are internal-only.
+
+Possible future endpoint shape remains proposed/not implemented:
+
+| Endpoint | Purpose | Status |
+|---|---|---|
+| `GET /api/catalog/services?state=MX-CHH` | Return mobile-safe active services for a canonical state plus national services. | Proposed/not implemented |
+| `GET /service-catalog?state_code=MX-CHH` | Compatibility evolution of the current endpoint if chosen by implementation sprint. | Proposed/not implemented |

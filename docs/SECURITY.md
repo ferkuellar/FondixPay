@@ -561,3 +561,16 @@ Confidential Tekae materials include at minimum:
 - Screenshots or evidence containing real provider/customer/credential data.
 
 Allowed repository content is limited to derived non-sensitive architecture, security, integration, validation, and operational notes. Any future use of confidential Tekae content must happen from an approved external source of truth and must preserve redaction, least privilege, and no-commit controls.
+
+## Sprint 027 Public Catalog Coverage API Security
+
+`docs/PUBLIC_CATALOG_COVERAGE_API_DESIGN.md` defines the future public/mobile catalog coverage projection. Sprint 027 does not implement API behavior.
+
+Security rules for the future public projection:
+
+- Public/mobile catalog responses may expose only reviewed FONDIXPAY display fields and sanitized coverage fields.
+- Public coverage responses must use canonical `MX-*` state codes only.
+- National services must be represented as `coverage.mode = "NATIONAL"` with `coverage.states = []`; `MX-ALL` remains internal/import compatibility only.
+- Public responses must not expose Tekae `menu`, `categoria`, `carrier`, provider IDs, `sourceProviderServiceId`, source row IDs, raw provider payloads, raw provider errors, credentials, token material, full URLs, production URLs, commercial terms, or NDA/confidential provider material.
+- `UNKNOWN_REVIEW_REQUIRED`, `DISABLED`, inactive, rejected, and not-user-facing services must not be exposed as available.
+- Legacy short-code input compatibility must not leak short codes back to public responses.
