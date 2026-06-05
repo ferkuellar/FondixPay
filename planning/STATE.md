@@ -1220,3 +1220,27 @@ Decision boundary:
 - No payment flow or payment logic changed.
 - No backend endpoint, database schema, migration, Tekae runtime, SSO, token generation, provider call, `.env`, secret, dependency, infrastructure, deployment, workflow, real catalog import, workbook use, NDA/manual copy, or confidential provider material was added.
 - Demo/local fallback remains intentionally in place until backend-backed payable catalog data is approved for broader use.
+
+## Sprint 030 - Backend-Backed Mobile Catalog Smoke Validation
+
+Current phase: Sprint 030 - Backend-Backed Mobile Catalog Smoke Validation.
+
+Status: COMPLETED as documentation-only smoke validation.
+
+Scope completed:
+
+- Created `docs/MOBILE_BACKEND_CATALOG_SMOKE_VALIDATION.md` as the Sprint 030 smoke validation artifact.
+- Documented the backend-to-mobile catalog chain: backend `/service-catalog` -> mobile `serviceCatalogApi` -> `serviceCatalogStore` -> `serviceCoverageFilter` -> `AddServiceScreen`.
+- Confirmed the backend public catalog response includes sanitized `coverage`.
+- Confirmed mobile API mapping preserves backend-backed `coverage` and maps compatibility fields.
+- Confirmed the mobile store can hold backend-backed catalog items and preserves the local/demo fallback when backend data is empty or unavailable in internal demo mode.
+- Confirmed the mobile coverage filter prioritizes valid backend-backed `coverage` before falling back to local/demo `coverageMode` and `coverageStates`.
+- Documented smoke cases for national coverage, state coverage, incomplete coverage, hidden services, and backend-unavailable fallback behavior.
+- Documented DEV/STAGING manual smoke checklist and the threshold required before a future sprint may remove local/demo fallback.
+
+Decision boundary:
+
+- No code changes were required for Sprint 030.
+- No Tekae runtime, Tekae SSO, token generation, provider call, real catalog import, NDA/manual copy, raw provider data, provider credential, sensitive URL, commercial term, or confidential provider metadata was added.
+- No payment flow, payment method, reconciliation, GPS/location behavior, endpoint, database schema, migration, dependency, mobile UI redesign, infrastructure, deployment, workflow, `.env`, secret, or Prontipagos work was added.
+- Local/demo fallback remains intentionally available until DEV and STAGING backend-backed payable catalog data meet the documented removal threshold.
