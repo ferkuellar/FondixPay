@@ -471,5 +471,82 @@
     });
   })();
 </script>
+
+<style>
+  .fp-cookie-banner {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+    background: #0A1628; color: #FFFFFF;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 16px 20px; display: none;
+    box-shadow: 0 -4px 24px rgba(10, 22, 40, 0.25);
+  }
+  .fp-cookie-banner.fp-visible { display: block; }
+  .fp-cookie-inner { max-width: 1080px; margin: 0 auto; display: flex;
+    align-items: center; gap: 24px; flex-wrap: wrap; }
+  .fp-cookie-text { flex: 1 1 420px; font-size: 13px; line-height: 1.5; color: #DDE3EE; }
+  .fp-cookie-text strong { color: #FFFFFF; }
+  .fp-cookie-text a { color: #7FA8FF; text-decoration: underline; text-underline-offset: 2px; }
+  .fp-cookie-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .fp-cookie-btn { font-family: inherit; font-size: 13px; font-weight: 600;
+    border-radius: 9999px; padding: 12px 22px; min-height: 44px;
+    cursor: pointer; border: none; transition: opacity 0.15s ease; }
+  .fp-cookie-btn:hover { opacity: 0.88; }
+  .fp-cookie-btn:focus-visible { outline: 2px solid #7FA8FF; outline-offset: 2px; }
+  .fp-btn-accept { background: #1A6BFF; color: #FFFFFF; }
+  .fp-btn-essential { background: transparent; color: #FFFFFF; border: 1px solid #3D4F6B; }
+  @media (max-width: 640px) {
+    .fp-cookie-inner { gap: 14px; }
+    .fp-cookie-actions { width: 100%; }
+    .fp-cookie-btn { flex: 1; }
+  }
+</style>
+
+<div class="fp-cookie-banner" id="fpCookieBanner" role="dialog"
+     aria-live="polite" aria-label="Aviso de uso de cookies">
+  <div class="fp-cookie-inner">
+    <p class="fp-cookie-text">
+      <strong>Usamos cookies.</strong> Las esenciales hacen funcionar el sitio.
+      Las de analítica nos ayudan a mejorarlo y solo se activan si las aceptas.
+      Consulta nuestro <a href="privacidad">Aviso de Privacidad</a>.
+    </p>
+    <div class="fp-cookie-actions">
+      <button type="button" class="fp-cookie-btn fp-btn-essential" id="fpCookieEssential">Solo esenciales</button>
+      <button type="button" class="fp-cookie-btn fp-btn-accept" id="fpCookieAccept">Aceptar cookies</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var STORAGE_KEY = 'fp_cookie_consent', EXPIRY_DAYS = 180;
+    var banner = document.getElementById('fpCookieBanner');
+    function getConsent() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        var data = JSON.parse(raw);
+        if (!data.timestamp || Date.now() - data.timestamp > EXPIRY_DAYS * 864e5) {
+          localStorage.removeItem(STORAGE_KEY); return null;
+        }
+        return data;
+      } catch (e) { return null; }
+    }
+    function saveConsent(analytics) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ analytics: analytics, timestamp: Date.now(), version: 1 })); }
+      catch (e) {}
+    }
+    function enableAnalytics() { /* cargar GA4 u otra herramienta aquí tras consentimiento */ }
+    function hideBanner() { banner.classList.remove('fp-visible'); }
+    var existing = getConsent();
+    if (existing === null) { banner.classList.add('fp-visible'); }
+    else if (existing.analytics === true) { enableAnalytics(); }
+    document.getElementById('fpCookieAccept').addEventListener('click', function () {
+      saveConsent(true); enableAnalytics(); hideBanner();
+    });
+    document.getElementById('fpCookieEssential').addEventListener('click', function () {
+      saveConsent(false); hideBanner();
+    });
+  })();
+</script>
 </body>
 </html>
