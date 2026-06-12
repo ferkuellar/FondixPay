@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { OtpInput } from '../../components/OtpInput';
 import { PrimaryButton } from '../../components/PrimaryButton';
@@ -22,9 +22,12 @@ export function OtpVerificationScreen({ route }: Props) {
   const { theme } = useAppTheme();
   const [otp, setOtp] = useState('');
   const [secondsLeft, setSecondsLeft] = useState(25);
+  const [resendSent, setResendSent] = useState(false);
+  const resendTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const error = useAuthStore((state) => state.error);
   const isLoading = useAuthStore((state) => state.isLoading);
   const otpDev = useAuthStore((state) => state.otpDev);
+  const requestLoginCode = useAuthStore((state) => state.requestLoginCode);
   const signInWithOtp = useAuthStore((state) => state.signInWithOtp);
 
   useEffect(() => {
@@ -32,6 +35,24 @@ export function OtpVerificationScreen({ route }: Props) {
     const timer = setTimeout(() => setSecondsLeft((value) => value - 1), 1000);
     return () => clearTimeout(timer);
   }, [secondsLeft]);
+
+  useEffect(() => {
+    return () => {
+      if (resendTimer.current) clearTimeout(resendTimer.current);
+    };
+  }, []);
+
+  async function resendCode() {
+    if (isLoading || secondsLeft > 0) return;
+    try {
+      await requestLoginCode(route.params.phone);
+      setSecondsLeft(25);
+      setResendSent(true);
+      resendTimer.current = setTimeout(() => setResendSent(false), 3000);
+    } catch {
+      // Store keeps user-facing error.
+    }
+  }
 
   async function continueToHome() {
     try {
@@ -60,13 +81,27 @@ export function OtpVerificationScreen({ route }: Props) {
             </View>
           ) : null}
           <Text style={[styles.resendPrompt, { color: theme.fg2 }]}>¿No recibiste el código?</Text>
-          <Text style={styles.resend}>
-            {secondsLeft > 0 ? (
-              <Text style={[styles.resendMuted, { color: theme.fg3 }]}>Reenviar código en 00:{String(secondsLeft).padStart(2, '0')}</Text>
-            ) : (
-              <Text style={[styles.resendAction, { color: theme.primary }]}>Reenviar código</Text>
-            )}
-          </Text>
+          {secondsLeft > 0 ? (
+            <Text style={[styles.resendMuted, { color: theme.fg3 }]}>
+              Reenviar código en 00:{String(secondsLeft).padStart(2, '0')}
+            </Text>
+          ) : (
+            <Pressable
+              disabled={isLoading}
+              onPress={resendCode}
+              accessibilityRole="button"
+              accessibilityLabel="Reenviar código de verificación"
+            >
+              <Text style={[styles.resendAction, { color: isLoading ? theme.fg3 : theme.primary }]}>
+                Reenviar código
+              </Text>
+            </Pressable>
+          )}
+          {resendSent ? (
+            <Text style={[styles.resendConfirm, { color: theme.success ?? '#16A34A' }]}>
+              Código reenviado
+            </Text>
+          ) : null}
           <View style={styles.actions}>
             <PrimaryButton disabled={otp.length < 6} loading={isLoading} onPress={continueToHome}>
               ENTRAR
@@ -106,13 +141,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: spacing.md,
   },
-  resend: {
+  resendAction: {
+    ...typography.bodySmall,
+    fontWeight: '700',
     textAlign: 'center',
   },
-  resendAction: {
-    fontWeight: '700',
+  resendConfirm: {
+    ...typography.caption,
+    textAlign: 'center',
   },
-  resendMuted: {},
+  resendMuted: {
+    ...typography.bodySmall,
+    textAlign: 'center',
+  },
   resendPrompt: {
     ...typography.bodySmall,
     marginTop: spacing.md,
