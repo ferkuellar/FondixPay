@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Soporte — FONDIX PAY</title>
+<meta name="description" content="Centro de soporte de FONDIX PAY. Aclara tu pago, conoce el estado de tu operación y protege tu cuenta.">
+<link rel="icon" href="assets/logo-fondix-pay.png">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  html, body { margin: 0; background: #FFFFFF; color: #0A1628;
+               font-family: 'Bricolage Grotesque', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  a { color: #1565E8; }
+
+  /* ── Nav ── */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.88);
+         backdrop-filter: blur(20px); border-bottom: 1px solid #E2EAF4; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+               display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+  .brand img { height: 44px; }
+  .nav-back { font-size: 14px; font-weight: 500; color: #4E6788; text-decoration: none;
+              display: flex; align-items: center; gap: 6px;
+              padding: 8px 14px; border-radius: 12px; border: 1px solid #E2EAF4;
+              transition: border-color .2s, color .2s; }
+  .nav-back:hover { color: #1565E8; border-color: #C9DEFF; text-decoration: none; }
+  .nav-back svg { width: 14px; height: 14px; }
+  .theme-toggle { background: transparent; border: 1px solid #C9DEFF; border-radius: 12px;
+                  width: 36px; height: 36px; cursor: pointer; padding: 0;
+                  display: inline-flex; align-items: center; justify-content: center;
+                  color: #1565E8; transition: background .2s, border-color .2s, transform .2s;
+                  flex-shrink: 0; }
+  .theme-toggle:hover { background: #F4F8FF; transform: rotate(-12deg); }
+  .theme-toggle svg { width: 18px; height: 18px; display: block; }
+  .theme-toggle .ico-moon { display: none; }
+
+  /* ── Prose container ── */
+  .prose { max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  /* ── Draft banner ── */
+  .draft-banner { background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.32);
+                  border-radius: 12px; padding: 14px 18px; margin-bottom: 36px;
+                  font-size: 14px; color: #92400E; line-height: 1.5;
+                  display: flex; align-items: flex-start; gap: 10px; }
+  .draft-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: #F59E0B; }
+
+  /* ── Hero ── */
+  .support-hero { background: linear-gradient(135deg, #F4F8FF 0%, #EBF1FF 100%);
+                  border-radius: 20px; padding: 40px 32px; margin-bottom: 48px;
+                  text-align: center; }
+  .support-hero h1 { font-size: 30px; font-weight: 700; letter-spacing: -.02em;
+                     line-height: 1.2; margin: 0 0 14px; color: #0A1628; }
+  .support-hero p { font-size: 16px; color: #4E6788; line-height: 1.65; margin: 0; max-width: 520px;
+                    margin-left: auto; margin-right: auto; }
+
+  /* ── Section headings & body ── */
+  h2 { font-size: 20px; font-weight: 700; letter-spacing: -.01em;
+       margin: 44px 0 16px; color: #0A1628; line-height: 1.2; }
+  p { font-size: 16px; line-height: 1.75; color: #1E2D40; margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { font-size: 16px; line-height: 1.75; color: #1E2D40; margin-bottom: 6px; }
+  strong { color: #0A1628; }
+  hr.rule { border: none; border-top: 1px solid #E2EAF4; margin: 56px 0; }
+  blockquote { border-left: 3px solid #C9DEFF; background: #F4F8FF;
+               border-radius: 0 12px 12px 0; margin: 0 0 20px;
+               padding: 12px 16px; font-size: 14px; color: #4E6788; line-height: 1.6; }
+  blockquote p { margin: 0; font-size: 14px; color: inherit; }
+
+  /* ── Channel cards ── */
+  .channel-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+  .channel-card { border: 1px solid #E2EAF4; border-radius: 16px; padding: 22px 20px; }
+  .channel-card-badge { display: inline-block; font-size: 11px; font-weight: 700;
+                        letter-spacing: .06em; text-transform: uppercase;
+                        background: #EEF4FF; color: #1565E8; border-radius: 8px;
+                        padding: 3px 10px; margin-bottom: 12px; }
+  .channel-card-title { font-size: 16px; font-weight: 700; color: #0A1628; margin: 0 0 8px; }
+  .channel-card p { font-size: 15px; margin: 0; color: #4E6788; }
+
+  /* ── How-it-works steps ── */
+  .steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 8px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; padding: 16px 0;
+          border-bottom: 1px solid #F0F4FA; }
+  .step:last-child { border-bottom: none; }
+  .step-num { flex-shrink: 0; width: 32px; height: 32px; border-radius: 50%;
+              background: #1565E8; color: #fff; font-size: 14px; font-weight: 700;
+              display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+  .step-body { flex: 1; }
+  .step-body strong { display: block; font-size: 16px; margin-bottom: 4px; color: #0A1628; }
+  .step-body p { margin: 0; font-size: 15px; color: #4E6788; }
+
+  /* ── Payment status table ── */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch;
+                border-radius: 12px; border: 1px solid #E2EAF4; margin-bottom: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 560px; }
+  thead th { background: #F4F8FF; text-align: left; padding: 11px 14px;
+             font-weight: 600; color: #0A1628; border-bottom: 1px solid #E2EAF4; }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid #E2EAF4;
+             color: #1E2D40; vertical-align: top; line-height: 1.5; font-size: 14px; }
+  tbody tr:last-child td { border-bottom: none; }
+  .status-pill { display: inline-block; border-radius: 999px; padding: 2px 10px;
+                 font-size: 12px; font-weight: 600; white-space: nowrap; }
+  .sp-processing { background: #EEF4FF; color: #1565E8; }
+  .sp-pending    { background: #FFF8E6; color: #92600A; }
+  .sp-applied    { background: #EDFAF3; color: #166534; }
+  .sp-rejected   { background: #FFF0F0; color: #B91C1C; }
+  .sp-review     { background: #F5F0FF; color: #6D28D9; }
+
+  /* ── FAQ accordion ── */
+  .faq-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  details { border: 1px solid #E2EAF4; border-radius: 12px; overflow: hidden; }
+  details[open] { border-color: #C9DEFF; }
+  summary { padding: 16px 18px; font-size: 15px; font-weight: 600; cursor: pointer;
+            list-style: none; display: flex; justify-content: space-between;
+            align-items: center; color: #0A1628; gap: 12px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; font-size: 22px; font-weight: 400; color: #1565E8;
+                   line-height: 1; flex-shrink: 0; transition: transform .18s; }
+  details[open] summary::after { content: '−'; }
+  .faq-body { padding: 0 18px 16px; border-top: 1px solid #E2EAF4; }
+  .faq-body p { font-size: 15px; color: #4E6788; margin: 14px 0 0; }
+  .faq-body p:last-child { margin-bottom: 0; }
+
+  /* ── Antifraud block ── */
+  .antifraud { background: #FFF5F5; border: 1px solid #FCA5A5;
+               border-left: 4px solid #EF4444; border-radius: 0 12px 12px 0;
+               padding: 20px 22px; margin-bottom: 8px; }
+  .antifraud-title { font-size: 16px; font-weight: 700; color: #DC2626;
+                     margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+  .antifraud-title svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .antifraud ul { margin: 0; padding-left: 20px; }
+  .antifraud li { font-size: 15px; color: #7F1D1D; margin-bottom: 6px; }
+  .antifraud li:last-child { margin-bottom: 0; }
+
+  /* ── Pending placeholder ── */
+  .pend { background: rgba(245,158,11,.18); color: #92400E; border-radius: 4px;
+          padding: 1px 5px; font-weight: 600; font-style: normal;
+          border: 1px solid rgba(245,158,11,.30); white-space: nowrap; }
+
+  /* ── Page footer CTA strip ── */
+  .support-cta { background: #F4F8FF; border-radius: 16px; padding: 24px 24px;
+                 text-align: center; margin-top: 48px; }
+  .support-cta p { margin: 0 0 8px; font-size: 16px; color: #1E2D40; }
+  .support-cta .cta-note { font-size: 13px; color: #7A95B8; margin: 12px 0 0; }
+
+  /* ── Internal-only warning block ── */
+  .internal-block { border: 2px solid #EF4444; border-radius: 16px; padding: 24px 24px 20px;
+                    background: rgba(239,68,68,.04); margin-top: 56px; }
+  .internal-block-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .internal-badge { background: #EF4444; color: #fff; border-radius: 8px;
+                    padding: 4px 12px; font-size: 11px; font-weight: 700;
+                    letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .internal-block h3 { font-size: 16px; font-weight: 700; color: #DC2626; margin: 0; line-height: 1.3; }
+  .internal-block > p { font-size: 14px; color: #7F1D1D; margin-bottom: 18px; }
+  .internal-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch;
+                         border-radius: 12px; border: 1px solid #E2EAF4; margin-top: 4px; }
+  .blocker-si { color: #DC2626; font-weight: 700; }
+  .blocker-no { color: #4E6788; }
+
+  /* ── Footer ── */
+  footer { background: #F4F8FF; border-top: 1px solid #E2EAF4; }
+  .foot-legal { max-width: 760px; margin: 0 auto; padding: 20px 24px;
+                font-size: 12px; color: #7A95B8; display: flex;
+                justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .foot-legal a { color: #4E6788; text-decoration: underline; }
+  .foot-legal a:hover { color: #1565E8; }
+
+  /* ── Dark mode ── */
+  [data-theme="dark"] body { background: #0A1628; color: #E2EAF4; }
+  [data-theme="dark"] .nav { background: rgba(15,30,54,.88); border-bottom-color: #1B335A; }
+  [data-theme="dark"] .nav-back { color: #7A95B8; border-color: #25426F; }
+  [data-theme="dark"] .nav-back:hover { color: #5CB8FF; border-color: #5CB8FF; }
+  [data-theme="dark"] .theme-toggle { color: #5CB8FF; border-color: #25426F; }
+  [data-theme="dark"] .theme-toggle:hover { background: #142848; transform: rotate(12deg); }
+  [data-theme="dark"] .theme-toggle .ico-sun { display: none; }
+  [data-theme="dark"] .theme-toggle .ico-moon { display: block; }
+  [data-theme="dark"] .draft-banner { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.20); color: #FCD34D; }
+  [data-theme="dark"] .draft-banner svg { fill: #FCD34D; }
+  [data-theme="dark"] .support-hero { background: linear-gradient(135deg, #0F1E36 0%, #142848 100%); }
+  [data-theme="dark"] .support-hero h1 { color: #E2EAF4; }
+  [data-theme="dark"] .support-hero p { color: #7A95B8; }
+  [data-theme="dark"] h2 { color: #E2EAF4; }
+  [data-theme="dark"] p, [data-theme="dark"] li { color: #C5D5E8; }
+  [data-theme="dark"] strong { color: #E2EAF4; }
+  [data-theme="dark"] a { color: #5CB8FF; }
+  [data-theme="dark"] hr.rule { border-top-color: #1B335A; }
+  [data-theme="dark"] blockquote { background: #0F1E36; border-left-color: #5CB8FF; }
+  [data-theme="dark"] blockquote p { color: #7A95B8; }
+  [data-theme="dark"] .channel-card { border-color: #1B335A; background: #0F1E36; }
+  [data-theme="dark"] .channel-card-badge { background: #142848; color: #5CB8FF; }
+  [data-theme="dark"] .channel-card-title { color: #E2EAF4; }
+  [data-theme="dark"] .channel-card p { color: #7A95B8; }
+  [data-theme="dark"] .step { border-bottom-color: #1B335A; }
+  [data-theme="dark"] .step-body strong { color: #E2EAF4; }
+  [data-theme="dark"] .step-body p { color: #7A95B8; }
+  [data-theme="dark"] .table-wrap { border-color: #1B335A; }
+  [data-theme="dark"] thead th { background: #142848; color: #E2EAF4; border-bottom-color: #1B335A; }
+  [data-theme="dark"] tbody td { color: #C5D5E8; border-bottom-color: #1B335A; }
+  [data-theme="dark"] details { border-color: #1B335A; }
+  [data-theme="dark"] details[open] { border-color: #25426F; }
+  [data-theme="dark"] summary { color: #E2EAF4; }
+  [data-theme="dark"] .faq-body { border-top-color: #1B335A; }
+  [data-theme="dark"] .faq-body p { color: #7A95B8; }
+  [data-theme="dark"] .antifraud { background: rgba(239,68,68,.06); border-color: #EF4444; border-left-color: #EF4444; }
+  [data-theme="dark"] .antifraud-title { color: #FCA5A5; }
+  [data-theme="dark"] .antifraud li { color: #FCA5A5; }
+  [data-theme="dark"] .support-cta { background: #0F1E36; }
+  [data-theme="dark"] .support-cta p { color: #C5D5E8; }
+  [data-theme="dark"] .support-cta .cta-note { color: #4E6788; }
+  [data-theme="dark"] .internal-block { background: rgba(239,68,68,.06); border-color: #EF4444; }
+  [data-theme="dark"] .internal-block h3 { color: #FCA5A5; }
+  [data-theme="dark"] .internal-block > p { color: #FCA5A5; }
+  [data-theme="dark"] .internal-table-wrap { border-color: #1B335A; }
+  [data-theme="dark"] footer { background: #0F1E36; border-top-color: #1B335A; }
+  [data-theme="dark"] .foot-legal { color: #5C7A9E; }
+  [data-theme="dark"] .foot-legal a { color: #7A95B8; }
+  [data-theme="dark"] .foot-legal a:hover { color: #5CB8FF; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .prose { padding: 32px 20px 72px; }
+    h2 { font-size: 18px; margin-top: 36px; }
+    p, li { font-size: 15px; }
+    .support-hero { padding: 28px 20px; }
+    .support-hero h1 { font-size: 24px; }
+    .channel-cards { grid-template-columns: 1fr; }
+    .nav-inner { padding: 12px 20px; }
+    .foot-legal { justify-content: center; text-align: center; }
+    .internal-block { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+<script>
+  (() => {
+    try {
+      const t = localStorage.getItem('fp-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  })();
+</script>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">
+      <img src="assets/logo-fondix-pay.png" alt="FONDIX PAY">
+    </a>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <a class="nav-back" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Inicio
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" type="button">
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="prose">
+
+  <!-- ── Draft banner ── -->
+  <div class="draft-banner" role="note" aria-label="Aviso de borrador">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 9v5m0-8v.5"/></svg>
+    <span><strong>Borrador — no publicar en producción.</strong> El contenido de soporte está listo para implementación y revisión operativa ligera. Los elementos marcados como <mark class="pend">pendiente</mark> deben resolverse antes de publicar.</span>
+  </div>
+
+  <!-- ── Hero ── -->
+  <div class="support-hero">
+    <h1>¿Algo no salió bien? Estamos aquí para ayudarte.</h1>
+    <p>Escríbenos con el folio de tu pago y lo revisamos. El folio aparece en tu comprobante dentro de la app.</p>
+  </div>
+
+  <!-- ── Canales de soporte ── -->
+  <h2>Canales de soporte</h2>
+  <div class="channel-cards">
+    <div class="channel-card">
+      <div class="channel-card-badge">Recomendado</div>
+      <div class="channel-card-title">Desde la app</div>
+      <p>Entra a la sección <strong>Soporte</strong> dentro de FONDIX PAY. Puedes iniciar una aclaración directamente desde la operación que quieres revisar — el folio se adjunta automáticamente.</p>
+    </div>
+    <div class="channel-card">
+      <div class="channel-card-badge">Alternativo</div>
+      <div class="channel-card-title">Por correo</div>
+      <p>Escríbenos a <strong><span class="pend">[correo de soporte pendiente]</span></strong> con tu folio (formato FP-XXXXXXXXXX), el servicio pagado y una descripción breve de lo que pasó.</p>
+    </div>
+  </div>
+
+  <blockquote>
+    <p>No incluyas en tu mensaje datos completos de tarjeta, contraseñas ni códigos de verificación. No los necesitamos para ayudarte.</p>
+  </blockquote>
+
+  <p><strong>Horario de atención:</strong> <span class="pend">[Horario pendiente — definir antes de publicar. No publicar "24/7" sin capacidad real.]</span></p>
+
+  <!-- ── Cómo funciona ── -->
+  <h2>Cómo funciona una aclaración</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num" aria-hidden="true">1</div>
+      <div class="step-body">
+        <strong>Inicias la aclaración</strong>
+        <p>Desde la app o por correo, con tu folio de operación.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" aria-hidden="true">2</div>
+      <div class="step-body">
+        <strong>Revisamos la operación</strong>
+        <p>Consultamos nuestros registros y, de ser necesario, al proveedor del servicio.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num" aria-hidden="true">3</div>
+      <div class="step-body">
+        <strong>Te respondemos con el resultado</strong>
+        <p>Si el cargo se realizó y el pago no se aplicó por causas de la plataforma o del procesador, procede el reembolso.</p>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:16px;">Los tiempos de respuesta del proveedor del servicio — por ejemplo la compañía de luz o telefonía — no dependen de FONDIX PAY y pueden extender la aclaración. Te mantenemos informado del avance.</p>
+
+  <!-- ── Estado del pago ── -->
+  <h2>Entiende el estado de tu pago</h2>
+  <div class="table-wrap" role="region" aria-label="Estados de pago">
+    <table>
+      <thead>
+        <tr>
+          <th>Estado en la app</th>
+          <th>Qué significa</th>
+          <th>Qué hacer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="status-pill sp-processing">En proceso</span></td>
+          <td>Tu pago fue enviado y está siendo procesado</td>
+          <td>Espera la confirmación. <strong>No hagas un pago duplicado.</strong></td>
+        </tr>
+        <tr>
+          <td><span class="status-pill sp-pending">Pendiente proveedor</span></td>
+          <td>El proveedor aún no confirma. Puede tardar hasta 30 minutos o más</td>
+          <td>Espera. Si pasan más de 24 horas, inicia una aclaración.</td>
+        </tr>
+        <tr>
+          <td><span class="status-pill sp-applied">Aplicado</span></td>
+          <td>El pago fue confirmado</td>
+          <td>Guarda tu comprobante. Sin acción requerida.</td>
+        </tr>
+        <tr>
+          <td><span class="status-pill sp-rejected">Rechazado</span></td>
+          <td>El pago no se procesó y no se generó cargo de servicio</td>
+          <td>Verifica tus datos e intenta de nuevo.</td>
+        </tr>
+        <tr>
+          <td><span class="status-pill sp-review">En aclaración</span></td>
+          <td>Estamos revisando tu caso</td>
+          <td>Te notificamos el resultado por los canales que autorizaste.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── FAQ ── -->
+  <h2>Preguntas frecuentes</h2>
+  <div class="faq-list">
+
+    <details>
+      <summary>1. ¿Cuánto cuesta usar FONDIX PAY?</summary>
+      <div class="faq-body">
+        <p>Descargar la app y registrarte es gratis. Cada pago de servicio genera una comisión que se muestra claramente <strong>antes</strong> de confirmar. Nunca verás cargos que no hayas aceptado en pantalla.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>2. ¿Qué servicios puedo pagar?</summary>
+      <div class="faq-body">
+        <p>Electricidad, telefonía fija y móvil, agua, gas, internet, plataformas de entretenimiento, recargas de tiempo aire y otros servicios participantes. El catálogo se ajusta a tu estado de la República; dentro de la app verás los servicios disponibles en tu zona.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>3. ¿Cuánto tarda en aplicarse mi pago?</summary>
+      <div class="faq-body">
+        <p>Depende del proveedor. Algunos confirman en minutos; otros pueden tardar hasta 72 horas según sus propios procesos. El estado real de tu pago siempre está visible en la app.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>4. Pagué y el servicio no refleja el pago, ¿qué hago?</summary>
+      <div class="faq-body">
+        <p>Primero revisa el estado en la app. Si aparece "Aplicado" y el proveedor no lo refleja después de 72 horas, inicia una aclaración con tu folio. Si aparece "En proceso" o "Pendiente proveedor", espera la confirmación antes de actuar — y no repitas el pago.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>5. ¿Es seguro pagar con FONDIX PAY?</summary>
+      <div class="faq-body">
+        <p>Tu información viaja cifrada y <strong>no almacenamos los datos completos de tu tarjeta</strong>. Cada operación queda registrada con folio para que siempre tenga rastro. Consulta nuestro <a href="privacidad">Aviso de Privacidad</a> para conocer cómo protegemos tus datos.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>6. ¿Me pueden pedir mi contraseña o código por teléfono?</summary>
+      <div class="faq-body">
+        <p><strong>No. Nunca.</strong> FONDIX PAY jamás te pedirá contraseñas, códigos de verificación (OTP), NIP o los 16 dígitos de tu tarjeta por teléfono, WhatsApp, correo o redes sociales. Si alguien lo hace a nuestro nombre, es un intento de fraude: no respondas y repórtalo a <span class="pend">[correo de soporte pendiente]</span>.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>7. ¿Cuándo procede un reembolso?</summary>
+      <div class="faq-body">
+        <p>Cuando se confirma que el cargo se realizó y el pago no fue aplicado por causas atribuibles a la plataforma o al procesador. Si el pago se aplicó conforme a los datos que capturaste — por ejemplo a una referencia equivocada que ingresaste — no procede reembolso. Por eso te pedimos verificar los datos antes de confirmar. El detalle está en nuestros <a href="terminos">Términos y Condiciones</a>.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>8. ¿Cómo cancelo mi cuenta?</summary>
+      <div class="faq-body">
+        <p>Puedes solicitar la cancelación desde la app o escribiendo a <span class="pend">[correo de soporte pendiente]</span>. Las operaciones ya procesadas seguirán su curso normal de aclaración o aplicación.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <!-- ── Antifraud block ── -->
+  <h2>Protege tu cuenta</h2>
+  <div class="antifraud" role="note" aria-label="Aviso de seguridad y antifraude">
+    <div class="antifraud-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Seguridad — lo que FONDIX PAY nunca te pedirá
+    </div>
+    <ul>
+      <li>FONDIX PAY <strong>nunca</strong> te pedirá tu contraseña, OTP, NIP ni los datos completos de tu tarjeta por teléfono, WhatsApp, correo o redes sociales.</li>
+      <li>No compartas tus códigos de verificación con nadie, aunque digan ser personal de soporte.</li>
+      <li>Verifica que estás en <strong>fondixpay.com</strong> o en la app oficial antes de capturar cualquier dato.</li>
+      <li>¿Recibiste un mensaje sospechoso a nombre de FONDIX PAY? Repórtalo a <span class="pend">[correo de soporte pendiente]</span> y no respondas.</li>
+    </ul>
+  </div>
+
+  <!-- ── CTA strip ── -->
+  <div class="support-cta">
+    <p>¿No encontraste lo que buscabas?</p>
+    <p>Escríbenos a <strong><span class="pend">[correo de soporte pendiente]</span></strong> con el folio de tu operación y lo revisamos.</p>
+    <p class="cta-note"><a href="terminos">Términos y Condiciones</a> · <a href="privacidad">Aviso de Privacidad</a></p>
+  </div>
+
+  <hr class="rule">
+
+  <!-- ── INTERNAL-ONLY BLOCK ── -->
+  <div class="internal-block" aria-label="Bloque interno — eliminar antes de publicar">
+    <div class="internal-block-hd">
+      <span class="internal-badge">Interno</span>
+      <h3>⚠ USO INTERNO — ELIMINAR ANTES DE PUBLICAR</h3>
+    </div>
+    <p>Esta sección no debe aparecer en la versión pública de la página de Soporte. Contiene pendientes que bloquean la publicación en producción.</p>
+    <div class="internal-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pendiente</th>
+            <th>¿Bloquea publicación?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Correo de soporte real (recomendado: soporte@fondixpay.com)</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Horario de atención real — no publicar "24/7" sin capacidad operativa confirmada</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Validar el umbral de 72 horas contra el SLA formal del procesador de pagos cuando exista</td>
+            <td class="blocker-no">No (lenguaje prudente válido hasta contar con SLA)</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Confirmar que la app tendrá flujo de aclaración in-app en v1; si no, actualizar el canal recomendado a correo</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Confirmar flujo real de cancelación de cuenta in-app para la FAQ 8</td>
+            <td class="blocker-no">No</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- /INTERNAL BLOCK -->
+
+</main>
+
+<footer>
+  <div class="foot-legal">
+    <span>© 2026 FondixPay · Plataforma en preparación · No producción comercial</span>
+    <span><a href="/">Inicio</a> · <a href="soporte">Soporte</a> · <a href="terminos">Términos y Condiciones</a> · <a href="privacidad">Aviso de Privacidad</a></span>
+  </div>
+</footer>
+
+<script>
+  (() => {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (next === 'dark') root.setAttribute('data-theme', 'dark');
+      else root.removeAttribute('data-theme');
+      try { localStorage.setItem('fp-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+
+<style>
+  .fp-cookie-banner {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+    background: #0A1628; color: #FFFFFF;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 16px 20px; display: none;
+    box-shadow: 0 -4px 24px rgba(10, 22, 40, 0.25);
+  }
+  .fp-cookie-banner.fp-visible { display: block; }
+  .fp-cookie-inner { max-width: 1080px; margin: 0 auto; display: flex;
+    align-items: center; gap: 24px; flex-wrap: wrap; }
+  .fp-cookie-text { flex: 1 1 420px; font-size: 13px; line-height: 1.5; color: #DDE3EE; }
+  .fp-cookie-text strong { color: #FFFFFF; }
+  .fp-cookie-text a { color: #7FA8FF; text-decoration: underline; text-underline-offset: 2px; }
+  .fp-cookie-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .fp-cookie-btn { font-family: inherit; font-size: 13px; font-weight: 600;
+    border-radius: 9999px; padding: 12px 22px; min-height: 44px;
+    cursor: pointer; border: none; transition: opacity 0.15s ease; }
+  .fp-cookie-btn:hover { opacity: 0.88; }
+  .fp-cookie-btn:focus-visible { outline: 2px solid #7FA8FF; outline-offset: 2px; }
+  .fp-btn-accept { background: #1A6BFF; color: #FFFFFF; }
+  .fp-btn-essential { background: transparent; color: #FFFFFF; border: 1px solid #3D4F6B; }
+  @media (max-width: 640px) {
+    .fp-cookie-inner { gap: 14px; }
+    .fp-cookie-actions { width: 100%; }
+    .fp-cookie-btn { flex: 1; }
+  }
+</style>
+
+<div class="fp-cookie-banner" id="fpCookieBanner" role="dialog"
+     aria-live="polite" aria-label="Aviso de uso de cookies">
+  <div class="fp-cookie-inner">
+    <p class="fp-cookie-text">
+      <strong>Usamos cookies.</strong> Las esenciales hacen funcionar el sitio.
+      Las de analítica nos ayudan a mejorarlo y solo se activan si las aceptas.
+      Consulta nuestro <a href="privacidad">Aviso de Privacidad</a>.
+    </p>
+    <div class="fp-cookie-actions">
+      <button type="button" class="fp-cookie-btn fp-btn-essential" id="fpCookieEssential">Solo esenciales</button>
+      <button type="button" class="fp-cookie-btn fp-btn-accept" id="fpCookieAccept">Aceptar cookies</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var STORAGE_KEY = 'fp_cookie_consent', EXPIRY_DAYS = 180;
+    var banner = document.getElementById('fpCookieBanner');
+    function getConsent() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        var data = JSON.parse(raw);
+        if (!data.timestamp || Date.now() - data.timestamp > EXPIRY_DAYS * 864e5) {
+          localStorage.removeItem(STORAGE_KEY); return null;
+        }
+        return data;
+      } catch (e) { return null; }
+    }
+    function saveConsent(analytics) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ analytics: analytics, timestamp: Date.now(), version: 1 })); }
+      catch (e) {}
+    }
+    function enableAnalytics() { /* cargar GA4 u otra herramienta aquí tras consentimiento */ }
+    function hideBanner() { banner.classList.remove('fp-visible'); }
+    var existing = getConsent();
+    if (existing === null) { banner.classList.add('fp-visible'); }
+    else if (existing.analytics === true) { enableAnalytics(); }
+    document.getElementById('fpCookieAccept').addEventListener('click', function () {
+      saveConsent(true); enableAnalytics(); hideBanner();
+    });
+    document.getElementById('fpCookieEssential').addEventListener('click', function () {
+      saveConsent(false); hideBanner();
+    });
+  })();
+</script>
+</body>
+</html>

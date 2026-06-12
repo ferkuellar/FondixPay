@@ -1403,4 +1403,51 @@ Files changed:
 
 Next recommended sprint:
 
-Legal review of `landing/terminos.html` and `landing/privacidad.html` drafts by qualified Mexican attorney, then resolve pending placeholders (legal entity name, domicile, ARCO email, effective date) before any public launch, or return to Tekae discovery when sandbox credentials are received.
+Legal review of `landing/terminos.html` and `landing/privacidad.html` drafts by qualified Mexican attorney, then resolve pending placeholders (legal entity name, domicile, ARCO email, effective date, support email, support hours) before any public launch, or return to Tekae discovery when sandbox credentials are received.
+
+## Sprint 035 — Public Support Page Draft
+
+Current phase: Sprint 035 — Public Support Page Draft.
+
+Status: COMPLETED. Sprint 035 created the public-facing Soporte page and wired footer support links across all landing pages. No backend, mobile, admin, payment, provider, migration, or deployment changes were made.
+
+Scope completed:
+
+- Created `landing/soporte.html` — public support page at `/soporte` (Vercel `cleanUrls: true`).
+- Page includes: hero, support channels (app + email), how-it-works steps, payment-status table with colored status pills, FAQ accordion using native `<details>`/`<summary>`, antifraud callout block, footer CTA strip, internal pending checklist (red-bordered, clearly marked for removal before publish), cookie consent banner, dark mode.
+- All support email and hours placeholders use `.pend` amber style — no invented email, no invented hours, no 24/7 claim.
+- Payment-state table wrapped in `overflow-x: auto` for mobile safety.
+- FAQ uses `<details>`/`<summary>` — no dependencies added.
+- Antifraud block uses left red border + red-tinted background, visually distinct from prose.
+- Updated footer in `landing/index.html`: `Soporte pendiente` (`href="#"`) → `Soporte` (`href="soporte"`).
+- Updated footer strip in `landing/terminos.html` and `landing/privacidad.html`: added `Soporte` link.
+- Internal links to `/terminos` and `/aviso-de-privacidad` in sprint content were normalized to relative `terminos` and `privacidad` to match existing site convention.
+- Tekae remains disabled. Prontipagos not reintroduced.
+
+Decision boundary:
+
+- No support email invented. No support hours invented. No 24/7 claim made.
+- No in-app support workflow, ticketing, email sending, chat, or WhatsApp integration added.
+- No payment processing, refund engine, reconciliation, or Tekae runtime added.
+- No fintech/wallet/banking claims introduced.
+- No backend code, endpoint, migration, schema, mobile code, admin/CRM code, infrastructure, Terraform, workflow, or deployment behavior changed.
+
+Files changed:
+
+- `landing/soporte.html` (created)
+- `landing/index.html` (footer Legal support link wired)
+- `landing/terminos.html` (footer strip: Soporte link added)
+- `landing/privacidad.html` (footer strip: Soporte link added)
+- `planning/STATE.md` (this record)
+- `planning/sprints/035-public-support-page/` (sprint docs)
+
+Remaining publication blockers:
+
+1. Support email (soporte@fondixpay.com or similar) — blocks publish.
+2. Support hours — blocks publish.
+3. Confirm in-app aclaración flow exists in v1 or update recommended channel to email only.
+4. Validate 72-hour threshold against formal processor SLA when available.
+
+Next recommended sprint:
+
+Resolve publication blockers (support email, hours, in-app aclaración confirmation), or return to Tekae discovery when sandbox credentials are received.
