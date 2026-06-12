@@ -24,7 +24,7 @@ export function NotificationsScreen() {
     <Screen padded={false}>
       <ScrollView contentContainerStyle={styles.scroll}>
         {isLoading ? <LoadingState message="Cargando notificaciones..." /> : null}
-        {error ? <ErrorState message={error} /> : null}
+        {error ? <ErrorState message={error} onRetry={() => void fetchNotifications()} /> : null}
         {!isLoading && !error && notifications.length === 0 ? (
           <EmptyState
             emoji="🔔"

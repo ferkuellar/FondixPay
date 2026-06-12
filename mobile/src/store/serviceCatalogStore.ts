@@ -125,7 +125,7 @@ export const useServiceCatalogStore = create<ServiceCatalogState>((set) => ({
       const categories = await getServiceCategories();
       set({ categories });
     } catch {
-      set({ error: 'No pudimos cargar las categorias.' });
+      set({ error: 'No pudimos cargar las categorías.' });
     }
   },
   fetchServices: async (filters = {}) => {
