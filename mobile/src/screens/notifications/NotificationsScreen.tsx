@@ -27,7 +27,8 @@ export function NotificationsScreen() {
         {error ? <ErrorState message={error} /> : null}
         {!isLoading && !error && notifications.length === 0 ? (
           <EmptyState
-            message="Aqui veras avisos demo, pendientes de prueba y comprobantes de prueba no disponibles."
+            emoji="🔔"
+            message="Cuando realices un pago, aquí verás los avisos y estados de tus operaciones."
             title="Sin notificaciones"
           />
         ) : null}
