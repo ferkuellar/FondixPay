@@ -7,5 +7,12 @@
     "mobile:start": "cd mobile && npx expo start -c --port 8081",
     "mobile:doctor": "cd mobile && npx expo-doctor",
     "mobile:typecheck": "cd mobile && npm run typecheck"
+  },
+  "dependencies": {
+    "expo": "^56.0.11"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.14",
+    "typescript": "~6.0.3"
   }
 }
