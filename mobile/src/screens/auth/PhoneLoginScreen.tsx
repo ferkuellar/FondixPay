@@ -1,11 +1,12 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Linking, Platform, StatusBar, StyleSheet, Text, View } from 'react-native';
 
 import { NumericKeypad } from '../../components/NumericKeypad';
 import { PhoneInput } from '../../components/PhoneInput';
 import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
+import { PRIVACY_PAGE_URL, TERMS_PAGE_URL } from '../../constants/links';
 import { useAuthStore } from '../../store/authStore';
 import { radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
@@ -61,6 +62,25 @@ export function PhoneLoginScreen({ navigation }: Props) {
             <PrimaryButton disabled={cleanPhone.length < 10} loading={isLoading} onPress={continueToOtp}>
               CONTINUAR
             </PrimaryButton>
+            <Text style={[styles.consentNote, { color: theme.fg3 }]}>
+              {'Al continuar aceptas nuestros '}
+              <Text
+                accessibilityRole={TERMS_PAGE_URL ? 'link' : 'text'}
+                onPress={TERMS_PAGE_URL ? () => void Linking.openURL(TERMS_PAGE_URL) : undefined}
+                style={TERMS_PAGE_URL ? [styles.consentLink, { color: theme.primary }] : undefined}
+              >
+                Términos y Condiciones
+              </Text>
+              {' y el '}
+              <Text
+                accessibilityRole={PRIVACY_PAGE_URL ? 'link' : 'text'}
+                onPress={PRIVACY_PAGE_URL ? () => void Linking.openURL(PRIVACY_PAGE_URL) : undefined}
+                style={PRIVACY_PAGE_URL ? [styles.consentLink, { color: theme.primary }] : undefined}
+              >
+                Aviso de Privacidad
+              </Text>
+              {'.'}
+            </Text>
           </View>
           <View style={styles.keypad}>
             <NumericKeypad onBackspace={backspace} onKeyPress={appendDigit} />
@@ -88,6 +108,13 @@ const styles = StyleSheet.create({
       android: (StatusBar.currentHeight ?? 0) + spacing.lg,
       default: spacing.xl,
     }),
+  },
+  consentLink: {
+    fontWeight: '600',
+  },
+  consentNote: {
+    ...typography.caption,
+    textAlign: 'center',
   },
   devHint: {
     ...typography.bodySmall,
