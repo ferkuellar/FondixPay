@@ -57,7 +57,7 @@ export function ProfileScreen({ navigation }: Props) {
   const preferencesError = useNotificationPreferencesStore((state) => state.error);
   const fetchPreferences = useNotificationPreferencesStore((state) => state.fetchPreferences);
 
-  const displayName = user?.name?.trim() || 'Sofía Ramírez';
+  const displayName = user?.name?.trim() || 'Usuario';
   const displayPhone = formatProfilePhone(user?.phone);
   const notificationsStatus = whatsappReceipt?.enabled === false ? 'Inactivas' : 'Activas';
 
@@ -249,7 +249,7 @@ function formatProfilePhone(phone?: string | null) {
     return `+52 ${national.slice(0, 2)} ${national.slice(2, 6)} ${national.slice(6)}`;
   }
 
-  return '+52 61 4123 4567';
+  return 'Sin teléfono';
 }
 
 const styles = StyleSheet.create({

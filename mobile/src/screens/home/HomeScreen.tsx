@@ -11,6 +11,7 @@ import { Screen } from '../../components/Screen';
 import { ServiceCard } from '../../components/ServiceCard';
 import { StateSelectorCard } from '../../components/StateSelectorCard';
 import { useAccountStore } from '../../store/accountStore';
+import { useAuthStore } from '../../store/authStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
 import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
@@ -40,8 +41,9 @@ export function HomeScreen({ navigation }: Props) {
   const accountLoading = useAccountStore((state) => state.isLoading);
   const refreshAccountData = useAccountStore((state) => state.refreshAccountData);
   const selectService = usePaymentStore((state) => state.selectService);
+  const user = useAuthStore((state) => state.user);
 
-  const userName = 'Ana';
+  const displayName = user?.name?.trim() || 'Usuario';
   const totalDue = services.reduce((sum, s) => sum + Math.max(s.amountDue, 0), 0);
   const urgentCount = services.filter((s) => {
     const due = s.dueText.toLowerCase();
@@ -73,11 +75,11 @@ export function HomeScreen({ navigation }: Props) {
             accessibilityLabel="Ver perfil"
           >
             <View style={[styles.avatar, { backgroundColor: theme.primary }]}>
-              <Text style={styles.avatarInitial}>{userName[0]}</Text>
+              <Text style={styles.avatarInitial}>{displayName[0]}</Text>
             </View>
             <View>
               <Text style={[styles.greeting, { color: theme.fg2 }]}>{currentGreeting()}</Text>
-              <Text style={[styles.userName, { color: theme.fg }]}>{userName}</Text>
+              <Text style={[styles.displayName, { color: theme.fg }]}>{displayName}</Text>
             </View>
           </Pressable>
           <Pressable
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
   },
-  userName: {
+  displayName: {
     fontSize: 17,
     fontWeight: '700',
     letterSpacing: -0.2,
