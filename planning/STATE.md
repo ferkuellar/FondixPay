@@ -1329,3 +1329,39 @@ Files changed:
 Next recommended sprint:
 
 Landing visual validation (local browser smoke test), or return to Tekae discovery when sandbox credentials are received.
+
+## Sprint 033 — Public Terms and Conditions Page
+
+Current phase: Sprint 033 — Public Terms and Conditions Page.
+
+Status: COMPLETED. Sprint 033 created the public-facing Términos y Condiciones draft page and wired the footer link. No backend, mobile, admin, payment, provider, migration, or deployment changes were made.
+
+Scope completed:
+
+- Created `landing/terminos.html` — a new static HTML page serving the Spanish terms draft at the `/terminos` route (Vercel `cleanUrls: true`).
+- Page includes the same design tokens (`colors_and_type.css`), sticky nav with back-to-home link, dark mode IIFE, and footer as the main landing.
+- All 20 sections of the terms draft are implemented: acceptance, service nature, eligibility, account/credentials, service description, fees, payment processing, receipts, errors/refunds, permitted/prohibited use, notifications, personal data, intellectual property, service availability, liability limitation, third-party providers, suspension/termination, changes to terms, applicable law, and contact.
+- Pending placeholders are styled visually with `<span class="pend">` (amber background, distinct from body text): legal entity name, effective date, legal email, jurisdiction, and support email.
+- An internal-only warning block at the bottom of the page (clearly marked `⚠ USO INTERNO — ELIMINAR ANTES DE PUBLICAR`) contains a pending-items table with 8 pre-launch blockers.
+- Page is mobile-responsive (prose `max-width: 760px`, overflow-safe table wrapper, 640px breakpoints).
+- Updated footer Legal column in `landing/index.html`: `href="#" > Términos pendientes` → `href="terminos" > Términos y Condiciones`.
+- Product positioned as services/payments platform throughout — no bank, wallet, IFPE, fintech, lender, or investment language.
+- Tekae remains disabled. Prontipagos not reintroduced.
+
+Decision boundary:
+
+- This document is a draft base for legal review and must not be published in production without review by a qualified Mexican attorney.
+- No final legal advice is implied. No pending placeholder was replaced with invented legal entity name, jurisdiction, or email.
+- No backend code, endpoint, migration, schema, payment logic, provider adapter, Tekae behavior, mobile code, admin/CRM code, infrastructure, Terraform, workflow, or deployment behavior changed.
+- Aviso de Privacidad remains a future sprint. Footer privacy link remains `href="#"`.
+- Real App Store / Play Store URLs and real support channel remain pending (unchanged from Sprint 032).
+
+Files changed:
+
+- `landing/terminos.html` (created)
+- `landing/index.html` (footer Legal link updated)
+- `planning/STATE.md` (this record)
+
+Next recommended sprint:
+
+Legal review of `landing/terminos.html` draft by qualified Mexican attorney, then Aviso de Privacidad draft sprint, or return to Tekae discovery when sandbox credentials are received.

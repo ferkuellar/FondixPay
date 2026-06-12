@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Términos y Condiciones — FONDIX PAY</title>
+<meta name="description" content="Términos y Condiciones de Uso de FONDIX PAY, plataforma móvil de pago de servicios en México.">
+<link rel="icon" href="assets/logo-fondix-pay.png">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  html, body { margin: 0; background: #FFFFFF; color: #0A1628;
+               font-family: 'Bricolage Grotesque', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  a { color: #1565E8; }
+
+  /* ── Nav ── */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.88);
+         backdrop-filter: blur(20px); border-bottom: 1px solid #E2EAF4; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+               display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+  .brand img { height: 44px; }
+  .nav-back { font-size: 14px; font-weight: 500; color: #4E6788; text-decoration: none;
+              display: flex; align-items: center; gap: 6px;
+              padding: 8px 14px; border-radius: 12px; border: 1px solid #E2EAF4;
+              transition: border-color .2s, color .2s; }
+  .nav-back:hover { color: #1565E8; border-color: #C9DEFF; text-decoration: none; }
+  .nav-back svg { width: 14px; height: 14px; }
+  .theme-toggle { background: transparent; border: 1px solid #C9DEFF; border-radius: 12px;
+                  width: 36px; height: 36px; cursor: pointer; padding: 0;
+                  display: inline-flex; align-items: center; justify-content: center;
+                  color: #1565E8; transition: background .2s, border-color .2s, transform .2s;
+                  flex-shrink: 0; }
+  .theme-toggle:hover { background: #F4F8FF; transform: rotate(-12deg); }
+  .theme-toggle svg { width: 18px; height: 18px; display: block; }
+  .theme-toggle .ico-moon { display: none; }
+
+  /* ── Prose container ── */
+  .prose { max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  /* ── Draft banner ── */
+  .draft-banner { background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.32);
+                  border-radius: 12px; padding: 14px 18px; margin-bottom: 36px;
+                  font-size: 14px; color: #92400E; line-height: 1.5;
+                  display: flex; align-items: flex-start; gap: 10px; }
+  .draft-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: #F59E0B; }
+
+  /* ── Document header ── */
+  .doc-header { padding-bottom: 28px; border-bottom: 1px solid #E2EAF4; margin-bottom: 40px; }
+  .doc-title { font-size: 34px; font-weight: 700; letter-spacing: -.02em;
+               line-height: 1.1; margin: 0 0 22px; color: #0A1628; }
+  .doc-meta { list-style: none; padding: 0; margin: 0;
+              display: flex; flex-direction: column; gap: 7px; }
+  .doc-meta li { font-size: 14px; color: #4E6788; }
+  .doc-meta li strong { color: #0A1628; font-weight: 600; }
+
+  /* ── Legal notice callout ── */
+  .legal-notice { border-left: 3px solid #1565E8; background: #F4F8FF;
+                  border-radius: 0 12px 12px 0; padding: 14px 18px; margin: 0 0 40px;
+                  font-size: 14px; color: #4E6788; line-height: 1.6; }
+  .legal-notice p { margin: 0; }
+
+  /* ── Section headings & body ── */
+  h2 { font-size: 20px; font-weight: 700; letter-spacing: -.01em;
+       margin: 44px 0 12px; color: #0A1628; line-height: 1.2; }
+  h2:first-of-type { margin-top: 0; }
+  p { font-size: 16px; line-height: 1.75; color: #1E2D40; margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { font-size: 16px; line-height: 1.75; color: #1E2D40; margin-bottom: 5px; }
+  strong { color: #0A1628; }
+  hr.rule { border: none; border-top: 1px solid #E2EAF4; margin: 56px 0; }
+
+  /* ── Pending placeholder ── */
+  .pend { background: rgba(245,158,11,.18); color: #92400E; border-radius: 4px;
+          padding: 1px 5px; font-weight: 600; font-style: normal;
+          border: 1px solid rgba(245,158,11,.30); white-space: nowrap; }
+
+  /* ── Privacy link placeholder ── */
+  .link-pending { color: #7A95B8; text-decoration: underline dotted; cursor: default; }
+
+  /* ── Internal-only warning block ── */
+  .internal-block { border: 2px solid #EF4444; border-radius: 16px; padding: 24px 24px 20px;
+                    background: rgba(239,68,68,.04); margin-top: 56px; }
+  .internal-block-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .internal-badge { background: #EF4444; color: #fff; border-radius: 8px;
+                    padding: 4px 12px; font-size: 11px; font-weight: 700;
+                    letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .internal-block h3 { font-size: 16px; font-weight: 700; color: #DC2626; margin: 0; line-height: 1.3; }
+  .internal-block > p { font-size: 14px; color: #7F1D1D; margin-bottom: 18px; }
+
+  /* ── Pending table ── */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch;
+                border-radius: 12px; border: 1px solid #E2EAF4; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+  thead th { background: #F4F8FF; text-align: left; padding: 11px 14px;
+             font-weight: 600; color: #0A1628; border-bottom: 1px solid #E2EAF4; }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid #E2EAF4;
+             color: #1E2D40; vertical-align: top; line-height: 1.5; }
+  tbody tr:last-child td { border-bottom: none; }
+  .blocker-si { color: #DC2626; font-weight: 700; }
+  .blocker-no { color: #4E6788; }
+
+  /* ── Footer ── */
+  footer { background: #F4F8FF; border-top: 1px solid #E2EAF4; }
+  .foot-legal { max-width: 760px; margin: 0 auto; padding: 20px 24px;
+                font-size: 12px; color: #7A95B8; display: flex;
+                justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .foot-legal a { color: #4E6788; text-decoration: underline; }
+  .foot-legal a:hover { color: #1565E8; }
+
+  /* ── Dark mode ── */
+  [data-theme="dark"] body { background: #0A1628; color: #E2EAF4; }
+  [data-theme="dark"] .nav { background: rgba(15,30,54,.88); border-bottom-color: #1B335A; }
+  [data-theme="dark"] .nav-back { color: #7A95B8; border-color: #25426F; }
+  [data-theme="dark"] .nav-back:hover { color: #5CB8FF; border-color: #5CB8FF; }
+  [data-theme="dark"] .theme-toggle { color: #5CB8FF; border-color: #25426F; }
+  [data-theme="dark"] .theme-toggle:hover { background: #142848; transform: rotate(12deg); }
+  [data-theme="dark"] .theme-toggle .ico-sun { display: none; }
+  [data-theme="dark"] .theme-toggle .ico-moon { display: block; }
+  [data-theme="dark"] .draft-banner { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.20); color: #FCD34D; }
+  [data-theme="dark"] .draft-banner svg { fill: #FCD34D; }
+  [data-theme="dark"] .doc-title { color: #E2EAF4; }
+  [data-theme="dark"] .doc-meta li { color: #7A95B8; }
+  [data-theme="dark"] .doc-meta li strong { color: #E2EAF4; }
+  [data-theme="dark"] .doc-header { border-bottom-color: #1B335A; }
+  [data-theme="dark"] .legal-notice { background: #0F1E36; border-left-color: #5CB8FF; color: #7A95B8; }
+  [data-theme="dark"] h2 { color: #E2EAF4; }
+  [data-theme="dark"] p, [data-theme="dark"] li { color: #C5D5E8; }
+  [data-theme="dark"] strong { color: #E2EAF4; }
+  [data-theme="dark"] a { color: #5CB8FF; }
+  [data-theme="dark"] hr.rule { border-top-color: #1B335A; }
+  [data-theme="dark"] .internal-block { background: rgba(239,68,68,.06); border-color: #EF4444; }
+  [data-theme="dark"] .internal-block h3 { color: #FCA5A5; }
+  [data-theme="dark"] .internal-block > p { color: #FCA5A5; }
+  [data-theme="dark"] .table-wrap { border-color: #1B335A; }
+  [data-theme="dark"] thead th { background: #142848; color: #E2EAF4; border-bottom-color: #1B335A; }
+  [data-theme="dark"] tbody td { color: #C5D5E8; border-bottom-color: #1B335A; }
+  [data-theme="dark"] footer { background: #0F1E36; border-top-color: #1B335A; }
+  [data-theme="dark"] .foot-legal { color: #5C7A9E; }
+  [data-theme="dark"] .foot-legal a { color: #7A95B8; }
+  [data-theme="dark"] .foot-legal a:hover { color: #5CB8FF; }
+  [data-theme="dark"] .link-pending { color: #4E6788; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .prose { padding: 32px 20px 72px; }
+    .doc-title { font-size: 26px; }
+    h2 { font-size: 18px; margin-top: 36px; }
+    p, li { font-size: 15px; }
+    .internal-block { padding: 18px 16px; }
+    .nav-inner { padding: 12px 20px; }
+    .foot-legal { justify-content: center; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<script>
+  (() => {
+    try {
+      const t = localStorage.getItem('fp-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  })();
+</script>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">
+      <img src="assets/logo-fondix-pay.png" alt="FONDIX PAY">
+    </a>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <a class="nav-back" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Inicio
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" type="button">
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="prose">
+
+  <!-- ── Draft warning banner ── -->
+  <div class="draft-banner" role="note" aria-label="Aviso de borrador">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 9v5m0-8v.5"/></svg>
+    <span><strong>Borrador — no publicar en producción.</strong> Este documento es una base inicial preparada para revisión por asesoría legal calificada en México. Los elementos marcados como <mark class="pend">pendiente</mark> deben resolverse antes de publicar.</span>
+  </div>
+
+  <!-- ── Document header ── -->
+  <div class="doc-header">
+    <h1 class="doc-title">Términos y Condiciones de Uso — FONDIX PAY</h1>
+    <ul class="doc-meta">
+      <li><strong>Estado del documento:</strong> Borrador inicial para revisión legal</li>
+      <li><strong>Última actualización:</strong> <span class="pend">[Fecha pendiente]</span></li>
+      <li><strong>Producto:</strong> FONDIX PAY — aplicación móvil de pago de servicios</li>
+      <li><strong>Operado por:</strong> <span class="pend">[Nombre legal / razón social pendiente]</span></li>
+      <li><strong>Contacto legal:</strong> <span class="pend">[Correo legal pendiente]</span></li>
+    </ul>
+  </div>
+
+  <div class="legal-notice">
+    <p>Este documento es una base inicial preparada para revisión por asesoría legal calificada en México. No debe publicarse en producción sin dicha revisión.</p>
+  </div>
+
+  <!-- ── Section 1 ── -->
+  <h2>1. Aceptación de los términos</h2>
+  <p>Al descargar, registrarte o usar la aplicación FONDIX PAY (la "Aplicación"), aceptas estos Términos y Condiciones (los "Términos"). Si no estás de acuerdo con ellos, no uses la Aplicación.</p>
+  <p>Estos Términos constituyen un acuerdo entre tú (el "Usuario") y <span class="pend">[Nombre legal pendiente]</span> ("FONDIX PAY", "nosotros").</p>
+
+  <!-- ── Section 2 ── -->
+  <h2>2. Naturaleza del servicio</h2>
+  <p>FONDIX PAY es una plataforma tecnológica que facilita el pago de servicios del hogar y recargas de tiempo aire en México, a través de agregadores de pago autorizados y de los emisores de cada servicio.</p>
+  <p>FONDIX PAY:</p>
+  <ul>
+    <li><strong>No es un banco</strong>, ni una institución de fondos de pago electrónico (IFPE), ni una entidad financiera regulada por la Comisión Nacional Bancaria y de Valores (CNBV).</li>
+    <li><strong>No recibe depósitos ni custodia fondos</strong> del Usuario. Los cargos se aplican directamente al método de pago que el Usuario elige al momento de cada transacción.</li>
+    <li><strong>No emite los servicios que se pagan.</strong> Los servicios (electricidad, telefonía, agua, gas, entretenimiento, trámites, entre otros) son emitidos y operados por terceros independientes.</li>
+    <li><strong>No ofrece asesoría financiera, fiscal, legal ni de inversión.</strong></li>
+  </ul>
+
+  <!-- ── Section 3 ── -->
+  <h2>3. Elegibilidad</h2>
+  <p>Para usar la Aplicación debes:</p>
+  <ul>
+    <li>Tener al menos 18 años de edad.</li>
+    <li>Residir en México o pagar servicios emitidos en México.</li>
+    <li>Contar con un número de teléfono móvil válido para verificación.</li>
+    <li>Proporcionar información veraz durante el registro.</li>
+  </ul>
+
+  <!-- ── Section 4 ── -->
+  <h2>4. Cuenta de usuario y credenciales</h2>
+  <ul>
+    <li>El registro requiere verificación mediante código enviado a tu número de teléfono (OTP).</li>
+    <li>Eres responsable de mantener la confidencialidad de tu acceso y de toda actividad realizada desde tu cuenta.</li>
+    <li>Notifícanos de inmediato si detectas uso no autorizado de tu cuenta.</li>
+    <li><strong>Nunca compartas tus códigos de verificación (OTP), contraseñas o datos completos de tarjetas con nadie, incluyendo personas que digan ser personal de FONDIX PAY.</strong> FONDIX PAY nunca te pedirá estos datos por teléfono, WhatsApp o correo.</li>
+  </ul>
+
+  <!-- ── Section 5 ── -->
+  <h2>5. Descripción del servicio</h2>
+  <p>A través de la Aplicación puedes:</p>
+  <ul>
+    <li>Consultar y pagar servicios participantes (por ejemplo: electricidad, telefonía fija y móvil, agua, gas, internet, plataformas de entretenimiento y ciertos trámites).</li>
+    <li>Realizar recargas de tiempo aire de operadores participantes.</li>
+    <li>Recibir comprobantes digitales de cada operación con folio de rastreo.</li>
+    <li>Recibir notificaciones sobre el estado de tus pagos, si así lo autorizas.</li>
+  </ul>
+  <p>El catálogo de servicios disponibles puede variar según tu ubicación geográfica y la disponibilidad de los emisores y agregadores. FONDIX PAY puede agregar, modificar o retirar servicios del catálogo en cualquier momento.</p>
+
+  <!-- ── Section 6 ── -->
+  <h2>6. Comisiones y cargos</h2>
+  <ul>
+    <li>Cada transacción puede generar una comisión de servicio, la cual se muestra de forma clara <strong>antes</strong> de confirmar el pago.</li>
+    <li>Las comisiones pueden variar según el tipo de servicio o producto.</li>
+    <li>El monto total a cargo (importe del servicio más comisión) se muestra siempre antes de la confirmación final.</li>
+    <li>No aplicamos cargos ocultos. Si una operación no se procesa, no se genera comisión por esa operación.</li>
+  </ul>
+
+  <!-- ── Section 7 ── -->
+  <h2>7. Procesamiento de pagos y tiempos de acreditación</h2>
+  <ul>
+    <li>Los pagos se procesan a través de agregadores de pago autorizados y de los sistemas de los emisores de cada servicio.</li>
+    <li>La confirmación del pago por parte del emisor puede tardar. Algunos proveedores reflejan el pago en minutos; otros pueden tardar hasta 72 horas o más, según sus propios procesos.</li>
+    <li>El estado de cada transacción (en proceso, aplicada, rechazada, en aclaración) se muestra en la Aplicación.</li>
+    <li><strong>No realices pagos duplicados</strong> mientras una operación aparezca como "en proceso". Si tienes duda, contacta a soporte con tu folio.</li>
+  </ul>
+
+  <!-- ── Section 8 ── -->
+  <h2>8. Comprobantes</h2>
+  <ul>
+    <li>Cada operación genera un comprobante digital con folio único.</li>
+    <li>El comprobante emitido por FONDIX PAY acredita que la operación fue enviada y procesada a través de la plataforma; la aplicación final del pago corresponde al emisor del servicio.</li>
+    <li>Te recomendamos conservar tus comprobantes como respaldo.</li>
+  </ul>
+
+  <!-- ── Section 9 ── -->
+  <h2>9. Errores, aclaraciones y reembolsos</h2>
+  <ul>
+    <li>Si un pago no se aplica correctamente, inicia una aclaración desde la Aplicación o con soporte, proporcionando el folio de la operación.</li>
+    <li>Las aclaraciones que dependen del emisor del servicio o del agregador pueden tomar el tiempo que dichos terceros establezcan.</li>
+    <li>Procederá el reembolso cuando se confirme que el cargo se realizó y el pago no fue aplicado por causas atribuibles a la plataforma o al agregador, conforme al proceso de aclaración.</li>
+    <li>No procede reembolso cuando el Usuario capturó datos incorrectos (por ejemplo, número de referencia, número telefónico o monto equivocados) y el pago fue aplicado conforme a lo capturado. Te recomendamos verificar siempre los datos antes de confirmar.</li>
+  </ul>
+
+  <!-- ── Section 10 ── -->
+  <h2>10. Uso permitido y prohibido</h2>
+  <p>Está prohibido usar la Aplicación para:</p>
+  <ul>
+    <li>Actividades ilícitas, incluyendo lavado de dinero o financiamiento de actividades ilegales.</li>
+    <li>Pagar servicios con métodos de pago que no te pertenecen o sin autorización del titular.</li>
+    <li>Intentar vulnerar, descompilar, interferir o realizar ingeniería inversa sobre la plataforma.</li>
+    <li>Usar bots, scripts o accesos automatizados no autorizados.</li>
+    <li>Suplantar la identidad de otra persona.</li>
+    <li>Revender el servicio o explotar la plataforma comercialmente sin autorización escrita.</li>
+  </ul>
+  <p>FONDIX PAY puede suspender o cancelar cuentas que incurran en estas conductas, así como rechazar operaciones que presenten indicios de fraude o riesgo.</p>
+
+  <!-- ── Section 11 ── -->
+  <h2>11. Notificaciones y comunicaciones</h2>
+  <ul>
+    <li>La Aplicación puede enviarte notificaciones push y, si lo autorizas expresamente, mensajes por WhatsApp relacionados con el estado de tus pagos.</li>
+    <li>Puedes retirar tu consentimiento de notificaciones por WhatsApp en cualquier momento desde la Aplicación.</li>
+    <li>Las fallas en canales de notificación no afectan la validez ni el procesamiento de tus pagos; el estado oficial de cada operación es el que muestra la Aplicación.</li>
+  </ul>
+
+  <!-- ── Section 12 ── -->
+  <h2>12. Datos personales</h2>
+  <p>El tratamiento de tus datos personales se rige por nuestro <a class="link-pending" href="#" aria-disabled="true" title="Aviso de Privacidad pendiente de publicación">Aviso de Privacidad</a> conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP).</p>
+  <p>De manera resumida:</p>
+  <ul>
+    <li>Recopilamos los datos necesarios para operar el servicio (registro, verificación, procesamiento de pagos y soporte).</li>
+    <li>No vendemos tus datos personales.</li>
+    <li>Compartimos datos con agregadores y procesadores únicamente en la medida necesaria para ejecutar tus operaciones.</li>
+    <li>Tomamos medidas de seguridad razonables, incluyendo cifrado de información en tránsito.</li>
+  </ul>
+
+  <!-- ── Section 13 ── -->
+  <h2>13. Propiedad intelectual</h2>
+  <p>La Aplicación, su diseño, marcas, logotipos, código y contenidos son propiedad de <span class="pend">[Nombre legal pendiente]</span> o de sus licenciantes. Los nombres y logotipos de los servicios participantes pertenecen a sus respectivos titulares y se muestran únicamente con fines de identificación del servicio a pagar.</p>
+
+  <!-- ── Section 14 ── -->
+  <h2>14. Disponibilidad del servicio</h2>
+  <ul>
+    <li>Buscamos mantener la Aplicación disponible de forma continua, pero <strong>no garantizamos disponibilidad ininterrumpida</strong>.</li>
+    <li>El servicio puede verse afectado por mantenimientos, fallas de terceros (agregadores, emisores, redes de telecomunicaciones) o causas de fuerza mayor.</li>
+    <li>Podemos modificar, suspender o descontinuar funciones de la Aplicación, notificándolo cuando sea razonablemente posible.</li>
+  </ul>
+
+  <!-- ── Section 15 ── -->
+  <h2>15. Limitación de responsabilidad</h2>
+  <p>En la máxima medida permitida por la ley aplicable:</p>
+  <ul>
+    <li>FONDIX PAY no será responsable por daños indirectos, incidentales o consecuenciales derivados del uso o imposibilidad de uso de la Aplicación.</li>
+    <li>FONDIX PAY no es responsable por la calidad, continuidad o facturación de los servicios emitidos por terceros (por ejemplo, suministro eléctrico, telefonía o internet); nuestra responsabilidad se limita a la gestión del pago a través de la plataforma.</li>
+    <li>La responsabilidad total de FONDIX PAY frente al Usuario por una operación específica se limita al monto de dicha operación, incluyendo su comisión.</li>
+  </ul>
+  <p>Nada en estos Términos limita los derechos irrenunciables que te otorga la legislación mexicana de protección al consumidor.</p>
+
+  <!-- ── Section 16 ── -->
+  <h2>16. Proveedores externos</h2>
+  <p>Para operar, FONDIX PAY se apoya en terceros, incluyendo agregadores de pago autorizados, procesadores, proveedores de infraestructura en la nube y canales de mensajería. Estos terceros operan bajo sus propios términos y niveles de servicio, y su desempeño puede afectar los tiempos de procesamiento o notificación.</p>
+
+  <!-- ── Section 17 ── -->
+  <h2>17. Suspensión y terminación</h2>
+  <ul>
+    <li>Puedes dejar de usar la Aplicación y solicitar la cancelación de tu cuenta en cualquier momento.</li>
+    <li>FONDIX PAY puede suspender o cancelar tu cuenta por incumplimiento de estos Términos, indicios de fraude, requerimiento de autoridad o riesgo para la plataforma o para otros usuarios.</li>
+    <li>Las operaciones ya procesadas antes de la cancelación seguirán su curso normal de aclaración o aplicación.</li>
+  </ul>
+
+  <!-- ── Section 18 ── -->
+  <h2>18. Cambios a estos términos</h2>
+  <p>Podemos actualizar estos Términos. Publicaremos la versión vigente en la Aplicación y/o en nuestro sitio web, indicando la fecha de última actualización. El uso continuado de la Aplicación después de un cambio implica tu aceptación de la versión actualizada. Para cambios sustanciales, buscaremos notificarte por los canales disponibles.</p>
+
+  <!-- ── Section 19 ── -->
+  <h2>19. Ley aplicable y jurisdicción</h2>
+  <p>Estos Términos se rigen por las leyes de los Estados Unidos Mexicanos. Para cualquier controversia, las partes se someten a la jurisdicción de los tribunales competentes de <span class="pend">[Jurisdicción pendiente — definir: Chihuahua, Chih. o Ciudad de México]</span>, sin perjuicio de los derechos del Usuario ante la PROFECO o la autoridad de protección al consumidor competente.</p>
+
+  <!-- ── Section 20 ── -->
+  <h2>20. Contacto</h2>
+  <p>Para dudas, aclaraciones o soporte:</p>
+  <ul>
+    <li>Correo: <span class="pend">[Correo de soporte pendiente]</span></li>
+    <li>Dentro de la Aplicación: sección de Soporte (ten a la mano el folio de tu operación)</li>
+  </ul>
+
+  <hr class="rule">
+
+  <!-- ══════════════════════════════════════════════
+       INTERNAL ONLY — REMOVE BEFORE PUBLIC RELEASE
+       ══════════════════════════════════════════════ -->
+  <!--
+    ⚠ INTERNAL USE ONLY — DO NOT PUBLISH THIS SECTION
+    This block must be removed from the HTML before the page goes live.
+    It is kept here for internal tracking during the draft phase only.
+  -->
+  <div class="internal-block" role="note" aria-label="Sección interna — eliminar antes de publicar">
+    <div class="internal-block-hd">
+      <span class="internal-badge">⚠ Uso interno</span>
+      <h3>Pendientes antes de publicación — eliminar este bloque de la versión pública</h3>
+    </div>
+    <p>Los siguientes elementos deben resolverse antes de publicar estos Términos en producción. Esta tabla es exclusivamente para uso interno del equipo y debe eliminarse del HTML antes del lanzamiento.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pendiente</th>
+            <th>Responsable</th>
+            <th>Bloqueante</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Razón social / nombre legal de la entidad operadora</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Jurisdicción base (Chihuahua vs CDMX)</td>
+            <td>Fernando + abogado</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Aviso de Privacidad completo (documento separado, LFPDPPP)</td>
+            <td>Pendiente de redactar</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Confirmar si existe "Wallet"/saldo — si sí, requiere análisis IFPE antes de publicar</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Fecha de última actualización</td>
+            <td>Al publicar</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Correo legal y de soporte</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Revisión por abogado mexicano (consumo + fintech)</td>
+            <td>Externo</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Política de reembolsos detallada (tiempos por tipo de servicio, según SLA de Tekae)</td>
+            <td>Tras SLA formal de Tekae</td>
+            <td class="blocker-no">No (puede referenciarse)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- /INTERNAL BLOCK -->
+
+</main>
+
+<footer>
+  <div class="foot-legal">
+    <span>© 2026 FondixPay · Plataforma en preparación · No producción comercial</span>
+    <span><a href="/">Inicio</a> · <a href="terminos">Términos y Condiciones</a> · <a href="#" class="link-pending">Privacidad (pendiente)</a></span>
+  </div>
+</footer>
+
+<script>
+  (() => {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (next === 'dark') root.setAttribute('data-theme', 'dark');
+      else root.removeAttribute('data-theme');
+      try { localStorage.setItem('fp-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
