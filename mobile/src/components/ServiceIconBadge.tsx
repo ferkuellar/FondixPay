@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import { colors, serviceColorForCategory } from '../theme';
+import { serviceColorForCategory } from '../theme';
 
 type Props = {
   category: string;

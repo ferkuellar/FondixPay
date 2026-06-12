@@ -14,7 +14,7 @@ import { useAccountStore } from '../../store/accountStore';
 import { useAuthStore } from '../../store/authStore';
 import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
-import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
+import { colors, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;

@@ -1,5 +1,5 @@
 import { apiRequest } from './api';
-import type { CoverageMapState, ServiceCatalogItem, ServiceCategory } from '../types';
+import type { CoverageMapState, ServiceCatalogItem } from '../types';
 
 type ServiceCategoryResponse = {
   id: number;

@@ -17,7 +17,7 @@ import { usePaymentStore } from '../../store/paymentStore';
 import { useServiceStore } from '../../store/serviceStore';
 import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
-import { calculatePaymentBreakdown, formatMoneyMinor } from '../../utils/money';
+import { calculatePaymentBreakdown } from '../../utils/money';
 import { sharedStyles } from '../styles';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ConfirmPayment'>;

@@ -12,11 +12,11 @@ import type { PaymentMethodType, RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'AddPaymentMethodMock'>;
 
-const options: Array<{
+const options: {
   type: PaymentMethodType;
   title: string;
   description: string;
-}> = [
+}[] = [
   {
     type: 'card_mock',
     title: 'Método demo',

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
 
-import { colors, radius, shadows, spacing, typography, useAppTheme } from '../theme';
+import { radius, shadows, spacing, typography, useAppTheme } from '../theme';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'success' | 'danger';
 type Size = 'lg' | 'md' | 'sm';

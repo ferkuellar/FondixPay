@@ -8,7 +8,7 @@ type Props = {
   onSelect: (filter: TransactionHistoryFilter) => void;
 };
 
-const filters: Array<[TransactionHistoryFilter, string]> = [
+const filters: [TransactionHistoryFilter, string][] = [
   ['all', 'Todos'],
   ['succeeded', 'Simulados'],
   ['pending', 'Pendientes'],

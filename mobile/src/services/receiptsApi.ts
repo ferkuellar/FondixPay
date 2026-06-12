@@ -64,7 +64,7 @@ function mapProof(proof: ReceiptProofApiResponse): ReceiptProof {
 }
 
 export async function getReceipts(token: string) {
-  return apiRequest<Array<{ id: number }>>('/receipts', { headers: authorization(token) });
+  return apiRequest<{ id: number }[]>('/receipts', { headers: authorization(token) });
 }
 
 export async function getReceiptDetail(token: string, receiptId: string): Promise<ReceiptProof> {

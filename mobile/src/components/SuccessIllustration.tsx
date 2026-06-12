@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
-import { colors, spacing } from '../theme';
+import { colors } from '../theme';
 
 const CONFETTI = ['#F59E0B', '#3B82F6', '#EF4444', '#22C55E', '#8B5CF6'];
 
