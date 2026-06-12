@@ -7,6 +7,7 @@ import { EmptyState } from '../../components/EmptyState';
 import { ErrorState } from '../../components/ErrorState';
 import { HistoryFilterTabs } from '../../components/HistoryFilterTabs';
 import { LoadingState } from '../../components/LoadingState';
+import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { TransactionHistoryCard } from '../../components/TransactionHistoryCard';
 import { usePaymentStore } from '../../store/paymentStore';
@@ -35,10 +36,18 @@ export function HistoryScreen({ navigation }: Props) {
       <ScrollView contentContainerStyle={styles.scroll}>
         {isLoading ? <LoadingState message="Cargando historial..." /> : null}
         {error ? <ErrorState message={error} /> : null}
-        {!isLoading && !error && filtered.length === 0 ? (
+        {!isLoading && !error && payments.length === 0 ? (
           <EmptyState
-            message={filter === 'all' ? 'Aquí aparecerán tus pagos mock, pendientes y fallidos.' : 'No hay registros para este filtro.'}
-            title="Sin historial"
+            action={<PrimaryButton onPress={() => navigation.navigate('AddService')}>Agregar servicio</PrimaryButton>}
+            emoji="🧾"
+            message="Simula tu primer pago para verlo aquí. Comienza agregando un servicio."
+            title="Aún no hay movimientos"
+          />
+        ) : null}
+        {!isLoading && !error && payments.length > 0 && filtered.length === 0 ? (
+          <EmptyState
+            message="No hay pagos demo que coincidan con este filtro."
+            title="Sin resultados"
           />
         ) : null}
         {!isLoading && !error ? (
