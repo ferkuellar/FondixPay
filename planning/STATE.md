@@ -1451,3 +1451,56 @@ Remaining publication blockers:
 Next recommended sprint:
 
 Resolve publication blockers (support email, hours, in-app aclaración confirmation), or return to Tekae discovery when sandbox credentials are received.
+
+## Phase 036 — Public Contact Page Draft
+
+Current phase: Phase 036 — Public Contact Page Draft.
+
+Status: COMPLETED. Phase 036 created the public-facing Contacto page and wired footer contact links across all landing pages. No backend, mobile, admin, payment, provider, migration, or deployment changes were made.
+
+Scope completed:
+
+- Created `landing/contacto.html` — public contact page at `/contacto` (Vercel `cleanUrls: true`).
+- Page includes: draft banner, hero, two-column layout (form 2fr + sidebar 1fr → single column ≤768px), contact form with 7 fields (tipo de consulta, nombre, teléfono, correo, folio condicional, mensaje, consent checkbox), contextual hint box (vanilla JS, updates per tipo selection), conditional folio field (shown only for soporte/aclaración types), sidebar with 4 cards (app channel, soporte email, ARCO/privacy email, legal contact + legal data block), antifraud block, page footer note, internal pending checklist (10 items), cookie consent banner, dark mode.
+- Form action is `#`; JS intercepts submit and shows a clearly-labeled stub notice — no production submission is claimed.
+- `[FORM_ACTION]` is visually marked as a publication blocker in the draft banner, under the submit button, and in the internal checklist.
+- All email, entity, RFC, domicile, and hours placeholders use `.pend` amber style — no invented values.
+- Links to `privacidad`, `terminos`, and `soporte` are present throughout.
+- Updated footer Legal column in `landing/index.html`: `Contacto pendiente` (`href="#"`) → `Contacto` (`href="contacto"`).
+- Updated footer strips in `landing/terminos.html`, `landing/privacidad.html`, and `landing/soporte.html`: Contacto link added.
+- `planning/RISKS.md` updated with Phase 036 contact form risks.
+- Tekae remains disabled. Prontipagos not reintroduced.
+
+Decision boundary:
+
+- No backend form endpoint created.
+- No Formspree, Netlify Forms, Resend, SendGrid, SMTP, CRM, ticketing, or chat integration added.
+- No invented email, hours, legal entity name, RFC, or domicile.
+- No fintech/wallet/banking claims.
+- No payment processing, refund engine, reconciliation, Tekae runtime, mobile code, admin/CRM code, infrastructure, Terraform, workflow, or deployment behavior changed.
+
+Files changed:
+
+- `landing/contacto.html` (created)
+- `landing/index.html` (footer Legal contact link wired)
+- `landing/terminos.html` (footer strip: Contacto link added)
+- `landing/privacidad.html` (footer strip: Contacto link added)
+- `landing/soporte.html` (footer strip: Contacto link added)
+- `planning/STATE.md` (this record)
+- `planning/RISKS.md` (Phase 036 contact risks added)
+- `planning/sprints/036-public-contact-page/` (sprint docs)
+
+Remaining publication blockers:
+
+1. `[FORM_ACTION]` — real form submission endpoint (Formspree, Resend, backend, or other — requires approved sprint).
+2. `[CORREO_SOPORTE]` — real support email.
+3. `[CORREO_PRIVACIDAD]` — real privacy/ARCO email.
+4. `[CORREO_LEGAL]` — real legal email.
+5. `[NOMBRE_LEGAL]` — legal entity name.
+6. `[DOMICILIO_LEGAL]` — registered legal/fiscal address.
+7. `[RFC]` — entity RFC.
+8. `[HORARIO]` — real support hours.
+
+Next recommended sprint:
+
+Resolve publication blockers across contacto, soporte, terminos, and privacidad pages (primarily: legal entity name, emails, RFC, domicile, support hours, form endpoint), or return to Tekae discovery when sandbox credentials are received.

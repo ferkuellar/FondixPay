@@ -1,6 +1,6 @@
 # Risks
 
-Updated: 2026-05-20
+Updated: 2026-06-12
 
 | Risk | Impact | Current Mitigation | Next Action |
 | --- | --- | --- | --- |
@@ -571,3 +571,13 @@ Open production risks:
 | Tekae provider metadata could leak through reused admin schemas. | SEV-1 | open | Sprint 027 defines Tekae `menu`, `categoria`, `carrier`, provider IDs, raw payloads, credentials, URLs, and commercial terms as internal-only. |
 | Mobile may keep depending on demo/local coverage metadata if backend-owned public coverage is delayed. | SEV-2 | open | Future implementation must make backend coverage authoritative before removing demo fallback dependency. |
 | Short-code compatibility could become permanent migration debt. | SEV-2 | open | Sprint 027 documents short-code compatibility as temporary input-only behavior and requires a future migration/validation plan. |
+
+## Phase 036 Public Contact Page Risks
+
+| Risk | Severity | Status | Mitigation |
+|---|---|---|---|
+| Contact form has no real endpoint — `[FORM_ACTION]` is unresolved. | SEV-1 | open | Form submission is intercepted by JS stub and clearly labeled as not production. `[FORM_ACTION]` is documented as a publication blocker. Do not publish `contacto.html` without a real approved endpoint. |
+| Support/privacy/legal email placeholders could be replaced with invented addresses before production approval. | SEV-1 | open | All email addresses use `.pend` amber placeholder style; no invented addresses were added. Resolution requires Fernando + legal review before publish. |
+| Legal entity name, RFC, and domicile placeholders could be treated as cosmetic once copy is finalized. | SEV-1 | open | These are legal/fiscal facts, not copy choices. They require Fernando + attorney + accountant confirmation before publication. |
+| Public contact form could receive sensitive data (OTP, card numbers, passwords) from users who ignore the antifraud warning. | SEV-2 | open | Antifraud block warns users explicitly. Future form endpoint must redact and not store sensitive patterns submitted via form. |
+| Contact form endpoint selection could introduce third-party data processing without a privacy review. | SEV-2 | open | Any chosen form endpoint (Formspree, Resend, Netlify Forms, backend) must be reviewed against the Aviso de Privacidad before enabling. |

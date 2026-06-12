@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacto — FONDIX PAY</title>
+<meta name="description" content="Contáctanos para soporte, aclaraciones, reportes de fraude o consultas legales. Escríbenos con el folio de tu operación y te ayudamos.">
+<link rel="icon" href="assets/logo-fondix-pay.png">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  html, body { margin: 0; background: #F5F7FA; color: #0A1628;
+               font-family: 'Bricolage Grotesque', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  a { color: #1A6BFF; }
+
+  /* ── Nav ── */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(245,247,250,.92);
+         backdrop-filter: blur(20px); border-bottom: 1px solid #DDE3EE; }
+  .nav-inner { max-width: 1100px; margin: 0 auto; padding: 14px 24px;
+               display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+  .brand img { height: 44px; }
+  .nav-back { font-size: 14px; font-weight: 500; color: #3D4F6B; text-decoration: none;
+              display: flex; align-items: center; gap: 6px;
+              padding: 8px 14px; border-radius: 12px; border: 1px solid #DDE3EE;
+              transition: border-color .2s, color .2s; }
+  .nav-back:hover { color: #1A6BFF; border-color: #C9DEFF; text-decoration: none; }
+  .nav-back svg { width: 14px; height: 14px; }
+  .theme-toggle { background: transparent; border: 1px solid #C9DEFF; border-radius: 12px;
+                  width: 36px; height: 36px; cursor: pointer; padding: 0;
+                  display: inline-flex; align-items: center; justify-content: center;
+                  color: #1A6BFF; transition: background .2s, border-color .2s, transform .2s;
+                  flex-shrink: 0; }
+  .theme-toggle:hover { background: #E8F0FF; transform: rotate(-12deg); }
+  .theme-toggle svg { width: 18px; height: 18px; display: block; }
+  .theme-toggle .ico-moon { display: none; }
+
+  /* ── Page wrapper ── */
+  .page-wrap { max-width: 1000px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  /* ── Draft banner ── */
+  .draft-banner { background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.32);
+                  border-radius: 12px; padding: 14px 18px; margin-bottom: 36px;
+                  font-size: 14px; color: #92400E; line-height: 1.5;
+                  display: flex; align-items: flex-start; gap: 10px; }
+  .draft-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: #F59E0B; }
+
+  /* ── Hero ── */
+  .page-hero { margin-bottom: 36px; }
+  .page-hero h1 { font-size: 34px; font-weight: 700; letter-spacing: -.02em;
+                  line-height: 1.15; margin: 0 0 12px; color: #0A1628; }
+  .page-hero p { font-size: 17px; color: #3D4F6B; line-height: 1.65; margin: 0; }
+
+  /* ── Two-column grid ── */
+  .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 28px; align-items: start; }
+
+  /* ── Form card ── */
+  .form-card { background: #FFFFFF; border: 1px solid #DDE3EE; border-radius: 20px; padding: 32px; }
+  .form-card h2 { font-size: 20px; font-weight: 700; color: #0A1628; margin: 0 0 8px; }
+  .form-lead { font-size: 15px; color: #3D4F6B; line-height: 1.6; margin: 0 0 24px; }
+
+  /* ── Contextual hint box ── */
+  .hint-box { background: #E8F0FF; border: 1px solid #C9DEFF; border-radius: 10px;
+              padding: 12px 14px; font-size: 14px; color: #1565E8; line-height: 1.55;
+              margin-bottom: 20px; }
+
+  /* ── Form groups ── */
+  .form-group { margin-bottom: 20px; }
+  label.field-label { display: block; font-size: 14px; font-weight: 600;
+                      color: #0A1628; margin-bottom: 6px; }
+  .req { color: #EF4444; margin-left: 2px; font-weight: 700; }
+  .select-wrap { position: relative; }
+  .select-wrap::after { content: '▾'; position: absolute; right: 14px; top: 50%;
+                        transform: translateY(-50%); pointer-events: none;
+                        color: #8A9ABB; font-size: 13px; }
+  input[type="text"],
+  input[type="tel"],
+  input[type="email"],
+  select,
+  textarea {
+    width: 100%; border: 1.5px solid #DDE3EE; border-radius: 10px;
+    padding: 12px 14px; font-size: 15px; font-family: inherit; color: #0A1628;
+    background: #FFFFFF; transition: border-color .15s, box-shadow .15s;
+    -webkit-appearance: none; appearance: none;
+  }
+  select { padding-right: 36px; cursor: pointer; }
+  input:focus, select:focus, textarea:focus {
+    outline: none; border-color: #1A6BFF; box-shadow: 0 0 0 3px rgba(26,107,255,.12);
+  }
+  input::placeholder, textarea::placeholder { color: #8A9ABB; }
+  textarea { min-height: 130px; resize: vertical; line-height: 1.6; }
+  .field-helper { font-size: 13px; color: #8A9ABB; margin-top: 5px; line-height: 1.5; }
+
+  /* ── Consent checkbox ── */
+  .checkbox-row { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 20px; }
+  .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; min-width: 18px;
+    margin-top: 2px; accent-color: #1A6BFF; cursor: pointer; }
+  .checkbox-label { font-size: 14px; color: #3D4F6B; line-height: 1.55; cursor: pointer; }
+
+  /* ── Submit ── */
+  .btn-submit { width: 100%; background: #1A6BFF; color: #FFFFFF; border: none;
+    border-radius: 999px; padding: 15px 24px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: inherit; letter-spacing: -.01em;
+    transition: background .18s; }
+  .btn-submit:hover { background: #0D4FCC; }
+  .btn-submit:focus-visible { outline: 2px solid #1A6BFF; outline-offset: 3px; }
+  .form-action-note { font-size: 12px; color: #8A9ABB; margin-top: 8px;
+                      text-align: center; line-height: 1.5; }
+  .form-legal { font-size: 12px; color: #8A9ABB; line-height: 1.65; margin-top: 18px; }
+
+  /* ── Form stub notice (shown on submit, not production) ── */
+  .form-stub { background: #FEF3C7; border: 1px solid #FCD34D; border-left: 3px solid #F59E0B;
+    border-radius: 0 10px 10px 0; padding: 14px 16px; font-size: 14px;
+    color: #92400E; margin-top: 16px; line-height: 1.55; display: none; }
+
+  /* ── Sidebar ── */
+  .sidebar { display: flex; flex-direction: column; gap: 14px; }
+  .sidebar-card { background: #FFFFFF; border: 1px solid #DDE3EE; border-radius: 16px; padding: 20px 18px; }
+  .sidebar-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .05em;
+    text-transform: uppercase; background: #E8F0FF; color: #1565E8; border-radius: 8px;
+    padding: 3px 10px; margin-bottom: 10px; }
+  .sidebar-tag-green { background: #EDFAF3; color: #166534; }
+  .sidebar-card-title { font-size: 15px; font-weight: 700; color: #0A1628; margin: 0 0 8px; }
+  .sidebar-card p { font-size: 14px; color: #3D4F6B; margin: 0; line-height: 1.6; }
+  .sidebar-email { display: block; font-size: 14px; font-weight: 600;
+                   margin-bottom: 8px; word-break: break-all; }
+  .legal-data { background: #F0F3F8; border-radius: 10px; padding: 12px 14px;
+                margin-top: 10px; font-size: 13px; }
+  .legal-data dt { font-weight: 600; color: #0A1628; margin-top: 8px; }
+  .legal-data dt:first-child { margin-top: 0; }
+  .legal-data dd { color: #3D4F6B; margin: 2px 0 0 0; }
+
+  /* ── Antifraud block ── */
+  .antifraud { background: #FFF5F5; border: 1px solid #FCA5A5;
+               border-left: 4px solid #EF4444; border-radius: 0 12px 12px 0;
+               padding: 20px 22px; margin-top: 32px; }
+  .antifraud-title { font-size: 16px; font-weight: 700; color: #DC2626;
+                     margin: 0 0 12px; display: flex; align-items: center; gap: 8px; }
+  .antifraud-title svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .antifraud ul { margin: 0; padding-left: 20px; }
+  .antifraud li { font-size: 15px; color: #7F1D1D; margin-bottom: 6px; }
+  .antifraud li:last-child { margin-bottom: 0; }
+
+  /* ── Page footer note ── */
+  .page-footer-note { font-size: 13px; color: #8A9ABB; line-height: 1.7;
+                      margin-top: 32px; padding-top: 24px; border-top: 1px solid #DDE3EE; }
+
+  /* ── Pending placeholder ── */
+  .pend { background: rgba(245,158,11,.18); color: #92400E; border-radius: 4px;
+          padding: 1px 5px; font-weight: 600; font-style: normal;
+          border: 1px solid rgba(245,158,11,.30); white-space: nowrap; }
+
+  /* ── Internal-only warning block ── */
+  .internal-block { border: 2px solid #EF4444; border-radius: 16px; padding: 24px 24px 20px;
+                    background: rgba(239,68,68,.04); margin-top: 56px; }
+  .internal-block-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .internal-badge { background: #EF4444; color: #fff; border-radius: 8px;
+                    padding: 4px 12px; font-size: 11px; font-weight: 700;
+                    letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .internal-block h3 { font-size: 16px; font-weight: 700; color: #DC2626; margin: 0; line-height: 1.3; }
+  .internal-block > p { font-size: 14px; color: #7F1D1D; margin-bottom: 18px; }
+  .int-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch;
+                    border-radius: 12px; border: 1px solid #E2EAF4; margin-top: 4px; }
+  .int-table-wrap table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 480px; }
+  .int-table-wrap thead th { background: #F4F8FF; text-align: left; padding: 11px 14px;
+                              font-weight: 600; color: #0A1628; border-bottom: 1px solid #E2EAF4; }
+  .int-table-wrap tbody td { padding: 11px 14px; border-bottom: 1px solid #E2EAF4;
+                              color: #1E2D40; vertical-align: top; line-height: 1.5; }
+  .int-table-wrap tbody tr:last-child td { border-bottom: none; }
+  .blocker-si { color: #DC2626; font-weight: 700; }
+  .blocker-no { color: #4E6788; }
+
+  /* ── Footer ── */
+  footer { background: #FFFFFF; border-top: 1px solid #DDE3EE; }
+  .foot-legal { max-width: 760px; margin: 0 auto; padding: 20px 24px;
+                font-size: 12px; color: #7A95B8; display: flex;
+                justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .foot-legal a { color: #4E6788; text-decoration: underline; }
+  .foot-legal a:hover { color: #1A6BFF; }
+
+  /* ── Dark mode ── */
+  [data-theme="dark"] body { background: #0A1628; color: #E2EAF4; }
+  [data-theme="dark"] .nav { background: rgba(10,22,40,.92); border-bottom-color: #1B335A; }
+  [data-theme="dark"] .nav-back { color: #7A95B8; border-color: #25426F; }
+  [data-theme="dark"] .nav-back:hover { color: #5CB8FF; border-color: #5CB8FF; }
+  [data-theme="dark"] .theme-toggle { color: #5CB8FF; border-color: #25426F; }
+  [data-theme="dark"] .theme-toggle:hover { background: #142848; transform: rotate(12deg); }
+  [data-theme="dark"] .theme-toggle .ico-sun { display: none; }
+  [data-theme="dark"] .theme-toggle .ico-moon { display: block; }
+  [data-theme="dark"] .draft-banner { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.20); color: #FCD34D; }
+  [data-theme="dark"] .draft-banner svg { fill: #FCD34D; }
+  [data-theme="dark"] .page-hero h1 { color: #E2EAF4; }
+  [data-theme="dark"] .page-hero p { color: #7A95B8; }
+  [data-theme="dark"] .form-card { background: #0F1E36; border-color: #1B335A; }
+  [data-theme="dark"] .form-card h2 { color: #E2EAF4; }
+  [data-theme="dark"] .form-lead { color: #7A95B8; }
+  [data-theme="dark"] .hint-box { background: #142848; border-color: #25426F; color: #5CB8FF; }
+  [data-theme="dark"] label.field-label { color: #E2EAF4; }
+  [data-theme="dark"] input[type="text"],
+  [data-theme="dark"] input[type="tel"],
+  [data-theme="dark"] input[type="email"],
+  [data-theme="dark"] select,
+  [data-theme="dark"] textarea { background: #0A1628; border-color: #25426F; color: #E2EAF4; }
+  [data-theme="dark"] input:focus,
+  [data-theme="dark"] select:focus,
+  [data-theme="dark"] textarea:focus { border-color: #5CB8FF; box-shadow: 0 0 0 3px rgba(92,184,255,.12); }
+  [data-theme="dark"] input::placeholder,
+  [data-theme="dark"] textarea::placeholder { color: #4E6788; }
+  [data-theme="dark"] .field-helper { color: #4E6788; }
+  [data-theme="dark"] .select-wrap::after { color: #4E6788; }
+  [data-theme="dark"] .checkbox-label { color: #C5D5E8; }
+  [data-theme="dark"] .btn-submit { background: #1A6BFF; }
+  [data-theme="dark"] .btn-submit:hover { background: #0D4FCC; }
+  [data-theme="dark"] .form-action-note { color: #4E6788; }
+  [data-theme="dark"] .form-legal { color: #4E6788; }
+  [data-theme="dark"] .form-stub { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.20); border-left-color: #F59E0B; color: #FCD34D; }
+  [data-theme="dark"] .sidebar-card { background: #0F1E36; border-color: #1B335A; }
+  [data-theme="dark"] .sidebar-tag { background: #142848; color: #5CB8FF; }
+  [data-theme="dark"] .sidebar-tag-green { background: #0A2318; color: #4ADE80; }
+  [data-theme="dark"] .sidebar-card-title { color: #E2EAF4; }
+  [data-theme="dark"] .sidebar-card p { color: #7A95B8; }
+  [data-theme="dark"] .legal-data { background: #142848; }
+  [data-theme="dark"] .legal-data dt { color: #E2EAF4; }
+  [data-theme="dark"] .legal-data dd { color: #7A95B8; }
+  [data-theme="dark"] .antifraud { background: rgba(239,68,68,.06); border-color: #EF4444; border-left-color: #EF4444; }
+  [data-theme="dark"] .antifraud-title { color: #FCA5A5; }
+  [data-theme="dark"] .antifraud li { color: #FCA5A5; }
+  [data-theme="dark"] .page-footer-note { color: #4E6788; border-top-color: #1B335A; }
+  [data-theme="dark"] .internal-block { background: rgba(239,68,68,.06); border-color: #EF4444; }
+  [data-theme="dark"] .internal-block h3 { color: #FCA5A5; }
+  [data-theme="dark"] .internal-block > p { color: #FCA5A5; }
+  [data-theme="dark"] .int-table-wrap { border-color: #1B335A; }
+  [data-theme="dark"] .int-table-wrap thead th { background: #142848; color: #E2EAF4; border-bottom-color: #1B335A; }
+  [data-theme="dark"] .int-table-wrap tbody td { color: #C5D5E8; border-bottom-color: #1B335A; }
+  [data-theme="dark"] footer { background: #0F1E36; border-top-color: #1B335A; }
+  [data-theme="dark"] .foot-legal { color: #5C7A9E; }
+  [data-theme="dark"] .foot-legal a { color: #7A95B8; }
+  [data-theme="dark"] .foot-legal a:hover { color: #5CB8FF; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .content-grid { grid-template-columns: 1fr; }
+    .sidebar { margin-top: 0; }
+  }
+  @media (max-width: 640px) {
+    .page-wrap { padding: 32px 20px 72px; }
+    .page-hero h1 { font-size: 26px; }
+    .page-hero p { font-size: 15px; }
+    .form-card { padding: 22px 18px; }
+    .nav-inner { padding: 12px 20px; }
+    .foot-legal { justify-content: center; text-align: center; }
+    .internal-block { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+<script>
+  (() => {
+    try {
+      const t = localStorage.getItem('fp-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  })();
+</script>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">
+      <img src="assets/logo-fondix-pay.png" alt="FONDIX PAY">
+    </a>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <a class="nav-back" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Inicio
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" type="button">
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main>
+<div class="page-wrap">
+
+  <!-- ── Draft banner ── -->
+  <div class="draft-banner" role="note" aria-label="Aviso de borrador">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 9v5m0-8v.5"/></svg>
+    <span><strong>Borrador — no publicar en producción.</strong> Los elementos marcados como <mark class="pend">pendiente</mark> deben resolverse antes de publicar. El formulario no está conectado — <span class="pend">[FORM_ACTION]</span> es un bloqueante de publicación.</span>
+  </div>
+
+  <!-- ── Hero ── -->
+  <div class="page-hero">
+    <h1>Contáctanos</h1>
+    <p>Resolvemos tus dudas, aclaraciones y reportes. Ten a la mano el folio de tu operación si es sobre un pago.</p>
+  </div>
+
+  <!-- ── Two-column grid ── -->
+  <div class="content-grid">
+
+    <!-- ── Form column ── -->
+    <div class="form-col">
+      <div class="form-card">
+        <h2>Envíanos un mensaje</h2>
+        <p class="form-lead">Respondemos a todas las consultas. Para soporte sobre un pago, incluye el folio — es la forma más rápida de ayudarte.</p>
+
+        <!-- Contextual hint (shown by JS based on tipo) -->
+        <div id="hintBox" class="hint-box" role="status" aria-live="polite" style="display:none"></div>
+
+        <form id="contactForm" action="#" aria-label="Formulario de contacto">
+
+          <!-- Tipo de consulta -->
+          <div class="form-group">
+            <label class="field-label" for="tipo">Tipo de consulta <span class="req" aria-hidden="true">*</span></label>
+            <div class="select-wrap">
+              <select id="tipo" name="tipo" required aria-required="true">
+                <option value="" disabled selected>Selecciona una opción</option>
+                <option value="soporte_pago">Soporte sobre un pago</option>
+                <option value="aclaracion_reembolso">Solicitud de aclaración o reembolso</option>
+                <option value="reporte_fraude">Reporte de fraude o uso no autorizado</option>
+                <option value="arco_privacidad">Ejercicio de derechos ARCO / privacidad</option>
+                <option value="consulta_legal">Consulta legal o aviso legal</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Nombre -->
+          <div class="form-group">
+            <label class="field-label" for="nombre">Nombre <span class="req" aria-hidden="true">*</span></label>
+            <input type="text" id="nombre" name="nombre" required aria-required="true"
+                   autocomplete="name" placeholder="Tu nombre completo">
+          </div>
+
+          <!-- Teléfono -->
+          <div class="form-group">
+            <label class="field-label" for="telefono">Teléfono registrado en la app <span class="req" aria-hidden="true">*</span></label>
+            <input type="tel" id="telefono" name="telefono" required aria-required="true"
+                   autocomplete="tel" placeholder="10 dígitos" inputmode="numeric">
+            <p class="field-helper">Lo usamos para identificar tu cuenta. No lo compartimos con terceros.</p>
+          </div>
+
+          <!-- Correo electrónico -->
+          <div class="form-group">
+            <label class="field-label" for="correo">Correo electrónico</label>
+            <input type="email" id="correo" name="correo"
+                   autocomplete="email" placeholder="Para enviarte la respuesta (opcional)">
+          </div>
+
+          <!-- Folio (condicional) -->
+          <div class="form-group" id="folioGroup" style="display:none">
+            <label class="field-label" for="folio">Folio de operación</label>
+            <input type="text" id="folio" name="folio"
+                   placeholder="FP-XXXXXXXXXX" autocomplete="off"
+                   pattern="FP-[A-Z0-9]+" aria-describedby="folioHelper">
+            <p class="field-helper" id="folioHelper">Lo encuentras en el comprobante dentro de la app.</p>
+          </div>
+
+          <!-- Mensaje -->
+          <div class="form-group">
+            <label class="field-label" for="mensaje">Mensaje <span class="req" aria-hidden="true">*</span></label>
+            <textarea id="mensaje" name="mensaje" required aria-required="true"
+                      placeholder="Describe tu consulta con detalle. No incluyas contraseñas, NIP ni códigos de verificación."></textarea>
+          </div>
+
+          <!-- Consent -->
+          <div class="checkbox-row">
+            <input type="checkbox" id="consentimiento" name="consentimiento" required aria-required="true">
+            <label class="checkbox-label" for="consentimiento">
+              Acepto que FONDIX PAY trate mis datos para gestionar esta consulta, conforme al
+              <a href="privacidad" target="_blank" rel="noopener">Aviso de Privacidad</a>.
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-submit">Enviar mensaje</button>
+          <p class="form-action-note">
+            Formulario no conectado — <span class="pend">[FORM_ACTION]</span> pendiente antes de publicar.
+          </p>
+
+        </form>
+
+        <!-- Stub notice (shown on submit, clearly not production) -->
+        <div id="formStub" class="form-stub" role="status" aria-live="polite">
+          <strong>Formulario no conectado.</strong> Este es un borrador — el endpoint <span class="pend">[FORM_ACTION]</span> aún no está configurado. Mientras tanto, escríbenos directamente a <span class="pend">[CORREO_SOPORTE]</span> o inicia una aclaración desde la sección Soporte dentro de la app.
+        </div>
+
+        <!-- Form legal note -->
+        <p class="form-legal">
+          Los datos que proporciones se usarán únicamente para gestionar tu consulta.
+          Consulta nuestro <a href="privacidad">Aviso de Privacidad</a> y
+          <a href="terminos">Términos y Condiciones</a>.
+          No almacenamos contraseñas ni códigos de verificación.
+        </p>
+
+      </div>
+    </div>
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar" aria-label="Otros canales de contacto">
+
+      <!-- Desde la app -->
+      <div class="sidebar-card">
+        <span class="sidebar-tag sidebar-tag-green">Más rápido</span>
+        <div class="sidebar-card-title">Desde la app (recomendado)</div>
+        <p>Ve a la sección <strong>Soporte</strong> dentro de FONDIX PAY. El folio de tu operación se adjunta automáticamente.</p>
+      </div>
+
+      <!-- Correo de soporte -->
+      <div class="sidebar-card">
+        <span class="sidebar-tag"><span class="pend">[HORARIO]</span></span>
+        <div class="sidebar-card-title">Correo de soporte</div>
+        <span class="sidebar-email pend">[CORREO_SOPORTE]</span>
+        <p>Incluye tu folio y descríbenos lo que pasó.</p>
+      </div>
+
+      <!-- Privacidad / ARCO -->
+      <div class="sidebar-card">
+        <span class="sidebar-tag">ARCO · LFPDPPP</span>
+        <div class="sidebar-card-title">Privacidad y derechos ARCO</div>
+        <span class="sidebar-email pend">[CORREO_PRIVACIDAD]</span>
+        <p>Acceso, rectificación, cancelación u oposición de tus datos. Respondemos en máximo 20 días hábiles (LFPDPPP).</p>
+      </div>
+
+      <!-- Consultas legales -->
+      <div class="sidebar-card">
+        <span class="sidebar-tag">Legal</span>
+        <div class="sidebar-card-title">Consultas legales</div>
+        <span class="sidebar-email pend">[CORREO_LEGAL]</span>
+        <dl class="legal-data">
+          <dt>Razón social</dt>
+          <dd><span class="pend">[NOMBRE_LEGAL]</span></dd>
+          <dt>RFC</dt>
+          <dd><span class="pend">[RFC]</span></dd>
+          <dt>Domicilio</dt>
+          <dd><span class="pend">[DOMICILIO_LEGAL]</span></dd>
+          <dt>Regulador de datos</dt>
+          <dd><a href="https://home.inai.org.mx" target="_blank" rel="noopener">INAI — inai.org.mx</a></dd>
+        </dl>
+      </div>
+
+    </aside>
+  </div>
+
+  <!-- ── Antifraud block ── -->
+  <div class="antifraud" role="note" aria-label="Aviso de seguridad y antifraude">
+    <div class="antifraud-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Protege tu cuenta
+    </div>
+    <ul>
+      <li>FONDIX PAY <strong>nunca</strong> te pedirá contraseñas, OTP ni datos de tarjeta.</li>
+      <li>No respondas mensajes que digan ser de soporte y pidan esos datos.</li>
+      <li>Reporta mensajes sospechosos a <span class="pend">[CORREO_SOPORTE]</span>.</li>
+    </ul>
+  </div>
+
+  <!-- ── Page footer note ── -->
+  <p class="page-footer-note">
+    Los datos que compartas a través de este formulario se tratarán conforme al
+    <a href="privacidad">Aviso de Privacidad</a> de FONDIX PAY.
+    No almacenamos contraseñas, NIP ni códigos de verificación.
+    · <a href="terminos">Términos y Condiciones</a>
+    · <a href="soporte">Soporte</a>
+  </p>
+
+  <hr style="border:none;border-top:1px solid #DDE3EE;margin:48px 0 0;">
+
+  <!-- ── INTERNAL-ONLY BLOCK ── -->
+  <div class="internal-block" aria-label="Bloque interno — eliminar antes de publicar">
+    <div class="internal-block-hd">
+      <span class="internal-badge">Interno</span>
+      <h3>⚠ USO INTERNO — ELIMINAR ANTES DE PUBLICAR</h3>
+    </div>
+    <p>Esta sección no debe aparecer en la versión pública de la página de Contacto. Contiene pendientes que bloquean la publicación en producción.</p>
+    <div class="int-table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pendiente</th>
+            <th>Recomendación</th>
+            <th>¿Bloquea?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td><code>[FORM_ACTION]</code> — endpoint real de envío del formulario</td>
+            <td>Formspree, Netlify Forms, Resend, o endpoint backend aprobado</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><code>[CORREO_SOPORTE]</code> — correo de soporte</td>
+            <td>soporte@fondixpay.com</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><code>[CORREO_PRIVACIDAD]</code> — correo ARCO / privacidad</td>
+            <td>privacidad@fondixpay.com</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><code>[CORREO_LEGAL]</code> — correo de consultas legales</td>
+            <td>legal@fondixpay.com</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><code>[NOMBRE_LEGAL]</code> — razón social de la entidad operadora</td>
+            <td>Fernando + abogado</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><code>[DOMICILIO_LEGAL]</code> — domicilio fiscal completo</td>
+            <td>Fernando + abogado</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><code>[RFC]</code> — RFC de la entidad operadora</td>
+            <td>Fernando + contador / abogado</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><code>[HORARIO]</code> — horario real de atención del correo de soporte</td>
+            <td>Ej: Lunes a viernes, 9:00 – 18:00 h (hora CDMX)</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Decidir si el formulario usa endpoint propio (backend), servicio tercero (Formspree, Resend), o solo correo directo</td>
+            <td>Requiere aprobación de sprint antes de implementar</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Confirmar flujo in-app de aclaración antes de publicar el canal "Desde la app"</td>
+            <td>Si no existe en v1, ajustar texto a correo como único canal</td>
+            <td class="blocker-no">No (lenguaje genérico mientras no se confirme)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- /INTERNAL BLOCK -->
+
+</div>
+</main>
+
+<footer>
+  <div class="foot-legal">
+    <span>© 2026 FondixPay · Plataforma en preparación · No producción comercial</span>
+    <span>
+      <a href="/">Inicio</a> ·
+      <a href="contacto">Contacto</a> ·
+      <a href="soporte">Soporte</a> ·
+      <a href="terminos">Términos y Condiciones</a> ·
+      <a href="privacidad">Aviso de Privacidad</a>
+    </span>
+  </div>
+</footer>
+
+<script>
+  /* ── Theme toggle ── */
+  (() => {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (next === 'dark') root.setAttribute('data-theme', 'dark');
+      else root.removeAttribute('data-theme');
+      try { localStorage.setItem('fp-theme', next); } catch (e) {}
+    });
+  })();
+
+  /* ── Form: conditional folio + contextual hints ── */
+  (() => {
+    var tipoSel   = document.getElementById('tipo');
+    var folioGrp  = document.getElementById('folioGroup');
+    var hintBox   = document.getElementById('hintBox');
+    var form      = document.getElementById('contactForm');
+    var stubBox   = document.getElementById('formStub');
+
+    var FOLIO_TIPOS = ['soporte_pago', 'aclaracion_reembolso'];
+
+    var HINTS = {
+      soporte_pago:
+        'Incluye el folio de tu operación (formato FP-XXXXXXXXXX). Lo encuentras en el comprobante dentro de la app.',
+      aclaracion_reembolso:
+        'Incluye el folio de tu operación (formato FP-XXXXXXXXXX). Lo encuentras en el comprobante dentro de la app.',
+      reporte_fraude:
+        'Describe lo que ocurrió sin incluir contraseñas ni códigos OTP. Nosotros no los necesitamos y nunca debes compartirlos.',
+      arco_privacidad:
+        'Para ejercer derechos ARCO, indica tu nombre, número de teléfono registrado y el derecho que deseas ejercer. Respondemos en máximo 20 días hábiles.'
+    };
+
+    function onTipoChange() {
+      var val = tipoSel.value;
+
+      /* folio field */
+      var showFolio = FOLIO_TIPOS.indexOf(val) !== -1;
+      folioGrp.style.display = showFolio ? '' : 'none';
+
+      /* hint */
+      if (HINTS[val]) {
+        hintBox.textContent = HINTS[val];
+        hintBox.style.display = '';
+      } else {
+        hintBox.style.display = 'none';
+      }
+    }
+
+    tipoSel.addEventListener('change', onTipoChange);
+
+    /* Form submit stub — not production */
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      stubBox.style.display = 'block';
+      stubBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    });
+  })();
+</script>
+
+<style>
+  .fp-cookie-banner {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+    background: #0A1628; color: #FFFFFF;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    padding: 16px 20px; display: none;
+    box-shadow: 0 -4px 24px rgba(10, 22, 40, 0.25);
+  }
+  .fp-cookie-banner.fp-visible { display: block; }
+  .fp-cookie-inner { max-width: 1080px; margin: 0 auto; display: flex;
+    align-items: center; gap: 24px; flex-wrap: wrap; }
+  .fp-cookie-text { flex: 1 1 420px; font-size: 13px; line-height: 1.5; color: #DDE3EE; }
+  .fp-cookie-text strong { color: #FFFFFF; }
+  .fp-cookie-text a { color: #7FA8FF; text-decoration: underline; text-underline-offset: 2px; }
+  .fp-cookie-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+  .fp-cookie-btn { font-family: inherit; font-size: 13px; font-weight: 600;
+    border-radius: 9999px; padding: 12px 22px; min-height: 44px;
+    cursor: pointer; border: none; transition: opacity 0.15s ease; }
+  .fp-cookie-btn:hover { opacity: 0.88; }
+  .fp-cookie-btn:focus-visible { outline: 2px solid #7FA8FF; outline-offset: 2px; }
+  .fp-btn-accept { background: #1A6BFF; color: #FFFFFF; }
+  .fp-btn-essential { background: transparent; color: #FFFFFF; border: 1px solid #3D4F6B; }
+  @media (max-width: 640px) {
+    .fp-cookie-inner { gap: 14px; }
+    .fp-cookie-actions { width: 100%; }
+    .fp-cookie-btn { flex: 1; }
+  }
+</style>
+
+<div class="fp-cookie-banner" id="fpCookieBanner" role="dialog"
+     aria-live="polite" aria-label="Aviso de uso de cookies">
+  <div class="fp-cookie-inner">
+    <p class="fp-cookie-text">
+      <strong>Usamos cookies.</strong> Las esenciales hacen funcionar el sitio.
+      Las de analítica nos ayudan a mejorarlo y solo se activan si las aceptas.
+      Consulta nuestro <a href="privacidad">Aviso de Privacidad</a>.
+    </p>
+    <div class="fp-cookie-actions">
+      <button type="button" class="fp-cookie-btn fp-btn-essential" id="fpCookieEssential">Solo esenciales</button>
+      <button type="button" class="fp-cookie-btn fp-btn-accept" id="fpCookieAccept">Aceptar cookies</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var STORAGE_KEY = 'fp_cookie_consent', EXPIRY_DAYS = 180;
+    var banner = document.getElementById('fpCookieBanner');
+    function getConsent() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return null;
+        var data = JSON.parse(raw);
+        if (!data.timestamp || Date.now() - data.timestamp > EXPIRY_DAYS * 864e5) {
+          localStorage.removeItem(STORAGE_KEY); return null;
+        }
+        return data;
+      } catch (e) { return null; }
+    }
+    function saveConsent(analytics) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ analytics: analytics, timestamp: Date.now(), version: 1 })); }
+      catch (e) {}
+    }
+    function enableAnalytics() { /* cargar GA4 u otra herramienta aquí tras consentimiento */ }
+    function hideBanner() { banner.classList.remove('fp-visible'); }
+    var existing = getConsent();
+    if (existing === null) { banner.classList.add('fp-visible'); }
+    else if (existing.analytics === true) { enableAnalytics(); }
+    document.getElementById('fpCookieAccept').addEventListener('click', function () {
+      saveConsent(true); enableAnalytics(); hideBanner();
+    });
+    document.getElementById('fpCookieEssential').addEventListener('click', function () {
+      saveConsent(false); hideBanner();
+    });
+  })();
+</script>
+</body>
+</html>
