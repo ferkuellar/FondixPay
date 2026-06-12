@@ -7,7 +7,7 @@ It is a static landing page copied from the delivered Claude Design system ZIP a
 ## Scope
 
 - Public brand and product presentation.
-- Official public coverage by state from `FONDIXPAY_Cobertura_Por_Estado.xlsx`, approved and consulted with Prontipagos for landing use.
+- Public coverage by state, embedded directly in the landing page as static service data.
 - Future mobile app download placeholders.
 - Public launch/waitlist copy placeholders.
 - Vercel-compatible static hosting.
@@ -19,24 +19,18 @@ It is a static landing page copied from the delivered Claude Design system ZIP a
 - No login.
 - No backend financial logic.
 - No CRM/Admin access.
-- No ledger, receipts, reconciliation, Prontipagos, or card processor logic.
+- No ledger, receipts, reconciliation, or card processor logic.
 - No secrets or private environment variables.
 
 ## Coverage Data
 
-The landing loads `assets/coverage-data.js`.
+Coverage data (state names, service counts, service areas) is embedded as a static JS object directly inside `index.html`. No external coverage file is loaded.
 
-That file is generated from the approved workbook `FONDIXPAY_Cobertura_Por_Estado.xlsx` and publishes only:
+The coverage section is informational only. It does not enable real payments and does not call the backend.
 
-- state name and code,
-- service counts,
-- service area,
-- service name,
-- coverage type.
+## Chatbot
 
-It intentionally excludes internal utility, margins, charges, user data, transaction data, PAN/CVV, tokens, secrets, and provider payloads.
-
-The coverage section is informational. It does not enable real payments and does not call Prontipagos or the backend.
+The floating chat bot calls `/api/public/chat` (POST). This endpoint is not yet implemented in the backend. Until it exists, the bot displays a safe fallback message. No real AI or support is connected.
 
 ## Local Preview
 
@@ -70,12 +64,13 @@ Suggested Vercel settings:
 
 ## Pending Placeholders
 
-- `[PENDING_PUBLIC_LANDING_URL]`
-- `[PENDING_APP_STORE_URL]`
-- `[PENDING_PLAY_STORE_URL]`
-- `[PENDING_SUPPORT_CHANNEL]`
-- `[PENDING_PRIVACY_NOTICE_URL]`
-- `[PENDING_TERMS_URL]`
+All `[PENDING_*]` href values have been replaced with safe in-page anchors (`#descarga`, `#`, `/`). The following must be wired before public launch:
+
+- App Store URL (store badge href)
+- Google Play URL (store badge href)
+- Official support/contact channel (social icons + footer)
+- Privacy notice URL (footer Legal)
+- Terms of service URL (footer Legal)
 
 ## Before Publishing
 

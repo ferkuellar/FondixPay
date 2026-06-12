@@ -133,7 +133,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
   .mascot-img { position: relative; height: 100%; object-fit: contain; }
   .float { position: absolute; width: 86px; height: 86px; border-radius: 50%;
            background: #fff; box-shadow: 0 6px 20px rgba(10,22,40,.10), 0 0 0 1px rgba(10,22,40,.04);
-           display: flex; align-items: center; justify-content: center; font-size: Pend.px;
+           display: flex; align-items: center; justify-content: center; font-size: 30px;
            animation: float 4s ease-in-out infinite; }
   .float.f1 { top: 10%; left: 4%; color: #F59E0B; animation-delay: -.4s; }
   .float.f2 { top: 5%; right: 6%; color: #22C55E; animation-delay: -1.2s; }
@@ -311,7 +311,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
              background: radial-gradient(closest-side, rgba(21,101,232,.45), rgba(21,101,232,0) 70%);
              pointer-events: none; z-index: 10;
              opacity: 0; animation: tap-dot 16s ease-in-out infinite; }
-  .tap-dot.t2 { top: 200px; left: Pend.px; }
+  .tap-dot.t2 { top: 200px; left: 44px; }
   .tap-dot.t3 { top: 480px; left: 50%; transform: translateX(-50%); width: 100px; height: 50px; border-radius: 24px; }
   @keyframes tap-dot {
     0%, 22% { opacity: 0; transform: scale(.5); }
@@ -511,14 +511,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
                   background: #FFFFFF; position: relative; }
   .phone-status { padding: 16px 20px 0; display: flex; justify-content: space-between;
                   align-items: center; font-family: 'Azeret Mono', monospace; font-size: 11px; color: #0A1628; }
-  .phone-amt { font-family: 'Azeret Mono', monospace; font-weight: 700; font-size: Pend.px;
-               text-align: center; margin: Pend.px 0 8px; color: #0A1628; }
+  .phone-amt { font-family: 'Azeret Mono', monospace; font-weight: 700; font-size: 26px;
+               text-align: center; margin: 12px 0 8px; color: #0A1628; }
   .phone-label { text-align: center; color: #7A95B8; font-size: 12px;
                  text-transform: uppercase; letter-spacing: .08em; margin-bottom: 26px; }
   .phone-card { margin: 0 16px 12px; padding: 14px; border-radius: 14px; background: #F4F8FF;
                 border: 1px solid #E2EAF4;
                 display: flex; align-items: center; gap: 12px; }
-  .phone-bubble { width: Pend.px; height: Pend.px; border-radius: 12px; display: flex;
+  .phone-bubble { width: 40px; height: 40px; border-radius: 12px; display: flex;
                   align-items: center; justify-content: center; font-size: 18px; }
   .phone-svctxt { flex: 1; }
   .phone-svctxt .n { font-size: 12px; font-weight: 500; }
@@ -707,14 +707,14 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
   .map-tt-meta { font-family: 'Azeret Mono', monospace; font-size: 12px; font-weight: 700; color: #7A95B8; margin-top: 1px; }
   .map-tt-rule { height: 6px; border-radius: 999px; background: #E9F3FF; margin-top: 8px; overflow: hidden; }
   .map-tt-rule span { display: block; width: var(--coverage-width, 0%); height: 100%; border-radius: inherit; background: linear-gradient(90deg,#5CB8FF,#1565E8); opacity: .38; }
-  #detail { background: var(--color-background-secondary); border-radius: 12px; padding: 17px 20px; margin: 14px 18px 20px;
+  #detail { background: #F4F8FF; border-radius: 12px; padding: 17px 20px; margin: 14px 18px 20px;
             font-size: 15px; line-height: 1.55; display: none; }
   .svc-pill { display: inline-block; font-size: 12px; padding: 4px 10px; border-radius: 20px; margin: 3px 4px 3px 0; font-weight: 600; }
   .leg-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 10px 18px 6px;
-             font-size: 13px; color: var(--color-text-secondary); }
+             font-size: 13px; color: #4E6788; }
   .swatch { display: inline-block; width: 18px; height: 13px; border-radius: 3px; vertical-align: middle; margin-right: 5px; }
   #loading-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
-                 font-size: 13px; color: var(--color-text-secondary); }
+                 font-size: 13px; color: #7A95B8; }
 
   /* Area color sets — match brand category palette */
   .cov-tag-ENERGÍA { background: rgba(245,158,11,.12); color: #B45309; }
@@ -772,7 +772,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
   [data-theme="dark"] { color-scheme: dark; }
 
   .theme-toggle { background: transparent; border: 1px solid #C9DEFF; border-radius: 12px;
-                  width: Pend.px; height: Pend.px; cursor: pointer; padding: 0;
+                  width: 36px; height: 36px; cursor: pointer; padding: 0;
                   display: inline-flex; align-items: center; justify-content: center;
                   color: #1565E8; transition: background .2s, border-color .2s, color .2s, transform .2s; }
   .theme-toggle:hover { background: #F4F8FF; transform: rotate(-12deg); }
@@ -921,6 +921,15 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
                                               box-shadow: 0 8px 20px rgba(21,101,232,.25); }
   [data-theme="dark"] .foot-legal { border-top-color: #1B335A; color: #5C7A9E; }
 
+  /* ───────── Mobile nav hamburger ───────── */
+  .menu-btn { display: none; background: transparent; border: 1px solid #C9DEFF; border-radius: 12px;
+              width: 36px; height: 36px; cursor: pointer; padding: 0; align-items: center; justify-content: center;
+              color: #1565E8; font-size: 20px; line-height: 1; flex-shrink: 0;
+              transition: background .2s, border-color .2s; }
+  .menu-btn:hover { background: #F4F8FF; }
+  [data-theme="dark"] .menu-btn { color: #5CB8FF; border-color: #25426F; }
+  [data-theme="dark"] .menu-btn:hover { background: #142848; }
+
   /* ───────── Responsive spacing (tablet + mobile) ───────── */
   @media (max-width: 1024px) {
     section { padding: 64px 24px; }
@@ -930,10 +939,27 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     .section-title { font-size: 36px; }
     .section-sub { margin-bottom: 40px; }
   }
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr 0.85fr; gap: 40px; }
+    h1.hero-title { font-size: 52px; }
+  }
   @media (max-width: 640px) {
     section { padding: 48px 20px; }
-    .nav-inner { padding: 12px 20px; gap: 14px; }
+    .nav-inner { padding: 12px 20px; gap: 10px; }
     .nav-links { display: none; }
+    .nav-links.open {
+      display: flex; flex-direction: column; position: absolute;
+      top: 100%; left: 0; right: 0;
+      background: rgba(255,255,255,.96); backdrop-filter: blur(20px);
+      padding: 12px 20px 16px; border-bottom: 1px solid #E2EAF4; gap: 0; z-index: 50;
+    }
+    .nav-links.open a { padding: 11px 0; font-size: 15px; border-bottom: 1px solid #E2EAF4; }
+    .nav-links.open a:last-child { border-bottom: none; }
+    [data-theme="dark"] .nav-links.open { background: rgba(10,22,40,.96); border-bottom-color: #1B335A; }
+    [data-theme="dark"] .nav-links.open a { border-bottom-color: #1B335A; }
+    .menu-btn { display: inline-flex; }
+    .btn-hide-mobile { display: none !important; }
+    .brand img { height: 44px; }
 
     .hero { padding: 56px 20px 40px; grid-template-columns: 1fr; gap: 36px; }
     .hero-mascot { height: 360px; }
@@ -943,6 +969,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     .section-sub { font-size: 15px; margin-bottom: 32px; }
 
     .services, .scenes, .steps { gap: 16px; }
+    .scenes, .steps { grid-template-columns: 1fr; }
     .showcase { padding: 32px 24px; gap: 32px; grid-template-columns: 1fr; border-radius: 24px; }
     .showcase .section-title { font-size: 28px; }
 
@@ -953,99 +980,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     .foot-inner { grid-template-columns: 1fr; gap: 24px; padding: 36px 20px 20px; }
     .foot-legal { flex-direction: column; gap: 8px; padding: 16px 20px; text-align: center; }
   }
-/* ───────── Chat bot ───────── */
-.bot-fab { position: fixed; right: 22px; bottom: 22px; z-index: 200;
-           width: 68px; height: 68px; border-radius: 50%; border: none; cursor: pointer; padding: 0;
-           background: linear-gradient(135deg,#5CB8FF,#1565E8);
-           box-shadow: 0 12px 32px rgba(21,101,232,.45), inset 0 1px 0 rgba(255,255,255,.3);
-           display: flex; align-items: center; justify-content: center;
-           transition: transform .35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .25s; }
-.bot-fab:hover { transform: scale(1.07); box-shadow: 0 18px 40px rgba(21,101,232,.55); }
-.bot-fab:active { transform: scale(0.96); }
-.bot-fab .bot-svg { width: 44px; height: 44px; will-change: transform; }
-.bot-fab .bot-svg .bot-body { transition: transform .25s ease; }
-.bot-fab .bot-svg .eye { transform-origin: center; transition: transform .12s ease-out; }
-.bot-fab .bot-svg .antenna-dot { animation: bot-blink 2.4s ease-in-out infinite; }
-@keyframes bot-blink {
-  0%, 80%, 100% { opacity: 1; }
-  85%, 92%       { opacity: .3; }
-}
-.bot-fab .badge { position: absolute; top: -2px; right: -2px; min-width: 18px; height: 18px;
-                  padding: 0 4px; border-radius: 99px; background: #EF4444; color: #fff;
-                  font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center;
-                  border: 2px solid #fff; box-shadow: 0 4px 10px rgba(239,68,68,.4); }
-
-.bot-tooltip { position: fixed; right: 100px; bottom: 36px; z-index: 199;
-               background: #0A1628; color: #fff; padding: 9px 14px; border-radius: 12px;
-               font-size: 13px; box-shadow: 0 8px 22px rgba(10,22,40,.25);
-               white-space: nowrap; opacity: 0; transform: translateX(8px); pointer-events: none;
-               transition: opacity .25s ease, transform .25s ease; }
-.bot-tooltip::after { content: ''; position: absolute; right: -6px; top: 50%; transform: translateY(-50%);
-                      border: 6px solid transparent; border-left-color: #0A1628; }
-.bot-tooltip.show { opacity: 1; transform: translateX(0); }
-
-.bot-panel { position: fixed; right: 22px; bottom: 102px; z-index: 201;
-             width: 360px; max-width: calc(100vw - 44px); height: 540px; max-height: calc(100vh - 130px);
-             background: #fff; border-radius: 20px; border: 1px solid #E2EAF4;
-             box-shadow: 0 24px 60px rgba(21,101,232,.25), 0 0 0 1px rgba(10,22,40,.04);
-             display: flex; flex-direction: column; overflow: hidden;
-             opacity: 0; transform: translateY(20px) scale(.96); pointer-events: none;
-             transition: opacity .3s ease, transform .3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.bot-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
-
-.bot-header { background: linear-gradient(135deg,#1565E8,#0D4FBF); color: #fff;
-              padding: 16px 18px; display: flex; align-items: center; gap: 12px; }
-.bot-header .av { width: 42px; height: 42px; border-radius: 50%; background: #fff;
-                  display: flex; align-items: center; justify-content: center; }
-.bot-header .av svg { width: 30px; height: 30px; }
-.bot-header .meta h4 { margin: 0; font-size: 14px; font-weight: 700; line-height: 1.2; }
-.bot-header .meta small { font-size: 11px; opacity: .85; display: flex; align-items: center; gap: 6px; }
-.bot-header .meta small::before { content: ''; width: 6px; height: 6px; border-radius: 50%;
-                                  background: #22C55E; box-shadow: 0 0 6px #22C55E; }
-.bot-header .close { margin-left: auto; background: rgba(255,255,255,.16); border: none; color: #fff;
-                     width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 16px; }
-
-.bot-msgs { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px;
-            background: #F4F8FF; }
-.bot-msgs::-webkit-scrollbar { width: 6px; }
-.bot-msgs::-webkit-scrollbar-thumb { background: #C9DEFF; border-radius: 6px; }
-.msg { max-width: 80%; padding: 10px 13px; border-radius: 14px; font-size: 13.5px; line-height: 1.45;
-       word-wrap: break-word; }
-.msg.bot { background: #fff; color: #0A1628; border-bottom-left-radius: 4px; align-self: flex-start;
-           border: 1px solid #E2EAF4; }
-.msg.user { background: linear-gradient(135deg,#3B9BFF,#1565E8); color: #fff;
-            border-bottom-right-radius: 4px; align-self: flex-end; }
-
-.typing { display: inline-flex; gap: 4px; padding: 12px 14px; background: #fff; border: 1px solid #E2EAF4;
-          border-radius: 14px; border-bottom-left-radius: 4px; align-self: flex-start; }
-.typing span { width: 6px; height: 6px; border-radius: 50%; background: #7A95B8;
-               animation: bot-typing 1.2s ease-in-out infinite; }
-.typing span:nth-child(2) { animation-delay: .15s; }
-.typing span:nth-child(3) { animation-delay: .30s; }
-@keyframes bot-typing {
-  0%,100% { opacity: .3; transform: translateY(0); }
-  50%     { opacity: 1; transform: translateY(-3px); }
-}
-
-.suggested { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 16px 8px; background: #F4F8FF; }
-.sugg-pill { background: #fff; border: 1px solid #C9DEFF; color: #1565E8;
-             padding: 7px 11px; border-radius: 99px; font-size: 11.5px; cursor: pointer; font-family: inherit;
-             transition: background .2s, border-color .2s; }
-.sugg-pill:hover { background: #1565E8; color: #fff; border-color: #1565E8; }
-
-.bot-input { display: flex; gap: 8px; padding: 12px 14px; background: #fff; border-top: 1px solid #E2EAF4; }
-.bot-input input { flex: 1; border: 1px solid #E2EAF4; border-radius: 99px; padding: 10px 16px;
-                   font-family: inherit; font-size: 13.5px; outline: none; color: #0A1628; background: #F4F8FF; }
-.bot-input input:focus { border-color: #1565E8; background: #fff; box-shadow: 0 0 0 3px rgba(21,101,232,.12); }
-.bot-input button { background: linear-gradient(135deg,#3B9BFF,#1565E8); border: none; color: #fff;
-                    width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 18px;
-                    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-                    box-shadow: 0 4px 12px rgba(21,101,232,.35); }
-.bot-input button:disabled { opacity: .5; cursor: not-allowed; }
-
-@media (prefers-reduced-motion: reduce) {
-  .bot-fab .bot-svg .antenna-dot { animation: none !important; }
-}
 </style>
 </head>
 <body>
@@ -1072,11 +1006,12 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       <a href="#descarga">Lanzamiento</a>
     </div>
     <div style="display:flex;gap:10px;align-items:center;">
+      <button class="menu-btn" id="menuBtn" aria-label="Menú de navegación" aria-expanded="false" type="button">☰</button>
       <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" type="button">
         <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4"/></svg>
         <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg>
       </button>
-      <a class="btn btn-secondary" href="#estado">Ver estado</a>
+      <a class="btn btn-secondary btn-hide-mobile" href="#estado">Ver estado</a>
       <a class="btn btn-primary" href="#descarga">Unirme a la lista</a>
     </div>
   </div>
@@ -1091,10 +1026,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       <a class="btn btn-secondary btn-lg" href="#momentos">Ver cómo funciona</a>
     </div>
     <div class="store-row" style="margin-top:18px">
-      <a class="store-badge" href="[PENDING_APP_STORE_URL]" aria-label="App Store pendiente">
+      <a class="store-badge" href="#descarga" aria-label="App Store pendiente">
         <img src="assets/badge-app-store.svg" alt="App Store pendiente">
       </a>
-      <a class="store-badge" href="[PENDING_PLAY_STORE_URL]" aria-label="Google Play pendiente">
+      <a class="store-badge" href="#descarga" aria-label="Google Play pendiente">
         <img src="assets/badge-google-play.svg" alt="Google Play pendiente">
       </a>
     </div>
@@ -1125,11 +1060,6 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       <span class="logo-chip"><img src="assets/partners/totalplay.svg" alt="Totalplay"></span>
       <span class="logo-chip"><img src="assets/partners/megacable.svg" alt="Megacable"></span>
       <span class="logo-chip tall"><img src="assets/partners/sacmex.png" alt="SACMEX"></span>
-      <span class="logo-chip"><img src="assets/partners/telcel.svg" alt="Netflix" style="filter:brightness(0) saturate(100%) invert(15%) sepia(85%) saturate(7479%) hue-rotate(355deg) brightness(89%) contrast(116%)"></span>
-      <span class="logo-chip"><img src="assets/partners/telmex.svg" alt="Spotify" style="filter:brightness(0) saturate(100%) invert(63%) sepia(46%) saturate(776%) hue-rotate(86deg) brightness(95%) contrast(89%)"></span>
-      <span class="logo-chip"><img src="assets/partners/izzi.svg" alt="HBO Max"></span>
-      <span class="logo-chip"><img src="assets/partners/totalplay.svg" alt="Disney+" style="filter:brightness(0) saturate(100%) invert(15%) sepia(85%) saturate(2479%) hue-rotate(220deg) brightness(89%) contrast(116%)"></span>
-      <span class="logo-chip"><img src="assets/partners/megacable.svg" alt="Prime Video" style="filter:brightness(0) saturate(100%) invert(45%) sepia(86%) saturate(1300%) hue-rotate(170deg) brightness(95%) contrast(101%)"></span>
     </div>
   </div>
 </div>
@@ -1154,6 +1084,23 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       if (next === 'dark') root.setAttribute('data-theme', 'dark');
       else root.removeAttribute('data-theme');
       try { localStorage.setItem('fp-theme', next); } catch (e) {}
+    });
+  })();
+
+  // Mobile nav hamburger
+  (() => {
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.querySelector('.nav-links');
+    if (!menuBtn || !navLinks) return;
+    menuBtn.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', open);
+    });
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.nav-inner')) {
+        navLinks.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      }
     });
   })();
 
@@ -1221,7 +1168,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       </div>
 
       <div class="leg-row" id="legend-row">
-        <span style="font-weight:500;color:var(--color-text-primary);">Servicios locales/regionales:</span>
+        <span style="font-weight:500;color:#0A1628;">Servicios locales/regionales:</span>
       </div>
 
       <div id="detail"></div>
@@ -1326,7 +1273,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       </div>
       <h5>¿No ves el tuyo?</h5>
       <p>Déjanos saber qué servicio necesitas cuando abramos canales públicos confirmados.</p>
-      <div class="partners"><span>[PENDING_SUPPORT_CHANNEL]</span>
+      <div class="partners"><span>Canal por confirmar</span>
         <span class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
       </div>
     </div>
@@ -1466,11 +1413,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       <p class="section-sub">Esta página es informativa. La app aún no habilita pagos reales ni descargas finales.</p>
     </div>
     <div class="rev-rating">
-      <div class="rev-rating-num">Prep.<span></span></div>
-      <div>
-        <div class="rev-rating-stars">Sin reseñas públicas</div>
-        <div class="rev-rating-meta"><b style="color:#0A1628;">App Store y Play Store pendientes</b><br>Canales públicos por confirmar</div>
+      <div style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:99px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.28);">
+        <span style="width:9px;height:9px;border-radius:50%;background:#F59E0B;box-shadow:0 0 8px rgba(245,158,11,.5);flex-shrink:0;"></span>
+        <span style="font-size:14px;font-weight:700;color:#92400E;font-family:'Azeret Mono',monospace;letter-spacing:-.01em;">En preparación</span>
       </div>
+      <div class="rev-rating-meta" style="margin-top:10px;"><b style="color:#0A1628;">App Store y Play Store pendientes</b><br>Canales públicos por confirmar</div>
     </div>
   </div>
 
@@ -1490,7 +1437,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       </div>
       <div class="rev-card">
         <span class="rev-city">Soporte</span>
-        <p class="rev-quote">El canal público de soporte todavía no está confirmado: [PENDING_SUPPORT_CHANNEL].</p>
+        <p class="rev-quote">El canal público de soporte todavía no está confirmado. Se anunciará con el lanzamiento.</p>
       </div>
     </div>
   </div>
@@ -1500,10 +1447,10 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     <h2>¿Quieres enterarte cuando <span class="grad">FondixPay</span> abra?</h2>
     <p>La descarga pública, términos, privacidad y soporte oficial siguen pendientes de confirmación.</p>
     <div class="store-row" style="justify-content:center;">
-      <a class="store-badge" href="[PENDING_APP_STORE_URL]" aria-label="App Store pendiente">
+      <a class="store-badge" href="#descarga" aria-label="App Store pendiente">
         <img src="assets/badge-app-store.svg" alt="App Store pendiente">
       </a>
-      <a class="store-badge" href="[PENDING_PLAY_STORE_URL]" aria-label="Google Play pendiente">
+      <a class="store-badge" href="#descarga" aria-label="Google Play pendiente">
         <img src="assets/badge-google-play.svg" alt="Google Play pendiente">
       </a>
     </div>
@@ -1517,19 +1464,19 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
       <p>FondixPay es una app móvil en preparación para pago de servicios con tarjeta crédito/débito. No procesa pagos reales desde esta landing.</p>
       <p style="font-family:'Azeret Mono',monospace;font-size:11px;color:#4E6788;">© 2026 FondixPay · Plataforma en preparación · No producción comercial</p>
       <div class="foot-social" aria-label="Síguenos en redes">
-        <a href="[PENDING_SUPPORT_CHANNEL]" aria-label="TikTok" target="_blank" rel="noopener">
+        <a href="#" aria-label="TikTok" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.5 3a4.6 4.6 0 0 0 4.5 4.4v2.9a7.4 7.4 0 0 1-4.5-1.5v6.6a5.5 5.5 0 1 1-5.5-5.5c.3 0 .7 0 1 .1v3a2.6 2.6 0 1 0 1.8 2.5V3h2.7z"/></svg>
         </a>
-        <a href="[PENDING_SUPPORT_CHANNEL]" aria-label="Instagram" target="_blank" rel="noopener">
+        <a href="#" aria-label="Instagram" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
         </a>
-        <a href="[PENDING_SUPPORT_CHANNEL]" aria-label="Facebook" target="_blank" rel="noopener">
+        <a href="#" aria-label="Facebook" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.7c0-.9.3-1.6 1.7-1.6h1.6V4.2c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.4V14h2.7v8h3.4z"/></svg>
         </a>
-        <a href="[PENDING_SUPPORT_CHANNEL]" aria-label="X (antes Twitter)" target="_blank" rel="noopener">
+        <a href="#" aria-label="X (antes Twitter)" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 3h3.2l-7 8 8.3 10h-6.6l-5.1-6.4L4.4 21H1.2l7.5-8.6L1 3h6.7l4.6 5.8L17.5 3zm-1.1 16.1h1.8L7.8 4.8H5.9l10.5 14.3z"/></svg>
         </a>
-        <a href="[PENDING_SUPPORT_CHANNEL]" aria-label="LinkedIn" target="_blank" rel="noopener">
+        <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4v11H3v-11zm6.5 0h3.8v1.5h.1c.5-1 1.8-2 3.7-2 4 0 4.7 2.6 4.7 6v5.5h-4v-4.9c0-1.2 0-2.7-1.7-2.7s-2 1.3-2 2.6v5h-4v-11z"/></svg>
         </a>
       </div>
@@ -1540,11 +1487,11 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
     </div>
     <div>
       <h6>Compañía</h6>
-      <a href="#estado">Estado público</a><a href="[PENDING_PUBLIC_LANDING_URL]">Sitio público pendiente</a><a href="[PENDING_SUPPORT_CHANNEL]">Contacto pendiente</a>
+      <a href="#estado">Estado público</a><a href="/">Sitio público pendiente</a><a href="#">Contacto pendiente</a>
     </div>
     <div>
       <h6>Legal</h6>
-      <a href="[PENDING_TERMS_URL]">Términos pendientes</a><a href="[PENDING_PRIVACY_NOTICE_URL]">Privacidad pendiente</a><a href="[PENDING_SUPPORT_CHANNEL]">Soporte pendiente</a><a href="[PENDING_SUPPORT_CHANNEL]">Contacto pendiente</a>
+      <a href="#">Términos pendientes</a><a href="#">Privacidad pendiente</a><a href="#">Soporte pendiente</a><a href="#">Contacto pendiente</a>
     </div>
   </div>
   <div class="foot-legal">
@@ -1960,13 +1907,13 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
             <div style="width:16px;height:16px;border-radius:4px;background:${colorScale(ex)};border:0.5px solid #ccc;flex-shrink:0;"></div>
             <div>
               <span style="font-size:15px;font-weight:500;">${name}</span>
-              <span style="font-size:12px;color:var(--color-text-secondary);margin-left:8px;">${total} servicios totales</span>
+              <span style="font-size:12px;color:#4E6788;margin-left:8px;">${total} servicios totales</span>
             </div>
           </div>
-          <div style="background:var(--color-background-primary);border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;">
-            <span style="color:var(--color-text-secondary);">Nacionales (todos los estados): </span>
+          <div style="background:#FFFFFF;border-radius:8px;padding:8px 12px;margin-bottom:10px;font-size:12px;">
+            <span style="color:#4E6788;">Nacionales (todos los estados): </span>
             <strong>${NATIONAL}</strong>
-            <span style="color:var(--color-text-secondary);font-size:11px;"> - CFE, Telmex, Telcel, Netflix, Spotify, Gas LP, Sky, TAE, INFONAVIT...</span>
+            <span style="color:#4E6788;font-size:11px;"> - CFE, Telmex, Telcel, Netflix, Spotify, Gas LP, Sky, TAE, INFONAVIT...</span>
           </div>`;
 
           if(ex > 0) {
@@ -1981,7 +1928,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
               html += "</div>";
             }
           } else {
-            html += `<div style="font-size:12px;color:var(--color-text-secondary);padding:6px 0;">Solo servicios nacionales. No hay agua, gobierno local, ni telecomunicaciones regionales disponibles aún en el catálogo.</div>`;
+            html += `<div style="font-size:12px;color:#4E6788;padding:6px 0;">Solo servicios nacionales. No hay agua, gobierno local, ni telecomunicaciones regionales disponibles aún en el catálogo.</div>`;
           }
           detail.style.display = "block";
           detail.innerHTML = html;
@@ -1991,7 +1938,7 @@ html { scroll-behavior: smooth; scroll-padding-top: 100px; }
 
       const legRow = document.getElementById("legend-row");
       const thresholds = [0,...colorScale.thresholds()];
-      legRow.innerHTML = '<span style="font-weight:500;color:var(--color-text-primary);font-size:12px;">Servicios locales:</span> ' +
+      legRow.innerHTML = '<span style="font-weight:500;color:#0A1628;font-size:12px;">Servicios locales:</span> ' +
         colors.map((c,i) => {
           const lo = thresholds[i]!==undefined ? Math.ceil(thresholds[i]) : 0;
           const hi = thresholds[i+1]!==undefined ? Math.floor(thresholds[i+1]-0.01) : maxE;

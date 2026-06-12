@@ -1,6 +1,6 @@
 # Project State
 
-Updated: 2026-05-26
+Updated: 2026-06-11
 
 Current phase: Phase 10X - Public Landing Page Integration & Commercial Front Door.
 
@@ -1283,3 +1283,49 @@ Decision boundary:
 Next recommended sprint:
 
 Tekae discovery closure after sandbox credentials and documentation are received, or a service catalog admin hardening sprint if internal tooling is prioritized.
+
+## Sprint 032 — Landing Page Responsive Polish
+
+Current phase: Sprint 032 — Landing Page Responsive Polish.
+
+Status: COMPLETED. Sprint 032 fixed critical CSS bugs, improved mobile responsiveness, cleaned content integrity issues, and removed misrepresented partner logos. No backend, mobile, admin, payment, provider, migration, or deployment changes were made.
+
+Scope completed:
+
+- Fixed five `Pend.px` placeholder values in CSS (`.float` font-size, `.tap-dot.t2` left, `.phone-amt` font-size and margin, `.phone-bubble` width/height, `.theme-toggle` width/height).
+- Removed duplicate chatbot CSS block (identical ruleset appeared twice in the single `<style>` tag).
+- Replaced three undefined CSS variables (`var(--color-background-secondary)`, `var(--color-text-secondary)`, `var(--color-text-primary)`) with literal hex values matching the `colors_and_type.css` design tokens.
+- Added `.scenes` and `.steps` single-column mobile collapse rule at ≤640px.
+- Added hero intermediate breakpoint at ≤900px (`1fr 0.85fr`) to prevent cramping on tablets before the full 640px stack.
+- Added mobile hamburger nav: `.menu-btn` CSS + JS toggle, `aria-expanded` state, click-outside-to-close.
+- Added `.brand img` mobile size override (82px → 44px at ≤640px).
+- Added `.btn-hide-mobile` utility class; "Ver estado" nav button hidden on mobile to reduce clutter.
+- Removed five misrepresented streaming logos (Netflix, Spotify, HBO Max, Disney+, Prime Video) from the partner marquee — these were real partner SVGs recolored with CSS filters, which was brand-misleading. Only confirmed operator logos remain (CFE, Telcel, Telmex, Izzi, Totalplay, Megacable, SACMEX).
+- Replaced all `[PENDING_*]` literal href values: App Store/Play Store → `#descarga`, `[PENDING_SUPPORT_CHANNEL]` → `#`, `[PENDING_PUBLIC_LANDING_URL]` → `/`, terms/privacy → `#`.
+- Replaced `[PENDING_SUPPORT_CHANNEL]` display text in categories ghost card and in the estado review card.
+- Replaced the broken `.rev-rating-num "Prep."` star-widget with a clean amber status badge ("En preparación").
+- Removed Prontipagos reference from `landing/README.md`.
+- Added chatbot endpoint note to README: `/api/public/chat` is not yet implemented; bot shows safe fallback.
+- Updated pending-placeholders section in README to document what needs to be wired before public launch.
+
+Decision boundary:
+
+- No backend code, endpoint, migration, schema, route, service, payment logic, provider adapter, or Tekae behavior changed.
+- No mobile code changed.
+- No admin/CRM code changed.
+- No new cloud infrastructure, Terraform, workflow, or deployment behavior added.
+- No real App Store or Play Store URLs wired (not yet confirmed).
+- No real support channel URL wired (not yet confirmed).
+- No paid libraries or analytics added.
+- No real Tekae catalog data used.
+- Prontipagos was not reintroduced.
+
+Files changed:
+
+- `landing/index.html`
+- `landing/README.md`
+- `planning/STATE.md`
+
+Next recommended sprint:
+
+Landing visual validation (local browser smoke test), or return to Tekae discovery when sandbox credentials are received.

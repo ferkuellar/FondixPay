@@ -1,6 +1,6 @@
 window.FONDIX_COVERAGE = {
   "source": "FONDIXPAY_Cobertura_Por_Estado.xlsx",
-  "approvalNote": "Cobertura original aprobada y consultada con Prontipagos para uso publico en landing.",
+  "approvalNote": "Cobertura por estado para uso publico en landing. Datos de referencia unicamente.",
   "publicDataPolicy": "Solo cobertura por estado y nombres de servicios. No incluye utilidad interna, cargos, secretos, tokens ni datos de usuarios.",
   "stateCount": 32,
   "uniqueServiceCount": 89,
