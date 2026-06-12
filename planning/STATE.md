@@ -1504,3 +1504,55 @@ Remaining publication blockers:
 Next recommended sprint:
 
 Resolve publication blockers across contacto, soporte, terminos, and privacidad pages (primarily: legal entity name, emails, RFC, domicile, support hours, form endpoint), or return to Tekae discovery when sandbox credentials are received.
+
+## Sprints 037–044 — Mobile UX Polish Series
+
+All eight sprints are mobile-only. No backend, payment logic, provider, migration, infrastructure, Terraform, workflow, or deployment behavior was changed in any of them. Tekae remains disabled. Prontipagos not reintroduced.
+
+### Sprint 037 — OTP Resend Activation
+Status: COMPLETED (2026-06-12, commit 8bc4892).
+Made the "Reenviar código" text on OtpVerificationScreen functional. Wrapped in Pressable, calls existing requestLoginCode action, resets 25-second countdown, shows 3-second "Código reenviado" confirmation. Disabled while loading.
+File changed: `mobile/src/screens/auth/OtpVerificationScreen.tsx`.
+
+### Sprint 038 — User Name Personalization
+Status: COMPLETED (2026-06-12, commit 6ab736c).
+Replaced hardcoded 'Ana' in HomeScreen with real user from auth store (displayName = user?.name?.trim() || 'Usuario'). Replaced 'Sofía Ramírez' fallback and fake phone fallback in ProfileScreen with neutral values.
+Files changed: `mobile/src/screens/home/HomeScreen.tsx`, `mobile/src/screens/profile/ProfileScreen.tsx`.
+
+### Sprint 039 — Support Screen Landing Handoff
+Status: COMPLETED (2026-06-12, commit 7256350).
+Created `mobile/src/constants/links.ts` with four empty pending URL constants (SUPPORT_PAGE_URL, CONTACT_PAGE_URL, PRIVACY_PAGE_URL, TERMS_PAGE_URL). Rewrote SupportPlaceholderScreen with improved copy, a conditional Linking.openURL link to the support page (gated on URL truthiness), and a ReferenceRow helper.
+Files changed: `mobile/src/constants/links.ts` (created), `mobile/src/screens/support/SupportPlaceholderScreen.tsx`.
+
+### Sprint 040 — links.ts Wiring to Landing Pages
+Status: COMPLETED (2026-06-12, commit 0bbe91e).
+Wired PRIVACY_PAGE_URL to ProfileScreen "Seguridad y privacidad" row (opens via Linking). Added terms/privacy consent footnote to OnboardingScreen below login link — tappable when URLs set, plain text when empty.
+Files changed: `mobile/src/screens/profile/ProfileScreen.tsx`, `mobile/src/screens/OnboardingScreen.tsx`.
+
+### Sprint 041 — OTP Resend Error Feedback
+Status: COMPLETED (2026-06-12, commit 10a0f09).
+Fixed two bugs: (1) resend failure was contaminating the wrong-code error card with "Código incorrecto" message; (2) resend failure had no visible feedback. Added local resendError state, calls clearError() after resend failure, renders amber warning card near resend button, auto-clears after 5 seconds.
+File changed: `mobile/src/screens/auth/OtpVerificationScreen.tsx`.
+
+### Sprint 042 — AccountCreated Screen Polish
+Status: COMPLETED (2026-06-12, commit 0bbc5a0).
+Personalized post-signup welcome screen: title shows "¡Hola, {firstName}!" when user.name is set, "¡Listo!" as fallback. Added privacy consent footnote with Linking.openURL. Upgraded text colors to theme.fg/fg2/fg3 for dark-mode correctness. Removed unused colors import.
+File changed: `mobile/src/screens/auth/AccountCreatedScreen.tsx`.
+
+### Sprint 043 — History Empty State Polish
+Status: COMPLETED (2026-06-12, commit 0208c66).
+Split HistoryScreen empty state into two distinct cases: no payments at all shows "Aún no hay movimientos" with PrimaryButton CTA to AddService; filter mismatch shows "Sin resultados" with no action.
+File changed: `mobile/src/screens/payments/HistoryScreen.tsx`.
+
+### Sprint 044 — PhoneLogin Consent Footnote
+Status: COMPLETED (2026-06-12, commit ec98558).
+Added terms/privacy consent footnote below CONTINUAR button in PhoneLoginScreen. Completes consistent consent coverage across the full auth entry path (OnboardingScreen Sprint 040, PhoneLoginScreen Sprint 044, AccountCreatedScreen Sprint 042).
+File changed: `mobile/src/screens/auth/PhoneLoginScreen.tsx`.
+
+### Sprint documentation gap note (014–033)
+
+Sprints 014–033 were all executed and committed to git (commits 34c5b80 through d9bbc16). STATE.md has records for all of them. However, no sprint directory artifacts (requirements.md, blueprint.md, acceptance.md, COMPLETION_REPORT.md) were created for any sprint in that range. This is a documentation debt. The code and STATE.md records are authoritative.
+
+Next recommended sprint:
+
+Publication blocker resolution (legal entity name, RFC, domicile, emails, support hours, form endpoint across landing pages), or continued mobile UX polish, or Tekae discovery when sandbox credentials are received.
