@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
+import { useAdminApi } from "../api/useAdminApi";
 import { useAdminAuth } from "../auth/AdminAuthProvider";
 import "./crmVisual.css";
 
@@ -860,7 +861,10 @@ function ReconciliationView({ title, subtitle }: { title: string; subtitle: stri
   );
 }
 
+type TestMessage = { role: "user" | "assistant"; content: string };
+
 function BotLandingView() {
+  const api = useAdminApi();
   const [identity, setIdentity] = useState<BotIdentity>({
     name: "FONDIX Bot",
     tagline: "En línea · responde al toque",
@@ -870,10 +874,52 @@ function BotLandingView() {
   const [prompt, setPrompt] = useState(BOT_DEFAULT_PROMPT);
   const [pills, setPills] = useState(botPillsInitial);
   const [kb, setKb] = useState(botKnowledgeInitial);
+  const [testOpen, setTestOpen] = useState(false);
+  const [testMessages, setTestMessages] = useState<TestMessage[]>([]);
+  const [testInput, setTestInput] = useState("");
+  const [testLoading, setTestLoading] = useState(false);
+  const [testError, setTestError] = useState<string | null>(null);
+  const threadRef = useRef<HTMLDivElement>(null);
 
   const updateIdentity = (key: keyof BotIdentity, value: string) => {
     setIdentity((current) => ({ ...current, [key]: value }));
   };
+
+  function openTest() {
+    setTestOpen(true);
+    setTestMessages([]);
+    setTestInput("");
+    setTestError(null);
+  }
+
+  function closeTest() {
+    setTestOpen(false);
+  }
+
+  async function sendTestMessage() {
+    const content = testInput.trim();
+    if (!content || testLoading) return;
+    const next: TestMessage[] = [...testMessages, { role: "user", content }];
+    setTestMessages(next);
+    setTestInput("");
+    setTestLoading(true);
+    setTestError(null);
+    setTimeout(() => {
+      if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight;
+    }, 0);
+    try {
+      const result = await api.chatTest({ system: prompt, messages: next });
+      const withReply: TestMessage[] = [...next, { role: "assistant", content: result.content }];
+      setTestMessages(withReply);
+      setTimeout(() => {
+        if (threadRef.current) threadRef.current.scrollTop = threadRef.current.scrollHeight;
+      }, 0);
+    } catch (err) {
+      setTestError(err instanceof Error ? err.message : "No se pudo conectar con el bot. Verifica que el backend esté corriendo y que CHATBOT_AI_API_KEY esté configurado en .env.");
+    } finally {
+      setTestLoading(false);
+    }
+  }
 
   return (
     <>
@@ -882,8 +928,8 @@ function BotLandingView() {
         subtitle="Configura la identidad, personalidad y respuestas del FONDIX Bot que vive en fondixpay.mx"
         actions={
           <>
-            <button className="crm-btn"><Icon name="eye" />Probar</button>
-            <button className="crm-btn primary"><Icon name="check" />Publicar cambios</button>
+            <button className="crm-btn" type="button" onClick={openTest}><Icon name="eye" />Probar</button>
+            <button className="crm-btn primary" type="button"><Icon name="check" />Publicar cambios</button>
           </>
         }
       />
@@ -983,7 +1029,7 @@ function BotLandingView() {
           </Card>
           <Card title="Salud del modelo">
             <div className="crm-bot-metrics">
-              <BotMetric label="Modelo activo" value="claude-haiku-4.5" mono />
+              <BotMetric label="Modelo activo" value="claude-haiku-4-5-20251001" mono />
               <BotMetric label="Latencia p50" value="0.84 s" mono />
               <BotMetric label="Latencia p95" value="2.1 s" mono />
               <BotMetric label="Tokens / día (avg)" value="142,800" mono />
@@ -992,6 +1038,57 @@ function BotLandingView() {
           </Card>
         </section>
       </div>
+
+      {testOpen ? (
+        <div className="crm-bot-test-overlay" onClick={(e) => { if (e.target === e.currentTarget) closeTest(); }}>
+          <div className="crm-bot-test-modal">
+            <div className="crm-bot-test-header">
+              <span>
+                <strong>{identity.name}</strong>
+                <small style={{ marginLeft: 8, color: "var(--crm-muted)", fontSize: 11 }}>Prueba en vivo · prompt activo</small>
+              </span>
+              <button type="button" onClick={closeTest} aria-label="Cerrar">×</button>
+            </div>
+            <div className="crm-bot-test-thread" ref={threadRef}>
+              {testMessages.length === 0 && !testError ? (
+                <div className="crm-bot-test-empty">Escribe un mensaje para probar el bot con el prompt configurado.</div>
+              ) : null}
+              {testMessages.map((msg, index) => (
+                <div key={index} className={`crm-bot-test-msg ${msg.role}`}>
+                  <strong>{msg.role === "user" ? "Tú" : identity.name}</strong>
+                  <p>{msg.content}</p>
+                </div>
+              ))}
+              {testLoading ? (
+                <div className="crm-bot-test-msg assistant crm-bot-test-typing">
+                  <strong>{identity.name}</strong>
+                  <p>···</p>
+                </div>
+              ) : null}
+              {testError ? <div className="crm-bot-test-error">{testError}</div> : null}
+            </div>
+            <div className="crm-bot-test-input">
+              <input
+                className="crm-input"
+                placeholder="Escribe tu pregunta..."
+                value={testInput}
+                onChange={(e) => setTestInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void sendTestMessage(); } }}
+                disabled={testLoading}
+                autoFocus
+              />
+              <button
+                className="crm-btn primary"
+                type="button"
+                onClick={() => void sendTestMessage()}
+                disabled={testLoading || !testInput.trim()}
+              >
+                {testLoading ? "···" : "Enviar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends, Query, Request, status
+import httpx
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.database import get_db
 from app.modules.admin.dependencies import require_admin_permission
 from app.modules.admin.models import SupportTicket
@@ -26,6 +28,8 @@ from app.modules.chatbot.schemas import (
     ChatbotKnowledgeUpdate,
     ChatbotSettingRead,
     ChatbotSettingUpdate,
+    ChatTestRequest,
+    ChatTestResponse,
     PublicChatRequest,
     PublicChatResponse,
 )
@@ -351,3 +355,36 @@ def update_setting(key: str, payload: ChatbotSettingUpdate, request: Request, cu
     item = repository.upsert_setting(db, key=key, value=payload.value, actor_id=current_user.id)
     services.audit_admin_chatbot_action(db, request, current_user, event_type="chatbot.settings.updated", permission="admin.chatbot.settings.manage", entity_type="ChatbotSetting", entity_id=key)
     return ChatbotSettingRead.model_validate(item, from_attributes=True)
+
+
+@admin_router.post("/test", response_model=ChatTestResponse)
+async def chat_test(
+    payload: ChatTestRequest,
+    current_user: User = Depends(require_admin_permission("admin.chatbot.manage")),
+) -> ChatTestResponse:
+    if not settings.chatbot_ai_api_key:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="CHATBOT_AI_API_KEY no está configurado en el backend. Agrega la clave al archivo .env y reinicia el servidor.",
+        )
+    model = payload.model or settings.chatbot_ai_model or "claude-haiku-4-5-20251001"
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        response = await client.post(
+            "https://api.anthropic.com/v1/messages",
+            headers={
+                "x-api-key": settings.chatbot_ai_api_key,
+                "anthropic-version": "2023-06-01",
+                "content-type": "application/json",
+            },
+            json={
+                "model": model,
+                "max_tokens": 1024,
+                "system": payload.system,
+                "messages": [{"role": m.role, "content": m.content} for m in payload.messages],
+            },
+        )
+    if not response.is_success:
+        raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=f"Anthropic API respondió con error {response.status_code}.")
+    data = response.json()
+    content = data["content"][0]["text"]
+    return ChatTestResponse(content=content, model=model)

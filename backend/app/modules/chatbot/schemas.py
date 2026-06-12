@@ -236,3 +236,19 @@ class ChatOperationTicketCreate(BaseModel):
 
 class ChatOperationTicketStatusUpdate(BaseModel):
     note: str | None = Field(default=None, max_length=4000)
+
+
+class ChatTestMessage(BaseModel):
+    role: str = Field(pattern=r"^(user|assistant)$")
+    content: str = Field(min_length=1, max_length=4000)
+
+
+class ChatTestRequest(BaseModel):
+    system: str = Field(default="", max_length=10000)
+    messages: list[ChatTestMessage] = Field(min_length=1, max_length=20)
+    model: str = Field(default="claude-haiku-4-5-20251001", max_length=100)
+
+
+class ChatTestResponse(BaseModel):
+    content: str
+    model: str

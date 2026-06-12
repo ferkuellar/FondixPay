@@ -164,6 +164,8 @@ export function createAdminClient(getToken: TokenProvider) {
     chatbotSettings: () => request<ChatbotSetting[]>("/admin/chat/settings"),
     updateChatbotSetting: (key: string, value: Record<string, unknown>) =>
       request<ChatbotSetting>(`/admin/chat/settings/${key}`, { method: "PATCH", body: JSON.stringify({ value }) }),
+    chatTest: (payload: { system: string; messages: Array<{ role: string; content: string }>; model?: string }) =>
+      request<{ content: string; model: string }>("/admin/chat/test", { method: "POST", body: JSON.stringify(payload) }),
     chatOperationsMetrics: () => request<ChatOperationsMetrics>("/admin/chat/operations/metrics"),
     chatOperationsConversations: (params: {
       status?: string;

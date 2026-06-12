@@ -19,7 +19,9 @@ services:
     build:
       context: ./backend
     env_file:
-      - .env.example
+      - path: .env.example
+      - path: .env
+        required: false
     environment:
       DATABASE_URL: postgresql+psycopg://fondix:fondix@postgres:5432/fondix_pay
     ports:
