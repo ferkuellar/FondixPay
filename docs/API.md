@@ -1010,3 +1010,31 @@ Implemented behavior:
 - Tekae `menu`, `categoria`, `carrier`, provider service codes, raw provider payloads, credentials, tokens, URLs, commercial terms, and confidential provider material remain internal-only.
 
 No database migration, table schema change, stored state-code migration, Tekae runtime, provider call, payment logic, webhook, `.env`, dependency, infrastructure, workflow, deployment, or real catalog import was added.
+
+## Sprint 031 State Coverage Filtering — Confirmed Behavior
+
+Sprint 031 inspected the current `GET /service-catalog` state filtering implementation and confirmed the behavior is correct. No production code was changed. Backend tests were hardened.
+
+### `state_code` Query Parameter — Confirmed Behavior
+
+| Input | Behavior |
+|---|---|
+| Omitted | Returns all payable mobile services regardless of state. |
+| `CHH` (legacy short code) | Normalized to `MX-CHH`; returns national services + CHH-covered services. |
+| `MX-CHH` (canonical) | Same result as `CHH`. Inputs are equivalent. |
+| `INVALID` or unrecognized value | Returns HTTP 200 with `services: []` and `count: 0`. Not a 422 or 500. |
+
+### Filtering Logic
+
+- Filtering is applied in the service layer (Python-side), not at the database query level.
+- Fetching all payable services first and filtering in Python is intentional: DB-level state joins exclude national services (which have no per-state rows).
+- National services (`is_national=true`) are always included for any valid requested state.
+- State-specific services are included only when the requested canonical state appears in the service's confirmed `coverage_states`.
+- Only services with `visible_on_mobile=true`, `payable_in_mobile=true`, `coverage_status=available`, and a confirmed provider capability are eligible for inclusion.
+- Unknown, unavailable, disabled, temporarily disabled, maintenance, deprecated, rejected, and not-user-facing services are excluded before returning.
+
+### Public Response Contract
+
+- National services emit `coverage.mode = "NATIONAL"` and `coverage.states = []`.
+- State services emit `coverage.mode = "STATE"` and canonical `MX-*` codes in `coverage.states`.
+- `MX-ALL` is internal compatibility only and is never emitted in a public response.

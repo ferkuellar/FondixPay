@@ -1244,3 +1244,42 @@ Decision boundary:
 - No Tekae runtime, Tekae SSO, token generation, provider call, real catalog import, NDA/manual copy, raw provider data, provider credential, sensitive URL, commercial term, or confidential provider metadata was added.
 - No payment flow, payment method, reconciliation, GPS/location behavior, endpoint, database schema, migration, dependency, mobile UI redesign, infrastructure, deployment, workflow, `.env`, secret, or Prontipagos work was added.
 - Local/demo fallback remains intentionally available until DEV and STAGING backend-backed payable catalog data meet the documented removal threshold.
+
+## Sprint 031 — Backend State Coverage Filtering Hardening
+
+Current phase: Sprint 031 — Backend State Coverage Filtering Hardening.
+
+Status: COMPLETED as test hardening and documentation only. No production code was changed.
+
+Inspection findings:
+
+- `GET /service-catalog?state_code=...` already implements correct state filtering as of Sprint 028.
+- Filtering is applied Python-side in `list_mobile_services()` (not at DB query level) intentionally: DB-level state joins exclude national services, which have no per-state coverage rows.
+- Both `CHH` (legacy short code) and `MX-CHH` (canonical) inputs are accepted and normalized to canonical form via `normalize_public_state_code()`.
+- National services are always included for any valid requested state.
+- State-specific services are included only when the requested canonical state appears in the service's confirmed coverage states.
+- An unrecognized `state_code` (e.g., `INVALID`) returns HTTP 200 with `services: []` and `count: 0`.
+- `MX-ALL` is never emitted in public responses.
+- Public response contract matches Sprint 027/028 design: `NATIONAL` mode with `states: []`, `STATE` mode with canonical `MX-*` codes.
+
+Tests added to `backend/tests/test_public_catalog_coverage_api.py`:
+
+- `test_short_code_and_canonical_input_return_identical_results`: asserts `CHH` and `MX-CHH` inputs return the same result set (national + CHH services, not JAL).
+- `test_state_specific_service_excluded_for_non_matching_state`: asserts a CHH-only service is excluded when requesting `MX-COA`.
+- `test_invalid_state_code_returns_empty_list`: asserts unrecognized `state_code` returns 200 with empty list.
+
+Documentation updated:
+
+- `docs/API.md`: Sprint 031 confirmed behavior section added with `state_code` parameter table and filtering logic summary.
+
+Decision boundary:
+
+- No production code was changed (no routes, services, schemas, mapper, repository, mobile, or payment logic).
+- No new endpoint was created.
+- No database schema or migration was changed.
+- No Tekae runtime, SSO, token generation, provider call, real catalog import, NDA/manual copy, GPS/location behavior, dependency, infrastructure, deployment, workflow, `.env`, secret, or Prontipagos work was added.
+- Mobile local/demo fallback remains intentionally in place.
+
+Next recommended sprint:
+
+Tekae discovery closure after sandbox credentials and documentation are received, or a service catalog admin hardening sprint if internal tooling is prioritized.

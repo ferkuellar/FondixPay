@@ -217,6 +217,42 @@ def test_public_catalog_keeps_existing_mobile_required_fields(client: TestClient
     }.issubset(service)
 
 
+def test_short_code_and_canonical_input_return_identical_results(client: TestClient, db_session: Session) -> None:
+    create_synthetic_public_service(db_session, slug="parity-national", is_national=True)
+    create_synthetic_public_service(db_session, slug="parity-chh-only", state_codes=["CHH"])
+    create_synthetic_public_service(db_session, slug="parity-jal-only", state_codes=["JAL"])
+
+    short_response = client.get("/service-catalog?state_code=CHH")
+    canonical_response = client.get("/service-catalog?state_code=MX-CHH")
+
+    assert short_response.status_code == 200
+    assert canonical_response.status_code == 200
+    short_slugs = {s["slug"] for s in short_response.json()["services"]}
+    canonical_slugs = {s["slug"] for s in canonical_response.json()["services"]}
+    assert short_slugs == canonical_slugs == {"parity-national", "parity-chh-only"}
+
+
+def test_state_specific_service_excluded_for_non_matching_state(client: TestClient, db_session: Session) -> None:
+    create_synthetic_public_service(db_session, slug="excl-chh-only", state_codes=["CHH"])
+
+    response = client.get("/service-catalog?state_code=MX-COA")
+
+    assert response.status_code == 200
+    slugs = {s["slug"] for s in response.json()["services"]}
+    assert "excl-chh-only" not in slugs
+
+
+def test_invalid_state_code_returns_empty_list(client: TestClient, db_session: Session) -> None:
+    create_synthetic_public_service(db_session, slug="invalid-state-national", is_national=True)
+
+    response = client.get("/service-catalog?state_code=INVALID")
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["services"] == []
+    assert body["count"] == 0
+
+
 def assert_no_legacy_state_values(values: list[str]) -> None:
     legacy_codes = {"CHH", "COA", "NLE", "CMX", "JAL"}
     assert all(value.startswith("MX-") for value in values)
