@@ -175,7 +175,6 @@ export function AddServiceScreen({ navigation }: Props) {
             />
             <Text style={[styles.helper, { color: theme.primary }]}>¿Dónde encuentro este número? Ver ejemplo del recibo →</Text>
             <TextInput onChangeText={setAlias} placeholder="Alias (opcional, ej. Casa)" value={alias} />
-            {validating ? <LoadingState message="Validando número..." /> : null}
             <PrimaryButton disabled={reference.length < 4 || validating} loading={validating} onPress={goToConfirm}>
               CONTINUAR
             </PrimaryButton>
