@@ -23,7 +23,9 @@ export function OtpVerificationScreen({ route }: Props) {
   const [otp, setOtp] = useState('');
   const [secondsLeft, setSecondsLeft] = useState(25);
   const [resendSent, setResendSent] = useState(false);
+  const [resendError, setResendError] = useState<string | undefined>();
   const resendTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const clearError = useAuthStore((state) => state.clearError);
   const error = useAuthStore((state) => state.error);
   const isLoading = useAuthStore((state) => state.isLoading);
   const otpDev = useAuthStore((state) => state.otpDev);
@@ -44,13 +46,18 @@ export function OtpVerificationScreen({ route }: Props) {
 
   async function resendCode() {
     if (isLoading || secondsLeft > 0) return;
+    setResendError(undefined);
+    if (resendTimer.current) clearTimeout(resendTimer.current);
     try {
       await requestLoginCode(route.params.phone);
       setSecondsLeft(25);
       setResendSent(true);
       resendTimer.current = setTimeout(() => setResendSent(false), 3000);
-    } catch {
-      // Store keeps user-facing error.
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'No pudimos reenviar el código. Intenta en un momento.';
+      clearError();
+      setResendError(message);
+      resendTimer.current = setTimeout(() => setResendError(undefined), 5000);
     }
   }
 
@@ -102,6 +109,13 @@ export function OtpVerificationScreen({ route }: Props) {
               Código reenviado
             </Text>
           ) : null}
+          {resendError ? (
+            <View style={[styles.resendErrorCard, { backgroundColor: `${theme.warning ?? '#F59E0B'}18`, borderColor: `${theme.warning ?? '#F59E0B'}55` }]}>
+              <Text style={[styles.resendErrorText, { color: theme.warning ?? '#92400E' }]}>
+                {resendError}
+              </Text>
+            </View>
+          ) : null}
           <View style={styles.actions}>
             <PrimaryButton disabled={otp.length < 6} loading={isLoading} onPress={continueToHome}>
               ENTRAR
@@ -148,6 +162,16 @@ const styles = StyleSheet.create({
   },
   resendConfirm: {
     ...typography.caption,
+    textAlign: 'center',
+  },
+  resendErrorCard: {
+    borderRadius: radius.lg,
+    borderWidth: 1,
+    padding: spacing.md,
+    width: '100%',
+  },
+  resendErrorText: {
+    ...typography.bodySmall,
     textAlign: 'center',
   },
   resendMuted: {
