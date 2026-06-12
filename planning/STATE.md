@@ -1364,4 +1364,43 @@ Files changed:
 
 Next recommended sprint:
 
-Legal review of `landing/terminos.html` draft by qualified Mexican attorney, then Aviso de Privacidad draft sprint, or return to Tekae discovery when sandbox credentials are received.
+Legal review of `landing/terminos.html` and `landing/privacidad.html` drafts by qualified Mexican attorney, then Aviso de Privacidad final review, or return to Tekae discovery when sandbox credentials are received.
+
+## Sprint 034 — Aviso de Privacidad Draft
+
+Current phase: Sprint 034 — Aviso de Privacidad Draft.
+
+Status: COMPLETED. Sprint 034 created the public-facing Aviso de Privacidad draft page and wired footer privacy links across the landing. No backend, mobile, admin, payment, provider, migration, or deployment changes were made.
+
+Scope completed:
+
+- Created `landing/privacidad.html` — a new static HTML page serving the Spanish LFPDPPP-compliant privacy notice draft at the `/privacidad` route (Vercel `cleanUrls: true`).
+- Page includes the same design tokens (`colors_and_type.css`), sticky nav with back-to-home link, dark mode IIFE, and footer as the main landing and `terminos.html`.
+- All 11 LFPDPPP sections implemented: Identidad del responsable, Datos que recabamos, Finalidades, Datos sensibles, Opciones de limitación, Derechos ARCO, Revocación, Transferencias, Cookies, Cambios, Contacto.
+- Pending placeholders (legal entity name, domicile, effective date, privacy email, ARCO email) styled with `.pend` amber style — no invented legal entities or emails.
+- Internal-only warning block clearly marked with red border and 10-item pending table.
+- Product positioned as services/payments platform throughout — no bank, wallet, IFPE, fintech, lender, or investment language.
+- Updated footer in `landing/index.html`: `Privacidad pendiente` (`href="#"`) → `Aviso de Privacidad` (`href="privacidad"`).
+- Updated footer in `landing/terminos.html`: `link-pending` privacy placeholder → `href="privacidad"`.
+- Updated internal table row 3 in `landing/terminos.html`: marks Aviso de Privacidad draft as created, pending legal review.
+- Tekae remains disabled. Prontipagos not reintroduced.
+
+Decision boundary:
+
+- This document is a draft base for legal review and must not be published in production without review by a qualified Mexican attorney specializing in LFPDPPP.
+- No final legal advice is implied. No pending placeholder was replaced with invented legal entity name, domicile, jurisdiction, or email.
+- No backend code, endpoint, migration, schema, payment logic, provider adapter, Tekae behavior, mobile code, admin/CRM code, infrastructure, Terraform, workflow, or deployment behavior changed.
+- Real App Store / Play Store URLs and real support channel remain pending (unchanged).
+- Soporte and Contacto footer links remain `href="#"` (unchanged).
+
+Files changed:
+
+- `landing/privacidad.html` (created)
+- `landing/index.html` (footer Legal privacy link updated)
+- `landing/terminos.html` (footer privacy link updated; internal table row 3 updated)
+- `planning/STATE.md` (this record)
+- `planning/sprints/034-aviso-de-privacidad/` (sprint docs created)
+
+Next recommended sprint:
+
+Legal review of `landing/terminos.html` and `landing/privacidad.html` drafts by qualified Mexican attorney, then resolve pending placeholders (legal entity name, domicile, ARCO email, effective date) before any public launch, or return to Tekae discovery when sandbox credentials are received.

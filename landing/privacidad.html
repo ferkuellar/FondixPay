@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aviso de Privacidad — FONDIX PAY</title>
+<meta name="description" content="Aviso de Privacidad de FONDIX PAY, plataforma móvil de pago de servicios en México, conforme a la LFPDPPP.">
+<link rel="icon" href="assets/logo-fondix-pay.png">
+<link rel="stylesheet" href="colors_and_type.css">
+<style>
+  html, body { margin: 0; background: #FFFFFF; color: #0A1628;
+               font-family: 'Bricolage Grotesque', system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  a { color: #1565E8; }
+
+  /* ── Nav ── */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.88);
+         backdrop-filter: blur(20px); border-bottom: 1px solid #E2EAF4; }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+               display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; }
+  .brand img { height: 44px; }
+  .nav-back { font-size: 14px; font-weight: 500; color: #4E6788; text-decoration: none;
+              display: flex; align-items: center; gap: 6px;
+              padding: 8px 14px; border-radius: 12px; border: 1px solid #E2EAF4;
+              transition: border-color .2s, color .2s; }
+  .nav-back:hover { color: #1565E8; border-color: #C9DEFF; text-decoration: none; }
+  .nav-back svg { width: 14px; height: 14px; }
+  .theme-toggle { background: transparent; border: 1px solid #C9DEFF; border-radius: 12px;
+                  width: 36px; height: 36px; cursor: pointer; padding: 0;
+                  display: inline-flex; align-items: center; justify-content: center;
+                  color: #1565E8; transition: background .2s, border-color .2s, transform .2s;
+                  flex-shrink: 0; }
+  .theme-toggle:hover { background: #F4F8FF; transform: rotate(-12deg); }
+  .theme-toggle svg { width: 18px; height: 18px; display: block; }
+  .theme-toggle .ico-moon { display: none; }
+
+  /* ── Prose container ── */
+  .prose { max-width: 760px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  /* ── Draft banner ── */
+  .draft-banner { background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.32);
+                  border-radius: 12px; padding: 14px 18px; margin-bottom: 36px;
+                  font-size: 14px; color: #92400E; line-height: 1.5;
+                  display: flex; align-items: flex-start; gap: 10px; }
+  .draft-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; fill: #F59E0B; }
+
+  /* ── Document header ── */
+  .doc-header { padding-bottom: 28px; border-bottom: 1px solid #E2EAF4; margin-bottom: 40px; }
+  .doc-title { font-size: 34px; font-weight: 700; letter-spacing: -.02em;
+               line-height: 1.1; margin: 0 0 22px; color: #0A1628; }
+  .doc-meta { list-style: none; padding: 0; margin: 0;
+              display: flex; flex-direction: column; gap: 7px; }
+  .doc-meta li { font-size: 14px; color: #4E6788; }
+  .doc-meta li strong { color: #0A1628; font-weight: 600; }
+
+  /* ── Legal notice callout ── */
+  .legal-notice { border-left: 3px solid #1565E8; background: #F4F8FF;
+                  border-radius: 0 12px 12px 0; padding: 14px 18px; margin: 0 0 40px;
+                  font-size: 14px; color: #4E6788; line-height: 1.6; }
+  .legal-notice p { margin: 0; }
+
+  /* ── Section headings & body ── */
+  h2 { font-size: 20px; font-weight: 700; letter-spacing: -.01em;
+       margin: 44px 0 12px; color: #0A1628; line-height: 1.2; }
+  h2:first-of-type { margin-top: 0; }
+  p { font-size: 16px; line-height: 1.75; color: #1E2D40; margin: 0 0 16px; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; }
+  li { font-size: 16px; line-height: 1.75; color: #1E2D40; margin-bottom: 5px; }
+  strong { color: #0A1628; }
+  hr.rule { border: none; border-top: 1px solid #E2EAF4; margin: 56px 0; }
+
+  /* ── Pending placeholder ── */
+  .pend { background: rgba(245,158,11,.18); color: #92400E; border-radius: 4px;
+          padding: 1px 5px; font-weight: 600; font-style: normal;
+          border: 1px solid rgba(245,158,11,.30); white-space: nowrap; }
+
+  /* ── Internal-only warning block ── */
+  .internal-block { border: 2px solid #EF4444; border-radius: 16px; padding: 24px 24px 20px;
+                    background: rgba(239,68,68,.04); margin-top: 56px; }
+  .internal-block-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .internal-badge { background: #EF4444; color: #fff; border-radius: 8px;
+                    padding: 4px 12px; font-size: 11px; font-weight: 700;
+                    letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+  .internal-block h3 { font-size: 16px; font-weight: 700; color: #DC2626; margin: 0; line-height: 1.3; }
+  .internal-block > p { font-size: 14px; color: #7F1D1D; margin-bottom: 18px; }
+
+  /* ── Pending table ── */
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch;
+                border-radius: 12px; border: 1px solid #E2EAF4; margin-top: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 520px; }
+  thead th { background: #F4F8FF; text-align: left; padding: 11px 14px;
+             font-weight: 600; color: #0A1628; border-bottom: 1px solid #E2EAF4; }
+  tbody td { padding: 11px 14px; border-bottom: 1px solid #E2EAF4;
+             color: #1E2D40; vertical-align: top; line-height: 1.5; }
+  tbody tr:last-child td { border-bottom: none; }
+  .blocker-si { color: #DC2626; font-weight: 700; }
+  .blocker-no { color: #4E6788; }
+
+  /* ── Footer ── */
+  footer { background: #F4F8FF; border-top: 1px solid #E2EAF4; }
+  .foot-legal { max-width: 760px; margin: 0 auto; padding: 20px 24px;
+                font-size: 12px; color: #7A95B8; display: flex;
+                justify-content: space-between; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .foot-legal a { color: #4E6788; text-decoration: underline; }
+  .foot-legal a:hover { color: #1565E8; }
+
+  /* ── Dark mode ── */
+  [data-theme="dark"] body { background: #0A1628; color: #E2EAF4; }
+  [data-theme="dark"] .nav { background: rgba(15,30,54,.88); border-bottom-color: #1B335A; }
+  [data-theme="dark"] .nav-back { color: #7A95B8; border-color: #25426F; }
+  [data-theme="dark"] .nav-back:hover { color: #5CB8FF; border-color: #5CB8FF; }
+  [data-theme="dark"] .theme-toggle { color: #5CB8FF; border-color: #25426F; }
+  [data-theme="dark"] .theme-toggle:hover { background: #142848; transform: rotate(12deg); }
+  [data-theme="dark"] .theme-toggle .ico-sun { display: none; }
+  [data-theme="dark"] .theme-toggle .ico-moon { display: block; }
+  [data-theme="dark"] .draft-banner { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.20); color: #FCD34D; }
+  [data-theme="dark"] .draft-banner svg { fill: #FCD34D; }
+  [data-theme="dark"] .doc-title { color: #E2EAF4; }
+  [data-theme="dark"] .doc-meta li { color: #7A95B8; }
+  [data-theme="dark"] .doc-meta li strong { color: #E2EAF4; }
+  [data-theme="dark"] .doc-header { border-bottom-color: #1B335A; }
+  [data-theme="dark"] .legal-notice { background: #0F1E36; border-left-color: #5CB8FF; color: #7A95B8; }
+  [data-theme="dark"] h2 { color: #E2EAF4; }
+  [data-theme="dark"] p, [data-theme="dark"] li { color: #C5D5E8; }
+  [data-theme="dark"] strong { color: #E2EAF4; }
+  [data-theme="dark"] a { color: #5CB8FF; }
+  [data-theme="dark"] hr.rule { border-top-color: #1B335A; }
+  [data-theme="dark"] .internal-block { background: rgba(239,68,68,.06); border-color: #EF4444; }
+  [data-theme="dark"] .internal-block h3 { color: #FCA5A5; }
+  [data-theme="dark"] .internal-block > p { color: #FCA5A5; }
+  [data-theme="dark"] .table-wrap { border-color: #1B335A; }
+  [data-theme="dark"] thead th { background: #142848; color: #E2EAF4; border-bottom-color: #1B335A; }
+  [data-theme="dark"] tbody td { color: #C5D5E8; border-bottom-color: #1B335A; }
+  [data-theme="dark"] footer { background: #0F1E36; border-top-color: #1B335A; }
+  [data-theme="dark"] .foot-legal { color: #5C7A9E; }
+  [data-theme="dark"] .foot-legal a { color: #7A95B8; }
+  [data-theme="dark"] .foot-legal a:hover { color: #5CB8FF; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .prose { padding: 32px 20px 72px; }
+    .doc-title { font-size: 26px; }
+    h2 { font-size: 18px; margin-top: 36px; }
+    p, li { font-size: 15px; }
+    .internal-block { padding: 18px 16px; }
+    .nav-inner { padding: 12px 20px; }
+    .foot-legal { justify-content: center; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<script>
+  (() => {
+    try {
+      const t = localStorage.getItem('fp-theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    } catch (e) {}
+  })();
+</script>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="/">
+      <img src="assets/logo-fondix-pay.png" alt="FONDIX PAY">
+    </a>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <a class="nav-back" href="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Inicio
+      </a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema" type="button">
+        <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M5 12H3M21 12h-2M5.6 5.6 4.2 4.2M19.8 19.8l-1.4-1.4M5.6 18.4l-1.4 1.4M19.8 4.2l-1.4 1.4"/></svg>
+        <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5z"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="prose">
+
+  <!-- ── Draft warning banner ── -->
+  <div class="draft-banner" role="note" aria-label="Aviso de borrador">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 9v5m0-8v.5"/></svg>
+    <span><strong>Borrador — no publicar en producción.</strong> Este documento es una base inicial preparada para revisión por asesoría legal calificada en México conforme a la LFPDPPP. Los elementos marcados como <mark class="pend">pendiente</mark> deben resolverse antes de publicar.</span>
+  </div>
+
+  <!-- ── Document header ── -->
+  <div class="doc-header">
+    <h1 class="doc-title">Aviso de Privacidad — FONDIX PAY</h1>
+    <ul class="doc-meta">
+      <li><strong>Estado del documento:</strong> Borrador inicial para revisión legal</li>
+      <li><strong>Última actualización:</strong> <span class="pend">[Fecha pendiente]</span></li>
+      <li><strong>Marco normativo:</strong> Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su Reglamento</li>
+      <li><strong>Responsable:</strong> <span class="pend">[Nombre legal / razón social pendiente]</span></li>
+      <li><strong>Contacto de privacidad:</strong> <span class="pend">[Correo de privacidad pendiente]</span></li>
+    </ul>
+  </div>
+
+  <div class="legal-notice">
+    <p>Este documento es una base inicial preparada para revisión por asesoría legal calificada en México. No debe publicarse en producción sin dicha revisión. El cumplimiento final con la LFPDPPP y demás normatividad aplicable es responsabilidad de la entidad operadora.</p>
+  </div>
+
+  <!-- ── Section 1 ── -->
+  <h2>1. Identidad y domicilio del responsable</h2>
+  <p><span class="pend">[Nombre legal / razón social pendiente]</span> (en adelante "FONDIX PAY", "nosotros" o el "Responsable"), con domicilio en <span class="pend">[Domicilio legal completo pendiente]</span>, es el responsable del tratamiento de tus datos personales conforme a la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP) y su Reglamento.</p>
+  <p>FONDIX PAY opera una plataforma tecnológica móvil para el pago de servicios del hogar y recargas de tiempo aire en México. <strong>No es un banco, institución de fondos de pago electrónico (IFPE) ni entidad financiera regulada por la CNBV.</strong> No custodia fondos del usuario ni emite los servicios que se pagan.</p>
+
+  <!-- ── Section 2 ── -->
+  <h2>2. Datos personales que recabamos</h2>
+  <p>Para prestarte el servicio, FONDIX PAY recaba las siguientes categorías de datos personales:</p>
+  <ul>
+    <li><strong>Identificación:</strong> Número de teléfono móvil, utilizado para verificación de identidad mediante código OTP.</li>
+    <li><strong>Datos de uso:</strong> Servicios consultados y pagados, historial de transacciones, folio de comprobante, importe y comisiones de cada operación.</li>
+    <li><strong>Datos del dispositivo:</strong> Identificador de dispositivo, sistema operativo, versión de la aplicación, y datos de sesión necesarios para la operación segura de la cuenta.</li>
+    <li><strong>Datos de ubicación (optativos):</strong> Estado de la República Mexicana sugerido por GPS o seleccionado manualmente por el usuario, exclusivamente para determinar la disponibilidad de servicios en tu zona. Las coordenadas exactas de latitud/longitud no se almacenan ni se transmiten.</li>
+    <li><strong>Preferencias y consentimientos:</strong> Preferencias de notificación, preferencias de tema visual (claro/oscuro), y consentimientos registrados dentro de la Aplicación.</li>
+  </ul>
+  <p>FONDIX PAY <strong>no recaba</strong> datos de tarjetas de crédito o débito de forma directa. Los datos de pago son procesados por el proveedor de pagos autorizado y están sujetos al aviso de privacidad de dicho proveedor.</p>
+
+  <!-- ── Section 3 ── -->
+  <h2>3. Finalidades del tratamiento</h2>
+  <p><strong>Finalidades primarias</strong> (necesarias para la prestación del servicio):</p>
+  <ul>
+    <li>Verificar tu identidad al registrarte e iniciar sesión mediante OTP.</li>
+    <li>Procesar el pago de servicios y recargas que solicites a través de la Aplicación.</li>
+    <li>Generar y entregarte comprobantes digitales de cada operación.</li>
+    <li>Mantener el historial de transacciones asociado a tu cuenta.</li>
+    <li>Gestionar la disponibilidad del catálogo de servicios según tu estado de la República.</li>
+    <li>Prevenir el fraude, identificar uso no autorizado de la cuenta y cumplir obligaciones de seguridad.</li>
+    <li>Atender solicitudes de soporte, reclamaciones y aclaraciones.</li>
+  </ul>
+  <p><strong>Finalidades secundarias</strong> (no necesarias para el servicio; puedes negarte a su tratamiento):</p>
+  <ul>
+    <li>Enviarte comunicaciones sobre nuevas funciones, servicios disponibles o actualizaciones de la Aplicación.</li>
+    <li>Realizar análisis estadísticos y de uso agregado para mejorar la Aplicación (datos anonimizados o seudoanonimizados).</li>
+  </ul>
+  <p>Si no deseas que tus datos sean tratados para las finalidades secundarias, puedes manifestarlo a través del correo <span class="pend">[Correo de privacidad pendiente]</span> en cualquier momento, sin que ello afecte la prestación del servicio principal.</p>
+
+  <!-- ── Section 4 ── -->
+  <h2>4. Datos personales sensibles</h2>
+  <p>FONDIX PAY <strong>no recaba datos personales sensibles</strong> en los términos del artículo 3, fracción VI de la LFPDPPP (salud, origen racial o étnico, creencias religiosas, opiniones políticas, preferencia sexual, etc.).</p>
+  <p>Si en el futuro fuera necesario recabar alguna categoría de dato sensible, se informará de manera previa y explícita al usuario y se solicitará consentimiento expreso por escrito.</p>
+
+  <!-- ── Section 5 ── -->
+  <h2>5. Opciones para limitar el uso o divulgación de tus datos</h2>
+  <p>Puedes limitar el uso o divulgación de tus datos personales de las siguientes formas:</p>
+  <ul>
+    <li>Negándote al tratamiento de finalidades secundarias al momento del registro o en cualquier momento posterior mediante solicitud a <span class="pend">[Correo de privacidad pendiente]</span>.</li>
+    <li>Revocando tu consentimiento para recibir notificaciones dentro de la sección de preferencias de la Aplicación.</li>
+    <li>Desactivando el permiso de ubicación en los ajustes de tu dispositivo en cualquier momento, lo que desactiva la sugerencia GPS de estado sin afectar el servicio.</li>
+    <li>Inscribiéndote en el Registro Público para Evitar Publicidad (REPEP) administrado por la PROFECO, en caso de que decidas recibir comunicaciones comerciales.</li>
+  </ul>
+
+  <!-- ── Section 6 ── -->
+  <h2>6. Derechos ARCO</h2>
+  <p>En términos de la LFPDPPP, tienes derecho a:</p>
+  <ul>
+    <li><strong>Acceso:</strong> Conocer qué datos personales tenemos de ti y cómo los tratamos.</li>
+    <li><strong>Rectificación:</strong> Solicitar la corrección de tus datos cuando sean inexactos o incompletos.</li>
+    <li><strong>Cancelación:</strong> Solicitar la supresión de tus datos personales, salvo que exista obligación legal de conservarlos.</li>
+    <li><strong>Oposición:</strong> Oponerte al tratamiento de tus datos para finalidades específicas.</li>
+  </ul>
+  <p>Para ejercer tus derechos ARCO debes presentar una solicitud a través de:</p>
+  <ul>
+    <li><strong>Correo electrónico:</strong> <span class="pend">[Correo ARCO pendiente]</span></li>
+  </ul>
+  <p>Tu solicitud debe incluir: nombre completo, número de teléfono registrado en la cuenta, descripción clara del derecho que deseas ejercer, y copia de identificación oficial. Responderemos en un plazo máximo de 20 días hábiles a partir de la recepción de la solicitud completa.</p>
+
+  <!-- ── Section 7 ── -->
+  <h2>7. Revocación del consentimiento</h2>
+  <p>Puedes revocar el consentimiento otorgado para el tratamiento de tus datos en cualquier momento, mediante solicitud dirigida a <span class="pend">[Correo de privacidad pendiente]</span>. La revocación no tendrá efectos retroactivos. En caso de que la revocación implique la imposibilidad de continuar prestando el servicio, se te informará de ello con anticipación.</p>
+
+  <!-- ── Section 8 ── -->
+  <h2>8. Transferencia de datos personales</h2>
+  <p>FONDIX PAY puede transferir tus datos personales a las siguientes categorías de terceros, sin requerir tu consentimiento en los casos en que así lo permita la LFPDPPP:</p>
+  <ul>
+    <li><strong>Proveedor de pagos autorizado:</strong> Para procesar el pago de cada servicio o recarga. El proveedor actúa como encargado del tratamiento y está sujeto a sus propias políticas de privacidad y obligaciones de confidencialidad contractuales.</li>
+    <li><strong>Emisores de servicios:</strong> Las empresas proveedoras de los servicios pagados (por ejemplo, empresas de electricidad, telefonía, agua) reciben únicamente los datos necesarios para confirmar y aplicar el pago (número de referencia o contrato, importe, folio).</li>
+    <li><strong>Autoridades competentes:</strong> Cuando así lo exija la ley, resolución judicial o requerimiento de autoridad facultada.</li>
+  </ul>
+  <p>FONDIX PAY no vende, arrienda ni cede tus datos personales a terceros con fines comerciales propios de dichos terceros.</p>
+  <p>Las transferencias a proveedores de tecnología (alojamiento en nube, seguridad, analítica) se realizan mediante contratos de encargo de tratamiento que incluyen obligaciones de confidencialidad y seguridad equivalentes a las establecidas en este Aviso.</p>
+
+  <!-- ── Section 9 ── -->
+  <h2>9. Uso de tecnologías de rastreo (cookies)</h2>
+  <p>La <strong>Aplicación móvil</strong> de FONDIX PAY no utiliza cookies de navegador. Puede utilizar almacenamiento local seguro del dispositivo (<em>Expo Secure Store</em>) exclusivamente para mantener tu sesión activa y tus preferencias de uso.</p>
+  <p>El <strong>sitio web público</strong> de FONDIX PAY (fondixpay.com o similar) puede utilizar cookies técnicas estrictamente necesarias para la navegación. <span class="pend">[Confirmar uso de cookies de terceros o analítica en el sitio web antes de publicar.]</span> No se utilizan cookies de rastreo publicitario.</p>
+  <p>Puedes configurar tu navegador para rechazar o eliminar cookies; sin embargo, algunas funciones del sitio web pueden dejar de estar disponibles.</p>
+
+  <!-- ── Section 10 ── -->
+  <h2>10. Cambios al Aviso de Privacidad</h2>
+  <p>FONDIX PAY puede actualizar este Aviso de Privacidad en cualquier momento. Los cambios se publicarán en este mismo sitio web y, cuando sean materiales, se te notificará a través de la Aplicación o al número de teléfono registrado. La fecha de última actualización indicada al inicio del documento refleja la versión vigente.</p>
+  <p>El uso continuado de la Aplicación después de la publicación de cambios implica la aceptación de la versión actualizada.</p>
+
+  <!-- ── Section 11 ── -->
+  <h2>11. Contacto</h2>
+  <p>Para cualquier pregunta, comentario o ejercicio de derechos relacionado con este Aviso de Privacidad, puedes contactarnos en:</p>
+  <ul>
+    <li><strong>Correo electrónico:</strong> <span class="pend">[Correo de privacidad pendiente]</span></li>
+    <li><strong>Domicilio:</strong> <span class="pend">[Domicilio legal completo pendiente]</span></li>
+  </ul>
+  <p>También puedes acudir ante el <strong>Instituto Nacional de Transparencia, Acceso a la Información y Protección de Datos Personales (INAI)</strong> si consideras que tu derecho a la protección de datos personales ha sido vulnerado: <a href="https://home.inai.org.mx" target="_blank" rel="noopener">home.inai.org.mx</a>.</p>
+
+  <hr class="rule">
+
+  <!-- ── INTERNAL-ONLY BLOCK ── -->
+  <div class="internal-block" aria-label="Bloque interno — eliminar antes de publicar">
+    <div class="internal-block-hd">
+      <span class="internal-badge">Interno</span>
+      <h3>⚠ USO INTERNO — ELIMINAR ANTES DE PUBLICAR</h3>
+    </div>
+    <p>Esta sección no debe aparecer en la versión pública del Aviso de Privacidad. Contiene pendientes que bloquean la publicación en producción.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pendiente</th>
+            <th>Responsable</th>
+            <th>¿Bloquea publicación?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Razón social / nombre legal de la entidad responsable</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Domicilio legal completo (calle, número, colonia, municipio, estado, CP)</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Correo electrónico de privacidad y ARCO (dedicado, no personal)</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Fecha de entrada en vigor / última actualización</td>
+            <td>Al publicar</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Revisión por abogado mexicano especializado en protección de datos (LFPDPPP)</td>
+            <td>Externo</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Confirmar nombre y URL del proveedor de pagos para referencia en transferencias</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Confirmar si la plataforma usa cookies de analítica o terceros en el sitio web (sección 9)</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Confirmar si existe saldo o wallet real que requiera análisis IFPE (no es evidente en MVP)</td>
+            <td>Fernando</td>
+            <td class="blocker-si">Sí</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Registrar Aviso de Privacidad ante INAI si aplica para la actividad de la empresa</td>
+            <td>Externo</td>
+            <td class="blocker-no">No (post-lanzamiento)</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Política de retención y eliminación de datos (plazos por categoría de dato)</td>
+            <td>Fernando + abogado</td>
+            <td class="blocker-no">No (puede referenciarse)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- /INTERNAL BLOCK -->
+
+</main>
+
+<footer>
+  <div class="foot-legal">
+    <span>© 2026 FondixPay · Plataforma en preparación · No producción comercial</span>
+    <span><a href="/">Inicio</a> · <a href="terminos">Términos y Condiciones</a> · <a href="privacidad">Aviso de Privacidad</a></span>
+  </div>
+</footer>
+
+<script>
+  (() => {
+    const btn = document.getElementById('themeToggle');
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (next === 'dark') root.setAttribute('data-theme', 'dark');
+      else root.removeAttribute('data-theme');
+      try { localStorage.setItem('fp-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+</body>
+</html>
