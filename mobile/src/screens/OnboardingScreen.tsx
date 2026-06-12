@@ -1,9 +1,10 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useState } from 'react';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Image, Linking, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { PrimaryButton } from '../components/PrimaryButton';
 import { Screen } from '../components/Screen';
+import { PRIVACY_PAGE_URL, TERMS_PAGE_URL } from '../constants/links';
 import { colors, spacing, typography, useAppTheme } from '../theme';
 import type { RootStackParamList } from '../types';
 
@@ -111,6 +112,25 @@ export function OnboardingScreen({ navigation }: Props) {
               <Text style={{ color: theme.primary, fontWeight: '700' }}>Inicia sesión</Text>
             </Text>
           </Pressable>
+          <Text style={[styles.consentNote, { color: theme.fg3 }]}>
+            {'Al continuar aceptas nuestros '}
+            <Text
+              accessibilityRole={TERMS_PAGE_URL ? 'link' : 'text'}
+              onPress={TERMS_PAGE_URL ? () => void Linking.openURL(TERMS_PAGE_URL) : undefined}
+              style={TERMS_PAGE_URL ? [styles.consentLink, { color: theme.primary }] : undefined}
+            >
+              Términos y Condiciones
+            </Text>
+            {' y el '}
+            <Text
+              accessibilityRole={PRIVACY_PAGE_URL ? 'link' : 'text'}
+              onPress={PRIVACY_PAGE_URL ? () => void Linking.openURL(PRIVACY_PAGE_URL) : undefined}
+              style={PRIVACY_PAGE_URL ? [styles.consentLink, { color: theme.primary }] : undefined}
+            >
+              Aviso de Privacidad
+            </Text>
+            {'.'}
+          </Text>
         </View>
       </View>
     </Screen>
@@ -161,6 +181,13 @@ const styles = StyleSheet.create({
   logo: {
     height: 34,
     width: 86,
+  },
+  consentLink: {
+    fontWeight: '600',
+  },
+  consentNote: {
+    ...typography.caption,
+    textAlign: 'center',
   },
   loginLink: {
     alignItems: 'center',

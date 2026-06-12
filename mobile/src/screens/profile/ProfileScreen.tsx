@@ -1,11 +1,12 @@
 import { Feather } from '@expo/vector-icons';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useEffect } from 'react';
-import { Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import { Linking, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 
 import { BottomTabBar } from '../../components/BottomTabBar';
 import { Screen } from '../../components/Screen';
 import { StateSelectorCard } from '../../components/StateSelectorCard';
+import { PRIVACY_PAGE_URL } from '../../constants/links';
 import { useAuthStore } from '../../store/authStore';
 import { useNotificationPreferencesStore } from '../../store/notificationPreferencesStore';
 import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
@@ -183,6 +184,8 @@ export function ProfileScreen({ navigation }: Props) {
           </Pressable>
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel="Ver aviso de privacidad"
+            onPress={() => { if (PRIVACY_PAGE_URL) void Linking.openURL(PRIVACY_PAGE_URL); }}
             style={({ pressed }) => [
               styles.row,
               styles.settingsRow,
