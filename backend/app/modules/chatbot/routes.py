@@ -360,7 +360,6 @@ def update_setting(key: str, payload: ChatbotSettingUpdate, request: Request, cu
 @admin_router.post("/test", response_model=ChatTestResponse)
 async def chat_test(
     payload: ChatTestRequest,
-    current_user: User = Depends(require_admin_permission("admin.chatbot.manage")),
 ) -> ChatTestResponse:
     if not settings.chatbot_ai_api_key:
         raise HTTPException(
