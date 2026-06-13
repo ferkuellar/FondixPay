@@ -151,3 +151,15 @@ class ChatbotInternalNote(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)
 
     conversation = relationship("ChatbotConversation", back_populates="internal_notes")
+
+
+class ChatbotAiMetric(Base):
+    __tablename__ = "chatbot_ai_metrics"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    conversation_id: Mapped[int | None] = mapped_column(ForeignKey("chatbot_conversations.id"), nullable=True, index=True)
+    model: Mapped[str] = mapped_column(String(80))
+    latency_ms: Mapped[int] = mapped_column(Integer)
+    input_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    output_tokens: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow, index=True)

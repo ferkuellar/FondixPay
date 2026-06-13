@@ -13,6 +13,7 @@ from app.modules.admin.models import SupportTicket
 from app.modules.audit.services import create_audit_event
 from app.modules.chatbot import repository
 from app.modules.chatbot.models import (
+    ChatbotAiMetric,
     ChatbotConversation,
     ChatbotConversationEvent,
     ChatbotFallback,
@@ -127,8 +128,11 @@ def _load_fallback_message(db: Session) -> str:
     return AI_DOWN_FALLBACK
 
 
-async def _call_claude_async(message: str, system_prompt: str) -> str | None:
+async def _call_claude_async(message: str, system_prompt: str) -> tuple[str | None, int, int, int]:
+    """Returns (text, latency_ms, input_tokens, output_tokens)."""
+    import time
     model = settings.chatbot_ai_model or "claude-haiku-4-5-20251001"
+    t0 = time.perf_counter()
     try:
         async with httpx.AsyncClient(timeout=20.0) as client:
             response = await client.post(
@@ -145,12 +149,19 @@ async def _call_claude_async(message: str, system_prompt: str) -> str | None:
                     "messages": [{"role": "user", "content": message}],
                 },
             )
+        latency_ms = int((time.perf_counter() - t0) * 1000)
         if response.is_success:
             data = response.json()
-            return data["content"][0]["text"]
+            usage = data.get("usage", {})
+            return (
+                data["content"][0]["text"],
+                latency_ms,
+                usage.get("input_tokens", 0),
+                usage.get("output_tokens", 0),
+            )
     except Exception:
         pass
-    return None
+    return None, 0, 0, 0
 
 
 async def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Request) -> PublicChatResponse:
@@ -218,7 +229,7 @@ async def resolve_public_chat(db: Session, payload: PublicChatRequest, request: 
     if classification["severity"] in HIGH_SEVERITIES:
         _audit_public(db, request, "conversation.escalated", conversation.id, {"severity": classification["severity"]})
 
-    reply, confidence, detected_intent = await _resolve_reply(db, message)
+    reply, confidence, detected_intent, latency_ms, input_tokens, output_tokens = await _resolve_reply(db, message)
     bot_message = repository.add_message(
         db,
         ChatbotMessage(
@@ -244,36 +255,48 @@ async def resolve_public_chat(db: Session, payload: PublicChatRequest, request: 
             ),
         )
         _audit_public(db, request, "chatbot.fallback.created", conversation.id, {"message_id": user_message.id})
+    if latency_ms > 0:
+        repository.add_ai_metric(
+            db,
+            ChatbotAiMetric(
+                conversation_id=conversation.id,
+                model=settings.chatbot_ai_model or "claude-haiku-4-5-20251001",
+                latency_ms=latency_ms,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+            ),
+        )
     db.commit()
     return PublicChatResponse(reply=bot_message.message_text_masked, conversationId=str(conversation.id), confidence=confidence)
 
 
-async def _resolve_reply(db: Session, message: str) -> tuple[str, str, str | None]:
+async def _resolve_reply(db: Session, message: str) -> tuple[str, str, str | None, int, int, int]:
+    """Returns (reply, confidence, detected_intent, latency_ms, input_tokens, output_tokens)."""
     normalized = normalize_text(message)
     if _is_private_request(normalized):
-        return PRIVATE_ROUTING_REPLY, "rule", "private_data_request"
+        return PRIVATE_ROUTING_REPLY, "rule", "private_data_request", 0, 0, 0
 
     faq = repository.find_faq_by_normalized_question(db, normalized)
     if faq is not None:
-        return faq.answer, "faq", "faq"
+        return faq.answer, "faq", "faq", 0, 0, 0
 
     intent = _match_intent(db, normalized)
     if intent is not None:
-        return intent.response, "intent", intent.name
+        return intent.response, "intent", intent.name, 0, 0, 0
 
     knowledge = repository.search_knowledge(db, tokenize(message))
     if knowledge is not None:
-        return knowledge.content, "rule", "knowledge"
+        return knowledge.content, "rule", "knowledge", 0, 0, 0
 
     if settings.chatbot_ai_api_key:
         system_prompt = _load_system_prompt(db)
-        ai_reply = await _call_claude_async(message, system_prompt)
+        ai_reply, latency_ms, input_tokens, output_tokens = await _call_claude_async(message, system_prompt)
         if ai_reply is not None:
-            return ai_reply, "ai", "ai_response"
+            return ai_reply, "ai", "ai_response", latency_ms, input_tokens, output_tokens
         fallback_msg = _load_fallback_message(db)
-        return fallback_msg, "fallback_ai_down", None
+        return fallback_msg, "fallback_ai_down", None, 0, 0, 0
 
-    return SAFE_FALLBACK_REPLY, "fallback", None
+    return SAFE_FALLBACK_REPLY, "fallback", None, 0, 0, 0
 
 
 def _is_private_request(normalized: str) -> bool:

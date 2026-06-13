@@ -1297,8 +1297,16 @@ function BotLandingView() {
               />
               <BotMetric label="Conv. hoy" value={modelHealth != null ? String(modelHealth.conversations_today) : "—"} mono />
               <BotMetric label="Tasa de fallback" value={modelHealth != null ? `${modelHealth.fallback_rate_pct}%` : "—"} mono />
-              <BotMetric label="Latencia p50" value="no instrumentado" mono />
-              <BotMetric label="Latencia p95" value="no instrumentado" mono />
+              <BotMetric
+                label="Latencia p50"
+                value={modelHealth?.latency_p50_ms != null ? `${(modelHealth.latency_p50_ms / 1000).toFixed(2)} s` : "—"}
+                mono
+              />
+              <BotMetric
+                label="Latencia p95"
+                value={modelHealth?.latency_p95_ms != null ? `${(modelHealth.latency_p95_ms / 1000).toFixed(2)} s` : "—"}
+                mono
+              />
             </div>
           </Card>
         </section>

@@ -4,6 +4,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
 from app.modules.chatbot.models import (
+    ChatbotAiMetric,
     ChatbotConversation,
     ChatbotConversationEvent,
     ChatbotFallback,
@@ -177,20 +178,35 @@ def get_top_questions(db: Session, days: int = 7, limit: int = 10) -> list[dict]
     return result
 
 
+def add_ai_metric(db: Session, metric: ChatbotAiMetric) -> ChatbotAiMetric:
+    db.add(metric)
+    db.flush()
+    return metric
+
+
 def get_model_health(db: Session) -> dict:
     from app.core.config import settings as _settings
     today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
+    seven_days_ago = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=7)
     conversations_today = db.query(ChatbotConversation).filter(ChatbotConversation.started_at >= today_start).count()
     total = db.query(ChatbotConversation).count()
     fallbacks = db.query(ChatbotFallback).count()
     fallback_rate = round(fallbacks / total * 100, 1) if total > 0 else 0.0
+    latencies = sorted(
+        row[0]
+        for row in db.query(ChatbotAiMetric.latency_ms)
+        .filter(ChatbotAiMetric.created_at >= seven_days_ago)
+        .all()
+    )
+    p50_ms: int | None = latencies[len(latencies) // 2] if latencies else None
+    p95_ms: int | None = latencies[int(len(latencies) * 0.95)] if latencies else None
     return {
         "model": _settings.chatbot_ai_model or "claude-haiku-4-5-20251001",
         "api_configured": bool(_settings.chatbot_ai_api_key),
         "conversations_today": conversations_today,
         "fallback_rate_pct": fallback_rate,
-        "latency_p50_ms": None,
-        "latency_p95_ms": None,
+        "latency_p50_ms": p50_ms,
+        "latency_p95_ms": p95_ms,
     }
 
 
