@@ -1701,7 +1701,19 @@ Removed: `ChatConsoleView`, `KeyValue` helper, 6 hardcoded module-scope const ar
 Added imports: `ChatOperationsPage`, `AdminPayment`, `AdminReceipt`, `AdminUser`, `AuditEvent`, `SupportTicket`, `formatDate`, `formatMoney`.
 TypeScript: 0 errors.
 
-Next recommended sprints: 070 (reconciliation honest state / Tekae honest scaffold), 071 (dashboard real KPIs), 072 (production config docs).
+Next recommended sprints: 071 (dashboard analytics backend), 072 (production config docs).
+
+## Sprint 070 — Dashboard Honest State
+
+Status: COMPLETED (2026-06-13).
+
+Removed all fake/hardcoded chart data from `DashboardView`. The KPI grid was already real (from Sprint 068). The chart section below it had 4 fake elements that are now gone.
+
+**Removed:** `SparklineMini` (fake sparkline on "Total pagos" KPI), `LineMock` (fake 30-day TPV chart), `HourlyBars` (fake hourly traffic), hardcoded $38.4M volume-by-category bars, 3 hardcoded operational alerts (CoDi fallo, SLA queue, CFE traffic spike), non-functional "Exportar reporte" button.
+
+**Added:** `buildAlerts()` helper — derives real operational alerts from existing `DashboardSummary` fields (`payments_failed_count`, `payments_pending_count`, `manual_review_open_count`, `support_tickets_open_count`, `card_reconciliation_status`). "No hay alertas activas" shown when all counts are nominal. Analytics placeholder card replaces fake charts. "Revisión manual" KPI added (shows real `manual_review_open_count`).
+
+TypeScript: 0 errors. No backend changes.
 
 ## Sprint 069 — CRM Admin OTP Login + 401 Session Recovery
 

@@ -282,6 +282,34 @@ function ViewHeader({ title, subtitle, actions }: { title: string; subtitle?: st
   );
 }
 
+type DashboardAlert = { title: string; detail: string; tone: "danger" | "pending" | "info" };
+
+function buildAlerts(summary: {
+  payments_failed_count: number;
+  payments_pending_count: number;
+  manual_review_open_count: number;
+  support_tickets_open_count: number;
+  card_reconciliation_status: string;
+}): DashboardAlert[] {
+  const alerts: DashboardAlert[] = [];
+  if (summary.payments_failed_count > 0) {
+    alerts.push({ title: `${summary.payments_failed_count} pagos fallidos`, detail: "Revisar en la vista de Pagos para diagnóstico.", tone: "danger" });
+  }
+  if (summary.payments_pending_count > 5) {
+    alerts.push({ title: `${summary.payments_pending_count} pagos pendientes`, detail: "Volumen inusualmente alto de pagos sin confirmar.", tone: "pending" });
+  }
+  if (summary.manual_review_open_count > 0) {
+    alerts.push({ title: `${summary.manual_review_open_count} casos en revisión manual`, detail: "Casos abiertos que requieren acción.", tone: "pending" });
+  }
+  if (summary.support_tickets_open_count > 3) {
+    alerts.push({ title: `${summary.support_tickets_open_count} tickets abiertos`, detail: "Cola de soporte por encima del umbral de 3.", tone: "info" });
+  }
+  if (summary.card_reconciliation_status !== "ok" && summary.card_reconciliation_status !== "not_implemented") {
+    alerts.push({ title: `Conciliación: ${summary.card_reconciliation_status}`, detail: "Revisar estado de conciliación con Tekae.", tone: "danger" });
+  }
+  return alerts;
+}
+
 function DashboardView() {
   const api = useAdminApi();
   const [summary, setSummary] = useState<{
@@ -316,6 +344,8 @@ function DashboardView() {
   const recon = summary?.card_reconciliation_status ?? "—";
   const reconOk = recon === "ok" || recon === "cuadrada";
 
+  const activeAlerts = summary ? buildAlerts(summary) : [];
+
   return (
     <div className="crm-dashboard-stack">
       <ViewHeader
@@ -324,42 +354,36 @@ function DashboardView() {
         actions={
           <>
             <button className="crm-btn" onClick={reload}><Icon name="refresh" />Actualizar</button>
-            <button className="crm-btn primary"><Icon name="download" />Exportar reporte</button>
           </>
         }
       />
       <div className="crm-kpi-grid">
-        <Kpi label="Total pagos" value={loading ? "…" : String(summary?.payments_count ?? 0)} sub="todos los estados" sparkline={<SparklineMini />} />
+        <Kpi label="Total pagos" value={loading ? "…" : String(summary?.payments_count ?? 0)} sub="todos los estados" />
         <Kpi label="Pagos exitosos" value={loading ? "…" : String(summary?.payments_succeeded_count ?? 0)} delta={successRate} sub="tasa de éxito" />
         <Kpi label="Pagos pendientes" value={loading ? "…" : String(summary?.payments_pending_count ?? 0)} deltaTone={summary && summary.payments_pending_count > 5 ? "danger" : "success"} />
         <Kpi label="Usuarios registrados" value={loading ? "…" : String(summary?.users_count ?? 0)} sub="total en plataforma" />
         <Kpi label="Tickets abiertos" value={loading ? "…" : String(summary?.support_tickets_open_count ?? 0)} deltaTone={summary && summary.support_tickets_open_count > 3 ? "danger" : "success"} sub="soporte activo" />
-        <Kpi label="Conciliación" value={loading ? "…" : reconOk ? "✓ Cuadrada" : recon} deltaTone={reconOk ? "success" : "danger"} sub="tarjeta" />
-      </div>
-      <div className="crm-charts-row">
-        <Card title="TPV · últimos 30 días" action={<select className="crm-select" style={{ width: 86, minHeight: 30, padding: "5px 10px", borderRadius: 8, fontSize: 12 }} defaultValue="30d"><option value="7d">7 días</option><option value="30d">30 días</option><option value="90d">90 días</option></select>}>
-          <LineMock />
-        </Card>
-        <Card title="Volumen por categoría · mes">
-          {[
-            ["Energía (CFE)", 94, "#f59e0b", "$38.4M"],
-            ["Internet", 73, "#22c55e", "$22.8M"],
-            ["Agua", 52, "#0ea5e9", "$14.2M"],
-            ["Telefonía", 42, "#7c3aed", "$11.9M"],
-            ["Gobierno", 35, "#10b981", "$9.6M"],
-          ].map(([name, width, color, value]) => <Bar key={String(name)} name={String(name)} width={Number(width)} color={String(color)} value={String(value)} />)}
-        </Card>
+        <Kpi label="Revisión manual" value={loading ? "…" : String(summary?.manual_review_open_count ?? 0)} deltaTone={summary && summary.manual_review_open_count > 0 ? "danger" : "success"} sub="casos abiertos" />
       </div>
       <div className="crm-charts-row" style={{ gridTemplateColumns: "1fr 1fr" }}>
-        <Card title="Alertas activas" action={<span className="crm-badge danger">3 activas</span>}>
+        <Card title="Alertas operativas" action={activeAlerts.length > 0 ? <span className="crm-badge danger">{activeAlerts.length} activas</span> : <span className="crm-badge success">Nominal</span>}>
           <div className="crm-alert-list">
-            <Alert title="Tasa de fallo CoDi > 5%" detail="Banxico reportó timeouts en últimos 12 min" tone="danger" time="hace 12 min" />
-            <Alert title="Cola de soporte sobre SLA" detail="8 tickets prioridad alta > 4h sin respuesta" tone="pending" time="hace 34 min" />
-            <Alert title="Pico de tráfico CFE" detail="+340% vs misma hora ayer" tone="info" time="hace 1 h" />
+            {loading ? (
+              <div style={{ color: "var(--crm-muted)", fontSize: 13, padding: "12px 0" }}>Cargando…</div>
+            ) : activeAlerts.length === 0 ? (
+              <div style={{ color: "var(--crm-muted)", fontSize: 13, padding: "12px 0", textAlign: "center" }}>No hay alertas activas</div>
+            ) : activeAlerts.map((a) => (
+              <Alert key={a.title} title={a.title} detail={a.detail} tone={a.tone} />
+            ))}
           </div>
         </Card>
-        <Card title="Tráfico por hora · hoy" action={<span style={{ fontSize: 12, color: "var(--fg-2)" }}>CDMX · GMT-6</span>}>
-          <HourlyBars />
+        <Card title="Analíticas pendientes">
+          <div style={{ padding: "20px 0", textAlign: "center", color: "var(--crm-muted)" }}>
+            <p style={{ fontSize: 22, margin: "0 0 8px" }}>📊</p>
+            <p style={{ fontSize: 13, margin: 0, lineHeight: 1.6 }}>
+              Gráficos de TPV, volumen por categoría y tráfico por hora estarán disponibles cuando se integre el motor de analíticas.
+            </p>
+          </div>
         </Card>
       </div>
     </div>
@@ -1648,45 +1672,6 @@ function Bar({ name, width, color, value }: { name: string; width: number; color
   );
 }
 
-function SparklineMini() {
-  const points = "0,37 20,31 40,34 60,22 80,26 100,15 120,20 140,8";
-  return (
-    <svg width="140" height="48" viewBox="0 0 140 48" role="img" aria-label="Tendencia TPV">
-      <path d={`M0 48 L ${points} L 140 48 Z`} fill="rgba(21,101,232,.15)" />
-      <polyline points={points} fill="none" stroke="var(--accent)" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
-function HourlyBars() {
-  const values = Array.from({ length: 24 }, (_, index) => 30 + ((index * 17) % 71));
-  const max = Math.max(...values);
-  const current = new Date().getHours();
-  return (
-    <div className="crm-hourly">
-      {values.map((value, hour) => (
-        <div className={`crm-hourly-col ${hour === current ? "current" : ""}`} key={hour}>
-          <div className="crm-hourly-bar-wrap">
-            <div className="crm-hourly-bar" style={{ height: `${(value / max) * 100}%` }} title={`${hour}:00`} />
-          </div>
-          <small>{hour % 6 === 0 ? hour : ""}</small>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function LineMock() {
-  const points = "0,210 52,198 104,205 156,150 208,170 260,120 312,166 364,95 416,125 468,78 520,112 572,42 624,86 676,128";
-  return (
-    <div className="crm-chart">
-      <svg viewBox="0 0 676 255" preserveAspectRatio="none" role="img" aria-label="TPV últimos 30 días">
-        <polygon points={`0,255 ${points} 676,255`} fill="rgba(21,101,232,.15)" />
-        <polyline points={points} fill="none" stroke="var(--crm-blue)" strokeWidth="3" />
-      </svg>
-    </div>
-  );
-}
 
 function Icon({ name }: { name: IconName }) {
   const common = { width: 18, height: 18, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
