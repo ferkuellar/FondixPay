@@ -1675,7 +1675,30 @@ Files changed: `backend/app/modules/chatbot/routes.py`, `backend/app/modules/cha
 - Railway production: phases 059–064 are on `main` branch but Railway has **not been redeployed** since these commits. New endpoints (`/top-questions`, `/model-health`, `DELETE /knowledge/{id}`), the `chatbot_ai_metrics` table, and the `max_length=20000` fix are **not yet live on Railway**.
 - CORS: `fondixpay.com` and `fondixpay.com.mx` are in `CORS_ORIGINS` example; Railway env variable needs confirmation.
 
-Next recommended sprint:
-- Railway redeploy to make phases 059–064 live in production.
-- End-to-end admin smoke test with valid JWT token to confirm all 6 BotLandingView sections save correctly.
-- Or continue with next product sprint as directed.
+## Sprint 067 — Dynamic FAQs Public Endpoint
+
+Status: COMPLETED (no sprint directory — hotfix committed inline with landing push).
+
+Implemented `GET /api/public/chat/faqs` public endpoint returning active FAQs ordered by priority. `landing/soporte.html` fetches from this endpoint on load, populates `#faq-list` container, and shows a static fallback `<details>` list if the fetch fails. `window.FONDIX_BOT_BASE` inline variable added before FAQ scripts. Tests added for public FAQ response contract. Railway needed a manual redeploy after commits were pushed.
+
+## Sprint 068 — CRM Wire Live Data Views
+
+Status: COMPLETED (2026-06-13).
+
+`admin/src/crm/CrmVisualApp.tsx` — all 7 hardcoded data sources replaced with real backend API calls:
+
+| View | Before | After |
+|---|---|---|
+| UsersView | 5 fake rows (`users` const) | `api.users({})` — Activo/Inactivo filter |
+| PaymentsView | 5 fake amounts (`payments` const) | `api.payments({})` — status filter segmented control |
+| TicketsView | 3 fake tickets (`tickets` const) | `api.tickets()` — 4-column kanban |
+| ReceiptsView | generic TableView + hardcoded `receipts` const | new `ReceiptsView` using `api.receipts({})` |
+| AuditLogsView | generic TableView + hardcoded `auditLogs` const | new `AuditLogsView` using `api.auditEvents({})` |
+| ChatConsoleView | ~75 lines of fake chat UI (4 fake conversations) | removed — `case "chat"` now renders `<ChatOperationsPage />` |
+| ReconciliationView | $4.2M fake KPIs ("Cuadrada") | honest "En construcción" card, no false data |
+
+Removed: `ChatConsoleView`, `KeyValue` helper, 6 hardcoded module-scope const arrays.
+Added imports: `ChatOperationsPage`, `AdminPayment`, `AdminReceipt`, `AdminUser`, `AuditEvent`, `SupportTicket`, `formatDate`, `formatMoney`.
+TypeScript: 0 errors.
+
+Next recommended sprints: 069 (auth hardening), 070 (reconciliation honest state), 071 (dashboard real KPIs), 072 (production config docs).

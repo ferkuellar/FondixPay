@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 import { useAdminApi } from "../api/useAdminApi";
 import { useAdminAuth } from "../auth/AdminAuthProvider";
+import { ChatOperationsPage } from "../pages/ChatOperationsPage";
+import type { AdminPayment, AdminReceipt, AdminUser, AuditEvent, SupportTicket } from "../types/admin";
+import { formatDate, formatMoney } from "../utils/format";
 import "./crmVisual.css";
 
 type ModuleKey =
@@ -92,44 +95,6 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
   },
 ];
 
-const users = [
-  { id: "usr_01022", name: "Carlos Ortiz Díaz", initials: "CO", email: "carlos.ortiz@gmail.com", state: "Yucatán", status: "Activo", kyc: 3, txCount: 142, tpv: "$84,920.00", lastSeen: "hace 3 min" },
-  { id: "usr_01038", name: "María García López", initials: "MG", email: "maria.garcia@gmail.com", state: "CDMX", status: "Activo", kyc: 3, txCount: 88, tpv: "$31,450.20", lastSeen: "hace 22 min" },
-  { id: "usr_01045", name: "Ana Sofía Ramírez", initials: "AR", email: "ana.ramirez@gmail.com", state: "Nuevo León", status: "KYC pendiente", kyc: 2, txCount: 24, tpv: "$12,810.00", lastSeen: "hace 2 h" },
-  { id: "usr_01052", name: "Luis Hernández Cruz", initials: "LH", email: "luis.cruz@gmail.com", state: "Jalisco", status: "Bloqueado", kyc: 1, txCount: 9, tpv: "$7,420.90", lastSeen: "hace 1 d" },
-  { id: "usr_01066", name: "Renata Flores Ortiz", initials: "RF", email: "renata.flores@gmail.com", state: "Querétaro", status: "Activo", kyc: 3, txCount: 51, tpv: "$19,225.00", lastSeen: "hace 4 h" },
-  { id: "usr_01071", name: "Diego Pérez Morales", initials: "DP", email: "diego.perez@gmail.com", state: "Estado de México", status: "Activo", kyc: 2, txCount: 73, tpv: "$44,080.00", lastSeen: "hace 18 min" },
-];
-
-const payments = [
-  { id: "tx_0847200", ref: "MX034829144201", user: "Carlos Ortiz Díaz", initials: "CO", service: "CFE", color: "#f59e0b", amount: "$1,247.50", method: "Tarjeta ···· 4821", status: "Exitosa", created: "hace 8 min" },
-  { id: "tx_0847199", ref: "MX034829144183", user: "Renata Martínez", initials: "RM", service: "Totalplay", color: "#22c55e", amount: "$689.00", method: "Tarjeta ···· 1102", status: "Pendiente", created: "hace 14 min" },
-  { id: "tx_0847198", ref: "MX034829144121", user: "Paola Reyes", initials: "PR", service: "SACMEX", color: "#0ea5e9", amount: "$432.20", method: "CoDi (SPEI)", status: "Fallida", created: "hace 22 min" },
-  { id: "tx_0847197", ref: "MX034829144090", user: "Alejandro Reyes", initials: "AR", service: "Telmex", color: "#22c55e", amount: "$599.00", method: "Tarjeta ···· 7901", status: "Exitosa", created: "hace 31 min" },
-  { id: "tx_0847196", ref: "MX034829144052", user: "María García López", initials: "MG", service: "Netflix", color: "#ec4899", amount: "$249.00", method: "Tarjeta ···· 2880", status: "Reembolsada", created: "hace 42 min" },
-];
-
-const receipts = [
-  ["REC-2026001", "tx_0847200", "CFE", "WhatsApp", "Entregado", "hace 8 min"],
-  ["REC-2026002", "tx_0847197", "Telmex", "Email", "Entregado", "hace 31 min"],
-  ["REC-2026003", "tx_0847194", "SIAPA", "WhatsApp", "Pendiente", "hace 1 h"],
-  ["REC-2026004", "tx_0847191", "Totalplay", "WhatsApp", "Rebotado", "hace 2 h"],
-];
-
-const tickets = [
-  { id: "TKT-4500", subject: "No se aplicó mi pago de agua", sev: "SEV-2", status: "new", agent: "— sin asignar", sla: 94, channel: "chat", user: "Carlos Ortiz", initials: "CO", age: "hace 12 min" },
-  { id: "TKT-4499", subject: "No reconozco un cargo", sev: "SEV-1", status: "in_progress", agent: "Ana Vega", sla: 83, channel: "email", user: "María García", initials: "MG", age: "hace 28 min" },
-  { id: "TKT-4498", subject: "No me llegó el comprobante", sev: "SEV-3", status: "waiting", agent: "Luis Mora", sla: 61, channel: "chat", user: "Renata Flores", initials: "RF", age: "hace 1 h" },
-  { id: "TKT-4497", subject: "Quiero cambiar mi correo", sev: "SEV-4", status: "resolved", agent: "Karla Ríos", sla: 100, channel: "email", user: "Diego Pérez", initials: "DP", age: "hace 2 h" },
-  { id: "TKT-4496", subject: "Pago duplicado en CFE", sev: "SEV-2", status: "in_progress", agent: "Pedro Ibáñez", sla: 72, channel: "chat", user: "Paola Reyes", initials: "PR", age: "hace 3 h" },
-];
-
-const conversations = [
-  ["c4", "Carlos Ortiz", "Mi pago de Totalplay no se aplica", "SEV-2", "frustrado", "2"],
-  ["c1", "Paola Reyes", "No me llega el SMS y necesito pagar luz hoy", "SEV-2", "frustrado", "3"],
-  ["c2", "Alejandro Reyes", "¿Cuánto tarda el reembolso de CFE?", "SEV-3", "neutral", "1"],
-  ["c3", "Renata Martínez", "Gracias, ya jaló", "SEV-4", "feliz", "0"],
-];
 
 type BotIdentity = {
   name: string;
@@ -168,13 +133,6 @@ const botPillsInitial: BotPill[] = [
 ];
 
 
-const auditLogs = [
-  ["hace 4 min", "Ana Vega", "SUPER_ADMIN", "ticket.severity_changed", "TKT-4499", "SEV-2 → SEV-1"],
-  ["hace 12 min", "Sistema", "SYSTEM", "conversation.escalated", "c4", "Regla payment_concern"],
-  ["hace 35 min", "Karla Ríos", "COMPLIANCE", "kyc.approve", "usr_01045", "KYC nivel 3 aprobado"],
-  ["hace 67 min", "Pedro Ibáñez", "CX", "ticket.close", "TKT-4490", "Ticket resuelto"],
-  ["hace 2 h", "Luis Mora", "OPS", "recon.adjustment", "recon_2026-05-26", "Ajuste manual documentado"],
-];
 
 function currentPath() {
   return window.location.hash.replace(/^#/, "") || "/dashboard";
@@ -296,17 +254,17 @@ function renderView(key: ModuleKey) {
     case "payments":
       return <PaymentsView />;
     case "receipts":
-      return <TableView title="Recibos" subtitle="Comprobantes generados y enviados al usuario" rows={receipts} columns={["Recibo", "Pago", "Servicio", "Canal", "Estado", "Enviado"]} />;
+      return <ReceiptsView />;
     case "search":
       return <SearchView />;
     case "tickets":
       return <TicketsView />;
     case "chat":
-      return <ChatConsoleView />;
+      return <ChatOperationsPage />;
     case "reconciliation-tekae":
       return <ReconciliationView title="Conciliación Tekae" subtitle="Cuadre entre pagos procesados por Tekae y comisiones correspondientes a FondixPay" />;
     case "audit-logs":
-      return <TableView title="Audit logs" subtitle="Registro interno de acciones sensibles" rows={auditLogs} columns={["Tiempo", "Actor", "Rol", "Acción", "Entidad", "Detalle"]} />;
+      return <AuditLogsView />;
     case "bot-landing":
       return <BotLandingView />;
   }
@@ -435,123 +393,130 @@ function Card({ title, action, children }: { title: string; action?: React.React
 }
 
 function UsersView() {
+  const api = useAdminApi();
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("Todos");
-  const visible = users.filter((user) => filter === "Todos" || user.status === filter);
+
+  useEffect(() => {
+    api.users({}).then(setUsers).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  const visible = users.filter((u) =>
+    filter === "Todos" || (filter === "Activo" && u.is_active) || (filter === "Inactivo" && !u.is_active)
+  );
+
   return (
     <>
       <ViewHeader
         title="Usuarios"
-        subtitle="60 registrados · 52 activos"
-        actions={
-          <>
-            <button className="crm-btn">Filtros</button>
-            <button className="crm-btn"><Icon name="download" />Exportar CSV</button>
-          </>
-        }
+        subtitle={loading ? "Cargando…" : `${users.length} registrados`}
+        actions={<button className="crm-btn"><Icon name="download" />Exportar CSV</button>}
       />
       <div className="crm-toolbar">
-        <div className="crm-field-with-icon">
-          <Icon name="search" />
-          <input className="crm-input" placeholder="Buscar por nombre o ID..." />
-        </div>
-        <Segmented options={["Todos", "Activo", "KYC pendiente", "Bloqueado"]} value={filter} onChange={setFilter} />
+        <Segmented options={["Todos", "Activo", "Inactivo"]} value={filter} onChange={setFilter} />
         <span className="crm-result-count">{visible.length} resultados</span>
       </div>
-      <div className="crm-card crm-table-wrap">
-        <table className="crm-table">
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>ID</th>
-              <th>Estado</th>
-              <th>KYC</th>
-              <th style={{ textAlign: "right" }}>Transacciones</th>
-              <th style={{ textAlign: "right" }}>Volumen total</th>
-              <th>Último acceso</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {visible.map((user) => (
-              <tr key={user.id}>
-                <td>
-                  <span className="crm-user-cell">
-                    <span className="crm-avatar">{user.initials}</span>
-                    <span><strong>{user.name}</strong><small>{user.email}</small></span>
-                  </span>
-                </td>
-                <td><span className="crm-mono">{user.id}</span></td>
-                <td>{statusCell(user.status)}</td>
-                <td><KycBars level={user.kyc} /></td>
-                <td className="crm-mono" style={{ textAlign: "right" }}>{user.txCount}</td>
-                <td className="crm-mono" style={{ textAlign: "right", fontWeight: 700 }}>{user.tpv}</td>
-                <td style={{ color: "var(--crm-muted)" }}>{user.lastSeen}</td>
-                <td style={{ color: "var(--crm-muted-2)" }}>›</td>
+      {loading ? <div className="crm-loading">Cargando usuarios…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr>
+                <th>Teléfono</th>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th style={{ textAlign: "right" }}>Pagos</th>
+                <th>Registrado</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {visible.length === 0 ? (
+                <tr><td colSpan={6} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin usuarios</td></tr>
+              ) : visible.map((u) => (
+                <tr key={u.id}>
+                  <td><span className="crm-mono">{u.phone}</span></td>
+                  <td>{u.name ?? "—"}</td>
+                  <td>{u.role}</td>
+                  <td>{statusCell(u.is_active ? "Activo" : "Inactivo")}</td>
+                  <td className="crm-mono" style={{ textAlign: "right" }}>{u.recent_payment_ids?.length ?? 0}</td>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(u.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 }
 
 function PaymentsView() {
+  const api = useAdminApi();
+  const [payments, setPayments] = useState<AdminPayment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState("Todos");
+
+  useEffect(() => {
+    api.payments({}).then(setPayments).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  const statusLabel: Record<string, string> = {
+    succeeded: "Exitosa", pending: "Pendiente", failed: "Fallida",
+    refunded: "Reembolsada", cancelled: "Cancelada", processing: "Procesando",
+  };
+
+  const filtered = payments.filter((p) => statusFilter === "Todos" || statusLabel[p.status] === statusFilter);
+
   return (
     <>
       <ViewHeader
         title="Pagos"
-        subtitle="Transacciones recientes · 98.4% tasa de éxito hoy"
-        actions={
-          <>
-            <button className="crm-btn">Filtros</button>
-            <button className="crm-btn"><Icon name="download" />Exportar CSV</button>
-          </>
-        }
+        subtitle={loading ? "Cargando…" : `${payments.length} transacciones`}
+        actions={<button className="crm-btn"><Icon name="download" />Exportar CSV</button>}
       />
       <div className="crm-mini-grid">
-        <MiniStat label="Pagos hoy" value="12,847" />
-        <MiniStat label="Monto procesado" value="$4.3M" />
-        <MiniStat label="Pendientes" value="184" accent="var(--crm-orange)" />
-        <MiniStat label="Fallidos" value="91" accent="var(--crm-red)" />
+        <MiniStat label="Total" value={loading ? "…" : String(payments.length)} />
+        <MiniStat label="Exitosos" value={loading ? "…" : String(payments.filter((p) => p.status === "succeeded").length)} />
+        <MiniStat label="Pendientes" value={loading ? "…" : String(payments.filter((p) => p.status === "pending").length)} accent="var(--crm-orange)" />
+        <MiniStat label="Fallidos" value={loading ? "…" : String(payments.filter((p) => p.status === "failed").length)} accent="var(--crm-red)" />
       </div>
       <div className="crm-toolbar">
-        <div className="crm-field-with-icon">
-          <Icon name="search" />
-          <input className="crm-input" placeholder="Buscar por transacción, usuario o biller..." />
-        </div>
-        <Segmented options={["Todos", "Exitosa", "Pendiente", "Fallida", "Reembolsada"]} value="Todos" onChange={() => undefined} />
+        <Segmented options={["Todos", "Exitosa", "Pendiente", "Fallida", "Reembolsada"]} value={statusFilter} onChange={setStatusFilter} />
       </div>
-      <div className="crm-card crm-table-wrap">
-        <table className="crm-table">
-          <thead>
-            <tr>
-              <th>Transacción</th>
-              <th>Usuario</th>
-              <th>Servicio</th>
-              <th style={{ textAlign: "right" }}>Monto</th>
-              <th>Método</th>
-              <th>Estado</th>
-              <th>Creada</th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {payments.map((payment) => (
-              <tr key={payment.id}>
-                <td><span className="crm-mono">{payment.id}</span><small className="crm-subline">{payment.ref}</small></td>
-                <td><span className="crm-user-cell compact"><span className="crm-avatar">{payment.initials}</span>{payment.user}</span></td>
-                <td><span className="crm-service-dot" style={{ background: payment.color }} />{payment.service}</td>
-                <td className="crm-mono" style={{ textAlign: "right", fontWeight: 800 }}>{payment.amount}</td>
-                <td>{payment.method}</td>
-                <td>{statusCell(payment.status)}</td>
-                <td>{payment.created}</td>
-                <td><button className="crm-icon-btn" aria-label="Ver pago"><Icon name="eye" /></button></td>
+      {loading ? <div className="crm-loading">Cargando pagos…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Servicio</th>
+                <th>Referencia</th>
+                <th style={{ textAlign: "right" }}>Total</th>
+                <th>Estado</th>
+                <th>Creado</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {filtered.length === 0 ? (
+                <tr><td colSpan={6} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin pagos</td></tr>
+              ) : filtered.map((p) => (
+                <tr key={p.id}>
+                  <td>
+                    <span className="crm-mono">#{p.id}</span>
+                    {p.is_mock ? <span className="crm-badge" style={{ fontSize: 10, marginLeft: 6 }}>mock</span> : null}
+                  </td>
+                  <td>{p.service_name}</td>
+                  <td><span className="crm-mono">{p.service_reference_masked}</span></td>
+                  <td className="crm-mono" style={{ textAlign: "right", fontWeight: 800 }}>{formatMoney(p.total_minor)}</td>
+                  <td>{statusCell(statusLabel[p.status] ?? p.status)}</td>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(p.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 }
@@ -650,145 +615,68 @@ function SearchView() {
   );
 }
 
+type KanbanCol = { label: string; statuses: string[]; color: string };
+const KANBAN_COLS: KanbanCol[] = [
+  { label: "Nuevos", statuses: ["new", "open", "triaged"], color: "#1565e8" },
+  { label: "En proceso", statuses: ["assigned", "pending", "escalated", "reopened"], color: "#f59e0b" },
+  { label: "Esperando", statuses: ["waiting_user", "waiting_customer", "waiting_internal", "waiting_internal_review"], color: "#7c3aed" },
+  { label: "Resueltos", statuses: ["resolved", "closed"], color: "#22c55e" },
+];
+
 function TicketsView() {
-  const columns = [
-    ["Nuevos", "new", "#1565e8"],
-    ["En proceso", "in_progress", "#f59e0b"],
-    ["Esperando user", "waiting", "#7c3aed"],
-    ["Resueltos hoy", "resolved", "#22c55e"],
-  ];
+  const api = useAdminApi();
+  const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.tickets().then(setTickets).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  const open = tickets.filter((t) => !["resolved", "closed"].includes(t.status));
+
   return (
     <>
       <ViewHeader
         title="Tickets de soporte"
-        subtitle="18 abiertos · 3 sobre SLA"
-        actions={
-          <>
-            <button className="crm-btn">Mis tickets</button>
-            <button className="crm-btn primary"><Icon name="plus" />Crear ticket</button>
-          </>
-        }
+        subtitle={loading ? "Cargando…" : `${open.length} abiertos · ${tickets.length} total`}
+        actions={<button className="crm-btn primary"><Icon name="plus" />Crear ticket</button>}
       />
-      <div className="crm-kanban">
-        {columns.map(([label, status, color]) => (
-          <section key={status}>
-            <div className="crm-kanban-head">
-              <span><i style={{ background: color }} />{label}</span>
-              <b>{tickets.filter((ticket) => ticket.status === status).length}</b>
-            </div>
-            {tickets.filter((ticket) => ticket.status === status).map((ticket) => <TicketCard key={ticket.id} ticket={ticket} />)}
-          </section>
-        ))}
-      </div>
+      {loading ? <div className="crm-loading">Cargando tickets…</div> : (
+        <div className="crm-kanban">
+          {KANBAN_COLS.map(({ label, statuses, color }) => {
+            const col = tickets.filter((t) => statuses.includes(t.status));
+            return (
+              <section key={label}>
+                <div className="crm-kanban-head">
+                  <span><i style={{ background: color }} />{label}</span>
+                  <b>{col.length}</b>
+                </div>
+                {col.map((ticket) => <TicketCard key={ticket.id} ticket={ticket} />)}
+              </section>
+            );
+          })}
+        </div>
+      )}
     </>
   );
 }
 
-function TicketCard({ ticket }: { ticket: (typeof tickets)[number] }) {
+function TicketCard({ ticket }: { ticket: SupportTicket }) {
+  const sevColor = ticket.severity === "SEV-1" ? "var(--crm-red)" : ticket.severity === "SEV-2" ? "var(--crm-orange)" : "var(--crm-blue)";
   return (
-    <div className="crm-ticket" style={{ borderLeftColor: ticket.sev === "SEV-1" ? "var(--crm-red)" : ticket.sev === "SEV-2" ? "var(--crm-orange)" : "var(--crm-blue)" }}>
+    <div className="crm-ticket" style={{ borderLeftColor: sevColor }}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-        <span className="crm-mono">{ticket.id}</span>
-        <ChannelChip channel={ticket.channel} />
+        <span className="crm-mono">{ticket.ticket_number ?? `#${ticket.id}`}</span>
+        <span className="crm-badge" style={{ fontSize: 10 }}>{ticket.severity ?? ticket.priority}</span>
       </div>
       <strong style={{ display: "block", fontSize: 13, marginTop: 8 }}>{ticket.subject}</strong>
       <div className="crm-ticket-user">
-        <span className="crm-avatar small">{ticket.initials}</span>
-        <span>{ticket.user}</span>
-        <small>{ticket.age}</small>
+        <span>{ticket.category.replace(/_/g, " ")}</span>
+        <small>{formatDate(ticket.created_at)}</small>
       </div>
-      {ticket.status !== "resolved" ? (
-        <>
-          <div className="crm-sla-label"><span>SLA {ticket.sla > 90 ? "· vencido" : ""}</span><b>{ticket.sla}%</b></div>
-          <div className="crm-bar-track"><div className="crm-bar-fill" style={{ width: `${ticket.sla}%`, background: ticket.sla > 90 ? "var(--crm-red)" : ticket.sla > 70 ? "var(--crm-orange)" : "var(--crm-green)" }} /></div>
-        </>
+      {ticket.sla_due_at && !["resolved", "closed"].includes(ticket.status) ? (
+        <p style={{ color: "var(--crm-muted)", fontSize: 11, margin: "8px 0 0" }}>SLA: {formatDate(ticket.sla_due_at)}</p>
       ) : null}
-      <p style={{ color: "var(--crm-muted)", fontSize: 11, margin: "8px 0 0" }}>Asignado a <b>{ticket.agent}</b></p>
-    </div>
-  );
-}
-
-function ChatConsoleView() {
-  const [active, setActive] = useState(conversations[0]);
-  return (
-    <>
-      <ViewHeader title="Chat Operations Console" subtitle="7 conversaciones activas · 2 requieren atención" />
-      <div className="crm-chat-layout">
-        <aside className="crm-chat-pane">
-          <div className="crm-chat-head"><strong>Cola en vivo</strong><span className="crm-nav-badge">7</span></div>
-          {conversations.map((conversation) => (
-            <button className={`crm-chat-row ${active[0] === conversation[0] ? "active" : ""}`} key={conversation[0]} type="button" onClick={() => setActive(conversation)} style={{ width: "100%", textAlign: "left", border: 0, background: active[0] === conversation[0] ? undefined : "transparent", font: "inherit" }}>
-              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-                <span className="crm-avatar">{conversation[1].split(" ").map((part) => part[0]).slice(0, 2).join("")}</span>
-                <div style={{ minWidth: 0, flex: 1 }}>
-                  <strong style={{ fontSize: 13 }}>{conversation[1]}</strong>
-                  <div style={{ color: "var(--crm-muted)", fontSize: 12, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{conversation[2]}</div>
-                </div>
-                {conversation[5] !== "0" ? <span className="crm-nav-badge">{conversation[5]}</span> : null}
-              </div>
-              <div style={{ marginTop: 7, display: "flex", justifyContent: "space-between", fontSize: 11, color: conversation[4] === "frustrado" ? "var(--crm-red)" : "var(--crm-muted)" }}>
-                <span>espera 124s</span><span>{conversation[4]}</span>
-              </div>
-            </button>
-          ))}
-        </aside>
-        <section className="crm-chat-pane" style={{ background: "#f1f6ff" }}>
-          <div className="crm-chat-head">
-            <span className="crm-avatar">{active[1].split(" ").map((part) => part[0]).slice(0, 2).join("")}</span>
-            <div>
-              <strong>{active[1]}</strong>
-              <div style={{ color: "var(--crm-muted)", fontSize: 12 }}><span className="crm-mono">usr_01022</span> · Yucatán · ● en línea</div>
-            </div>
-          </div>
-          <div className="crm-message user">Hola, hice un pago de Totalplay hace 2 días y no se aplica.<br /><small>hace 8 min</small></div>
-          <div className="crm-message bot"><strong style={{ color: "var(--crm-blue)", fontSize: 11 }}>FONDIX BOT</strong><br />¡Hola Diego! Veo que tienes un pago a Totalplay. Lo estoy verificando...</div>
-          <div className="crm-message system">⚡ Chat escalado a humano · cola "Pagos no aplicados"</div>
-          <div style={{ padding: 16, borderTop: "1px solid var(--crm-border)" }}>
-            <div style={{ display: "flex", gap: 8 }}>
-              <input className="crm-input" placeholder="Escribe tu respuesta..." />
-              <button className="crm-btn primary">Enviar</button>
-            </div>
-            <div className="crm-quick-pills">
-              {["Saludo cordial", "Pago verificado", "Estamos revisando", "Reembolso iniciado"].map((item) => <button key={item} type="button">{item}</button>)}
-            </div>
-          </div>
-        </section>
-        <aside className="crm-chat-pane">
-          <div className="crm-chat-head"><strong>Contexto del cliente</strong></div>
-          <div style={{ padding: 14, display: "grid", gap: 12 }}>
-            <div>
-              <h4 className="crm-panel-title">Cuenta</h4>
-              <KeyValue label="Estado" value={<span className="crm-badge success">Activo</span>} />
-              <KeyValue label="KYC" value="Nivel 3 de 3" />
-              <KeyValue label="Volumen 30d" value="$21,230.00" mono />
-              <KeyValue label="Cliente desde" value="12/02/2026" />
-            </div>
-            <div>
-              <h4 className="crm-panel-title">Clasificación</h4>
-              <KeyValue label="Intent" value="payment_concern" />
-              <KeyValue label="Severidad" value={active[3]} mono />
-              <KeyValue label="Confianza" value="0.86" mono />
-            </div>
-            <div className="crm-note"><strong>Ticket vinculado</strong><br /><span className="crm-mono">TKT-4500</span> · SLA vence en 42 min.</div>
-            <div>
-              <h4 className="crm-panel-title">Sugerencias del bot</h4>
-              {["El usuario menciona Totalplay — ofrecer link al estado del pago.", "Verificar referencia 5512345678 en panel de billers.", "Lleva 235s esperando — escalar antes de 5 min."].map((item) => <div className="crm-suggestion" key={item}>{item}</div>)}
-            </div>
-            <button className="crm-btn primary">Asignar a mí</button>
-            <button className="crm-btn">Cambiar severidad</button>
-            <button className="crm-btn">Agregar nota interna</button>
-          </div>
-        </aside>
-      </div>
-    </>
-  );
-}
-
-function KeyValue({ label, value, mono }: { label: string; value: React.ReactNode; mono?: boolean }) {
-  return (
-    <div className="crm-key-value">
-      <span>{label}</span>
-      <b className={mono ? "crm-mono" : ""}>{value}</b>
     </div>
   );
 }
@@ -796,16 +684,93 @@ function KeyValue({ label, value, mono }: { label: string; value: React.ReactNod
 function ReconciliationView({ title, subtitle }: { title: string; subtitle: string }) {
   return (
     <>
-      <ViewHeader title={title} subtitle={subtitle} actions={<button className="crm-btn primary"><Icon name="refresh" />Re-conciliar</button>} />
-      <div className="crm-kpi-grid">
-        <Kpi label="Recibido" value="$4,211,880.20" meta="12,487 TX procesadas" />
-        <Kpi label="Pagado" value="$4,211,880.20" meta="Biller settlement mock" />
-        <Kpi label="Diferencia" value="$0.00" meta="Sin diferencias" />
-        <Kpi label="Tasa éxito" value="98.6%" meta="±0.2% vs promedio" />
+      <ViewHeader title={title} subtitle={subtitle} />
+      <div className="crm-card" style={{ padding: 40, textAlign: "center" }}>
+        <p style={{ fontSize: 36, margin: "0 0 12px" }}>🔧</p>
+        <h2 style={{ margin: "0 0 8px", fontSize: 18 }}>En construcción</h2>
+        <p style={{ color: "var(--crm-muted)", maxWidth: 480, margin: "0 auto", lineHeight: 1.6 }}>
+          Disponible cuando la integración con Tekae esté activa. No hay reportes reales de cargos, capturas ni mismatches en esta fase de desarrollo.
+        </p>
       </div>
-      <div style={{ marginTop: 18 }}>
-        <TableRows rows={[["CFE", "Energía", "$1,840,000.00", "$1,840,000.00", "Cuadrada"], ["SACMEX", "Agua", "$438,200.00", "$438,200.00", "Cuadrada"], ["Totalplay", "Internet", "$771,900.00", "$771,487.20", "Diferencia"]]} />
-      </div>
+    </>
+  );
+}
+
+function ReceiptsView() {
+  const api = useAdminApi();
+  const [receipts, setReceipts] = useState<AdminReceipt[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.receipts({}).then(setReceipts).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <>
+      <ViewHeader title="Recibos" subtitle={loading ? "Cargando…" : `${receipts.length} comprobantes`} actions={<button className="crm-btn"><Icon name="download" />Exportar</button>} />
+      {loading ? <div className="crm-loading">Cargando recibos…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr><th>Folio</th><th>Pago</th><th style={{ textAlign: "right" }}>Monto</th><th>Estado</th><th>Creado</th></tr>
+            </thead>
+            <tbody>
+              {receipts.length === 0 ? (
+                <tr><td colSpan={5} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin recibos</td></tr>
+              ) : receipts.map((r) => (
+                <tr key={r.id}>
+                  <td>
+                    <span className="crm-mono">{r.folio}</span>
+                    {r.is_mock ? <span className="crm-badge" style={{ fontSize: 10, marginLeft: 6 }}>mock</span> : null}
+                  </td>
+                  <td><span className="crm-mono">#{r.payment_id}</span></td>
+                  <td className="crm-mono" style={{ textAlign: "right" }}>{formatMoney(r.total_minor)}</td>
+                  <td>{statusCell(r.receipt_status ?? r.payment_status)}</td>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(r.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+}
+
+function AuditLogsView() {
+  const api = useAdminApi();
+  const [events, setEvents] = useState<AuditEvent[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api.auditEvents({}).then(setEvents).catch(() => {}).finally(() => setLoading(false));
+  }, []);
+
+  return (
+    <>
+      <ViewHeader title="Audit logs" subtitle={loading ? "Cargando…" : `${events.length} eventos`} actions={<button className="crm-btn"><Icon name="download" />Exportar</button>} />
+      {loading ? <div className="crm-loading">Cargando eventos…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr><th>Tiempo</th><th>Actor</th><th>Acción</th><th>Entidad</th><th>Resultado</th></tr>
+            </thead>
+            <tbody>
+              {events.length === 0 ? (
+                <tr><td colSpan={5} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin eventos de auditoría</td></tr>
+              ) : events.map((e) => (
+                <tr key={e.id}>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(e.created_at)}</td>
+                  <td><span className="crm-mono">{e.actor_id ?? e.actor_type}</span></td>
+                  <td>{e.event_type}</td>
+                  <td>{e.entity_type ? <span className="crm-mono">{e.entity_type} {e.entity_id}</span> : "—"}</td>
+                  <td>{statusCell(e.result)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   );
 }
