@@ -148,6 +148,24 @@ def get_chatbot_stats(
     return repository.get_chatbot_stats(db)
 
 
+@admin_router.get("/top-questions")
+def get_top_questions(
+    days: int = Query(default=7, ge=1, le=90),
+    limit: int = Query(default=10, ge=1, le=50),
+    current_user: User = Depends(require_admin_permission("admin.chatbot.conversations.view")),
+    db: Session = Depends(get_db),
+) -> list[dict]:
+    return repository.get_top_questions(db, days=days, limit=limit)
+
+
+@admin_router.get("/model-health")
+def get_model_health(
+    current_user: User = Depends(require_admin_permission("admin.chatbot.conversations.view")),
+    db: Session = Depends(get_db),
+) -> dict:
+    return repository.get_model_health(db)
+
+
 @admin_router.get("/faqs", response_model=list[ChatbotFaqRead])
 def list_faqs(
     current_user: User = Depends(require_admin_permission("admin.chatbot.view")),

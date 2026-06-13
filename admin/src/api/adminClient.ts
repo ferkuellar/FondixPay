@@ -164,6 +164,19 @@ export function createAdminClient(getToken: TokenProvider) {
       avg_messages_per_conversation: number;
       escalation_rate_pct: number;
     }>("/admin/chat/stats"),
+    chatbotTopQuestions: (days?: number, limit?: number) =>
+      request<{ intent: string; hits: number; escalated: number }[]>(
+        `/admin/chat/top-questions${query({ days, limit })}`,
+      ),
+    chatbotModelHealth: () =>
+      request<{
+        model: string;
+        api_configured: boolean;
+        conversations_today: number;
+        fallback_rate_pct: number;
+        latency_p50_ms: number | null;
+        latency_p95_ms: number | null;
+      }>("/admin/chat/model-health"),
     chatbotConversations: () => request<ChatbotConversation[]>("/admin/chat/conversations"),
     chatbotConversation: (id: string) => request<ChatbotConversation>(`/admin/chat/conversations/${id}`),
     chatbotFallbacks: () => request<ChatbotFallback[]>("/admin/chat/fallbacks"),

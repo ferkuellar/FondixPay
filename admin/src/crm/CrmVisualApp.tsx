@@ -144,14 +144,6 @@ type BotPill = {
   q: string;
 };
 
-type BotKnowledge = {
-  id: string;
-  q: string;
-  a: string;
-  cat: string;
-  uses: number;
-};
-
 type SaveState = "idle" | "saving" | "saved" | "error";
 
 const BOT_DEFAULT_PROMPT = `Eres el asistente virtual de FONDIX PAY, una app mexicana para pagar servicios del hogar.
@@ -175,26 +167,6 @@ const botPillsInitial: BotPill[] = [
   { id: "p4", label: "Cómo empezar", q: "¿Cómo me registro?" },
 ];
 
-const botKnowledgeInitial: BotKnowledge[] = [
-  { id: "k1", q: "¿Cuánto cobran de comisión?", a: "Cobramos $0. Cero comisión sobre el monto del recibo.", cat: "comisiones", uses: 412 },
-  { id: "k2", q: "¿En qué estados funciona?", a: "En los 32 estados de México. Cobertura nacional.", cat: "cobertura", uses: 318 },
-  { id: "k3", q: "¿Cuánto tarda en aplicarse el pago?", a: "En segundos. El comprobante llega por canal aprobado en pocos segundos.", cat: "pagos", uses: 287 },
-  { id: "k4", q: "¿Cómo me registro?", a: "Descarga la app y en 2 minutos con tu número de celular quedas listo.", cat: "onboarding", uses: 256 },
-  { id: "k5", q: "¿Puedo facturar?", a: "Sí, desde la app entras a Recibos, Facturar y eliges tu RFC.", cat: "facturas", uses: 198 },
-  { id: "k6", q: "¿Aceptan tarjeta de crédito?", a: "Sí, débito y crédito mexicanas.", cat: "pagos", uses: 173 },
-  { id: "k7", q: "¿Cómo cancelo un pago?", a: "Si es una operación privada, debe revisarse dentro de la app o soporte autenticado.", cat: "pagos", uses: 145 },
-  { id: "k8", q: "¿Y si no me llega el recibo?", a: "Por seguridad, revisa la app o el canal oficial de soporte autenticado.", cat: "recibos", uses: 121 },
-  { id: "k9", q: "¿Es seguro?", a: "Sí. Usamos controles de seguridad y datos cifrados.", cat: "seguridad", uses: 88 },
-];
-
-const botTopQuestions = [
-  { q: "¿Cuánto cobran de comisión?", hits: 412, escalated: 2 },
-  { q: "¿En qué estados funciona?", hits: 318, escalated: 0 },
-  { q: "¿Cuánto tarda mi pago?", hits: 287, escalated: 8 },
-  { q: "No me llegó el comprobante", hits: 198, escalated: 41 },
-  { q: "¿Aceptan AMEX?", hits: 142, escalated: 12 },
-  { q: "Quiero hablar con un humano", hits: 89, escalated: 89 },
-];
 
 const auditLogs = [
   ["hace 4 min", "Ana Vega", "SUPER_ADMIN", "ticket.severity_changed", "TKT-4499", "SEV-2 → SEV-1"],
@@ -864,7 +836,22 @@ function BotLandingView() {
   });
   const [prompt, setPrompt] = useState(BOT_DEFAULT_PROMPT);
   const [pills, setPills] = useState(botPillsInitial);
-  const [kb, setKb] = useState(botKnowledgeInitial);
+  const [kb, setKb] = useState<import("../types/admin").ChatbotKnowledgeEntry[]>([]);
+  const [kbLoading, setKbLoading] = useState(true);
+  const [newKbOpen, setNewKbOpen] = useState(false);
+  const [newKbTitle, setNewKbTitle] = useState("");
+  const [newKbContent, setNewKbContent] = useState("");
+  const [newKbCategory, setNewKbCategory] = useState("");
+  const [newKbSaving, setNewKbSaving] = useState(false);
+  const [topQuestions, setTopQuestions] = useState<{ intent: string; hits: number; escalated: number }[] | null>(null);
+  const [modelHealth, setModelHealth] = useState<{
+    model: string;
+    api_configured: boolean;
+    conversations_today: number;
+    fallback_rate_pct: number;
+    latency_p50_ms: number | null;
+    latency_p95_ms: number | null;
+  } | null>(null);
   const [testOpen, setTestOpen] = useState(false);
   const [testMessages, setTestMessages] = useState<TestMessage[]>([]);
   const [testInput, setTestInput] = useState("");
@@ -925,6 +912,16 @@ function BotLandingView() {
     api.chatbotStats()
       .then((s) => setStats(s))
       .catch(() => {});
+    api.chatbotKnowledge()
+      .then((items) => setKb(items))
+      .catch(() => {})
+      .finally(() => setKbLoading(false));
+    api.chatbotTopQuestions()
+      .then((q) => setTopQuestions(q))
+      .catch(() => {});
+    api.chatbotModelHealth()
+      .then((h) => setModelHealth(h))
+      .catch(() => {});
   }, []);
 
   async function saveIdentity() {
@@ -967,6 +964,36 @@ function BotLandingView() {
     } catch {
       setPillsSave("error");
     }
+  }
+
+  async function saveNewKbEntry() {
+    if (!newKbTitle.trim() || !newKbContent.trim() || newKbSaving) return;
+    setNewKbSaving(true);
+    try {
+      const created = await api.createChatbotKnowledge({
+        title: newKbTitle.trim(),
+        content: newKbContent.trim(),
+        category: newKbCategory.trim() || undefined,
+      });
+      setKb((current) => [created, ...current]);
+      setNewKbOpen(false);
+      setNewKbTitle("");
+      setNewKbContent("");
+      setNewKbCategory("");
+    } catch {
+      // leave form open on error
+    } finally {
+      setNewKbSaving(false);
+    }
+  }
+
+  async function toggleKbEntry(id: number, isActive: boolean) {
+    try {
+      const updated = isActive
+        ? await api.disableChatbotKnowledge(id)
+        : await api.enableChatbotKnowledge(id);
+      setKb((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+    } catch {}
   }
 
   async function publishAll() {
@@ -1151,28 +1178,80 @@ function BotLandingView() {
             </div>
             <button className="crm-btn" style={{ marginTop: 12 }} type="button"><Icon name="plus" />Agregar pregunta guiada</button>
           </Card>
-          <Card title={`Base de conocimiento · ${kb.length} entradas`} action={<button className="crm-btn"><Icon name="plus" />Nueva entrada</button>}>
+          <Card
+            title={kbLoading ? "Base de conocimiento · …" : `Base de conocimiento · ${kb.length} entradas`}
+            action={
+              <button className="crm-btn" type="button" onClick={() => setNewKbOpen((open) => !open)}>
+                <Icon name="plus" />Nueva entrada
+              </button>
+            }
+          >
+            {newKbOpen && (
+              <div className="crm-kb-new-form">
+                <input
+                  className="crm-input"
+                  placeholder="Título / pregunta"
+                  value={newKbTitle}
+                  onChange={(e) => setNewKbTitle(e.target.value)}
+                />
+                <textarea
+                  className="crm-textarea"
+                  placeholder="Contenido / respuesta"
+                  rows={3}
+                  value={newKbContent}
+                  onChange={(e) => setNewKbContent(e.target.value)}
+                />
+                <div className="crm-kb-new-form__row">
+                  <input
+                    className="crm-input"
+                    placeholder="Categoría (opcional)"
+                    value={newKbCategory}
+                    onChange={(e) => setNewKbCategory(e.target.value)}
+                  />
+                  <button
+                    className="crm-btn primary"
+                    type="button"
+                    disabled={!newKbTitle.trim() || !newKbContent.trim() || newKbSaving}
+                    onClick={() => void saveNewKbEntry()}
+                  >
+                    {newKbSaving ? "Guardando…" : "Guardar"}
+                  </button>
+                  <button className="crm-btn" type="button" onClick={() => setNewKbOpen(false)}>Cancelar</button>
+                </div>
+              </div>
+            )}
             <div className="crm-table-wrap">
               <table className="crm-table crm-bot-kb-table">
                 <thead>
                   <tr>
-                    <th>Pregunta</th>
-                    <th>Respuesta</th>
+                    <th>Título</th>
+                    <th>Contenido</th>
                     <th>Categoría</th>
-                    <th>Uso</th>
-                    <th></th>
+                    <th>Estado</th>
                   </tr>
                 </thead>
                 <tbody>
                   {kb.map((entry) => (
-                    <tr key={entry.id}>
-                      <td>{entry.q}</td>
-                      <td>{entry.a}</td>
-                      <td><span className="crm-badge neutral">{entry.cat}</span></td>
-                      <td className="crm-mono">{entry.uses}</td>
-                      <td><button className="crm-icon-btn small" type="button" onClick={() => setKb((current) => current.filter((item) => item.id !== entry.id))} aria-label={`Quitar ${entry.q}`}>×</button></td>
+                    <tr key={entry.id} style={{ opacity: entry.is_active ? 1 : 0.5 }}>
+                      <td>{entry.title}</td>
+                      <td style={{ maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{entry.content}</td>
+                      <td>{entry.category ? <span className="crm-badge neutral">{entry.category}</span> : <span className="crm-muted">—</span>}</td>
+                      <td>
+                        <button
+                          className={`crm-badge ${entry.is_active ? "active" : "neutral"}`}
+                          type="button"
+                          style={{ cursor: "pointer", border: "none", background: "none", padding: 0 }}
+                          onClick={() => void toggleKbEntry(entry.id, entry.is_active)}
+                          title={entry.is_active ? "Desactivar" : "Activar"}
+                        >
+                          {entry.is_active ? "activa" : "inactiva"}
+                        </button>
+                      </td>
                     </tr>
                   ))}
+                  {!kbLoading && kb.length === 0 && (
+                    <tr><td colSpan={4} style={{ textAlign: "center", color: "var(--crm-muted)", padding: "20px 0" }}>Sin entradas. Agrega la primera.</td></tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -1182,20 +1261,27 @@ function BotLandingView() {
           <Card title="Vista previa en vivo">
             <BotPreview identity={identity} pills={pills} />
           </Card>
-          <Card title="Top preguntas · 7 días">
+          <Card title="Top intents · 7 días">
             <div className="crm-top-questions">
-              {botTopQuestions.map((question, index) => {
-                const rate = question.escalated / question.hits;
+              {topQuestions === null && (
+                <span style={{ color: "var(--crm-muted)", fontSize: 13 }}>Cargando…</span>
+              )}
+              {topQuestions !== null && topQuestions.length === 0 && (
+                <span style={{ color: "var(--crm-muted)", fontSize: 13 }}>Sin datos todavía</span>
+              )}
+              {topQuestions !== null && topQuestions.map((question, index) => {
+                const rate = question.hits > 0 ? question.escalated / question.hits : 0;
+                const maxHits = topQuestions[0]?.hits ?? 1;
                 return (
-                  <div className="crm-top-question" key={question.q}>
+                  <div className="crm-top-question" key={question.intent}>
                     <span className="crm-top-rank">{index + 1}</span>
                     <div>
-                      <b>{question.q}</b>
+                      <b>{question.intent}</b>
                       <small>
-                        {question.hits} hits · <span className={rate > 0.2 ? "danger" : ""}>{question.escalated} escalados</span>
+                        {question.hits} conv · <span className={rate > 0.2 ? "danger" : ""}>{question.escalated} escaladas</span>
                       </small>
                     </div>
-                    <i><span style={{ width: `${(question.hits / botTopQuestions[0].hits) * 100}%` }} /></i>
+                    <i><span style={{ width: `${(question.hits / maxHits) * 100}%` }} /></i>
                   </div>
                 );
               })}
@@ -1203,11 +1289,16 @@ function BotLandingView() {
           </Card>
           <Card title="Salud del modelo">
             <div className="crm-bot-metrics">
-              <BotMetric label="Modelo activo" value="claude-haiku-4-5-20251001" mono />
-              <BotMetric label="Latencia p50" value="0.84 s" mono />
-              <BotMetric label="Latencia p95" value="2.1 s" mono />
-              <BotMetric label="Tokens / día (avg)" value="142,800" mono />
-              <BotMetric label="Costo del día" value="$32.40 MXN" mono />
+              <BotMetric label="Modelo activo" value={modelHealth?.model ?? "—"} mono />
+              <BotMetric
+                label="API key"
+                value={modelHealth == null ? "—" : modelHealth.api_configured ? "● configurada" : "⚠ no configurada"}
+                mono
+              />
+              <BotMetric label="Conv. hoy" value={modelHealth != null ? String(modelHealth.conversations_today) : "—"} mono />
+              <BotMetric label="Tasa de fallback" value={modelHealth != null ? `${modelHealth.fallback_rate_pct}%` : "—"} mono />
+              <BotMetric label="Latencia p50" value="no instrumentado" mono />
+              <BotMetric label="Latencia p95" value="no instrumentado" mono />
             </div>
           </Card>
         </section>

@@ -144,6 +144,56 @@ def get_chatbot_stats(db: Session) -> dict:
     }
 
 
+def get_top_questions(db: Session, days: int = 7, limit: int = 10) -> list[dict]:
+    since = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(days=days)
+    from sqlalchemy import func
+    rows = (
+        db.query(
+            ChatbotConversation.detected_intent,
+            func.count(ChatbotConversation.id).label("hits"),
+        )
+        .filter(
+            ChatbotConversation.started_at >= since,
+            ChatbotConversation.detected_intent.is_not(None),
+        )
+        .group_by(ChatbotConversation.detected_intent)
+        .order_by(func.count(ChatbotConversation.id).desc())
+        .limit(limit)
+        .all()
+    )
+    result = []
+    for row in rows:
+        escalated = (
+            db.query(func.count(ChatbotConversation.id))
+            .filter(
+                ChatbotConversation.started_at >= since,
+                ChatbotConversation.detected_intent == row.detected_intent,
+                ChatbotConversation.escalation_status != "none",
+            )
+            .scalar()
+            or 0
+        )
+        result.append({"intent": row.detected_intent, "hits": row.hits, "escalated": escalated})
+    return result
+
+
+def get_model_health(db: Session) -> dict:
+    from app.core.config import settings as _settings
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
+    conversations_today = db.query(ChatbotConversation).filter(ChatbotConversation.started_at >= today_start).count()
+    total = db.query(ChatbotConversation).count()
+    fallbacks = db.query(ChatbotFallback).count()
+    fallback_rate = round(fallbacks / total * 100, 1) if total > 0 else 0.0
+    return {
+        "model": _settings.chatbot_ai_model or "claude-haiku-4-5-20251001",
+        "api_configured": bool(_settings.chatbot_ai_api_key),
+        "conversations_today": conversations_today,
+        "fallback_rate_pct": fallback_rate,
+        "latency_p50_ms": None,
+        "latency_p95_ms": None,
+    }
+
+
 def add_message(db: Session, message: ChatbotMessage) -> ChatbotMessage:
     db.add(message)
     db.flush()
