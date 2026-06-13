@@ -6,7 +6,8 @@
              data-base-url="https://fondixpay-production.up.railway.app"></script>
    Dev default: http://localhost:8000
 ============================================================ */
-const FONDIX_BOT_BASE = document.currentScript?.dataset?.baseUrl?.replace(/\/$/, '') || 'http://localhost:8000';
+const _botScript = document.currentScript || document.querySelector('script[src*="bot-widget.js"]');
+const FONDIX_BOT_BASE = _botScript?.dataset?.baseUrl?.replace(/\/$/, '') || 'http://localhost:8000';
 
 const DEFAULTS = {
   name: 'FONDIX Bot',
