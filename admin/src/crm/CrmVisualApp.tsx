@@ -230,7 +230,7 @@ export function CrmVisualApp() {
             </select>
             <span className="crm-pill crm-env"><i className="crm-env-dot" />{environment === "DEV" ? "DEV / SANDBOX" : environment}</span>
             <span className="crm-pill crm-role">{role ?? "SUPER_ADMIN"}</span>
-            <button className="crm-btn" type="button" onClick={logout}>Salir</button>
+            <button className="crm-btn" type="button" onClick={() => logout()}>Salir</button>
           </div>
         </header>
         {showBanner && environment !== "PRODUCTION" && devAuthEnabled ? (

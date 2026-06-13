@@ -14,7 +14,7 @@ type AdminSession = {
   devAuthEnabled: boolean;
   isAuthenticated: boolean;
   signIn: (token: string, role?: AdminRole) => void;
-  logout: () => void;
+  logout: (expired?: boolean) => void;
   hasPermission: (permission: Permission) => boolean;
 };
 
@@ -50,10 +50,15 @@ export function AdminAuthProvider({ children }: { children: ReactNode }) {
         setToken(nextToken);
         setRole(resolvedRole);
       },
-      logout: () => {
+      logout: (expired?: boolean) => {
         sessionStorage.removeItem(TOKEN_KEY);
         setToken(null);
         setRole(configuredRole);
+        if (expired) {
+          const url = new URL(window.location.href);
+          url.search = "?expired=1";
+          window.history.replaceState({}, "", url.toString());
+        }
       },
       hasPermission: (permission) => permissions.includes(permission),
     };

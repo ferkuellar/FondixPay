@@ -34,7 +34,10 @@ export class AdminApiError extends Error {
 
 type TokenProvider = () => string | null;
 
-export function createAdminClient(getToken: TokenProvider) {
+export type AdminOtpSentResponse = { message: string; expires_in_seconds: number; otp_dev?: string | null };
+export type AdminTokenResponse = { access_token: string; token_type: string; role: string; expires_in: number };
+
+export function createAdminClient(getToken: TokenProvider, on401?: () => void) {
   async function request<T>(path: string, init?: RequestInit): Promise<T> {
     const token = getToken();
     const response = await fetch(`${API_BASE_URL}${path}`, {
@@ -54,15 +57,40 @@ export function createAdminClient(getToken: TokenProvider) {
       } catch {
         payload = null;
       }
+      if (response.status === 401 && on401) {
+        on401();
+      }
       const message =
         response.status === 401
-          ? "Sesion admin no valida. Revisa el token."
+          ? "Sesion expirada. Vuelve a iniciar sesion."
           : response.status === 403
             ? "El backend rechazo esta operacion por permisos."
             : payload?.detail ?? payload?.error ?? payload?.message ?? "No se pudo consultar el backend admin.";
       throw new AdminApiError(message, response.status);
     }
 
+    return (await response.json()) as T;
+  }
+
+  async function publicRequest<T>(path: string, init?: RequestInit): Promise<T> {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        ...init?.headers,
+      },
+    });
+    if (!response.ok) {
+      let payload: ApiErrorBody | null = null;
+      try {
+        payload = (await response.json()) as ApiErrorBody;
+      } catch {
+        payload = null;
+      }
+      const message = payload?.detail ?? payload?.error ?? payload?.message ?? "Error de autenticacion.";
+      throw new AdminApiError(message, response.status);
+    }
     return (await response.json()) as T;
   }
 
@@ -215,5 +243,9 @@ export function createAdminClient(getToken: TokenProvider) {
       request<SupportTicket>(`/admin/chat/operations/tickets/${ticketId}/first-response`, { method: "POST" }),
     updateChatTicketStatus: (ticketId: number, targetStatus: "resolved" | "closed" | "reopened", note: string) =>
       request<SupportTicket>(`/admin/chat/operations/tickets/${ticketId}/${targetStatus}`, { method: "POST", body: JSON.stringify({ note }) }),
+    adminRequestOtp: (phone: string) =>
+      publicRequest<AdminOtpSentResponse>("/admin/auth/request-otp", { method: "POST", body: JSON.stringify({ phone }) }),
+    adminLogin: (phone: string, otp: string) =>
+      publicRequest<AdminTokenResponse>("/admin/auth/verify-otp", { method: "POST", body: JSON.stringify({ phone, otp }) }),
   };
 }

@@ -15,6 +15,7 @@ from app.modules.admin.models import (
     SupportTicket,
     SupportTicketNote,
 )
+from app.modules.admin.auth_routes import router as admin_auth_router
 from app.modules.admin.routes import router as admin_router
 from app.modules.audit.models import AuditEvent
 from app.modules.auth.routes import router as auth_router
@@ -77,6 +78,7 @@ app.include_router(receipts_router, prefix="/receipts", tags=["receipts"])
 app.include_router(notifications_router, prefix="/notifications", tags=["notifications"])
 app.include_router(preferences_router, prefix="/notification-preferences", tags=["notification preferences"])
 app.include_router(accounts_router, prefix="/account", tags=["account"])
+app.include_router(admin_auth_router, prefix="/admin/auth", tags=["admin auth"])
 app.include_router(admin_router, prefix="/admin", tags=["admin"])
 app.include_router(service_catalog_router, prefix="/service-catalog", tags=["service catalog"])
 app.include_router(coverage_router, tags=["coverage map"])

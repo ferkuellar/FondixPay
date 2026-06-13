@@ -28,7 +28,7 @@ export function Topbar({ theme, onToggleTheme, environment, onEnvironmentChange 
         </select>
         <span className="environment-pill">● {envLabel}</span>
         <span className="role-pill">{role ?? "Sin rol"}</span>
-        <button type="button" className="button button-quiet" onClick={logout}>
+        <button type="button" className="button button-quiet" onClick={() => logout()}>
           Salir
         </button>
       </div>

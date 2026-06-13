@@ -1701,4 +1701,22 @@ Removed: `ChatConsoleView`, `KeyValue` helper, 6 hardcoded module-scope const ar
 Added imports: `ChatOperationsPage`, `AdminPayment`, `AdminReceipt`, `AdminUser`, `AuditEvent`, `SupportTicket`, `formatDate`, `formatMoney`.
 TypeScript: 0 errors.
 
-Next recommended sprints: 069 (auth hardening), 070 (reconciliation honest state), 071 (dashboard real KPIs), 072 (production config docs).
+Next recommended sprints: 070 (reconciliation honest state / Tekae honest scaffold), 071 (dashboard real KPIs), 072 (production config docs).
+
+## Sprint 069 — CRM Admin OTP Login + 401 Session Recovery
+
+Status: COMPLETED (2026-06-13).
+
+Replaced the paste-token login form with a real two-step OTP flow. Backend admin auth endpoints added with admin-role gate.
+
+**Backend (`backend/app/modules/admin/auth_routes.py`):**
+- `POST /admin/auth/request-otp` — validates phone has admin role before sending OTP. Returns 403 for non-admin phones.
+- `POST /admin/auth/verify-otp` — verifies OTP + admin role, returns `{access_token, role, expires_in}`. Both endpoints write audit events.
+
+**Frontend:**
+- `adminClient.ts` — `adminRequestOtp`, `adminLogin` methods; `on401` callback support; 401 message now "Sesion expirada."
+- `useAdminApi.ts` — passes `() => logout(true)` as `on401` → expired sessions auto-redirect to login with `?expired=1`.
+- `AdminAuthProvider.tsx` — `logout(expired?)` appends `?expired=1` to URL.
+- `LoginPage.tsx` rewritten — phone → OTP two-step; role from backend response; dev OTP badge; expired-session alert; legacy paste-token as collapsible fallback.
+
+Tests: 9/9 backend tests passing. TypeScript: 0 errors.
