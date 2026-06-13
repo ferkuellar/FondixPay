@@ -1,13 +1,12 @@
 /* ============================================================
    FondixPay — Bot Widget
    Vanilla JS, no dependencies.
-   Production: add data-base-url (server root only, no /api/public suffix):
-     <script defer src="bot-widget.js"
-             data-base-url="https://fondixpay-production.up.railway.app"></script>
+   Production: set window.FONDIX_BOT_BASE in an inline <script> before this file:
+     <script>window.FONDIX_BOT_BASE = 'https://fondixpay-production.up.railway.app';</script>
+     <script defer src="bot-widget.js"></script>
    Dev default: http://localhost:8000
 ============================================================ */
-const _botScript = document.currentScript || document.querySelector('script[src*="bot-widget.js"]');
-const FONDIX_BOT_BASE = _botScript?.dataset?.baseUrl?.replace(/\/$/, '') || 'http://localhost:8000';
+const FONDIX_BOT_BASE = (window.FONDIX_BOT_BASE || '').replace(/\/$/, '') || 'http://localhost:8000';
 
 const DEFAULTS = {
   name: 'FONDIX Bot',
