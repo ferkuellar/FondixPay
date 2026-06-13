@@ -151,6 +151,8 @@ type BotKnowledge = {
   uses: number;
 };
 
+type SaveState = "idle" | "saving" | "saved" | "error";
+
 const BOT_DEFAULT_PROMPT = `Eres el asistente virtual de FONDIX PAY, una app mexicana para pagar servicios del hogar.
 
 Información clave:
@@ -837,6 +839,20 @@ function ReconciliationView({ title, subtitle }: { title: string; subtitle: stri
 
 type TestMessage = { role: "user" | "assistant"; content: string };
 
+function relativeTime(date: Date | null): string | null {
+  if (!date) return null;
+  const diff = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (diff < 60) return "hace unos segundos";
+  return `hace ${Math.floor(diff / 60)} min`;
+}
+
+function saveBtnText(state: SaveState): string {
+  if (state === "saving") return "Guardando...";
+  if (state === "saved") return "✓ Guardado";
+  if (state === "error") return "Error al guardar";
+  return "Guardar";
+}
+
 function BotLandingView() {
   const api = useAdminApi();
   const [identity, setIdentity] = useState<BotIdentity>({
@@ -854,10 +870,93 @@ function BotLandingView() {
   const [testLoading, setTestLoading] = useState(false);
   const [testError, setTestError] = useState<string | null>(null);
   const threadRef = useRef<HTMLDivElement>(null);
+  const [settingsLoading, setSettingsLoading] = useState(true);
+  const [identitySave, setIdentitySave] = useState<SaveState>("idle");
+  const [promptSave, setPromptSave] = useState<SaveState>("idle");
+  const [pillsSave, setPillsSave] = useState<SaveState>("idle");
+  const [identitySavedAt, setIdentitySavedAt] = useState<Date | null>(null);
+  const [promptSavedAt, setPromptSavedAt] = useState<Date | null>(null);
+  const [pillsSavedAt, setPillsSavedAt] = useState<Date | null>(null);
 
   const updateIdentity = (key: keyof BotIdentity, value: string) => {
     setIdentity((current) => ({ ...current, [key]: value }));
   };
+
+  useEffect(() => {
+    api.chatbotSettings()
+      .then((items) => {
+        const get = (key: string): string | null => {
+          const item = items.find((s) => s.key === key);
+          if (item == null) return null;
+          return (item.value as unknown as string) ?? null;
+        };
+        const name = get("bot.identity.name");
+        const tagline = get("bot.identity.tagline");
+        const tooltip = get("bot.identity.tooltip");
+        const greeting = get("bot.identity.greeting");
+        const systemPrompt = get("system_prompt");
+        const pillsStr = get("bot.pills");
+        setIdentity((cur) => ({
+          name: name ?? cur.name,
+          tagline: tagline ?? cur.tagline,
+          tooltip: tooltip ?? cur.tooltip,
+          greeting: greeting ?? cur.greeting,
+        }));
+        if (systemPrompt !== null) setPrompt(systemPrompt);
+        if (pillsStr) {
+          try {
+            const parsed = JSON.parse(pillsStr) as Array<{ id: string; label: string; question: string }>;
+            if (Array.isArray(parsed)) {
+              setPills(parsed.map((p) => ({ id: p.id, label: p.label, q: p.question ?? "" })));
+            }
+          } catch {}
+        }
+      })
+      .catch(() => {})
+      .finally(() => setSettingsLoading(false));
+  }, []);
+
+  async function saveIdentity() {
+    setIdentitySave("saving");
+    try {
+      await Promise.all([
+        api.updateChatbotSetting("bot.identity.name", identity.name as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("bot.identity.tagline", identity.tagline as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("bot.identity.tooltip", identity.tooltip as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("bot.identity.greeting", identity.greeting as unknown as Record<string, unknown>),
+      ]);
+      setIdentitySave("saved");
+      setIdentitySavedAt(new Date());
+      setTimeout(() => setIdentitySave("idle"), 2000);
+    } catch {
+      setIdentitySave("error");
+    }
+  }
+
+  async function savePrompt() {
+    setPromptSave("saving");
+    try {
+      await api.updateChatbotSetting("system_prompt", prompt as unknown as Record<string, unknown>);
+      setPromptSave("saved");
+      setPromptSavedAt(new Date());
+      setTimeout(() => setPromptSave("idle"), 2000);
+    } catch {
+      setPromptSave("error");
+    }
+  }
+
+  async function savePills() {
+    setPillsSave("saving");
+    try {
+      const payload = JSON.stringify(pills.map((p) => ({ id: p.id, label: p.label, question: p.q })));
+      await api.updateChatbotSetting("bot.pills", payload as unknown as Record<string, unknown>);
+      setPillsSave("saved");
+      setPillsSavedAt(new Date());
+      setTimeout(() => setPillsSave("idle"), 2000);
+    } catch {
+      setPillsSave("error");
+    }
+  }
 
   function openTest() {
     setTestOpen(true);
@@ -899,7 +998,7 @@ function BotLandingView() {
     <>
       <ViewHeader
         title="Bot de Landing"
-        subtitle="Configura la identidad, personalidad y respuestas del FONDIX Bot que vive en fondixpay.mx"
+        subtitle={settingsLoading ? "Cargando configuración..." : "Configura la identidad, personalidad y respuestas del FONDIX Bot"}
         actions={
           <>
             <button className="crm-btn" type="button" onClick={openTest}><Icon name="eye" />Probar</button>
@@ -915,7 +1014,25 @@ function BotLandingView() {
       </div>
       <div className="crm-bot-grid">
         <section className="crm-bot-column">
-          <Card title="Identidad y bienvenida">
+          <Card
+            title="Identidad y bienvenida"
+            action={
+              <div className="crm-card-actions">
+                {identitySave === "error" && <span style={{ fontSize: 11, color: "var(--crm-red)" }}>Error al guardar</span>}
+                {identitySavedAt && identitySave === "idle" && (
+                  <span style={{ fontSize: 11, color: "var(--crm-muted)" }}>Guardado {relativeTime(identitySavedAt)}</span>
+                )}
+                <button
+                  className={`crm-btn${identitySave === "saved" ? " primary" : ""}`}
+                  type="button"
+                  disabled={settingsLoading || identitySave === "saving"}
+                  onClick={() => void saveIdentity()}
+                >
+                  <Icon name="check" />{saveBtnText(identitySave)}
+                </button>
+              </div>
+            }
+          >
             <div className="crm-form-grid bot-fields">
               <BotField label="Nombre del bot" value={identity.name} onChange={(value) => updateIdentity("name", value)} />
               <BotField label="Estado / tagline" value={identity.tagline} onChange={(value) => updateIdentity("tagline", value)} />
@@ -931,6 +1048,18 @@ function BotLandingView() {
                 <button className="crm-icon-btn small" type="button" onClick={() => setPrompt(BOT_DEFAULT_PROMPT)} aria-label="Restaurar default">
                   <Icon name="refresh" />
                 </button>
+                {promptSave === "error" && <span style={{ fontSize: 11, color: "var(--crm-red)" }}>Error</span>}
+                {promptSavedAt && promptSave === "idle" && (
+                  <span style={{ fontSize: 11, color: "var(--crm-muted)" }}>{relativeTime(promptSavedAt)}</span>
+                )}
+                <button
+                  className={`crm-btn${promptSave === "saved" ? " primary" : ""}`}
+                  type="button"
+                  disabled={settingsLoading || promptSave === "saving"}
+                  onClick={() => void savePrompt()}
+                >
+                  {saveBtnText(promptSave)}
+                </button>
               </div>
             }
           >
@@ -939,7 +1068,25 @@ function BotLandingView() {
               {["Tono mexicano", "Respuestas cortas", "Emojis moderados", "Off-topic redirect"].map((pill) => <span className="crm-small-pill" key={pill}>{pill}</span>)}
             </div>
           </Card>
-          <Card title="Respuestas guiadas">
+          <Card
+            title="Respuestas guiadas"
+            action={
+              <div className="crm-card-actions">
+                {pillsSave === "error" && <span style={{ fontSize: 11, color: "var(--crm-red)" }}>Error al guardar</span>}
+                {pillsSavedAt && pillsSave === "idle" && (
+                  <span style={{ fontSize: 11, color: "var(--crm-muted)" }}>Guardado {relativeTime(pillsSavedAt)}</span>
+                )}
+                <button
+                  className={`crm-btn${pillsSave === "saved" ? " primary" : ""}`}
+                  type="button"
+                  disabled={settingsLoading || pillsSave === "saving"}
+                  onClick={() => void savePills()}
+                >
+                  {saveBtnText(pillsSave)}
+                </button>
+              </div>
+            }
+          >
             <div className="crm-guided-list">
               {pills.map((pill) => (
                 <div key={pill.id}>
