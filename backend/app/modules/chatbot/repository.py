@@ -126,6 +126,24 @@ def count_conversations_today(db: Session) -> int:
     return db.query(ChatbotConversation).filter(ChatbotConversation.started_at >= today_start).count()
 
 
+def get_chatbot_stats(db: Session) -> dict:
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
+    conversations_today = db.query(ChatbotConversation).filter(ChatbotConversation.started_at >= today_start).count()
+    messages_today = db.query(ChatbotMessage).filter(ChatbotMessage.created_at >= today_start).count()
+    escalated_today = db.query(ChatbotConversation).filter(
+        ChatbotConversation.started_at >= today_start,
+        ChatbotConversation.escalation_status != "none",
+    ).count()
+    avg_msgs = round(messages_today / conversations_today, 1) if conversations_today > 0 else 0.0
+    escalation_rate = round(escalated_today / conversations_today * 100, 1) if conversations_today > 0 else 0.0
+    return {
+        "conversations_today": conversations_today,
+        "messages_today": messages_today,
+        "avg_messages_per_conversation": avg_msgs,
+        "escalation_rate_pct": escalation_rate,
+    }
+
+
 def add_message(db: Session, message: ChatbotMessage) -> ChatbotMessage:
     db.add(message)
     db.flush()

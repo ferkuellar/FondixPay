@@ -877,6 +877,11 @@ function BotLandingView() {
   const [identitySavedAt, setIdentitySavedAt] = useState<Date | null>(null);
   const [promptSavedAt, setPromptSavedAt] = useState<Date | null>(null);
   const [pillsSavedAt, setPillsSavedAt] = useState<Date | null>(null);
+  const [stats, setStats] = useState<{
+    conversations_today: number;
+    avg_messages_per_conversation: number;
+    escalation_rate_pct: number;
+  } | null>(null);
 
   const updateIdentity = (key: keyof BotIdentity, value: string) => {
     setIdentity((current) => ({ ...current, [key]: value }));
@@ -914,6 +919,9 @@ function BotLandingView() {
       })
       .catch(() => {})
       .finally(() => setSettingsLoading(false));
+    api.chatbotStats()
+      .then((s) => setStats(s))
+      .catch(() => {});
   }, []);
 
   async function saveIdentity() {
@@ -1007,10 +1015,10 @@ function BotLandingView() {
         }
       />
       <div className="crm-mini-grid">
-        <MiniStat label="Conversaciones · hoy" value="247" />
-        <MiniStat label="Mensajes promedio" value="4.8" />
-        <MiniStat label="Tasa de escalación" value="12.4%" accent="var(--crm-red)" />
-        <MiniStat label="CSAT" value="4.6 / 5" accent="var(--crm-green)" />
+        <MiniStat label="Conversaciones · hoy" value={stats ? String(stats.conversations_today) : "—"} />
+        <MiniStat label="Mensajes promedio" value={stats ? String(stats.avg_messages_per_conversation) : "—"} />
+        <MiniStat label="Tasa de escalación" value={stats ? `${stats.escalation_rate_pct}%` : "—"} accent="var(--crm-red)" />
+        <MiniStat label="CSAT" value="—" />
       </div>
       <div className="crm-bot-grid">
         <section className="crm-bot-column">

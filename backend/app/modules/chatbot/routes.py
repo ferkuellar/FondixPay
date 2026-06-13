@@ -140,6 +140,14 @@ def get_chat_health(db: Session = Depends(get_db)) -> dict:
     }
 
 
+@admin_router.get("/stats")
+def get_chatbot_stats(
+    current_user: User = Depends(require_admin_permission("admin.chatbot.conversations.view")),
+    db: Session = Depends(get_db),
+) -> dict:
+    return repository.get_chatbot_stats(db)
+
+
 @admin_router.get("/faqs", response_model=list[ChatbotFaqRead])
 def list_faqs(
     current_user: User = Depends(require_admin_permission("admin.chatbot.view")),

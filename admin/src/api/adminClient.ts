@@ -158,6 +158,12 @@ export function createAdminClient(getToken: TokenProvider) {
       request<ChatbotKnowledgeEntry>(`/admin/chat/knowledge/${id}/enable`, { method: "POST" }),
     disableChatbotKnowledge: (id: number) =>
       request<ChatbotKnowledgeEntry>(`/admin/chat/knowledge/${id}/disable`, { method: "POST" }),
+    chatbotStats: () => request<{
+      conversations_today: number;
+      messages_today: number;
+      avg_messages_per_conversation: number;
+      escalation_rate_pct: number;
+    }>("/admin/chat/stats"),
     chatbotConversations: () => request<ChatbotConversation[]>("/admin/chat/conversations"),
     chatbotConversation: (id: string) => request<ChatbotConversation>(`/admin/chat/conversations/${id}`),
     chatbotFallbacks: () => request<ChatbotFallback[]>("/admin/chat/fallbacks"),
