@@ -2,6 +2,7 @@ import re
 import unicodedata
 from datetime import datetime, timedelta, timezone
 
+import httpx
 from fastapi import HTTPException, Request, status
 from sqlalchemy import func
 from sqlalchemy.orm import Session
@@ -101,7 +102,47 @@ def classify_message(value: str) -> dict[str, str]:
     return {"intent": "general_faq", "severity": "SEV-4", "reason": "general public FAQ or informational question"}
 
 
-def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Request) -> PublicChatResponse:
+_DEFAULT_SYSTEM_PROMPT = (
+    "Eres el asistente virtual de FondixPay, una plataforma de pagos de servicios en México. "
+    "Responde en español de forma concisa y amigable. "
+    "Si no tienes información suficiente, sugiere al usuario que contacte al soporte."
+)
+
+
+def _load_system_prompt(db: Session) -> str:
+    setting = repository.get_setting(db, "system_prompt")
+    if setting and setting.value:
+        return setting.value
+    return _DEFAULT_SYSTEM_PROMPT
+
+
+async def _call_claude_async(message: str, system_prompt: str) -> str | None:
+    model = settings.chatbot_ai_model or "claude-haiku-4-5-20251001"
+    try:
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            response = await client.post(
+                "https://api.anthropic.com/v1/messages",
+                headers={
+                    "x-api-key": settings.chatbot_ai_api_key,
+                    "anthropic-version": "2023-06-01",
+                    "content-type": "application/json",
+                },
+                json={
+                    "model": model,
+                    "max_tokens": 400,
+                    "system": system_prompt,
+                    "messages": [{"role": "user", "content": message}],
+                },
+            )
+        if response.is_success:
+            data = response.json()
+            return data["content"][0]["text"]
+    except Exception:
+        pass
+    return None
+
+
+async def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Request) -> PublicChatResponse:
     message = payload.message.strip()
     if not message:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Message is required.")
@@ -166,7 +207,7 @@ def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Reques
     if classification["severity"] in HIGH_SEVERITIES:
         _audit_public(db, request, "conversation.escalated", conversation.id, {"severity": classification["severity"]})
 
-    reply, confidence, detected_intent = _resolve_reply(db, message)
+    reply, confidence, detected_intent = await _resolve_reply(db, message)
     bot_message = repository.add_message(
         db,
         ChatbotMessage(
@@ -196,7 +237,7 @@ def resolve_public_chat(db: Session, payload: PublicChatRequest, request: Reques
     return PublicChatResponse(reply=bot_message.message_text_masked, conversationId=str(conversation.id), confidence=confidence)
 
 
-def _resolve_reply(db: Session, message: str) -> tuple[str, str, str | None]:
+async def _resolve_reply(db: Session, message: str) -> tuple[str, str, str | None]:
     normalized = normalize_text(message)
     if _is_private_request(normalized):
         return PRIVATE_ROUTING_REPLY, "rule", "private_data_request"
@@ -213,9 +254,11 @@ def _resolve_reply(db: Session, message: str) -> tuple[str, str, str | None]:
     if knowledge is not None:
         return knowledge.content, "rule", "knowledge"
 
-    if settings.chatbot_ai_provider and settings.chatbot_ai_api_key:
-        # AI provider wiring is intentionally deferred to a provider-specific implementation.
-        return SAFE_FALLBACK_REPLY, "fallback", "ai_not_configured"
+    if settings.chatbot_ai_api_key:
+        system_prompt = _load_system_prompt(db)
+        ai_reply = await _call_claude_async(message, system_prompt)
+        if ai_reply is not None:
+            return ai_reply, "ai", "ai_response"
 
     return SAFE_FALLBACK_REPLY, "fallback", None
 

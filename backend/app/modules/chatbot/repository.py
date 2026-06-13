@@ -193,3 +193,10 @@ def upsert_setting(db: Session, *, key: str, value: str | None, actor_id: int) -
         item.updated_by = actor_id
     db.flush()
     return item
+
+
+def get_setting_value(db: Session, key: str, default: str = "") -> str:
+    item = get_setting(db, key)
+    if item is None or item.value is None:
+        return default
+    return item.value

@@ -252,3 +252,18 @@ class ChatTestRequest(BaseModel):
 class ChatTestResponse(BaseModel):
     content: str
     model: str
+
+
+class BotPillConfig(BaseModel):
+    id: str
+    label: str
+    question: str
+
+
+class PublicBotConfig(BaseModel):
+    name: str
+    tagline: str
+    tooltip: str
+    greeting: str
+    pills: list[BotPillConfig]
+    model_display: str

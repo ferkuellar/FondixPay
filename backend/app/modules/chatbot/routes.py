@@ -1,9 +1,11 @@
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+import json
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
+from app.core.rate_limit import check_rate_limit
 from app.modules.admin.dependencies import require_admin_permission
 from app.modules.admin.models import SupportTicket
 from app.modules.admin.schemas import SupportTicketRead
@@ -30,6 +32,8 @@ from app.modules.chatbot.schemas import (
     ChatbotSettingUpdate,
     ChatTestRequest,
     ChatTestResponse,
+    BotPillConfig,
+    PublicBotConfig,
     PublicChatRequest,
     PublicChatResponse,
 )
@@ -38,10 +42,47 @@ from app.modules.users.models import User
 public_router = APIRouter()
 admin_router = APIRouter()
 
+_DEFAULT_PILLS: list[dict] = [
+    {"id": "p1", "label": "¿Cuánto cuesta?", "question": "¿Cuánto cobran de comisión?"},
+    {"id": "p2", "label": "¿Qué servicios pagan?", "question": "¿Qué servicios puedo pagar con FondixPay?"},
+    {"id": "p3", "label": "¿Cómo me registro?", "question": "¿Cómo me registro en la app?"},
+]
+
 
 @public_router.post("/chat", response_model=PublicChatResponse)
-def public_chat(payload: PublicChatRequest, request: Request, db: Session = Depends(get_db)) -> PublicChatResponse:
-    return services.resolve_public_chat(db, payload, request)
+async def public_chat(payload: PublicChatRequest, request: Request, db: Session = Depends(get_db)) -> PublicChatResponse:
+    if not check_rate_limit(payload.sessionId):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Demasiadas solicitudes. Intenta en unos minutos.",
+        )
+    return await services.resolve_public_chat(db, payload, request)
+
+
+@public_router.get("/chat/config", response_model=PublicBotConfig)
+def get_bot_config(fastapi_response: Response, db: Session = Depends(get_db)) -> PublicBotConfig:
+    fastapi_response.headers["Cache-Control"] = "public, max-age=60"
+    fastapi_response.headers["X-Content-Type-Options"] = "nosniff"
+    name = repository.get_setting_value(db, "bot.identity.name", "FONDIX Bot")
+    tagline = repository.get_setting_value(db, "bot.identity.tagline", "En línea · responde al toque")
+    tooltip = repository.get_setting_value(db, "bot.identity.tooltip", "¿Tienes dudas? Pregúntame")
+    greeting = repository.get_setting_value(db, "bot.identity.greeting", "¡Hola! Soy el bot de FONDIX PAY. ¿En qué te puedo ayudar?")
+    model_display = repository.get_setting_value(db, "bot.model_display", "claude-haiku-4-5")
+    pills_str = repository.get_setting_value(db, "bot.pills", "")
+    pills = _DEFAULT_PILLS
+    if pills_str:
+        try:
+            pills = json.loads(pills_str)
+        except (json.JSONDecodeError, ValueError):
+            pills = _DEFAULT_PILLS
+    return PublicBotConfig(
+        name=name,
+        tagline=tagline,
+        tooltip=tooltip,
+        greeting=greeting,
+        pills=[BotPillConfig(**p) for p in pills],
+        model_display=model_display,
+    )
 
 
 @admin_router.get("/faqs", response_model=list[ChatbotFaqRead])
