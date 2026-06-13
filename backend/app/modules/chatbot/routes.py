@@ -1,11 +1,12 @@
 import httpx
 import json
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response, status
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
 from app.core.database import get_db
-from app.core.rate_limit import check_rate_limit
+from app.core.rate_limit import IP_LIMIT_CHAT, IP_LIMIT_CONFIG, check_ip_rate_limit, check_rate_limit
 from app.modules.admin.dependencies import require_admin_permission
 from app.modules.admin.models import SupportTicket
 from app.modules.admin.schemas import SupportTicketRead
@@ -42,6 +43,11 @@ from app.modules.users.models import User
 public_router = APIRouter()
 admin_router = APIRouter()
 
+_PUBLIC_SECURITY_HEADERS = {
+    "X-Content-Type-Options": "nosniff",
+    "X-Frame-Options": "DENY",
+}
+
 _DEFAULT_PILLS: list[dict] = [
     {"id": "p1", "label": "¿Cuánto cuesta?", "question": "¿Cuánto cobran de comisión?"},
     {"id": "p2", "label": "¿Qué servicios pagan?", "question": "¿Qué servicios puedo pagar con FondixPay?"},
@@ -49,20 +55,44 @@ _DEFAULT_PILLS: list[dict] = [
 ]
 
 
+def _get_client_ip(request: Request) -> str:
+    forwarded = request.headers.get("X-Forwarded-For")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
 @public_router.post("/chat", response_model=PublicChatResponse)
-async def public_chat(payload: PublicChatRequest, request: Request, db: Session = Depends(get_db)) -> PublicChatResponse:
+async def public_chat(payload: PublicChatRequest, request: Request, fastapi_response: Response, db: Session = Depends(get_db)) -> PublicChatResponse:
+    client_ip = _get_client_ip(request)
+    if not check_ip_rate_limit("chat", client_ip, IP_LIMIT_CHAT):
+        return JSONResponse(  # type: ignore[return-value]
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={"detail": "Demasiadas solicitudes. Intenta en unos minutos."},
+            headers={"Retry-After": "3600"},
+        )
     if not check_rate_limit(payload.sessionId):
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
             detail="Demasiadas solicitudes. Intenta en unos minutos.",
         )
+    for header, value in _PUBLIC_SECURITY_HEADERS.items():
+        fastapi_response.headers[header] = value
     return await services.resolve_public_chat(db, payload, request)
 
 
 @public_router.get("/chat/config", response_model=PublicBotConfig)
-def get_bot_config(fastapi_response: Response, db: Session = Depends(get_db)) -> PublicBotConfig:
+def get_bot_config(request: Request, fastapi_response: Response, db: Session = Depends(get_db)) -> PublicBotConfig:
+    client_ip = _get_client_ip(request)
+    if not check_ip_rate_limit("config", client_ip, IP_LIMIT_CONFIG):
+        return JSONResponse(  # type: ignore[return-value]
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={"detail": "Demasiadas solicitudes. Intenta en unos minutos."},
+            headers={"Retry-After": "3600"},
+        )
     fastapi_response.headers["Cache-Control"] = "public, max-age=60"
     fastapi_response.headers["X-Content-Type-Options"] = "nosniff"
+    fastapi_response.headers["X-Frame-Options"] = "DENY"
     name = repository.get_setting_value(db, "bot.identity.name", "FONDIX Bot")
     tagline = repository.get_setting_value(db, "bot.identity.tagline", "En línea · responde al toque")
     tooltip = repository.get_setting_value(db, "bot.identity.tooltip", "¿Tienes dudas? Pregúntame")
@@ -83,6 +113,31 @@ def get_bot_config(fastapi_response: Response, db: Session = Depends(get_db)) ->
         pills=[BotPillConfig(**p) for p in pills],
         model_display=model_display,
     )
+
+
+@public_router.get("/chat/health")
+def get_chat_health(db: Session = Depends(get_db)) -> dict:
+    ai_configured = bool(settings.chatbot_ai_api_key)
+    try:
+        conversations_today = repository.count_conversations_today(db)
+        db_reachable = True
+    except Exception:
+        conversations_today = 0
+        db_reachable = False
+
+    if not db_reachable:
+        health_status = "down"
+    elif not ai_configured:
+        health_status = "degraded"
+    else:
+        health_status = "ok"
+
+    return {
+        "status": health_status,
+        "ai_configured": ai_configured,
+        "db_reachable": db_reachable,
+        "conversations_today": conversations_today,
+    }
 
 
 @admin_router.get("/faqs", response_model=list[ChatbotFaqRead])

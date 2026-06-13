@@ -8,6 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from app.core import rate_limit as rl
 from app.core.database import Base, get_db
 from app.core.security import create_access_token
 from app.main import app
@@ -42,6 +43,12 @@ test_engine = create_engine(
     poolclass=StaticPool,
 )
 TestingSessionLocal = sessionmaker(bind=test_engine, autoflush=False, autocommit=False)
+
+
+@pytest.fixture(autouse=True)
+def reset_rate_limit_buckets() -> None:
+    rl._buckets.clear()
+    rl._ip_buckets.clear()
 
 
 @pytest.fixture()

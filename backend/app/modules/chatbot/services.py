@@ -40,6 +40,10 @@ from app.modules.users.models import User
 
 PRIVATE_ROUTING_REPLY = "Por seguridad, ese tipo de consulta debe revisarse dentro de la app o por el canal oficial de soporte autenticado."
 SAFE_FALLBACK_REPLY = "No quiero inventarte una respuesta. Puedo dejar registrado tu caso para que soporte lo revise."
+AI_DOWN_FALLBACK = (
+    "En este momento estoy teniendo dificultades para responderte. "
+    "Por favor escríbenos directamente al soporte o descarga la app para ayudarte mejor."
+)
 
 PRIVATE_TERMS = {
     "pago",
@@ -114,6 +118,13 @@ def _load_system_prompt(db: Session) -> str:
     if setting and setting.value:
         return setting.value
     return _DEFAULT_SYSTEM_PROMPT
+
+
+def _load_fallback_message(db: Session) -> str:
+    setting = repository.get_setting(db, "bot.fallback_message")
+    if setting and setting.value:
+        return setting.value
+    return AI_DOWN_FALLBACK
 
 
 async def _call_claude_async(message: str, system_prompt: str) -> str | None:
@@ -222,14 +233,14 @@ async def resolve_public_chat(db: Session, payload: PublicChatRequest, request: 
     if detected_intent and classification["intent"] in {"general_faq", "fallback_unknown"}:
         conversation.detected_intent = detected_intent
     conversation.confidence = confidence
-    if confidence == "fallback":
+    if confidence in {"fallback", "fallback_ai_down"}:
         repository.add_fallback(
             db,
             ChatbotFallback(
                 conversation_id=conversation.id,
                 message_id=user_message.id,
                 message_text_masked=masked,
-                reason="no_confident_answer",
+                reason="no_confident_answer" if confidence == "fallback" else "ai_unavailable",
             ),
         )
         _audit_public(db, request, "chatbot.fallback.created", conversation.id, {"message_id": user_message.id})
@@ -259,6 +270,8 @@ async def _resolve_reply(db: Session, message: str) -> tuple[str, str, str | Non
         ai_reply = await _call_claude_async(message, system_prompt)
         if ai_reply is not None:
             return ai_reply, "ai", "ai_response"
+        fallback_msg = _load_fallback_message(db)
+        return fallback_msg, "fallback_ai_down", None
 
     return SAFE_FALLBACK_REPLY, "fallback", None
 

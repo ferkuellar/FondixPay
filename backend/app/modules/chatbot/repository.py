@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta, timezone
+
 from sqlalchemy import or_
 from sqlalchemy.orm import Session
 
@@ -89,6 +91,9 @@ def search_knowledge(db: Session, terms: list[str]) -> ChatbotKnowledgeEntry | N
     )
 
 
+_CONVERSATION_EXPIRY_HOURS = 24
+
+
 def get_or_create_conversation(db: Session, *, session_id: str, source: str, page_url: str | None) -> tuple[ChatbotConversation, bool]:
     conversation = (
         db.query(ChatbotConversation)
@@ -97,11 +102,28 @@ def get_or_create_conversation(db: Session, *, session_id: str, source: str, pag
         .first()
     )
     if conversation is not None:
+        if conversation.status not in {"closed"} and conversation.last_message_at is not None:
+            cutoff = datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=_CONVERSATION_EXPIRY_HOURS)
+            last_msg = conversation.last_message_at
+            if hasattr(last_msg, "tzinfo") and last_msg.tzinfo is not None:
+                last_msg = last_msg.replace(tzinfo=None)
+            if last_msg < cutoff:
+                conversation.status = "closed"
+                db.flush()
+                conversation = ChatbotConversation(session_id=session_id, source=source, page_url=page_url)
+                db.add(conversation)
+                db.flush()
+                return conversation, True
         return conversation, False
     conversation = ChatbotConversation(session_id=session_id, source=source, page_url=page_url)
     db.add(conversation)
     db.flush()
     return conversation, True
+
+
+def count_conversations_today(db: Session) -> int:
+    today_start = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
+    return db.query(ChatbotConversation).filter(ChatbotConversation.started_at >= today_start).count()
 
 
 def add_message(db: Session, message: ChatbotMessage) -> ChatbotMessage:

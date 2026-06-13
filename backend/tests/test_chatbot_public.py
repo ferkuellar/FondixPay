@@ -31,12 +31,13 @@ def test_public_chat_rejects_oversized_message(client: TestClient) -> None:
 def test_public_chat_returns_safe_fallback_and_stores_review_event(
     client: TestClient,
     db_session: Session,
+    monkeypatch: object,
 ) -> None:
-    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
-        response = client.post(
-            "/api/public/chat",
-            json={"message": "Pregunta rara sin cobertura", "sessionId": "landing-test", "source": "landing"},
-        )
+    monkeypatch.setattr(settings, "chatbot_ai_api_key", "")
+    response = client.post(
+        "/api/public/chat",
+        json={"message": "Pregunta rara sin cobertura", "sessionId": "landing-test", "source": "landing"},
+    )
 
     assert response.status_code == 200
     payload = response.json()
@@ -142,8 +143,7 @@ def test_public_chat_falls_back_gracefully_when_claude_returns_none(
 
     assert response.status_code == 200
     payload = response.json()
-    assert payload["reply"] == SAFE_FALLBACK_REPLY
-    assert payload["confidence"] == "fallback"
+    assert payload["confidence"] == "fallback_ai_down"
     assert db_session.query(ChatbotFallback).count() == 1
 
 
@@ -351,3 +351,118 @@ def test_get_bot_config_does_not_expose_api_key(
     response = client.get("/api/public/chat/config")
 
     assert "sk-ant-api03-do-not-expose" not in response.text
+
+
+# ---------------------------------------------------------------------------
+# Sprint 058 — Production hardening
+# ---------------------------------------------------------------------------
+
+
+def test_get_chat_health_returns_ok(client: TestClient, monkeypatch: object) -> None:
+    monkeypatch.setattr(settings, "chatbot_ai_api_key", "sk-test-key")
+
+    response = client.get("/api/public/chat/health")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["status"] == "ok"
+    assert payload["ai_configured"] is True
+    assert payload["db_reachable"] is True
+    assert isinstance(payload["conversations_today"], int)
+
+
+def test_get_chat_health_returns_degraded_without_api_key(client: TestClient, monkeypatch: object) -> None:
+    monkeypatch.setattr(settings, "chatbot_ai_api_key", "")
+
+    response = client.get("/api/public/chat/health")
+
+    assert response.status_code == 200
+    assert response.json()["status"] == "degraded"
+    assert response.json()["ai_configured"] is False
+
+
+def test_public_chat_ip_rate_limit_blocks_after_limit(client: TestClient) -> None:
+    import time
+
+    from app.core import rate_limit as rl
+
+    rl._ip_buckets.clear()
+    rl._ip_buckets[f"chat:testclient"] = (rl.IP_LIMIT_CHAT - 1, time.monotonic())
+
+    ok = client.post(
+        "/api/public/chat",
+        json={"message": "Hola mundo", "sessionId": "ip-rl-test-ok", "source": "landing"},
+    )
+    assert ok.status_code == 200
+
+    blocked = client.post(
+        "/api/public/chat",
+        json={"message": "Una mas", "sessionId": "ip-rl-test-blocked", "source": "landing"},
+    )
+    assert blocked.status_code == 429
+    assert blocked.headers.get("retry-after") == "3600"
+
+
+def test_public_chat_has_security_headers(client: TestClient) -> None:
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
+        response = client.post(
+            "/api/public/chat",
+            json={"message": "Hola", "sessionId": "sec-headers-test", "source": "landing"},
+        )
+
+    assert response.status_code == 200
+    assert response.headers.get("x-content-type-options") == "nosniff"
+    assert response.headers.get("x-frame-options") == "DENY"
+
+
+def test_public_chat_fallback_ai_down_uses_configurable_message(
+    client: TestClient,
+    db_session: Session,
+    monkeypatch: object,
+) -> None:
+    from app.modules.chatbot.models import ChatbotSetting
+
+    db_session.add(ChatbotSetting(key="bot.fallback_message", value="Servicio en mantenimiento."))
+    db_session.commit()
+    monkeypatch.setattr(settings, "chatbot_ai_api_key", "sk-test-key")
+
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
+        response = client.post(
+            "/api/public/chat",
+            json={"message": "cualquier cosa", "sessionId": "fallback-custom", "source": "landing"},
+        )
+
+    assert response.status_code == 200
+    assert response.json()["reply"] == "Servicio en mantenimiento."
+    assert response.json()["confidence"] == "fallback_ai_down"
+
+
+def test_conversation_expiry_creates_new_after_24h(
+    client: TestClient,
+    db_session: Session,
+) -> None:
+    from datetime import datetime, timedelta, timezone
+
+    from app.modules.chatbot.models import ChatbotConversation
+
+    old_conv = ChatbotConversation(
+        session_id="expiry-test-session",
+        source="landing",
+        last_message_at=datetime.now(timezone.utc).replace(tzinfo=None) - timedelta(hours=25),
+    )
+    db_session.add(old_conv)
+    db_session.commit()
+    old_id = old_conv.id
+
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
+        response = client.post(
+            "/api/public/chat",
+            json={"message": "Hola de nuevo", "sessionId": "expiry-test-session", "source": "landing"},
+        )
+
+    assert response.status_code == 200
+    new_conv_id = int(response.json()["conversationId"])
+    assert new_conv_id != old_id
+
+    db_session.refresh(old_conv)
+    assert old_conv.status == "closed"
