@@ -12,11 +12,7 @@ type ModuleKey =
   | "search"
   | "tickets"
   | "chat"
-  | "manual-review"
-  | "fraud-signals"
-  | "disputes"
-  | "reconciliation-card"
-  | "reconciliation-prontipagos"
+  | "reconciliation-tekae"
   | "audit-logs"
   | "bot-landing";
 
@@ -61,11 +57,7 @@ const routes: Record<ModuleKey, string> = {
   search: "/search",
   tickets: "/tickets",
   chat: "/chat",
-  "manual-review": "/manual-review",
-  "fraud-signals": "/fraud-signals",
-  disputes: "/disputes",
-  "reconciliation-card": "/reconciliation/card",
-  "reconciliation-prontipagos": "/reconciliation/prontipagos",
+  "reconciliation-tekae": "/reconciliation/tekae",
   "audit-logs": "/audit-logs",
   "bot-landing": "/chatbot",
 };
@@ -84,22 +76,13 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
       { key: "receipts", label: "Recibos", icon: "receipts" },
       { key: "search", label: "Búsqueda", icon: "search" },
       { key: "tickets", label: "Tickets", icon: "tickets", badge: 23 },
-    ],
-  },
-  {
-    title: "Riesgo y compliance",
-    items: [
-      { key: "manual-review", label: "Revisión manual", icon: "shield", badge: 14 },
-      { key: "fraud-signals", label: "Señales fraude", icon: "fraud", badge: 5 },
-      { key: "disputes", label: "Disputas", icon: "disputes" },
       { key: "bot-landing", label: "Bot de Landing", icon: "bot" },
     ],
   },
   {
     title: "Finanzas",
     items: [
-      { key: "reconciliation-card", label: "Conciliación tarjeta", icon: "recon" },
-      { key: "reconciliation-prontipagos", label: "Conciliación Prontipagos", icon: "recon" },
+      { key: "reconciliation-tekae", label: "Conciliación Tekae", icon: "recon" },
     ],
   },
   {
@@ -345,16 +328,8 @@ function renderView(key: ModuleKey) {
       return <TicketsView />;
     case "chat":
       return <ChatConsoleView />;
-    case "manual-review":
-      return <ManualReviewView />;
-    case "fraud-signals":
-      return <RiskTable title="Señales fraude" />;
-    case "disputes":
-      return <DisputesView />;
-    case "reconciliation-card":
-      return <ReconciliationView title="Conciliación tarjeta" subtitle="Cuadre diario entre procesador de tarjeta y ledger operativo" />;
-    case "reconciliation-prontipagos":
-      return <ReconciliationView title="Conciliación Prontipagos" subtitle="Cuadre diario entre agregador, servicios y evidencia operativa" />;
+    case "reconciliation-tekae":
+      return <ReconciliationView title="Conciliación Tekae" subtitle="Cuadre entre pagos procesados por Tekae y comisiones correspondientes a FondixPay" />;
     case "audit-logs":
       return <TableView title="Audit logs" subtitle="Registro interno de acciones sensibles" rows={auditLogs} columns={["Tiempo", "Actor", "Rol", "Acción", "Entidad", "Detalle"]} />;
     case "bot-landing":
@@ -375,25 +350,58 @@ function ViewHeader({ title, subtitle, actions }: { title: string; subtitle?: st
 }
 
 function DashboardView() {
+  const api = useAdminApi();
+  const [summary, setSummary] = useState<{
+    users_count: number;
+    payments_count: number;
+    payments_succeeded_count: number;
+    payments_pending_count: number;
+    payments_failed_count: number;
+    support_tickets_open_count: number;
+    manual_review_open_count: number;
+    card_reconciliation_status: string;
+    note?: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const reload = () => {
+    setLoading(true);
+    api
+      .dashboard()
+      .then((data) => setSummary(data as typeof summary))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { reload(); }, []);
+
+  const successRate =
+    summary && summary.payments_count > 0
+      ? ((summary.payments_succeeded_count / summary.payments_count) * 100).toFixed(1) + "%"
+      : "—";
+
+  const recon = summary?.card_reconciliation_status ?? "—";
+  const reconOk = recon === "ok" || recon === "cuadrada";
+
   return (
     <div className="crm-dashboard-stack">
       <ViewHeader
         title="Dashboard"
-        subtitle="Operación en tiempo real · datos del 27 may, 2026"
+        subtitle={loading ? "Cargando…" : `${summary?.payments_count ?? 0} pagos registrados · ${summary?.users_count ?? 0} usuarios`}
         actions={
           <>
-            <button className="crm-btn"><Icon name="refresh" />Actualizar</button>
+            <button className="crm-btn" onClick={reload}><Icon name="refresh" />Actualizar</button>
             <button className="crm-btn primary"><Icon name="download" />Exportar reporte</button>
           </>
         }
       />
       <div className="crm-kpi-grid">
-        <Kpi label="TPV hoy" value="$4,309,212.00" delta="+4.2%" sub="vs ayer" sparkline={<SparklineMini />} />
-        <Kpi label="Transacciones hoy" value="12,847" delta="+6.2%" sub="vs ayer" />
-        <Kpi label="Tasa de éxito" value="98.4%" delta="-0.3%" deltaTone="danger" sub="CoDi timeouts" />
-        <Kpi label="Usuarios activos (7d)" value="38,420" delta="+12.8%" sub="vs semana pasada" />
-        <Kpi label="Tickets abiertos" value="4" delta="2 sobre SLA" deltaTone="danger" />
-        <Kpi label="Conciliación de hoy" value="✓ Cuadrada" delta="Sin diferencias" />
+        <Kpi label="Total pagos" value={loading ? "…" : String(summary?.payments_count ?? 0)} sub="todos los estados" sparkline={<SparklineMini />} />
+        <Kpi label="Pagos exitosos" value={loading ? "…" : String(summary?.payments_succeeded_count ?? 0)} delta={successRate} sub="tasa de éxito" />
+        <Kpi label="Pagos pendientes" value={loading ? "…" : String(summary?.payments_pending_count ?? 0)} deltaTone={summary && summary.payments_pending_count > 5 ? "danger" : "success"} />
+        <Kpi label="Usuarios registrados" value={loading ? "…" : String(summary?.users_count ?? 0)} sub="total en plataforma" />
+        <Kpi label="Tickets abiertos" value={loading ? "…" : String(summary?.support_tickets_open_count ?? 0)} deltaTone={summary && summary.support_tickets_open_count > 3 ? "danger" : "success"} sub="soporte activo" />
+        <Kpi label="Conciliación" value={loading ? "…" : reconOk ? "✓ Cuadrada" : recon} deltaTone={reconOk ? "success" : "danger"} sub="tarjeta" />
       </div>
       <div className="crm-charts-row">
         <Card title="TPV · últimos 30 días" action={<select className="crm-select" style={{ width: 86, minHeight: 30, padding: "5px 10px", borderRadius: 8, fontSize: 12 }} defaultValue="30d"><option value="7d">7 días</option><option value="30d">30 días</option><option value="90d">90 días</option></select>}>
@@ -807,40 +815,6 @@ function KeyValue({ label, value, mono }: { label: string; value: React.ReactNod
       <span>{label}</span>
       <b className={mono ? "crm-mono" : ""}>{value}</b>
     </div>
-  );
-}
-
-function ManualReviewView() {
-  return (
-    <>
-      <ViewHeader title="Revisión manual / KYC" subtitle="Documentos pendientes y revisión de riesgo operativo" />
-      <div className="crm-grid-2">
-        <Card title="Cola KYC">
-          <TableRows rows={[["kyc_001", "Carlos Ortiz Díaz", "INE", "Alto", "Pendiente"], ["kyc_002", "Ana Sofía Ramírez", "Pasaporte", "Medio", "Pendiente"], ["kyc_003", "Luis Hernández Cruz", "INE", "Bajo", "Aprobado"]]} />
-        </Card>
-        <Card title="Vista documento">
-          <div className="crm-note" style={{ height: 280, display: "grid", placeItems: "center" }}>Previsualización segura de documento KYC</div>
-        </Card>
-      </div>
-    </>
-  );
-}
-
-function RiskTable({ title }: { title: string }) {
-  return (
-    <>
-      <ViewHeader title={title} subtitle="Señales explicables sin bloqueo automático de usuarios" />
-      <TableRows rows={[["FS-2451", "Velocidad anormal", "SEV-2", "8 intentos en 4 min", "Abierta"], ["FS-2450", "Tarjeta en blocklist", "SEV-1", "BIN reportado", "Escalada"], ["FS-2449", "IP sospechosa", "SEV-3", "VPN de alto riesgo", "Revisión"]]} />
-    </>
-  );
-}
-
-function DisputesView() {
-  return (
-    <>
-      <ViewHeader title="Disputas" subtitle="Casos de contracargo y evidencia operativa" />
-      <TableRows rows={[["DSP-08870", "tx_0847200", "Cargo no autorizado", "UNDER_REVIEW", "$1,247.50"], ["DSP-08869", "tx_0847196", "Cargo duplicado", "EVIDENCE_GATHERING", "$249.00"], ["DSP-08868", "tx_0847188", "Servicio no recibido", "OPEN", "$689.00"]]} />
-    </>
   );
 }
 
