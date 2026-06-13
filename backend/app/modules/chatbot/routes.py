@@ -288,6 +288,14 @@ def enable_knowledge(item_id: int, request: Request, current_user: User = Depend
     return ChatbotKnowledgeRead.model_validate(item, from_attributes=True)
 
 
+@admin_router.delete("/knowledge/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_knowledge(item_id: int, request: Request, current_user: User = Depends(require_admin_permission("admin.chatbot.manage")), db: Session = Depends(get_db)) -> None:
+    services.get_or_404(repository.get_knowledge(db, item_id), "Entrada no encontrada")
+    repository.delete_knowledge(db, item_id)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="chatbot.knowledge.deleted", permission="admin.chatbot.manage", entity_type="ChatbotKnowledgeEntry", entity_id=item_id)
+    db.commit()
+
+
 @admin_router.get("/conversations", response_model=list[ChatbotConversationRead])
 def list_conversations(limit: int = Query(default=50, ge=1, le=200), offset: int = Query(default=0, ge=0), current_user: User = Depends(require_admin_permission("admin.chatbot.conversations.view")), db: Session = Depends(get_db)) -> list[ChatbotConversationRead]:
     return [ChatbotConversationRead.model_validate(item, from_attributes=True) for item in repository.list_conversations(db, limit=limit, offset=offset)]

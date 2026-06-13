@@ -158,6 +158,8 @@ export function createAdminClient(getToken: TokenProvider) {
       request<ChatbotKnowledgeEntry>(`/admin/chat/knowledge/${id}/enable`, { method: "POST" }),
     disableChatbotKnowledge: (id: number) =>
       request<ChatbotKnowledgeEntry>(`/admin/chat/knowledge/${id}/disable`, { method: "POST" }),
+    deleteChatbotKnowledge: (id: number) =>
+      request<void>(`/admin/chat/knowledge/${id}`, { method: "DELETE" }),
     chatbotStats: () => request<{
       conversations_today: number;
       messages_today: number;

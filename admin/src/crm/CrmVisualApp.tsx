@@ -1003,6 +1003,13 @@ function BotLandingView() {
     } catch {}
   }
 
+  async function deleteKbEntry(id: number) {
+    try {
+      await api.deleteChatbotKnowledge(id);
+      setKb((current) => current.filter((item) => item.id !== id));
+    } catch {}
+  }
+
   async function publishAll() {
     if (settingsLoading || publishState === "saving") return;
     setPublishState("saving");
@@ -1282,6 +1289,7 @@ function BotLandingView() {
                     <th>Contenido</th>
                     <th>Categoría</th>
                     <th>Estado</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1299,6 +1307,17 @@ function BotLandingView() {
                           title={entry.is_active ? "Desactivar" : "Activar"}
                         >
                           {entry.is_active ? "activa" : "inactiva"}
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="crm-icon-btn small"
+                          type="button"
+                          onClick={() => void deleteKbEntry(entry.id)}
+                          aria-label={`Eliminar ${entry.title}`}
+                          title="Eliminar"
+                        >
+                          ×
                         </button>
                       </td>
                     </tr>

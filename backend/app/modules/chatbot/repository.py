@@ -77,6 +77,15 @@ def get_knowledge(db: Session, item_id: int) -> ChatbotKnowledgeEntry | None:
     return db.query(ChatbotKnowledgeEntry).filter(ChatbotKnowledgeEntry.id == item_id).one_or_none()
 
 
+def delete_knowledge(db: Session, item_id: int) -> bool:
+    item = get_knowledge(db, item_id)
+    if item is None:
+        return False
+    db.delete(item)
+    db.flush()
+    return True
+
+
 def search_knowledge(db: Session, terms: list[str]) -> ChatbotKnowledgeEntry | None:
     if not terms:
         return None
