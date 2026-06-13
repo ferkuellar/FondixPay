@@ -115,6 +115,18 @@ def get_bot_config(request: Request, fastapi_response: Response, db: Session = D
     )
 
 
+@public_router.get("/chat/faqs")
+def get_public_faqs(fastapi_response: Response, db: Session = Depends(get_db)) -> list[dict]:
+    faqs = repository.list_faqs(db, include_inactive=False)
+    fastapi_response.headers["Cache-Control"] = "public, max-age=300"
+    for header, value in _PUBLIC_SECURITY_HEADERS.items():
+        fastapi_response.headers[header] = value
+    return [
+        {"id": f.id, "question": f.question, "answer": f.answer, "category": f.category, "priority": f.priority}
+        for f in faqs
+    ]
+
+
 @public_router.get("/chat/health")
 def get_chat_health(db: Session = Depends(get_db)) -> dict:
     ai_configured = bool(settings.chatbot_ai_api_key)
@@ -198,6 +210,14 @@ def update_faq(
     item = services.update_faq(db, item, payload, current_user)
     services.audit_admin_chatbot_action(db, request, current_user, event_type="chatbot.faq.updated", permission="admin.chatbot.manage", entity_type="ChatbotFaq", entity_id=item.id)
     return ChatbotFaqRead.model_validate(item, from_attributes=True)
+
+
+@admin_router.delete("/faqs/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_faq(item_id: int, request: Request, current_user: User = Depends(require_admin_permission("admin.chatbot.manage")), db: Session = Depends(get_db)) -> None:
+    services.get_or_404(repository.get_faq(db, item_id), "FAQ no encontrada")
+    repository.delete_faq(db, item_id)
+    services.audit_admin_chatbot_action(db, request, current_user, event_type="chatbot.faq.deleted", permission="admin.chatbot.manage", entity_type="ChatbotFaq", entity_id=item_id)
+    db.commit()
 
 
 @admin_router.post("/faqs/{item_id}/disable", response_model=ChatbotFaqRead)

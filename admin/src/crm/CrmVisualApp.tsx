@@ -843,6 +843,13 @@ function BotLandingView() {
   const [newKbContent, setNewKbContent] = useState("");
   const [newKbCategory, setNewKbCategory] = useState("");
   const [newKbSaving, setNewKbSaving] = useState(false);
+  const [faqs, setFaqs] = useState<import("../types/admin").ChatbotFaq[]>([]);
+  const [faqsLoading, setFaqsLoading] = useState(true);
+  const [newFaqOpen, setNewFaqOpen] = useState(false);
+  const [newFaqQ, setNewFaqQ] = useState("");
+  const [newFaqA, setNewFaqA] = useState("");
+  const [newFaqCategory, setNewFaqCategory] = useState("");
+  const [newFaqSaving, setNewFaqSaving] = useState(false);
   const [newPillOpen, setNewPillOpen] = useState(false);
   const [newPillLabel, setNewPillLabel] = useState("");
   const [newPillQ, setNewPillQ] = useState("");
@@ -926,6 +933,10 @@ function BotLandingView() {
     api.chatbotModelHealth()
       .then((h) => setModelHealth(h))
       .catch(() => {});
+    api.chatbotFaqs()
+      .then((items) => setFaqs(items))
+      .catch(() => {})
+      .finally(() => setFaqsLoading(false));
   }, []);
 
   async function saveIdentity() {
@@ -992,6 +1003,43 @@ function BotLandingView() {
     } finally {
       setNewKbSaving(false);
     }
+  }
+
+  async function saveNewFaq() {
+    if (!newFaqQ.trim() || !newFaqA.trim() || newFaqSaving) return;
+    setNewFaqSaving(true);
+    try {
+      const created = await api.createChatbotFaq({
+        question: newFaqQ.trim(),
+        answer: newFaqA.trim(),
+        category: newFaqCategory.trim() || undefined,
+      });
+      setFaqs((current) => [...current, created]);
+      setNewFaqOpen(false);
+      setNewFaqQ("");
+      setNewFaqA("");
+      setNewFaqCategory("");
+    } catch {
+      // leave form open on error
+    } finally {
+      setNewFaqSaving(false);
+    }
+  }
+
+  async function toggleFaqEntry(id: number, isActive: boolean) {
+    try {
+      const updated = isActive
+        ? await api.disableChatbotFaq(id)
+        : await api.enableChatbotFaq(id);
+      setFaqs((current) => current.map((item) => (item.id === updated.id ? updated : item)));
+    } catch {}
+  }
+
+  async function deleteFaqEntry(id: number) {
+    try {
+      await api.deleteChatbotFaq(id);
+      setFaqs((current) => current.filter((item) => item.id !== id));
+    } catch {}
   }
 
   async function toggleKbEntry(id: number, isActive: boolean) {
@@ -1324,6 +1372,101 @@ function BotLandingView() {
                   ))}
                   {!kbLoading && kb.length === 0 && (
                     <tr><td colSpan={4} style={{ textAlign: "center", color: "var(--crm-muted)", padding: "20px 0" }}>Sin entradas. Agrega la primera.</td></tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+          <Card
+            title={faqsLoading ? "Preguntas frecuentes · …" : `Preguntas frecuentes · ${faqs.length} activas en soporte`}
+            action={
+              <button className="crm-btn" type="button" onClick={() => setNewFaqOpen((open) => !open)}>
+                <Icon name="plus" />Nueva FAQ
+              </button>
+            }
+          >
+            <p style={{ fontSize: 12, color: "var(--crm-muted)", margin: "0 0 10px" }}>
+              Las FAQs activas se muestran dinámicamente en <strong>fondixpay.com/soporte</strong>. Los cambios se reflejan en &lt; 5 min.
+            </p>
+            {newFaqOpen && (
+              <div className="crm-kb-new-form">
+                <input
+                  className="crm-input"
+                  placeholder="Pregunta (ej: ¿Cuánto cuesta usar FONDIX PAY?)"
+                  value={newFaqQ}
+                  onChange={(e) => setNewFaqQ(e.target.value)}
+                />
+                <textarea
+                  className="crm-textarea"
+                  placeholder="Respuesta"
+                  rows={3}
+                  value={newFaqA}
+                  onChange={(e) => setNewFaqA(e.target.value)}
+                />
+                <div className="crm-kb-new-form__row">
+                  <input
+                    className="crm-input"
+                    placeholder="Categoría (opcional, ej: pagos)"
+                    value={newFaqCategory}
+                    onChange={(e) => setNewFaqCategory(e.target.value)}
+                  />
+                  <button
+                    className="crm-btn primary"
+                    type="button"
+                    disabled={!newFaqQ.trim() || !newFaqA.trim() || newFaqSaving}
+                    onClick={() => void saveNewFaq()}
+                  >
+                    {newFaqSaving ? "Guardando…" : "Guardar"}
+                  </button>
+                  <button className="crm-btn" type="button" onClick={() => setNewFaqOpen(false)}>Cancelar</button>
+                </div>
+              </div>
+            )}
+            <div className="crm-table-wrap">
+              <table className="crm-table crm-bot-kb-table">
+                <thead>
+                  <tr>
+                    <th>Pregunta</th>
+                    <th>Respuesta</th>
+                    <th>Categoría</th>
+                    <th>Estado</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {faqs.map((faq) => (
+                    <tr key={faq.id} style={{ opacity: faq.is_active ? 1 : 0.5 }}>
+                      <td style={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{faq.question}</td>
+                      <td style={{ maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{faq.answer}</td>
+                      <td>{faq.category ? <span className="crm-badge neutral">{faq.category}</span> : <span className="crm-muted">—</span>}</td>
+                      <td>
+                        <button
+                          className={`crm-badge ${faq.is_active ? "active" : "neutral"}`}
+                          type="button"
+                          style={{ cursor: "pointer", border: "none", background: "none", padding: 0 }}
+                          onClick={() => void toggleFaqEntry(faq.id, faq.is_active)}
+                          title={faq.is_active ? "Desactivar (ocultar en soporte)" : "Activar (mostrar en soporte)"}
+                        >
+                          {faq.is_active ? "visible" : "oculta"}
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="crm-icon-btn small"
+                          type="button"
+                          onClick={() => void deleteFaqEntry(faq.id)}
+                          aria-label={`Eliminar FAQ: ${faq.question}`}
+                          title="Eliminar"
+                        >
+                          ×
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  {!faqsLoading && faqs.length === 0 && (
+                    <tr><td colSpan={5} style={{ textAlign: "center", color: "var(--crm-muted)", padding: "20px 0" }}>
+                      Sin FAQs. Las 8 preguntas del soporte están hardcodeadas — agrega FAQs aquí para reemplazarlas dinámicamente.
+                    </td></tr>
                   )}
                 </tbody>
               </table>

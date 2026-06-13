@@ -34,6 +34,15 @@ def get_faq(db: Session, item_id: int) -> ChatbotFaq | None:
     return db.query(ChatbotFaq).filter(ChatbotFaq.id == item_id).one_or_none()
 
 
+def delete_faq(db: Session, item_id: int) -> bool:
+    item = get_faq(db, item_id)
+    if item is None:
+        return False
+    db.delete(item)
+    db.flush()
+    return True
+
+
 def find_faq_by_normalized_question(db: Session, normalized_question: str) -> ChatbotFaq | None:
     return (
         db.query(ChatbotFaq)

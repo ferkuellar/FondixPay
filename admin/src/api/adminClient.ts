@@ -142,6 +142,7 @@ export function createAdminClient(getToken: TokenProvider) {
       request<ChatbotFaq>(`/admin/chat/faqs/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
     enableChatbotFaq: (id: number) => request<ChatbotFaq>(`/admin/chat/faqs/${id}/enable`, { method: "POST" }),
     disableChatbotFaq: (id: number) => request<ChatbotFaq>(`/admin/chat/faqs/${id}/disable`, { method: "POST" }),
+    deleteChatbotFaq: (id: number) => request<void>(`/admin/chat/faqs/${id}`, { method: "DELETE" }),
     chatbotIntents: () => request<ChatbotIntent[]>("/admin/chat/intents"),
     createChatbotIntent: (payload: Partial<ChatbotIntent>) =>
       request<ChatbotIntent>("/admin/chat/intents", { method: "POST", body: JSON.stringify(payload) }),

@@ -364,7 +364,7 @@
 
   <!-- ── FAQ ── -->
   <h2>Preguntas frecuentes</h2>
-  <div class="faq-list">
+  <div class="faq-list" id="faq-list">
 
     <details>
       <summary>1. ¿Cuánto cuesta usar FONDIX PAY?</summary>
@@ -562,6 +562,33 @@
     </div>
   </div>
 </div>
+
+<script>
+  (function () {
+    var list = document.getElementById('faq-list');
+    if (!list) return;
+    var base = (window.FONDIX_BOT_BASE || '').replace(/\/$/, '');
+    function esc(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+    fetch(base + '/api/public/chat/faqs')
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (faqs) {
+        if (!Array.isArray(faqs) || faqs.length === 0) return;
+        list.innerHTML = faqs
+          .map(function (faq, i) {
+            return '<details><summary>' + (i + 1) + '. ' + esc(faq.question) +
+              '</summary><div class="faq-body"><p>' + esc(faq.answer) + '</p></div></details>';
+          })
+          .join('');
+      })
+      .catch(function () { /* keep static FAQs on error */ });
+  })();
+</script>
 
 <script>
   (function () {
