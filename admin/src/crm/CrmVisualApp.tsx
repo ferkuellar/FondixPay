@@ -47,7 +47,8 @@ type IconName =
   | "check"
   | "arrowUp"
   | "arrowDn"
-  | "sparkle";
+  | "sparkle"
+  | "x";
 
 const routes: Record<ModuleKey, string> = {
   dashboard: "/dashboard",
@@ -882,6 +883,8 @@ function BotLandingView() {
     avg_messages_per_conversation: number;
     escalation_rate_pct: number;
   } | null>(null);
+  const [publishState, setPublishState] = useState<SaveState>("idle");
+  const [publishedAt, setPublishedAt] = useState<Date | null>(null);
 
   const updateIdentity = (key: keyof BotIdentity, value: string) => {
     setIdentity((current) => ({ ...current, [key]: value }));
@@ -966,6 +969,27 @@ function BotLandingView() {
     }
   }
 
+  async function publishAll() {
+    if (settingsLoading || publishState === "saving") return;
+    setPublishState("saving");
+    try {
+      await Promise.all([
+        api.updateChatbotSetting("bot.identity.name", identity.name as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("bot.identity.tagline", identity.tagline as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("bot.identity.tooltip", identity.tooltip as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("bot.identity.greeting", identity.greeting as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("system_prompt", prompt as unknown as Record<string, unknown>),
+        api.updateChatbotSetting("bot.pills", JSON.stringify(pills.map((p) => ({ id: p.id, label: p.label, question: p.q }))) as unknown as Record<string, unknown>),
+      ]);
+      setPublishState("saved");
+      setPublishedAt(new Date());
+      setTimeout(() => setPublishState("idle"), 8000);
+    } catch {
+      setPublishState("error");
+      setTimeout(() => setPublishState("idle"), 4000);
+    }
+  }
+
   function openTest() {
     setTestOpen(true);
     setTestMessages([]);
@@ -1010,7 +1034,15 @@ function BotLandingView() {
         actions={
           <>
             <button className="crm-btn" type="button" onClick={openTest}><Icon name="eye" />Probar</button>
-            <button className="crm-btn primary" type="button"><Icon name="check" />Publicar cambios</button>
+            <button
+              className="crm-btn primary"
+              type="button"
+              disabled={settingsLoading || publishState === "saving"}
+              onClick={() => void publishAll()}
+            >
+              <Icon name="check" />
+              {publishState === "saving" ? "Publicando…" : "Publicar cambios"}
+            </button>
           </>
         }
       />
@@ -1020,6 +1052,19 @@ function BotLandingView() {
         <MiniStat label="Tasa de escalación" value={stats ? `${stats.escalation_rate_pct}%` : "—"} accent="var(--crm-red)" />
         <MiniStat label="CSAT" value="—" />
       </div>
+      {publishState === "saved" && (
+        <div className="crm-publish-banner crm-publish-banner--ok">
+          <Icon name="check" />
+          <span>Bot actualizado · cambios visibles en la landing en &lt; 60 s</span>
+          {publishedAt && <span className="crm-publish-banner__time">{relativeTime(publishedAt)}</span>}
+        </div>
+      )}
+      {publishState === "error" && (
+        <div className="crm-publish-banner crm-publish-banner--error">
+          <Icon name="x" />
+          <span>Error al publicar — revisa la conexión con el backend</span>
+        </div>
+      )}
       <div className="crm-bot-grid">
         <section className="crm-bot-column">
           <Card
@@ -1390,6 +1435,7 @@ function Icon({ name }: { name: IconName }) {
     arrowUp: <><path d="M12 19V5M5 12l7-7 7 7" /></>,
     arrowDn: <><path d="M12 5v14M5 12l7 7 7-7" /></>,
     sparkle: <><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" /></>,
+    x: <><path d="M18 6 6 18M6 6l12 12" /></>,
   };
   return <svg {...common}>{p[name]}</svg>;
 }
