@@ -1715,6 +1715,20 @@ Removed all fake/hardcoded chart data from `DashboardView`. The KPI grid was alr
 
 TypeScript: 0 errors. No backend changes.
 
+## Sprint 072 — Admin Panel Production Config & Docs
+
+Status: COMPLETED (2026-06-13).
+
+Closed config and documentation gaps left after the CRM completion series (068–071).
+
+**Code fix:** `admin/src/api/authClient.ts` — removed `?? "http://localhost:8000"` hardcoded localhost fallback; changed to `?? ""` (same pattern as `adminClient.ts`).
+
+**Config:** `admin/.env` — added missing `VITE_API_BASE_URL=http://localhost:8000`. `admin/.env.example` — rewritten with dev and production/staging sections; security note that `VITE_ENABLE_ADMIN_DEV_AUTH` must be `false` in all non-local builds.
+
+**Docs:** `admin/README.md` — full rewrite: OTP login flow (sprint 069), environment variable table, expanded module list (8 → 14 modules including Fraud Signals, Disputes, Chat Operations, Bot de Landing, Search, Notifications, Analytics), roles table, commands, security notes.
+
+TypeScript: 0 errors.
+
 ## Sprint 071 — Dashboard Analytics (Real Charts)
 
 Status: COMPLETED (2026-06-13).
