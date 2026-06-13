@@ -1631,3 +1631,51 @@ The full bot production series (054–058) is complete. The following items rema
 - [ ] Manual smoke: open landing, send question, receive Claude response
 - [ ] Admin smoke: change system prompt, verify bot responds differently
 - [ ] Rate limit verified: 31 consecutive requests return 429
+
+## Sprints 059–064 — BotLandingView Hardening & Admin UX
+
+All six sprints are completed and committed. No Tekae runtime was enabled. Prontipagos not reintroduced. Real payments remain blocked.
+
+### Sprint 059 — Publicar cambios button in BotLandingView
+Status: COMPLETED (commit 43a020e).
+Implemented `publishAll()` function that saves all 6 bot settings in parallel (identity, system prompt, pills, KB active state). Added animated publish banner (green on success, red on error) that appears after publish attempt. Settings apply immediately on save; the publish button is a UI shortcut that saves all sections at once.
+Files changed: `admin/src/crm/CrmVisualApp.tsx`, `admin/src/crm/crmVisual.css`.
+
+### Sprint 060 — Wire BotLandingView to real backend data
+Status: COMPLETED (commit 56788cb).
+Replaced all mock/hardcoded data in BotLandingView with live backend calls:
+- `chatbotTopQuestions` → real detected-intent aggregation (labeled "Top intents · 7 días").
+- `chatbotModelHealth` → real model config, api_configured, conversations_today, fallback_rate_pct, latency_p50_ms, latency_p95_ms.
+- `chatbotKnowledge` → real KB entries with title/content/category/is_active toggle.
+Added `deleteChatbotKnowledge` client method. Added KB new-entry inline form (title + content + category). Removed all mock constants (`botKnowledgeInitial`, `botTopQuestions`).
+Files changed: `admin/src/crm/CrmVisualApp.tsx`, `admin/src/api/adminClient.ts`.
+
+### Sprint 061 — Claude API call instrumentation
+Status: COMPLETED (commit 56788cb via 85daf3e).
+Added `ChatbotAiMetric` SQLAlchemy model (`chatbot_ai_metrics` table) capturing `conversation_id`, `model`, `latency_ms`, `input_tokens`, `output_tokens`, `created_at`. Table auto-creates via `Base.metadata.create_all` on startup. `_call_claude_async` now returns `(text, latency_ms, input_tokens, output_tokens)`. `resolve_public_chat` saves a `ChatbotAiMetric` row after each successful Claude call. `get_model_health` computes p50/p95 from real latency rows.
+Files changed: `backend/app/modules/chatbot/models.py`, `backend/app/modules/chatbot/services.py`, `backend/app/modules/chatbot/repository.py`.
+
+### Sprint 062 — Add guided pill form
+Status: COMPLETED (commit 85daf3e).
+Implemented inline "Agregar pregunta guiada" form in the Respuestas guiadas section. The "+" button now opens a two-field form (label + question) with Agregar/Cancelar actions. `saveNewPill()` appends the new pill to the existing list, persists via `updateChatbotSetting("bot.pills", ...)`, and collapses the form on success.
+Files changed: `admin/src/crm/CrmVisualApp.tsx`.
+
+### Sprint 063 — Fix system prompt save
+Status: COMPLETED (commit 37b4e84).
+Root cause: `ChatbotSettingUpdate.value` had `max_length=4000`, too short for production system prompts. Raised to `max_length=20000`. Added `promptError: string | null` state and inline error display below the system prompt textarea so save failures surface the actual backend message.
+Files changed: `backend/app/modules/chatbot/schemas.py`, `admin/src/crm/CrmVisualApp.tsx`.
+
+### Sprint 064 — JWT fix + KB delete endpoint
+Status: COMPLETED (commit acfa5c2).
+Root cause diagnosis: token was generated with `create_access_token({'sub': str(user.id), 'role': user.role})` — passing a dict as subject. Backend does `int(payload.get("sub"))` which fails on a dict, causing 401 on all admin endpoints. Fixed token generation to use `create_access_token(str(user.id))`. Added `DELETE /admin/chat/knowledge/{item_id}` (204 No Content) with RBAC + audit. Added `×` delete button per KB row in the admin UI. Added `delete_knowledge()` repository function.
+Files changed: `backend/app/modules/chatbot/routes.py`, `backend/app/modules/chatbot/repository.py`, `backend/app/modules/chatbot/schemas.py`, `admin/src/crm/CrmVisualApp.tsx`.
+
+### Deployment status (post-064)
+- Docker local: synced with all phase 059–064 changes. Backend running on `http://localhost:8000`.
+- Railway production: phases 059–064 are on `main` branch but Railway has **not been redeployed** since these commits. New endpoints (`/top-questions`, `/model-health`, `DELETE /knowledge/{id}`), the `chatbot_ai_metrics` table, and the `max_length=20000` fix are **not yet live on Railway**.
+- CORS: `fondixpay.com` and `fondixpay.com.mx` are in `CORS_ORIGINS` example; Railway env variable needs confirmation.
+
+Next recommended sprint:
+- Railway redeploy to make phases 059–064 live in production.
+- End-to-end admin smoke test with valid JWT token to confirm all 6 BotLandingView sections save correctly.
+- Or continue with next product sprint as directed.
