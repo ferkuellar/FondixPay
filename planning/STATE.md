@@ -1,8 +1,8 @@
 # Project State
 
-Updated: 2026-06-11
+Updated: 2026-06-12
 
-Current phase: Phase 10X - Public Landing Page Integration & Commercial Front Door.
+Current phase: Phase 10X — Bot Production Series complete (Sprints 054–058). Bot live-ready pending deployment checklist.
 
 Status: MVP mock/dev mobile app with a shared visual design system, auth/session P0 hardening, backend safety test foundation, UX/Product fintech risk register, ledger/audit foundation design, minimal backend ledger/audit/idempotency implementation, mock/dev fee transparency, explicit mock payment methods, recovery UX, demo balance/movements, and hardened mobile history/receipt detail semantics. Backend payment semantics remain mock/dev. Product is not production-ready and commercial production remains blocked.
 
@@ -1556,3 +1556,78 @@ Sprints 014–033 were all executed and committed to git (commits 34c5b80 throug
 Next recommended sprint:
 
 Publication blocker resolution (legal entity name, RFC, domicile, emails, support hours, form endpoint across landing pages), or continued mobile UX polish, or Tekae discovery when sandbox credentials are received.
+
+## Sprints 045–058 — Documentation Closure, Mobile Polish, and Bot Production Series
+
+All sprints below are completed and committed. No Tekae runtime was enabled. Prontipagos not reintroduced. Real payments remain blocked.
+
+### Sprint 045 — Sprint Docs Backfill 037–044
+Status: COMPLETED (commit 5ea4bff).
+Created sprint directory artifacts (requirements.md, acceptance.md, COMPLETION_REPORT.md) for Sprints 037–044 and updated STATE.md. Documentation only.
+
+### Sprint 046 — Sprint Docs Backfill 014–033
+Status: COMPLETED (commit bf10f41).
+Created sprint directory artifacts for Sprints 014–033, closing the documentation gap noted in Sprint 044. Documentation only.
+
+### Sprint 047 — ESLint Setup and Mobile Lint Cleanup
+Status: COMPLETED (commit 6d32952).
+Added ESLint configuration to the mobile project and resolved all lint warnings across the mobile codebase. No runtime behavior changed.
+
+### Sprint 048 — Notifications Empty State Copy Polish
+Status: COMPLETED (commit 596a9aa).
+Improved empty state copy and emoji in the notifications screen for a more polished user-facing experience. Mobile-only copy change.
+
+### Sprint 049 — ErrorState Audit and Retry UX
+Status: COMPLETED (commit 1dd45d4).
+Audited error states across mobile screens. Added retry actions to the notifications error state. Fixed an accent typo. Mobile-only.
+
+### Sprint 051 — ESLint Config Expo Downgrade
+Status: COMPLETED (commit 53b204a).
+Downgraded `eslint-config-expo` to `~8.0.1` for Expo 52 compatibility. Resolves lint config version incompatibility. No runtime behavior changed.
+
+### Sprint 052 — Remove Full-Screen Loading Overlay
+Status: COMPLETED (commit 795f42c).
+Removed a redundant full-screen loading overlay that appeared during form validation. UX smoothness improvement. Mobile-only.
+
+### Sprint 053 — Claude API Admin Bot Test Panel
+Status: COMPLETED (commit a7041ed + 8d72987 hotfix).
+Integrated real Claude API into the admin CRM bot live test panel (`POST /admin/chat/test`). Only accessible to authenticated admin users. Bot responses from this endpoint use the admin-configured system prompt. A hotfix (053b) fixed the Vite dev proxy and removed unnecessary auth from the chat test endpoint configuration.
+Files changed: backend chatbot admin route, admin CRM bot panel component.
+
+### Sprints 054 + 055 — Claude AI on Public Chat + GET /chat/config
+Status: COMPLETED (commit 7d2a1e3).
+**Sprint 054:** `POST /api/public/chat` now resolves responses via Claude AI when `CHATBOT_AI_API_KEY` is configured. Resolution order: FAQ exact match → intent rule → knowledge search → Claude AI → safe fallback. Session-based rate limit (20 msg/session/hour). Messages masked before storage.
+**Sprint 055:** Added `GET /api/public/chat/config` — returns bot identity (name, tagline, greeting, tooltip) and suggested-question pills from DB settings, with `Cache-Control: public, max-age=60` and `X-Content-Type-Options: nosniff`. System prompt and API key are never exposed.
+Backend only. 20 tests passing.
+
+### Sprint 056 — Bot Widget Extraction to External Files
+Status: COMPLETED (commit fb39e0a).
+Extracted the inline chatbot HTML/CSS/JS from `landing/index.html` into standalone `landing/bot-widget.js` and `landing/bot-widget.css`. Widget consumes `GET /chat/config` on init and `POST /chat` on send. Typing indicator, pill pills, error handling, responsive. Landing-only.
+
+### Sprint 057 — BotLandingView Admin Persistence
+Status: COMPLETED (commit 9267670).
+Wired `BotLandingView` in the CRM admin to the backend: loads bot settings (identity, system prompt, pills) from DB on mount; saves each section independently via per-section "Guardar" buttons with `idle/saving/saved/error` visual feedback and relative-time timestamps. Pills format converted bidirectionally (`q` ↔ `question`). Admin frontend only (`admin/src/crm/CrmVisualApp.tsx` — `BotLandingView` function only). `npm run typecheck` passes clean.
+
+### Sprint 058 — Public Chatbot Production Hardening
+Status: COMPLETED (commit b826598).
+Prepared the public chatbot for real traffic:
+- **IP rate limiting:** 30 req/hr on `POST /chat`, 120 req/hr on `GET /chat/config`. Returns `429` with `Retry-After: 3600`.
+- **Security headers:** `X-Content-Type-Options: nosniff` and `X-Frame-Options: DENY` on all public chatbot endpoints.
+- **`GET /chat/health`:** Returns `{status: "ok"|"degraded"|"down", ai_configured, db_reachable, conversations_today}`.
+- **Graceful AI degradation:** When Claude API fails with key configured, returns configurable `bot.fallback_message` DB setting and records `confidence="fallback_ai_down"` (distinct from generic `"fallback"`).
+- **Lazy conversation expiry:** Conversations idle >24h are marked `closed` and a new one is created on next message.
+- **CORS:** Added `http://localhost:5200` (landing dev server) to `cors_origins` default.
+- **`backend/.env.example`:** Created with full documentation of all relevant env vars.
+- **Tests:** 27/27 passing. `autouse` fixture resets both `_buckets` and `_ip_buckets` before each test.
+Files changed: `rate_limit.py`, `services.py`, `repository.py`, `routes.py`, `config.py`, `.env.example`, `conftest.py`, `test_chatbot_public.py`.
+
+### Bot Production Series — Deployment Checklist (post-058)
+The full bot production series (054–058) is complete. The following items remain before live traffic:
+- [ ] `CHATBOT_AI_API_KEY` configured on production server
+- [ ] `CHATBOT_AI_MODEL=claude-haiku-4-5-20251001` configured
+- [ ] `CORS_ORIGINS` includes `https://fondixpay.com`
+- [ ] `FONDIX_BOT_BASE` in `bot-widget.js` points to production API URL
+- [ ] `GET /chat/health` returns `{"status": "ok", "ai_configured": true}` on production
+- [ ] Manual smoke: open landing, send question, receive Claude response
+- [ ] Admin smoke: change system prompt, verify bot responds differently
+- [ ] Rate limit verified: 31 consecutive requests return 429
