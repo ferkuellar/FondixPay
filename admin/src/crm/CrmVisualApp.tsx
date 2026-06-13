@@ -843,6 +843,9 @@ function BotLandingView() {
   const [newKbContent, setNewKbContent] = useState("");
   const [newKbCategory, setNewKbCategory] = useState("");
   const [newKbSaving, setNewKbSaving] = useState(false);
+  const [newPillOpen, setNewPillOpen] = useState(false);
+  const [newPillLabel, setNewPillLabel] = useState("");
+  const [newPillQ, setNewPillQ] = useState("");
   const [topQuestions, setTopQuestions] = useState<{ intent: string; hits: number; escalated: number }[] | null>(null);
   const [modelHealth, setModelHealth] = useState<{
     model: string;
@@ -1176,7 +1179,50 @@ function BotLandingView() {
                 </div>
               ))}
             </div>
-            <button className="crm-btn" style={{ marginTop: 12 }} type="button"><Icon name="plus" />Agregar pregunta guiada</button>
+            {newPillOpen && (
+              <div className="crm-kb-new-form" style={{ marginTop: 12 }}>
+                <input
+                  className="crm-input"
+                  placeholder="Etiqueta del botón (ej: Comisiones)"
+                  value={newPillLabel}
+                  onChange={(e) => setNewPillLabel(e.target.value)}
+                />
+                <input
+                  className="crm-input"
+                  placeholder="Pregunta que envía (ej: ¿Cuánto cobran de comisión?)"
+                  value={newPillQ}
+                  onChange={(e) => setNewPillQ(e.target.value)}
+                />
+                <div className="crm-kb-new-form__row">
+                  <button
+                    className="crm-btn primary"
+                    type="button"
+                    disabled={!newPillLabel.trim() || !newPillQ.trim()}
+                    onClick={() => {
+                      if (!newPillLabel.trim() || !newPillQ.trim()) return;
+                      setPills((current) => [
+                        ...current,
+                        { id: `p${Date.now()}`, label: newPillLabel.trim(), q: newPillQ.trim() },
+                      ]);
+                      setNewPillLabel("");
+                      setNewPillQ("");
+                      setNewPillOpen(false);
+                    }}
+                  >
+                    Agregar
+                  </button>
+                  <button className="crm-btn" type="button" onClick={() => setNewPillOpen(false)}>Cancelar</button>
+                </div>
+              </div>
+            )}
+            <button
+              className="crm-btn"
+              style={{ marginTop: 12 }}
+              type="button"
+              onClick={() => setNewPillOpen((open) => !open)}
+            >
+              <Icon name="plus" />Agregar pregunta guiada
+            </button>
           </Card>
           <Card
             title={kbLoading ? "Base de conocimiento · …" : `Base de conocimiento · ${kb.length} entradas`}
