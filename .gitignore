@@ -58,3 +58,7 @@ tfplan
 *.tfplan
 crash.log
 crash.*.log
+
+# Skills
+.codex
+.claude
