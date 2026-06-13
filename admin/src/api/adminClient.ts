@@ -36,6 +36,9 @@ type TokenProvider = () => string | null;
 
 export type AdminOtpSentResponse = { message: string; expires_in_seconds: number; otp_dev?: string | null };
 export type AdminTokenResponse = { access_token: string; token_type: string; role: string; expires_in: number };
+export type PaymentTrendPoint = { date: string; count: number; succeeded: number; failed: number };
+export type CategoryVolumePoint = { category: string; count: number; total_minor: number };
+export type HourlyTrafficPoint = { hour: number; count: number };
 
 export function createAdminClient(getToken: TokenProvider, on401?: () => void) {
   async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -247,5 +250,11 @@ export function createAdminClient(getToken: TokenProvider, on401?: () => void) {
       publicRequest<AdminOtpSentResponse>("/admin/auth/request-otp", { method: "POST", body: JSON.stringify({ phone }) }),
     adminLogin: (phone: string, otp: string) =>
       publicRequest<AdminTokenResponse>("/admin/auth/verify-otp", { method: "POST", body: JSON.stringify({ phone, otp }) }),
+    dashboardTrend: (days?: number) =>
+      request<PaymentTrendPoint[]>(`/admin/dashboard/trend${query({ days })}`),
+    dashboardCategoryVolume: () =>
+      request<CategoryVolumePoint[]>("/admin/dashboard/category-volume"),
+    dashboardHourly: () =>
+      request<HourlyTrafficPoint[]>("/admin/dashboard/hourly"),
   };
 }

@@ -1715,6 +1715,23 @@ Removed all fake/hardcoded chart data from `DashboardView`. The KPI grid was alr
 
 TypeScript: 0 errors. No backend changes.
 
+## Sprint 071 — Dashboard Analytics (Real Charts)
+
+Status: COMPLETED (2026-06-13).
+
+Replaced the "Analíticas pendientes" placeholder with three real chart sections backed by new backend endpoints.
+
+**Backend (`backend/app/modules/admin/analytics.py`):** `payment_trend(days)`, `category_volume()`, `hourly_traffic()` — Python-side aggregation, SQLite + PostgreSQL compatible.
+
+**Backend routes:** `GET /admin/dashboard/trend?days=N`, `GET /admin/dashboard/category-volume`, `GET /admin/dashboard/hourly` — all gated by `admin.dashboard.view`. Schemas: `PaymentTrendPoint`, `CategoryVolumePoint`, `HourlyTrafficPoint`.
+
+**Frontend (`CrmVisualApp.tsx` / `adminClient.ts`):** `DashboardView` now fetches all 4 endpoints via `Promise.all`. Placeholder replaced with:
+- `TrendChart` — SVG area/line, 30-day window, "Sin actividad" empty state.
+- Category bar chart using existing `Bar` component with real counts and `CATEGORY_LABELS`/`CATEGORY_COLORS` maps.
+- `HourlyChart` — 24-column bar, current hour highlighted via `var(--accent)`, labels at multiples of 6.
+
+**Tests:** `backend/tests/test_admin_analytics.py` — 13/13 passed. TypeScript: 0 errors.
+
 ## Sprint 069 — CRM Admin OTP Login + 401 Session Recovery
 
 Status: COMPLETED (2026-06-13).

@@ -10,6 +10,7 @@ from app.modules.admin.redaction import (
     redact_sensitive_dict,
     redact_user_for_role,
 )
+from app.modules.admin import analytics as admin_analytics
 from app.modules.admin.schemas import (
     AdminAuditEventListItem,
     AdminNotificationDeliveryDetail,
@@ -21,6 +22,7 @@ from app.modules.admin.schemas import (
     AdminSearchResponse,
     AdminUserDetail,
     AdminUserListItem,
+    CategoryVolumePoint,
     DashboardSummary,
     DisputeCaseCreate,
     DisputeCaseRead,
@@ -29,9 +31,11 @@ from app.modules.admin.schemas import (
     FraudSignalCreate,
     FraudSignalRead,
     FraudSignalUpdate,
+    HourlyTrafficPoint,
     ManualReviewCaseCreate,
     ManualReviewCaseRead,
     ManualReviewCaseUpdate,
+    PaymentTrendPoint,
     ReconciliationSummaryPlaceholder,
     SupportTicketCreate,
     SupportTicketNoteCreate,
@@ -53,6 +57,31 @@ def get_dashboard(
     result = services.dashboard_summary(db)
     _audit(db, request, current_user, "admin.dashboard_viewed", "admin.dashboard.view")
     return result
+
+
+@router.get("/dashboard/trend", response_model=list[PaymentTrendPoint])
+def get_dashboard_trend(
+    days: int = Query(default=30, ge=7, le=90),
+    current_user: User = Depends(require_admin_permission("admin.dashboard.view")),
+    db: Session = Depends(get_db),
+) -> list[PaymentTrendPoint]:
+    return [PaymentTrendPoint(**p) for p in admin_analytics.payment_trend(db, days)]
+
+
+@router.get("/dashboard/category-volume", response_model=list[CategoryVolumePoint])
+def get_dashboard_category_volume(
+    current_user: User = Depends(require_admin_permission("admin.dashboard.view")),
+    db: Session = Depends(get_db),
+) -> list[CategoryVolumePoint]:
+    return [CategoryVolumePoint(**p) for p in admin_analytics.category_volume(db)]
+
+
+@router.get("/dashboard/hourly", response_model=list[HourlyTrafficPoint])
+def get_dashboard_hourly(
+    current_user: User = Depends(require_admin_permission("admin.dashboard.view")),
+    db: Session = Depends(get_db),
+) -> list[HourlyTrafficPoint]:
+    return [HourlyTrafficPoint(**p) for p in admin_analytics.hourly_traffic(db)]
 
 
 @router.get("/users", response_model=list[AdminUserListItem])

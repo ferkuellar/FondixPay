@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useAdminApi } from "../api/useAdminApi";
+import type { CategoryVolumePoint, HourlyTrafficPoint, PaymentTrendPoint } from "../api/adminClient";
 import { useAdminAuth } from "../auth/AdminAuthProvider";
 import { ChatOperationsPage } from "../pages/ChatOperationsPage";
 import type { AdminPayment, AdminReceipt, AdminUser, AuditEvent, SupportTicket } from "../types/admin";
@@ -310,6 +311,72 @@ function buildAlerts(summary: {
   return alerts;
 }
 
+const CATEGORY_LABELS: Record<string, string> = {
+  ELECTRICITY: "Energía",
+  PHONE: "Telefonía",
+  INTERNET: "Internet",
+  WATER: "Agua",
+  GAS: "Gas",
+  TV: "Televisión",
+  OTHER: "Otros",
+};
+
+const CATEGORY_COLORS: Record<string, string> = {
+  ELECTRICITY: "#f59e0b",
+  PHONE: "#7c3aed",
+  INTERNET: "#22c55e",
+  WATER: "#0ea5e9",
+  GAS: "#f97316",
+  TV: "#ec4899",
+  OTHER: "#94a3b8",
+};
+
+function TrendChart({ data }: { data: PaymentTrendPoint[] }) {
+  const hasData = data.some((p) => p.count > 0);
+  if (!hasData) {
+    return <div style={{ height: 120, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--crm-muted)", fontSize: 13 }}>Sin actividad en este período</div>;
+  }
+  const counts = data.map((p) => p.count);
+  const maxVal = Math.max(...counts, 1);
+  const W = 676, H = 160, PAD = 10;
+  const points = data.map((p, i) => {
+    const x = PAD + (i / (data.length - 1)) * (W - PAD * 2);
+    const y = H - PAD - ((p.count / maxVal) * (H - PAD * 2));
+    return `${x},${y}`;
+  }).join(" ");
+  const area = `0,${H} ${points} ${W},${H}`;
+  return (
+    <div className="crm-chart">
+      <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label="Pagos por día">
+        <polygon points={area} fill="rgba(21,101,232,.12)" />
+        <polyline points={points} fill="none" stroke="var(--crm-blue)" strokeWidth="2.5" />
+      </svg>
+    </div>
+  );
+}
+
+function HourlyChart({ data }: { data: HourlyTrafficPoint[] }) {
+  const maxVal = Math.max(...data.map((p) => p.count), 1);
+  const current = new Date().getHours();
+  const hasData = data.some((p) => p.count > 0);
+  return (
+    <div className="crm-hourly">
+      {data.map(({ hour, count }) => (
+        <div className={`crm-hourly-col ${hour === current ? "current" : ""}`} key={hour}>
+          <div className="crm-hourly-bar-wrap">
+            <div
+              className="crm-hourly-bar"
+              style={{ height: hasData ? `${(count / maxVal) * 100}%` : "4%" }}
+              title={`${hour}:00 · ${count} pagos`}
+            />
+          </div>
+          <small>{hour % 6 === 0 ? hour : ""}</small>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function DashboardView() {
   const api = useAdminApi();
   const [summary, setSummary] = useState<{
@@ -323,15 +390,19 @@ function DashboardView() {
     card_reconciliation_status: string;
     note?: string;
   } | null>(null);
+  const [trend, setTrend] = useState<PaymentTrendPoint[]>([]);
+  const [categories, setCategories] = useState<CategoryVolumePoint[]>([]);
+  const [hourly, setHourly] = useState<HourlyTrafficPoint[]>([]);
   const [loading, setLoading] = useState(true);
 
   const reload = () => {
     setLoading(true);
-    api
-      .dashboard()
-      .then((data) => setSummary(data as typeof summary))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    Promise.all([
+      api.dashboard().then((data) => setSummary(data as typeof summary)).catch(() => {}),
+      api.dashboardTrend().then(setTrend).catch(() => {}),
+      api.dashboardCategoryVolume().then(setCategories).catch(() => {}),
+      api.dashboardHourly().then(setHourly).catch(() => {}),
+    ]).finally(() => setLoading(false));
   };
 
   useEffect(() => { reload(); }, []);
@@ -341,21 +412,15 @@ function DashboardView() {
       ? ((summary.payments_succeeded_count / summary.payments_count) * 100).toFixed(1) + "%"
       : "—";
 
-  const recon = summary?.card_reconciliation_status ?? "—";
-  const reconOk = recon === "ok" || recon === "cuadrada";
-
   const activeAlerts = summary ? buildAlerts(summary) : [];
+  const catMax = Math.max(...categories.map((c) => c.count), 1);
 
   return (
     <div className="crm-dashboard-stack">
       <ViewHeader
         title="Dashboard"
         subtitle={loading ? "Cargando…" : `${summary?.payments_count ?? 0} pagos registrados · ${summary?.users_count ?? 0} usuarios`}
-        actions={
-          <>
-            <button className="crm-btn" onClick={reload}><Icon name="refresh" />Actualizar</button>
-          </>
-        }
+        actions={<button className="crm-btn" onClick={reload}><Icon name="refresh" />Actualizar</button>}
       />
       <div className="crm-kpi-grid">
         <Kpi label="Total pagos" value={loading ? "…" : String(summary?.payments_count ?? 0)} sub="todos los estados" />
@@ -364,6 +429,28 @@ function DashboardView() {
         <Kpi label="Usuarios registrados" value={loading ? "…" : String(summary?.users_count ?? 0)} sub="total en plataforma" />
         <Kpi label="Tickets abiertos" value={loading ? "…" : String(summary?.support_tickets_open_count ?? 0)} deltaTone={summary && summary.support_tickets_open_count > 3 ? "danger" : "success"} sub="soporte activo" />
         <Kpi label="Revisión manual" value={loading ? "…" : String(summary?.manual_review_open_count ?? 0)} deltaTone={summary && summary.manual_review_open_count > 0 ? "danger" : "success"} sub="casos abiertos" />
+      </div>
+      <div className="crm-charts-row">
+        <Card title="Pagos · últimos 30 días">
+          {loading ? <div className="crm-loading">Cargando…</div> : <TrendChart data={trend} />}
+        </Card>
+        <Card title="Volumen por categoría">
+          {loading ? <div className="crm-loading">Cargando…</div> : categories.length === 0 ? (
+            <div style={{ color: "var(--crm-muted)", fontSize: 13, padding: "16px 0", textAlign: "center" }}>Sin pagos registrados</div>
+          ) : (
+            <div style={{ padding: "8px 0" }}>
+              {categories.map((c) => (
+                <Bar
+                  key={c.category}
+                  name={CATEGORY_LABELS[c.category] ?? c.category}
+                  width={Math.round((c.count / catMax) * 100)}
+                  color={CATEGORY_COLORS[c.category] ?? "#94a3b8"}
+                  value={`${c.count} pago${c.count !== 1 ? "s" : ""}`}
+                />
+              ))}
+            </div>
+          )}
+        </Card>
       </div>
       <div className="crm-charts-row" style={{ gridTemplateColumns: "1fr 1fr" }}>
         <Card title="Alertas operativas" action={activeAlerts.length > 0 ? <span className="crm-badge danger">{activeAlerts.length} activas</span> : <span className="crm-badge success">Nominal</span>}>
@@ -377,13 +464,8 @@ function DashboardView() {
             ))}
           </div>
         </Card>
-        <Card title="Analíticas pendientes">
-          <div style={{ padding: "20px 0", textAlign: "center", color: "var(--crm-muted)" }}>
-            <p style={{ fontSize: 22, margin: "0 0 8px" }}>📊</p>
-            <p style={{ fontSize: 13, margin: 0, lineHeight: 1.6 }}>
-              Gráficos de TPV, volumen por categoría y tráfico por hora estarán disponibles cuando se integre el motor de analíticas.
-            </p>
-          </div>
+        <Card title="Tráfico por hora · hoy" action={<span style={{ fontSize: 12, color: "var(--crm-muted)" }}>CDMX · GMT-6</span>}>
+          {loading ? <div className="crm-loading">Cargando…</div> : <HourlyChart data={hourly} />}
         </Card>
       </div>
     </div>

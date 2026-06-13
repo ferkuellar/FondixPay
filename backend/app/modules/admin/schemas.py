@@ -97,6 +97,24 @@ class DashboardSummary(BaseModel):
     note: str | None = None
 
 
+class PaymentTrendPoint(BaseModel):
+    date: str
+    count: int
+    succeeded: int
+    failed: int
+
+
+class CategoryVolumePoint(BaseModel):
+    category: str
+    count: int
+    total_minor: int
+
+
+class HourlyTrafficPoint(BaseModel):
+    hour: int
+    count: int
+
+
 class AdminUserListItem(BaseModel):
     id: int
     phone: str

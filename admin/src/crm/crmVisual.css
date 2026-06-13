@@ -789,6 +789,13 @@ body {
   font-size: 9px;
 }
 
+.crm-loading {
+  color: var(--crm-muted);
+  font-size: 13px;
+  padding: 20px 0;
+  text-align: center;
+}
+
 .crm-kanban {
   display: grid;
   grid-template-columns: repeat(4, minmax(210px, 1fr));
