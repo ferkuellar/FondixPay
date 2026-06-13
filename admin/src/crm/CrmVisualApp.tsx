@@ -867,6 +867,7 @@ function BotLandingView() {
   const [pillsSave, setPillsSave] = useState<SaveState>("idle");
   const [identitySavedAt, setIdentitySavedAt] = useState<Date | null>(null);
   const [promptSavedAt, setPromptSavedAt] = useState<Date | null>(null);
+  const [promptError, setPromptError] = useState<string | null>(null);
   const [pillsSavedAt, setPillsSavedAt] = useState<Date | null>(null);
   const [stats, setStats] = useState<{
     conversations_today: number;
@@ -946,13 +947,16 @@ function BotLandingView() {
 
   async function savePrompt() {
     setPromptSave("saving");
+    setPromptError(null);
     try {
       await api.updateChatbotSetting("system_prompt", prompt as unknown as Record<string, unknown>);
       setPromptSave("saved");
       setPromptSavedAt(new Date());
       setTimeout(() => setPromptSave("idle"), 2000);
-    } catch {
+    } catch (err) {
       setPromptSave("error");
+      setPromptError(err instanceof Error ? err.message : "Error al guardar");
+      setTimeout(() => setPromptSave("idle"), 4000);
     }
   }
 
@@ -1131,7 +1135,11 @@ function BotLandingView() {
                 <button className="crm-icon-btn small" type="button" onClick={() => setPrompt(BOT_DEFAULT_PROMPT)} aria-label="Restaurar default">
                   <Icon name="refresh" />
                 </button>
-                {promptSave === "error" && <span style={{ fontSize: 11, color: "var(--crm-red)" }}>Error</span>}
+                {promptSave === "error" && (
+                  <span style={{ fontSize: 11, color: "var(--crm-red)" }} title={promptError ?? undefined}>
+                    {prompt.length > 20000 ? `Muy largo (${prompt.length} chars, máx 20 000)` : (promptError ?? "Error al guardar")}
+                  </span>
+                )}
                 {promptSavedAt && promptSave === "idle" && (
                   <span style={{ fontSize: 11, color: "var(--crm-muted)" }}>{relativeTime(promptSavedAt)}</span>
                 )}

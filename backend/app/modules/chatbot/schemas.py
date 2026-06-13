@@ -122,7 +122,7 @@ class ChatbotSettingRead(BaseModel):
 
 
 class ChatbotSettingUpdate(BaseModel):
-    value: str | None = Field(default=None, max_length=4000)
+    value: str | None = Field(default=None, max_length=20000)
 
 
 class ChatbotMessageRead(BaseModel):
