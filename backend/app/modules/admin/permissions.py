@@ -151,6 +151,8 @@ PERMISSIONS_BY_ROLE: dict[str, set[str]] = {
         "admin.catalog.view",
         "admin.catalog.manage",
         "admin.roles.manage",
+        "admin.admin_users.list",
+        "admin.admin_users.manage",
         "admin.config.view",
         "admin.config.manage",
         "admin.chatbot.view",

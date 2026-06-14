@@ -39,6 +39,7 @@ export type AdminTokenResponse = { access_token: string; token_type: string; rol
 export type PaymentTrendPoint = { date: string; count: number; succeeded: number; failed: number };
 export type CategoryVolumePoint = { category: string; count: number; total_minor: number };
 export type HourlyTrafficPoint = { hour: number; count: number };
+export type AdminOperatorCreate = { phone: string; role: string; name?: string };
 
 export function createAdminClient(getToken: TokenProvider, on401?: () => void) {
   async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -256,5 +257,11 @@ export function createAdminClient(getToken: TokenProvider, on401?: () => void) {
       request<CategoryVolumePoint[]>("/admin/dashboard/category-volume"),
     dashboardHourly: () =>
       request<HourlyTrafficPoint[]>("/admin/dashboard/hourly"),
+    adminOperators: () =>
+      request<import("../types/admin").AdminUser[]>("/admin/admin-users"),
+    createAdminOperator: (payload: AdminOperatorCreate) =>
+      request<import("../types/admin").AdminUser>("/admin/admin-users", { method: "POST", body: JSON.stringify(payload) }),
+    updateAdminOperatorStatus: (id: number, is_active: boolean) =>
+      request<import("../types/admin").AdminUser>(`/admin/admin-users/${id}/status`, { method: "PATCH", body: JSON.stringify({ is_active }) }),
   };
 }

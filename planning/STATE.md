@@ -1715,6 +1715,23 @@ Removed all fake/hardcoded chart data from `DashboardView`. The KPI grid was alr
 
 TypeScript: 0 errors. No backend changes.
 
+## Sprint 073 — Admin User Management + Sesiones Largas
+
+Status: COMPLETED (2026-06-13).
+
+**Token admin de 8h:** `create_access_token` acepta `expires_delta` opcional. `POST /admin/auth/verify-otp` pasa `timedelta(hours=8)`. `expires_in` en respuesta = 28800 s. Tokens de usuarios móviles sin cambios.
+
+**3 nuevos endpoints (SUPER_ADMIN only):**
+- `GET /admin/admin-users` — lista operadores con rol admin
+- `POST /admin/admin-users` — crea operador (409 si phone duplicado, 422 si rol inválido)
+- `PATCH /admin/admin-users/{id}/status` — activa/desactiva (400 si intenta desactivarse a sí mismo)
+
+**Permisos:** `admin.admin_users.list` + `admin.admin_users.manage` agregados a SUPER_ADMIN.
+
+**Frontend:** `AdminUsersView` en `#/admin-users` con tabla, formulario inline de creación, y toggle activo/inactivo. Nav item "Operadores" visible solo para SUPER_ADMIN.
+
+Tests: 17/17 nuevos + 39/39 suite completa de admin. TypeScript: 0 errores.
+
 ## Sprint 072 — Admin Panel Production Config & Docs
 
 Status: COMPLETED (2026-06-13).

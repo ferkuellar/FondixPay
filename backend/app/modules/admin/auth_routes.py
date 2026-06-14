@@ -12,8 +12,10 @@ from app.modules.admin.permissions import ADMIN_ROLES, normalize_role
 from app.modules.users.repository import get_by_phone
 
 import re
+from datetime import timedelta
 
 PHONE_PATTERN = re.compile(r"^\d{10,15}$")
+ADMIN_TOKEN_TTL = timedelta(hours=8)
 
 router = APIRouter()
 
@@ -125,7 +127,7 @@ def admin_verify_otp(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Codigo incorrecto")
 
     user = _require_admin_user(db, payload.phone)
-    token = create_access_token(str(user.id))
+    token = create_access_token(str(user.id), expires_delta=ADMIN_TOKEN_TTL)
     role = normalize_role(user.role)
     create_audit_event(
         db,
@@ -145,5 +147,5 @@ def admin_verify_otp(
     return AdminTokenResponse(
         access_token=token,
         role=role,
-        expires_in=settings.access_token_expire_minutes * 60,
+        expires_in=int(ADMIN_TOKEN_TTL.total_seconds()),
     )

@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta, timezone
+from typing import Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -12,8 +13,9 @@ from app.modules.users.models import User
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/verify-otp")
 
 
-def create_access_token(subject: str) -> str:
-    expires = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
+def create_access_token(subject: str, expires_delta: Optional[timedelta] = None) -> str:
+    delta = expires_delta if expires_delta is not None else timedelta(minutes=settings.access_token_expire_minutes)
+    expires = datetime.now(timezone.utc) + delta
     payload = {"sub": subject, "exp": expires}
     return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
 

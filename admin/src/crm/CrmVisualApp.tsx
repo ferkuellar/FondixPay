@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useAdminApi } from "../api/useAdminApi";
-import type { CategoryVolumePoint, HourlyTrafficPoint, PaymentTrendPoint } from "../api/adminClient";
+import type { AdminOperatorCreate, CategoryVolumePoint, HourlyTrafficPoint, PaymentTrendPoint } from "../api/adminClient";
 import { useAdminAuth } from "../auth/AdminAuthProvider";
 import { ChatOperationsPage } from "../pages/ChatOperationsPage";
 import type { AdminPayment, AdminReceipt, AdminUser, AuditEvent, SupportTicket } from "../types/admin";
@@ -18,13 +18,15 @@ type ModuleKey =
   | "chat"
   | "reconciliation-tekae"
   | "audit-logs"
-  | "bot-landing";
+  | "bot-landing"
+  | "admin-users";
 
 type NavItem = {
   key: ModuleKey;
   label: string;
   icon: IconName;
   badge?: number;
+  requiredRole?: string;
 };
 
 type IconName =
@@ -65,6 +67,7 @@ const routes: Record<ModuleKey, string> = {
   "reconciliation-tekae": "/reconciliation/tekae",
   "audit-logs": "/audit-logs",
   "bot-landing": "/chatbot",
+  "admin-users": "/admin-users",
 };
 
 const routeToKey: Record<string, ModuleKey> = Object.fromEntries(
@@ -92,7 +95,10 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
   },
   {
     title: "Administración",
-    items: [{ key: "audit-logs", label: "Audit logs", icon: "audit" }],
+    items: [
+      { key: "audit-logs", label: "Audit logs", icon: "audit" },
+      { key: "admin-users", label: "Operadores", icon: "shield", requiredRole: "SUPER_ADMIN" },
+    ],
   },
 ];
 
@@ -183,7 +189,7 @@ export function CrmVisualApp() {
           {navGroups.map((group) => (
             <div className="crm-nav-group" key={group.title}>
               <div className="crm-nav-group-title">{group.title}</div>
-              {group.items.map((item) => (
+              {group.items.filter((item) => !item.requiredRole || item.requiredRole === role).map((item) => (
                 <a
                   className={`crm-nav-link ${activeKey === item.key ? "active" : ""}`}
                   href={`#${routes[item.key]}`}
@@ -268,6 +274,8 @@ function renderView(key: ModuleKey) {
       return <AuditLogsView />;
     case "bot-landing":
       return <BotLandingView />;
+    case "admin-users":
+      return <AdminUsersView />;
   }
 }
 
@@ -373,6 +381,156 @@ function HourlyChart({ data }: { data: HourlyTrafficPoint[] }) {
           <small>{hour % 6 === 0 ? hour : ""}</small>
         </div>
       ))}
+    </div>
+  );
+}
+
+const ADMIN_ROLES_LIST = ["SUPER_ADMIN", "ADMIN", "SUPPORT", "FINANCE", "AUDITOR"] as const;
+
+function AdminUsersView() {
+  const api = useAdminApi();
+  const [operators, setOperators] = useState<AdminUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const [form, setForm] = useState<AdminOperatorCreate>({ phone: "", role: "SUPPORT", name: "" });
+  const [formError, setFormError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const reload = () => {
+    setLoading(true);
+    setError(null);
+    api.adminOperators()
+      .then(setOperators)
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => { reload(); }, []);
+
+  const handleCreate = async () => {
+    setFormError(null);
+    if (!form.phone.trim()) { setFormError("El teléfono es obligatorio"); return; }
+    setSaving(true);
+    try {
+      const created = await api.createAdminOperator({ ...form, name: form.name?.trim() || undefined });
+      setOperators((prev) => [created, ...prev]);
+      setForm({ phone: "", role: "SUPPORT", name: "" });
+      setCreating(false);
+    } catch (e: unknown) {
+      setFormError(e instanceof Error ? e.message : "Error al crear operador");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const toggleStatus = async (op: AdminUser) => {
+    try {
+      const updated = await api.updateAdminOperatorStatus(op.id, !op.is_active);
+      setOperators((prev) => prev.map((o) => (o.id === updated.id ? updated : o)));
+    } catch (e: unknown) {
+      alert(e instanceof Error ? e.message : "Error al actualizar estado");
+    }
+  };
+
+  return (
+    <div className="crm-dashboard-stack">
+      <ViewHeader
+        title="Operadores admin"
+        subtitle={loading ? "Cargando…" : `${operators.length} operador${operators.length !== 1 ? "es" : ""} registrados`}
+        actions={
+          <button className="crm-btn primary" onClick={() => { setCreating((v) => !v); setFormError(null); }}>
+            <Icon name="plus" />{creating ? "Cancelar" : "Nuevo operador"}
+          </button>
+        }
+      />
+
+      {creating && (
+        <Card title="Crear operador">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr auto", gap: 12, alignItems: "end" }}>
+            <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 13 }}>
+              <span>Teléfono *</span>
+              <input
+                className="crm-input"
+                placeholder="5512345678"
+                value={form.phone}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                autoComplete="off"
+              />
+            </label>
+            <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 13 }}>
+              <span>Rol *</span>
+              <select className="crm-select" value={form.role} onChange={(e) => setForm((f) => ({ ...f, role: e.target.value }))}>
+                {ADMIN_ROLES_LIST.filter((r) => r !== "SUPER_ADMIN").map((r) => (
+                  <option key={r} value={r}>{r}</option>
+                ))}
+              </select>
+            </label>
+            <label style={{ display: "flex", flexDirection: "column", gap: 4, fontSize: 13 }}>
+              <span>Nombre (opcional)</span>
+              <input
+                className="crm-input"
+                placeholder="Ana López"
+                value={form.name ?? ""}
+                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              />
+            </label>
+            <button className="crm-btn primary" onClick={handleCreate} disabled={saving} style={{ height: 36 }}>
+              {saving ? "Guardando…" : "Crear"}
+            </button>
+          </div>
+          {formError && <p style={{ color: "var(--crm-danger)", fontSize: 13, margin: "8px 0 0" }}>{formError}</p>}
+        </Card>
+      )}
+
+      <Card title="Operadores activos">
+        {loading ? (
+          <div className="crm-loading">Cargando…</div>
+        ) : error ? (
+          <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>
+        ) : operators.length === 0 ? (
+          <div style={{ color: "var(--crm-muted)", fontSize: 13, padding: "12px 0", textAlign: "center" }}>
+            No hay operadores registrados
+          </div>
+        ) : (
+          <table className="crm-table">
+            <thead>
+              <tr>
+                <th>Teléfono</th>
+                <th>Nombre</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Alta</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {operators.map((op) => (
+                <tr key={op.id} style={{ opacity: op.is_active ? 1 : 0.5 }}>
+                  <td><code style={{ fontSize: 12 }}>{op.phone}</code></td>
+                  <td>{op.name ?? <span style={{ color: "var(--crm-muted)" }}>—</span>}</td>
+                  <td><span className="crm-pill crm-role" style={{ fontSize: 11 }}>{op.role}</span></td>
+                  <td>
+                    <span className={`crm-badge ${op.is_active ? "success" : "danger"}`}>
+                      {op.is_active ? "Activo" : "Inactivo"}
+                    </span>
+                  </td>
+                  <td style={{ fontSize: 12, color: "var(--crm-muted)" }}>{formatDate(op.created_at)}</td>
+                  <td>
+                    <button
+                      className="crm-btn"
+                      style={{ fontSize: 12, padding: "4px 10px" }}
+                      onClick={() => toggleStatus(op)}
+                    >
+                      {op.is_active ? "Desactivar" : "Activar"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </Card>
     </div>
   );
 }

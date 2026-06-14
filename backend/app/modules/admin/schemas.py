@@ -124,6 +124,16 @@ class AdminUserListItem(BaseModel):
     created_at: datetime
 
 
+class AdminOperatorCreate(BaseModel):
+    phone: str = Field(min_length=10, max_length=20)
+    role: str = Field(min_length=3, max_length=40)
+    name: str | None = Field(default=None, max_length=120)
+
+
+class AdminOperatorStatusUpdate(BaseModel):
+    is_active: bool
+
+
 class AdminUserDetail(AdminUserListItem):
     recent_payment_ids: list[int] = Field(default_factory=list)
     receipt_ids: list[int] = Field(default_factory=list)

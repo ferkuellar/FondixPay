@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -15,6 +15,8 @@ from app.modules.admin.schemas import (
     AdminAuditEventListItem,
     AdminNotificationDeliveryDetail,
     AdminNotificationDeliveryListItem,
+    AdminOperatorCreate,
+    AdminOperatorStatusUpdate,
     AdminPaymentDetail,
     AdminPaymentListItem,
     AdminReceiptDetail,
@@ -42,8 +44,10 @@ from app.modules.admin.schemas import (
     SupportTicketRead,
     SupportTicketUpdate,
 )
+from app.modules.admin.permissions import ADMIN_ROLES, normalize_role
 from app.modules.notifications import repository as notification_repository
 from app.modules.users.models import User
+from app.modules.users.repository import get_by_phone
 
 router = APIRouter()
 
@@ -112,6 +116,61 @@ def get_user(
     result = services.user_detail(db, user, current_user.role)
     _audit(db, request, current_user, "admin.user_viewed", "admin.users.view", "User", user.id)
     return result
+
+
+@router.get("/admin-users", response_model=list[AdminUserListItem])
+def list_admin_operators(
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.admin_users.list")),
+    db: Session = Depends(get_db),
+) -> list[AdminUserListItem]:
+    operators = db.query(User).filter(User.role.in_(ADMIN_ROLES)).order_by(User.created_at.desc()).all()
+    _audit(db, request, current_user, "admin.admin_users_listed", "admin.admin_users.list")
+    return [AdminUserListItem.model_validate(u, from_attributes=True) for u in operators]
+
+
+@router.post("/admin-users", response_model=AdminUserListItem, status_code=status.HTTP_201_CREATED)
+def create_admin_operator(
+    payload: AdminOperatorCreate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.admin_users.manage")),
+    db: Session = Depends(get_db),
+) -> AdminUserListItem:
+    role = normalize_role(payload.role)
+    if role not in ADMIN_ROLES:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"Rol invalido. Valores permitidos: {sorted(ADMIN_ROLES)}",
+        )
+    if get_by_phone(db, payload.phone):
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ya existe un usuario con ese telefono")
+    user = User(phone=payload.phone, role=role, name=payload.name, is_active=True)
+    db.add(user)
+    db.flush()
+    _audit(db, request, current_user, "admin.admin_user_created", "admin.admin_users.manage", "User", user.id, {"role": role})
+    db.commit()
+    db.refresh(user)
+    return AdminUserListItem.model_validate(user, from_attributes=True)
+
+
+@router.patch("/admin-users/{user_id}/status", response_model=AdminUserListItem)
+def update_admin_operator_status(
+    user_id: int,
+    payload: AdminOperatorStatusUpdate,
+    request: Request,
+    current_user: User = Depends(require_admin_permission("admin.admin_users.manage")),
+    db: Session = Depends(get_db),
+) -> AdminUserListItem:
+    if user_id == current_user.id:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="No puedes cambiar tu propio estado")
+    user = db.get(User, user_id)
+    if user is None or normalize_role(user.role) not in ADMIN_ROLES:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Operador no encontrado")
+    user.is_active = payload.is_active
+    _audit(db, request, current_user, "admin.admin_user_status_updated", "admin.admin_users.manage", "User", user.id, {"is_active": payload.is_active})
+    db.commit()
+    db.refresh(user)
+    return AdminUserListItem.model_validate(user, from_attributes=True)
 
 
 @router.get("/payments", response_model=list[AdminPaymentListItem])
