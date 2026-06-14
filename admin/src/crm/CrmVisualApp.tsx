@@ -666,7 +666,8 @@ function UsersView() {
     api.users({}).then(setUsers).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
-  const visible = users.filter((u) =>
+  const mobileUsers = users.filter((u) => u.role === "USER");
+  const visible = mobileUsers.filter((u) =>
     filter === "Todos" || (filter === "Activo" && u.is_active) || (filter === "Inactivo" && !u.is_active)
   );
 
@@ -674,7 +675,7 @@ function UsersView() {
     <>
       <ViewHeader
         title="Usuarios"
-        subtitle={loading ? "Cargando…" : `${users.length} registrados`}
+        subtitle={loading ? "Cargando…" : `${mobileUsers.length} registrados`}
         actions={<button className="crm-btn"><Icon name="download" />Exportar CSV</button>}
       />
       <div className="crm-toolbar">

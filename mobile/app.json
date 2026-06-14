@@ -6,10 +6,13 @@
     "orientation": "portrait",
     "scheme": "fondixpay",
     "userInterfaceStyle": "light",
+    "newArchEnabled": true,
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "com.fondixpay.app"
     },
     "android": {
+      "package": "com.fondixpay.app",
       "adaptiveIcon": {
         "backgroundColor": "#1E5FE8"
       }
@@ -21,15 +24,6 @@
           "locationWhenInUsePermission": "Podemos usar tu ubicación para sugerir tu estado. También puedes elegirlo manualmente."
         }
       ]
-    ],
-    "extra": {
-      "apiUrl": "http://127.0.0.1:8000"
-    },
-
-    "expo": {
-      "newArchEnabled": true
-    }
+    ]
   }
 }
-
-
