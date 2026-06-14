@@ -4,7 +4,7 @@ import { useAdminApi } from "../api/useAdminApi";
 import type { AdminOperatorCreate, CategoryVolumePoint, HourlyTrafficPoint, PaymentTrendPoint } from "../api/adminClient";
 import { useAdminAuth } from "../auth/AdminAuthProvider";
 import { ChatOperationsPage } from "../pages/ChatOperationsPage";
-import type { AdminPayment, AdminReceipt, AdminUser, AuditEvent, SupportTicket } from "../types/admin";
+import type { AdminNotificationDelivery, AdminPayment, AdminReceipt, AdminUser, AuditEvent, DisputeCase, FraudSignal, ManualReviewCase, SupportTicket } from "../types/admin";
 import { formatDate, formatMoney } from "../utils/format";
 import "./crmVisual.css";
 
@@ -19,7 +19,11 @@ type ModuleKey =
   | "reconciliation-tekae"
   | "audit-logs"
   | "bot-landing"
-  | "admin-users";
+  | "admin-users"
+  | "manual-review"
+  | "fraud"
+  | "disputes"
+  | "notifications";
 
 type NavItem = {
   key: ModuleKey;
@@ -68,6 +72,10 @@ const routes: Record<ModuleKey, string> = {
   "audit-logs": "/audit-logs",
   "bot-landing": "/chatbot",
   "admin-users": "/admin-users",
+  "manual-review": "/manual-review",
+  fraud: "/fraud",
+  disputes: "/disputes",
+  notifications: "/notifications",
 };
 
 const routeToKey: Record<string, ModuleKey> = Object.fromEntries(
@@ -84,7 +92,16 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
       { key: "receipts", label: "Recibos", icon: "receipts" },
       { key: "search", label: "Búsqueda", icon: "search" },
       { key: "tickets", label: "Tickets", icon: "tickets", badge: 23 },
+      { key: "manual-review", label: "Revisión manual", icon: "eye" },
+      { key: "notifications", label: "Notificaciones", icon: "bell" },
       { key: "bot-landing", label: "Bot de Landing", icon: "bot" },
+    ],
+  },
+  {
+    title: "Riesgo",
+    items: [
+      { key: "fraud", label: "Señales fraude", icon: "fraud" },
+      { key: "disputes", label: "Disputas", icon: "disputes" },
     ],
   },
   {
@@ -276,6 +293,14 @@ function renderView(key: ModuleKey) {
       return <BotLandingView />;
     case "admin-users":
       return <AdminUsersView />;
+    case "manual-review":
+      return <ManualReviewView />;
+    case "fraud":
+      return <FraudView />;
+    case "disputes":
+      return <DisputesView />;
+    case "notifications":
+      return <NotificationsView />;
   }
 }
 
@@ -1029,6 +1054,336 @@ function AuditLogsView() {
                   <td>{e.event_type}</td>
                   <td>{e.entity_type ? <span className="crm-mono">{e.entity_type} {e.entity_id}</span> : "—"}</td>
                   <td>{statusCell(e.result)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+}
+
+function severityBadge(severity: string) {
+  if (severity === "urgent") return <span className="crm-badge danger">{severity}</span>;
+  if (severity === "high") return <span className="crm-badge pending">{severity}</span>;
+  return <span className="crm-badge">{severity}</span>;
+}
+
+function ManualReviewView() {
+  const api = useAdminApi();
+  const [cases, setCases] = useState<ManualReviewCase[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState("Todos");
+  const [severityFilter, setSeverityFilter] = useState("Todos");
+
+  const STATUS_LABELS: Record<string, string> = {
+    open: "Abierto", assigned: "Asignado", investigating: "Investigando",
+    waiting_provider: "Esp. proveedor", waiting_user: "Esp. usuario",
+    resolved: "Resuelto", escalated: "Escalado", closed: "Cerrado",
+  };
+
+  useEffect(() => {
+    api.manualReview()
+      .then(setCases)
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const visible = cases.filter((c) => {
+    const statusOk = statusFilter === "Todos" || (STATUS_LABELS[c.status] ?? c.status) === statusFilter;
+    const sevOk = severityFilter === "Todos" || c.severity === severityFilter.toLowerCase();
+    return statusOk && sevOk;
+  });
+
+  const open = cases.filter((c) => !["resolved", "closed"].includes(c.status));
+
+  return (
+    <>
+      <ViewHeader
+        title="Revisión manual"
+        subtitle={loading ? "Cargando…" : `${open.length} abiertos · ${cases.length} total`}
+      />
+      <div className="crm-mini-grid">
+        <MiniStat label="Total" value={loading ? "…" : String(cases.length)} />
+        <MiniStat label="Abiertos" value={loading ? "…" : String(cases.filter((c) => c.status === "open").length)} accent="var(--crm-orange)" />
+        <MiniStat label="Urgentes" value={loading ? "…" : String(cases.filter((c) => c.severity === "urgent").length)} accent="var(--crm-red)" />
+        <MiniStat label="Resueltos" value={loading ? "…" : String(cases.filter((c) => c.status === "resolved").length)} />
+      </div>
+      <div className="crm-toolbar">
+        <Segmented options={["Todos", "Abierto", "Asignado", "Investigando", "Escalado", "Resuelto"]} value={statusFilter} onChange={setStatusFilter} />
+        <Segmented options={["Todos", "Urgent", "High", "Medium", "Low"]} value={severityFilter} onChange={setSeverityFilter} />
+      </div>
+      {error && <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>}
+      {loading ? <div className="crm-loading">Cargando casos…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Severidad</th>
+                <th>Estado</th>
+                <th>Pago</th>
+                <th>Resumen</th>
+                <th>Creado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.length === 0 ? (
+                <tr><td colSpan={7} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin casos</td></tr>
+              ) : visible.map((c) => (
+                <tr key={c.id}>
+                  <td><span className="crm-mono">#{c.id}</span></td>
+                  <td style={{ fontSize: 12 }}>{c.case_type.replace(/_/g, " ")}</td>
+                  <td>{severityBadge(c.severity)}</td>
+                  <td>{statusCell(STATUS_LABELS[c.status] ?? c.status)}</td>
+                  <td>{c.payment_id ? <span className="crm-mono">#{c.payment_id}</span> : <span style={{ color: "var(--crm-muted)" }}>—</span>}</td>
+                  <td style={{ maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12 }}>{c.summary}</td>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(c.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+}
+
+function FraudView() {
+  const api = useAdminApi();
+  const [signals, setSignals] = useState<FraudSignal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState("Todos");
+  const [severityFilter, setSeverityFilter] = useState("Todos");
+
+  const STATUS_LABELS: Record<string, string> = {
+    open: "Abierto", reviewed: "Revisado", dismissed: "Descartado", escalated: "Escalado",
+  };
+
+  useEffect(() => {
+    api.fraudSignals({})
+      .then(setSignals)
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const visible = signals.filter((s) => {
+    const statusOk = statusFilter === "Todos" || (STATUS_LABELS[s.status] ?? s.status) === statusFilter;
+    const sevOk = severityFilter === "Todos" || s.severity === severityFilter.toLowerCase();
+    return statusOk && sevOk;
+  });
+
+  return (
+    <>
+      <ViewHeader
+        title="Señales de fraude"
+        subtitle={loading ? "Cargando…" : `${signals.filter((s) => s.status === "open").length} abiertas · ${signals.length} total`}
+      />
+      <div className="crm-mini-grid">
+        <MiniStat label="Total" value={loading ? "…" : String(signals.length)} />
+        <MiniStat label="Abiertas" value={loading ? "…" : String(signals.filter((s) => s.status === "open").length)} accent="var(--crm-orange)" />
+        <MiniStat label="Escaladas" value={loading ? "…" : String(signals.filter((s) => s.status === "escalated").length)} accent="var(--crm-red)" />
+        <MiniStat label="Descartadas" value={loading ? "…" : String(signals.filter((s) => s.status === "dismissed").length)} />
+      </div>
+      <div className="crm-toolbar">
+        <Segmented options={["Todos", "Abierto", "Revisado", "Descartado", "Escalado"]} value={statusFilter} onChange={setStatusFilter} />
+        <Segmented options={["Todos", "Urgent", "High", "Medium", "Low"]} value={severityFilter} onChange={setSeverityFilter} />
+      </div>
+      {error && <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>}
+      {loading ? <div className="crm-loading">Cargando señales…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo señal</th>
+                <th>Severidad</th>
+                <th>Estado</th>
+                <th>Entidad</th>
+                <th>Razón</th>
+                <th>Creado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.length === 0 ? (
+                <tr><td colSpan={7} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin señales</td></tr>
+              ) : visible.map((s) => (
+                <tr key={s.id}>
+                  <td><span className="crm-mono">#{s.id}</span></td>
+                  <td style={{ fontSize: 12 }}>{s.signal_type.replace(/_/g, " ")}</td>
+                  <td>{severityBadge(s.severity)}</td>
+                  <td>{statusCell(STATUS_LABELS[s.status] ?? s.status)}</td>
+                  <td style={{ fontSize: 12 }}><span className="crm-mono">{s.entity_type}/{s.entity_id}</span></td>
+                  <td style={{ maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12 }}>{s.reason}</td>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(s.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+}
+
+function DisputesView() {
+  const api = useAdminApi();
+  const [disputes, setDisputes] = useState<DisputeCase[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState("Todos");
+  const [typeFilter, setTypeFilter] = useState("Todos");
+
+  const STATUS_LABELS: Record<string, string> = {
+    OPEN: "Abierta", UNDER_REVIEW: "En revisión", EVIDENCE_GATHERING: "Evidencia",
+    SUBMITTED: "Enviada", WON: "Ganada", LOST: "Perdida", CLOSED: "Cerrada", CANCELED: "Cancelada",
+  };
+
+  useEffect(() => {
+    api.disputes({})
+      .then(setDisputes)
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const visible = disputes.filter((d) => {
+    const statusOk = statusFilter === "Todos" || (STATUS_LABELS[d.status] ?? d.status) === statusFilter;
+    const typeOk = typeFilter === "Todos" || d.case_type === typeFilter.toLowerCase();
+    return statusOk && typeOk;
+  });
+
+  const open = disputes.filter((d) => !["WON", "LOST", "CLOSED", "CANCELED"].includes(d.status));
+
+  return (
+    <>
+      <ViewHeader
+        title="Disputas y contracargos"
+        subtitle={loading ? "Cargando…" : `${open.length} activas · ${disputes.length} total`}
+      />
+      <div className="crm-mini-grid">
+        <MiniStat label="Total" value={loading ? "…" : String(disputes.length)} />
+        <MiniStat label="Abiertas" value={loading ? "…" : String(disputes.filter((d) => d.status === "OPEN").length)} accent="var(--crm-orange)" />
+        <MiniStat label="En revisión" value={loading ? "…" : String(disputes.filter((d) => d.status === "UNDER_REVIEW").length)} accent="var(--crm-blue)" />
+        <MiniStat label="Ganadas" value={loading ? "…" : String(disputes.filter((d) => d.status === "WON").length)} />
+      </div>
+      <div className="crm-toolbar">
+        <Segmented options={["Todos", "Abierta", "En revisión", "Enviada", "Ganada", "Perdida"]} value={statusFilter} onChange={setStatusFilter} />
+        <Segmented options={["Todos", "Dispute", "Chargeback"]} value={typeFilter} onChange={setTypeFilter} />
+      </div>
+      {error && <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>}
+      {loading ? <div className="crm-loading">Cargando disputas…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Pago</th>
+                <th style={{ textAlign: "right" }}>Monto</th>
+                <th>Resumen</th>
+                <th>Abierta</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.length === 0 ? (
+                <tr><td colSpan={7} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin disputas</td></tr>
+              ) : visible.map((d) => (
+                <tr key={d.id}>
+                  <td><span className="crm-mono">#{d.id}</span></td>
+                  <td>
+                    <span className={`crm-badge ${d.case_type === "chargeback" ? "danger" : ""}`} style={{ fontSize: 11 }}>
+                      {d.case_type === "chargeback" ? "Contracargo" : "Disputa"}
+                    </span>
+                  </td>
+                  <td>{statusCell(STATUS_LABELS[d.status] ?? d.status)}</td>
+                  <td>{d.payment_id ? <span className="crm-mono">#{d.payment_id}</span> : <span style={{ color: "var(--crm-muted)" }}>—</span>}</td>
+                  <td className="crm-mono" style={{ textAlign: "right" }}>
+                    {d.amount_minor != null ? formatMoney(d.amount_minor) : <span style={{ color: "var(--crm-muted)" }}>—</span>}
+                  </td>
+                  <td style={{ maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12 }}>{d.summary}</td>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(d.opened_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+}
+
+function NotificationsView() {
+  const api = useAdminApi();
+  const [deliveries, setDeliveries] = useState<AdminNotificationDelivery[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [channelFilter, setChannelFilter] = useState("Todos");
+  const [statusFilter, setStatusFilter] = useState("Todos");
+
+  useEffect(() => {
+    api.notificationDeliveries({})
+      .then(setDeliveries)
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const channels = Array.from(new Set(deliveries.map((d) => d.channel)));
+  const channelOptions = ["Todos", ...channels];
+
+  const visible = deliveries.filter((d) => {
+    const chOk = channelFilter === "Todos" || d.channel === channelFilter;
+    const stOk = statusFilter === "Todos" || d.status === statusFilter.toLowerCase();
+    return chOk && stOk;
+  });
+
+  return (
+    <>
+      <ViewHeader
+        title="Notificaciones"
+        subtitle={loading ? "Cargando…" : `${deliveries.length} entregas registradas`}
+      />
+      <div className="crm-mini-grid">
+        <MiniStat label="Total" value={loading ? "…" : String(deliveries.length)} />
+        <MiniStat label="Entregadas" value={loading ? "…" : String(deliveries.filter((d) => d.status === "delivered").length)} />
+        <MiniStat label="Fallidas" value={loading ? "…" : String(deliveries.filter((d) => d.status === "failed").length)} accent="var(--crm-red)" />
+        <MiniStat label="Pendientes" value={loading ? "…" : String(deliveries.filter((d) => d.status === "pending").length)} accent="var(--crm-orange)" />
+      </div>
+      <div className="crm-toolbar">
+        <Segmented options={channelOptions.length > 1 ? channelOptions : ["Todos"]} value={channelFilter} onChange={setChannelFilter} />
+        <Segmented options={["Todos", "Delivered", "Failed", "Pending"]} value={statusFilter} onChange={setStatusFilter} />
+      </div>
+      {error && <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>}
+      {loading ? <div className="crm-loading">Cargando notificaciones…</div> : (
+        <div className="crm-card crm-table-wrap">
+          <table className="crm-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Canal</th>
+                <th>Tipo</th>
+                <th>Plantilla</th>
+                <th>Destinatario</th>
+                <th>Estado</th>
+                <th>Enviado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.length === 0 ? (
+                <tr><td colSpan={7} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin entregas</td></tr>
+              ) : visible.map((d) => (
+                <tr key={d.id}>
+                  <td><span className="crm-mono">#{d.id}</span></td>
+                  <td><ChannelChip channel={d.channel} /></td>
+                  <td style={{ fontSize: 12 }}>{d.notification_type}</td>
+                  <td style={{ fontSize: 12 }}><span className="crm-mono">{d.template_name}</span></td>
+                  <td style={{ fontSize: 12 }}><span className="crm-mono">{d.recipient_masked}</span></td>
+                  <td>{statusCell(d.status === "delivered" ? "Entregado" : d.status === "failed" ? "Fallida" : d.status)}</td>
+                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(d.created_at)}</td>
                 </tr>
               ))}
             </tbody>
