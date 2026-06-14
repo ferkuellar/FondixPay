@@ -4,7 +4,7 @@ import { useAdminApi } from "../api/useAdminApi";
 import type { AdminOperatorCreate, CategoryVolumePoint, HourlyTrafficPoint, PaymentTrendPoint } from "../api/adminClient";
 import { useAdminAuth } from "../auth/AdminAuthProvider";
 import { ChatOperationsPage } from "../pages/ChatOperationsPage";
-import type { AdminNotificationDelivery, AdminPayment, AdminReceipt, AdminUser, AuditEvent, DisputeCase, FraudSignal, ManualReviewCase, SupportTicket } from "../types/admin";
+import type { AdminNotificationDelivery, AdminPayment, AdminReceipt, AdminUser, AuditEvent } from "../types/admin";
 import { formatDate, formatMoney } from "../utils/format";
 import "./crmVisual.css";
 
@@ -14,15 +14,11 @@ type ModuleKey =
   | "payments"
   | "receipts"
   | "search"
-  | "tickets"
   | "chat"
   | "reconciliation-tekae"
   | "audit-logs"
   | "bot-landing"
   | "admin-users"
-  | "manual-review"
-  | "fraud"
-  | "disputes"
   | "notifications";
 
 type NavItem = {
@@ -66,15 +62,11 @@ const routes: Record<ModuleKey, string> = {
   payments: "/payments",
   receipts: "/receipts",
   search: "/search",
-  tickets: "/tickets",
   chat: "/chat",
   "reconciliation-tekae": "/reconciliation/tekae",
   "audit-logs": "/audit-logs",
   "bot-landing": "/chatbot",
   "admin-users": "/admin-users",
-  "manual-review": "/manual-review",
-  fraud: "/fraud",
-  disputes: "/disputes",
   notifications: "/notifications",
 };
 
@@ -91,17 +83,8 @@ const navGroups: Array<{ title: string; items: NavItem[] }> = [
       { key: "payments", label: "Pagos", icon: "payments" },
       { key: "receipts", label: "Recibos", icon: "receipts" },
       { key: "search", label: "Búsqueda", icon: "search" },
-      { key: "tickets", label: "Tickets", icon: "tickets", badge: 23 },
-      { key: "manual-review", label: "Revisión manual", icon: "eye" },
       { key: "notifications", label: "Notificaciones", icon: "bell" },
       { key: "bot-landing", label: "Bot de Landing", icon: "bot" },
-    ],
-  },
-  {
-    title: "Riesgo",
-    items: [
-      { key: "fraud", label: "Señales fraude", icon: "fraud" },
-      { key: "disputes", label: "Disputas", icon: "disputes" },
     ],
   },
   {
@@ -281,8 +264,6 @@ function renderView(key: ModuleKey) {
       return <ReceiptsView />;
     case "search":
       return <SearchView />;
-    case "tickets":
-      return <TicketsView />;
     case "chat":
       return <ChatOperationsPage />;
     case "reconciliation-tekae":
@@ -293,12 +274,6 @@ function renderView(key: ModuleKey) {
       return <BotLandingView />;
     case "admin-users":
       return <AdminUsersView />;
-    case "manual-review":
-      return <ManualReviewView />;
-    case "fraud":
-      return <FraudView />;
-    case "disputes":
-      return <DisputesView />;
     case "notifications":
       return <NotificationsView />;
   }
@@ -888,85 +863,19 @@ function ChannelChip({ channel }: { channel: string }) {
 function SearchView() {
   return (
     <>
-      <ViewHeader title="Búsqueda global" subtitle="Busca en usuarios, pagos, recibos, tickets, disputas y señales de fraude" />
-      <input className="crm-input" style={{ height: 54, fontSize: 16 }} placeholder="Buscar usuario, pago, recibo o ticket..." />
+      <ViewHeader title="Búsqueda global" subtitle="Busca en usuarios, pagos, recibos y notificaciones" />
+      <input className="crm-input" style={{ height: 54, fontSize: 16 }} placeholder="Buscar usuario, pago o recibo..." />
       <div className="crm-grid-even" style={{ marginTop: 18 }}>
         <Card title="Resultados recientes">
-          {["usr_01022 · Carlos Ortiz Díaz", "tx_0847200 · Pago CFE", "TKT-4500 · Pago no aplicado", "DSP-08870 · Cargo no reconocido"].map((item) => <div className="crm-note" style={{ marginBottom: 8 }} key={item}>{item}</div>)}
+          {["usr_01022 · Carlos Ortiz Díaz", "tx_0847200 · Pago CFE", "REC-00123 · Recibo agua"].map((item) => <div className="crm-note" style={{ marginBottom: 8 }} key={item}>{item}</div>)}
         </Card>
         <Card title="Filtros rápidos">
           <div className="crm-pills">
-            {["Usuarios", "Pagos", "Recibos", "Tickets", "Disputas", "Fraude"].map((item) => <span className="crm-small-pill" key={item}>{item}</span>)}
+            {["Usuarios", "Pagos", "Recibos", "Notificaciones"].map((item) => <span className="crm-small-pill" key={item}>{item}</span>)}
           </div>
         </Card>
       </div>
     </>
-  );
-}
-
-type KanbanCol = { label: string; statuses: string[]; color: string };
-const KANBAN_COLS: KanbanCol[] = [
-  { label: "Nuevos", statuses: ["new", "open", "triaged"], color: "#1565e8" },
-  { label: "En proceso", statuses: ["assigned", "pending", "escalated", "reopened"], color: "#f59e0b" },
-  { label: "Esperando", statuses: ["waiting_user", "waiting_customer", "waiting_internal", "waiting_internal_review"], color: "#7c3aed" },
-  { label: "Resueltos", statuses: ["resolved", "closed"], color: "#22c55e" },
-];
-
-function TicketsView() {
-  const api = useAdminApi();
-  const [tickets, setTickets] = useState<SupportTicket[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    api.tickets().then(setTickets).catch(() => {}).finally(() => setLoading(false));
-  }, []);
-
-  const open = tickets.filter((t) => !["resolved", "closed"].includes(t.status));
-
-  return (
-    <>
-      <ViewHeader
-        title="Tickets de soporte"
-        subtitle={loading ? "Cargando…" : `${open.length} abiertos · ${tickets.length} total`}
-        actions={<button className="crm-btn primary"><Icon name="plus" />Crear ticket</button>}
-      />
-      {loading ? <div className="crm-loading">Cargando tickets…</div> : (
-        <div className="crm-kanban">
-          {KANBAN_COLS.map(({ label, statuses, color }) => {
-            const col = tickets.filter((t) => statuses.includes(t.status));
-            return (
-              <section key={label}>
-                <div className="crm-kanban-head">
-                  <span><i style={{ background: color }} />{label}</span>
-                  <b>{col.length}</b>
-                </div>
-                {col.map((ticket) => <TicketCard key={ticket.id} ticket={ticket} />)}
-              </section>
-            );
-          })}
-        </div>
-      )}
-    </>
-  );
-}
-
-function TicketCard({ ticket }: { ticket: SupportTicket }) {
-  const sevColor = ticket.severity === "SEV-1" ? "var(--crm-red)" : ticket.severity === "SEV-2" ? "var(--crm-orange)" : "var(--crm-blue)";
-  return (
-    <div className="crm-ticket" style={{ borderLeftColor: sevColor }}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
-        <span className="crm-mono">{ticket.ticket_number ?? `#${ticket.id}`}</span>
-        <span className="crm-badge" style={{ fontSize: 10 }}>{ticket.severity ?? ticket.priority}</span>
-      </div>
-      <strong style={{ display: "block", fontSize: 13, marginTop: 8 }}>{ticket.subject}</strong>
-      <div className="crm-ticket-user">
-        <span>{ticket.category.replace(/_/g, " ")}</span>
-        <small>{formatDate(ticket.created_at)}</small>
-      </div>
-      {ticket.sla_due_at && !["resolved", "closed"].includes(ticket.status) ? (
-        <p style={{ color: "var(--crm-muted)", fontSize: 11, margin: "8px 0 0" }}>SLA: {formatDate(ticket.sla_due_at)}</p>
-      ) : null}
-    </div>
   );
 }
 
@@ -1054,259 +963,6 @@ function AuditLogsView() {
                   <td>{e.event_type}</td>
                   <td>{e.entity_type ? <span className="crm-mono">{e.entity_type} {e.entity_id}</span> : "—"}</td>
                   <td>{statusCell(e.result)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </>
-  );
-}
-
-function severityBadge(severity: string) {
-  if (severity === "urgent") return <span className="crm-badge danger">{severity}</span>;
-  if (severity === "high") return <span className="crm-badge pending">{severity}</span>;
-  return <span className="crm-badge">{severity}</span>;
-}
-
-function ManualReviewView() {
-  const api = useAdminApi();
-  const [cases, setCases] = useState<ManualReviewCase[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState("Todos");
-  const [severityFilter, setSeverityFilter] = useState("Todos");
-
-  const STATUS_LABELS: Record<string, string> = {
-    open: "Abierto", assigned: "Asignado", investigating: "Investigando",
-    waiting_provider: "Esp. proveedor", waiting_user: "Esp. usuario",
-    resolved: "Resuelto", escalated: "Escalado", closed: "Cerrado",
-  };
-
-  useEffect(() => {
-    api.manualReview()
-      .then(setCases)
-      .catch((e: Error) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const visible = cases.filter((c) => {
-    const statusOk = statusFilter === "Todos" || (STATUS_LABELS[c.status] ?? c.status) === statusFilter;
-    const sevOk = severityFilter === "Todos" || c.severity === severityFilter.toLowerCase();
-    return statusOk && sevOk;
-  });
-
-  const open = cases.filter((c) => !["resolved", "closed"].includes(c.status));
-
-  return (
-    <>
-      <ViewHeader
-        title="Revisión manual"
-        subtitle={loading ? "Cargando…" : `${open.length} abiertos · ${cases.length} total`}
-      />
-      <div className="crm-mini-grid">
-        <MiniStat label="Total" value={loading ? "…" : String(cases.length)} />
-        <MiniStat label="Abiertos" value={loading ? "…" : String(cases.filter((c) => c.status === "open").length)} accent="var(--crm-orange)" />
-        <MiniStat label="Urgentes" value={loading ? "…" : String(cases.filter((c) => c.severity === "urgent").length)} accent="var(--crm-red)" />
-        <MiniStat label="Resueltos" value={loading ? "…" : String(cases.filter((c) => c.status === "resolved").length)} />
-      </div>
-      <div className="crm-toolbar">
-        <Segmented options={["Todos", "Abierto", "Asignado", "Investigando", "Escalado", "Resuelto"]} value={statusFilter} onChange={setStatusFilter} />
-        <Segmented options={["Todos", "Urgent", "High", "Medium", "Low"]} value={severityFilter} onChange={setSeverityFilter} />
-      </div>
-      {error && <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>}
-      {loading ? <div className="crm-loading">Cargando casos…</div> : (
-        <div className="crm-card crm-table-wrap">
-          <table className="crm-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Severidad</th>
-                <th>Estado</th>
-                <th>Pago</th>
-                <th>Resumen</th>
-                <th>Creado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visible.length === 0 ? (
-                <tr><td colSpan={7} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin casos</td></tr>
-              ) : visible.map((c) => (
-                <tr key={c.id}>
-                  <td><span className="crm-mono">#{c.id}</span></td>
-                  <td style={{ fontSize: 12 }}>{c.case_type.replace(/_/g, " ")}</td>
-                  <td>{severityBadge(c.severity)}</td>
-                  <td>{statusCell(STATUS_LABELS[c.status] ?? c.status)}</td>
-                  <td>{c.payment_id ? <span className="crm-mono">#{c.payment_id}</span> : <span style={{ color: "var(--crm-muted)" }}>—</span>}</td>
-                  <td style={{ maxWidth: 260, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12 }}>{c.summary}</td>
-                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(c.created_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </>
-  );
-}
-
-function FraudView() {
-  const api = useAdminApi();
-  const [signals, setSignals] = useState<FraudSignal[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState("Todos");
-  const [severityFilter, setSeverityFilter] = useState("Todos");
-
-  const STATUS_LABELS: Record<string, string> = {
-    open: "Abierto", reviewed: "Revisado", dismissed: "Descartado", escalated: "Escalado",
-  };
-
-  useEffect(() => {
-    api.fraudSignals({})
-      .then(setSignals)
-      .catch((e: Error) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const visible = signals.filter((s) => {
-    const statusOk = statusFilter === "Todos" || (STATUS_LABELS[s.status] ?? s.status) === statusFilter;
-    const sevOk = severityFilter === "Todos" || s.severity === severityFilter.toLowerCase();
-    return statusOk && sevOk;
-  });
-
-  return (
-    <>
-      <ViewHeader
-        title="Señales de fraude"
-        subtitle={loading ? "Cargando…" : `${signals.filter((s) => s.status === "open").length} abiertas · ${signals.length} total`}
-      />
-      <div className="crm-mini-grid">
-        <MiniStat label="Total" value={loading ? "…" : String(signals.length)} />
-        <MiniStat label="Abiertas" value={loading ? "…" : String(signals.filter((s) => s.status === "open").length)} accent="var(--crm-orange)" />
-        <MiniStat label="Escaladas" value={loading ? "…" : String(signals.filter((s) => s.status === "escalated").length)} accent="var(--crm-red)" />
-        <MiniStat label="Descartadas" value={loading ? "…" : String(signals.filter((s) => s.status === "dismissed").length)} />
-      </div>
-      <div className="crm-toolbar">
-        <Segmented options={["Todos", "Abierto", "Revisado", "Descartado", "Escalado"]} value={statusFilter} onChange={setStatusFilter} />
-        <Segmented options={["Todos", "Urgent", "High", "Medium", "Low"]} value={severityFilter} onChange={setSeverityFilter} />
-      </div>
-      {error && <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>}
-      {loading ? <div className="crm-loading">Cargando señales…</div> : (
-        <div className="crm-card crm-table-wrap">
-          <table className="crm-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo señal</th>
-                <th>Severidad</th>
-                <th>Estado</th>
-                <th>Entidad</th>
-                <th>Razón</th>
-                <th>Creado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visible.length === 0 ? (
-                <tr><td colSpan={7} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin señales</td></tr>
-              ) : visible.map((s) => (
-                <tr key={s.id}>
-                  <td><span className="crm-mono">#{s.id}</span></td>
-                  <td style={{ fontSize: 12 }}>{s.signal_type.replace(/_/g, " ")}</td>
-                  <td>{severityBadge(s.severity)}</td>
-                  <td>{statusCell(STATUS_LABELS[s.status] ?? s.status)}</td>
-                  <td style={{ fontSize: 12 }}><span className="crm-mono">{s.entity_type}/{s.entity_id}</span></td>
-                  <td style={{ maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12 }}>{s.reason}</td>
-                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(s.created_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-    </>
-  );
-}
-
-function DisputesView() {
-  const api = useAdminApi();
-  const [disputes, setDisputes] = useState<DisputeCase[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState("Todos");
-  const [typeFilter, setTypeFilter] = useState("Todos");
-
-  const STATUS_LABELS: Record<string, string> = {
-    OPEN: "Abierta", UNDER_REVIEW: "En revisión", EVIDENCE_GATHERING: "Evidencia",
-    SUBMITTED: "Enviada", WON: "Ganada", LOST: "Perdida", CLOSED: "Cerrada", CANCELED: "Cancelada",
-  };
-
-  useEffect(() => {
-    api.disputes({})
-      .then(setDisputes)
-      .catch((e: Error) => setError(e.message))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const visible = disputes.filter((d) => {
-    const statusOk = statusFilter === "Todos" || (STATUS_LABELS[d.status] ?? d.status) === statusFilter;
-    const typeOk = typeFilter === "Todos" || d.case_type === typeFilter.toLowerCase();
-    return statusOk && typeOk;
-  });
-
-  const open = disputes.filter((d) => !["WON", "LOST", "CLOSED", "CANCELED"].includes(d.status));
-
-  return (
-    <>
-      <ViewHeader
-        title="Disputas y contracargos"
-        subtitle={loading ? "Cargando…" : `${open.length} activas · ${disputes.length} total`}
-      />
-      <div className="crm-mini-grid">
-        <MiniStat label="Total" value={loading ? "…" : String(disputes.length)} />
-        <MiniStat label="Abiertas" value={loading ? "…" : String(disputes.filter((d) => d.status === "OPEN").length)} accent="var(--crm-orange)" />
-        <MiniStat label="En revisión" value={loading ? "…" : String(disputes.filter((d) => d.status === "UNDER_REVIEW").length)} accent="var(--crm-blue)" />
-        <MiniStat label="Ganadas" value={loading ? "…" : String(disputes.filter((d) => d.status === "WON").length)} />
-      </div>
-      <div className="crm-toolbar">
-        <Segmented options={["Todos", "Abierta", "En revisión", "Enviada", "Ganada", "Perdida"]} value={statusFilter} onChange={setStatusFilter} />
-        <Segmented options={["Todos", "Dispute", "Chargeback"]} value={typeFilter} onChange={setTypeFilter} />
-      </div>
-      {error && <div style={{ color: "var(--crm-danger)", fontSize: 13, padding: "12px 0" }}>{error}</div>}
-      {loading ? <div className="crm-loading">Cargando disputas…</div> : (
-        <div className="crm-card crm-table-wrap">
-          <table className="crm-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tipo</th>
-                <th>Estado</th>
-                <th>Pago</th>
-                <th style={{ textAlign: "right" }}>Monto</th>
-                <th>Resumen</th>
-                <th>Abierta</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visible.length === 0 ? (
-                <tr><td colSpan={7} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin disputas</td></tr>
-              ) : visible.map((d) => (
-                <tr key={d.id}>
-                  <td><span className="crm-mono">#{d.id}</span></td>
-                  <td>
-                    <span className={`crm-badge ${d.case_type === "chargeback" ? "danger" : ""}`} style={{ fontSize: 11 }}>
-                      {d.case_type === "chargeback" ? "Contracargo" : "Disputa"}
-                    </span>
-                  </td>
-                  <td>{statusCell(STATUS_LABELS[d.status] ?? d.status)}</td>
-                  <td>{d.payment_id ? <span className="crm-mono">#{d.payment_id}</span> : <span style={{ color: "var(--crm-muted)" }}>—</span>}</td>
-                  <td className="crm-mono" style={{ textAlign: "right" }}>
-                    {d.amount_minor != null ? formatMoney(d.amount_minor) : <span style={{ color: "var(--crm-muted)" }}>—</span>}
-                  </td>
-                  <td style={{ maxWidth: 220, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontSize: 12 }}>{d.summary}</td>
-                  <td style={{ color: "var(--crm-muted)" }}>{formatDate(d.opened_at)}</td>
                 </tr>
               ))}
             </tbody>
