@@ -20,11 +20,6 @@ const NAV_ITEMS: NavItem[] = [
   { href: "#/disputes", label: "Disputas", permission: "admin.disputes.list" },
   { href: "#/chatbot", label: "Bot de Landing", permission: "admin.chatbot.view" },
   { href: "#/reconciliation/card", label: "Conciliacion tarjeta", permission: "admin.reconciliation.card.view" },
-  {
-    href: "#/reconciliation/prontipagos",
-    label: "Conciliacion Prontipagos",
-    permission: "admin.reconciliation.prontipagos.view",
-  },
   { href: "#/audit-logs", label: "Audit logs", permission: "admin.audit.list" },
 ];
 

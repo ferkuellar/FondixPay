@@ -1,11 +1,11 @@
 from datetime import datetime
 from decimal import Decimal
+from typing import Literal
 
 from pydantic import BaseModel
 
 from app.modules.payments.models import PaymentStatus
 from app.modules.providers.card_processor.schemas import CardMockScenario
-from app.modules.providers.prontipagos.schemas import ProntipagosMockScenario
 
 
 class PaymentCreate(BaseModel):
@@ -37,7 +37,7 @@ class SandboxPaymentCreate(BaseModel):
     mock_card_token: str = "pm_mock_card_demo"
     idempotency_key: str
     card_scenario: CardMockScenario = "success"
-    prontipagos_scenario: ProntipagosMockScenario = "success"
+    service_scenario: Literal["success", "pending", "invalid_reference", "amount_mismatch", "timeout", "provider_unavailable", "duplicate_blocked", "failed"] = "success"
 
 
 class SandboxPaymentRead(BaseModel):

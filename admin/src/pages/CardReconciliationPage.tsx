@@ -16,7 +16,7 @@ export function CardReconciliationPage() {
       <header className="page-header">
         <div>
           <h1>Conciliacion de tarjeta</h1>
-          <p>Leg del futuro card processor. Separado de Prontipagos.</p>
+          <p>Conciliacion del card processor. El proveedor de servicios se define en un sprint futuro.</p>
         </div>
       </header>
       <article className="panel placeholder-panel">

@@ -1,1 +1,0 @@
-"""Prontipagos sandbox contracts."""

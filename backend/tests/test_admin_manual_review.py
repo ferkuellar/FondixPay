@@ -36,10 +36,10 @@ def test_manual_review_cannot_close_without_resolution(client, db_session, creat
         "/admin/manual-review",
         headers=headers,
         json={
-            "case_type": "card_success_prontipagos_failed",
+            "case_type": "card_success_service_payment_failed",
             "severity": "urgent",
             "correlation_id": "corr_manual_close",
-            "summary": "Tarjeta exitosa y Prontipagos fallido en sandbox.",
+            "summary": "Tarjeta exitosa y pago de servicio fallido en sandbox.",
         },
     )
     case_id = created.json()["id"]

@@ -5,19 +5,17 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app.core.request_context import RequestContext
-from app.modules.ledger.models import PaymentAttempt, PaymentIntent, ProviderTransaction
+from app.modules.ledger.models import PaymentAttempt, ProviderTransaction
 from app.modules.payments.models import PaymentStatus
 from app.modules.payments.orchestrator import process_sandbox_payment
 from app.modules.providers.card_processor.adapter import CardProcessorSandboxAdapter
 from app.modules.providers.card_processor.mock_client import MockCardProcessorClient
-from app.modules.providers.prontipagos.adapter import ProntipagosSandboxAdapter
-from app.modules.providers.prontipagos.mock_client import MockProntipagosClient
 from app.modules.receipts.models import Receipt
 from app.modules.user_services.models import UserService
 from app.modules.users.models import User
 
 
-def test_sandbox_success_calls_card_then_prontipagos_and_generates_receipt(
+def test_sandbox_success_generates_receipt(
     client: TestClient,
     db_session: Session,
     create_user: Callable[[str | None], User],
@@ -47,7 +45,7 @@ def test_sandbox_success_calls_card_then_prontipagos_and_generates_receipt(
     assert db_session.query(Receipt).count() == 1
 
 
-def test_card_declined_does_not_call_prontipagos(
+def test_card_declined_does_not_run_service_payment(
     db_session: Session,
     create_user: Callable[[str | None], User],
     create_user_service: Callable[[User, Decimal], UserService],
@@ -55,7 +53,6 @@ def test_card_declined_does_not_call_prontipagos(
     user = create_user("5598000002")
     service = create_user_service(user, Decimal("125.50"))
     card_client = MockCardProcessorClient()
-    prontipagos_client = MockProntipagosClient()
 
     result = process_sandbox_payment(
         db_session,
@@ -66,17 +63,15 @@ def test_card_declined_does_not_call_prontipagos(
         card_scenario="declined",
         request_context=RequestContext(request_id="req-card-declined"),
         card_processor=CardProcessorSandboxAdapter(card_client),
-        prontipagos=ProntipagosSandboxAdapter(prontipagos_client),
     )
 
     assert result.status == "failed"
     assert result.service_payment_status == "not_started"
     assert card_client.charge_calls == 1
-    assert prontipagos_client.execution_calls == 0
     assert result.payment.status == PaymentStatus.FAILED
 
 
-def test_card_timeout_and_pending_do_not_call_prontipagos(
+def test_card_timeout_and_pending_do_not_run_service_payment(
     db_session: Session,
     create_user: Callable[[str | None], User],
     create_user_service: Callable[[User, Decimal], UserService],
@@ -84,7 +79,6 @@ def test_card_timeout_and_pending_do_not_call_prontipagos(
     user = create_user("5598000003")
     for scenario in ("timeout", "pending"):
         service = create_user_service(user, Decimal("125.50"))
-        prontipagos_client = MockProntipagosClient()
         result = process_sandbox_payment(
             db_session,
             user_id=user.id,
@@ -93,12 +87,10 @@ def test_card_timeout_and_pending_do_not_call_prontipagos(
             idempotency_key=f"sandbox-card-{scenario}",
             card_scenario=scenario,
             request_context=RequestContext(request_id=f"req-card-{scenario}"),
-            prontipagos=ProntipagosSandboxAdapter(prontipagos_client),
         )
 
         assert result.status == "manual_review_required"
         assert result.service_payment_status == "not_started"
-        assert prontipagos_client.execution_calls == 0
 
 
 def test_sandbox_endpoint_requires_auth(client: TestClient) -> None:

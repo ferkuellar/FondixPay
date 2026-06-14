@@ -12,7 +12,6 @@ export type Permission =
   | "admin.notifications.view"
   | "admin.audit.list"
   | "admin.reconciliation.card.view"
-  | "admin.reconciliation.prontipagos.view"
   | "admin.manual_review.list"
   | "admin.manual_review.view"
   | "admin.manual_review.update"
@@ -55,7 +54,6 @@ export type DashboardSummary = {
   manual_review_open_count: number;
   support_tickets_open_count: number;
   card_reconciliation_status: string;
-  prontipagos_reconciliation_status: string;
   note?: string | null;
 };
 
@@ -150,7 +148,7 @@ export type SupportTicket = {
     | "payment_failed"
     | "payment_pending"
     | "receipt_missing"
-    | "prontipagos_issue"
+    | "service_payment_issue"
     | "duplicate_charge_claim"
     | "pending_payment"
     | "account_access"
@@ -176,10 +174,10 @@ export type SupportTicket = {
 export type ManualReviewCase = {
   id: number;
   case_type:
-    | "card_success_prontipagos_failed"
-    | "card_success_prontipagos_pending"
-    | "prontipagos_timeout"
-    | "prontipagos_pending"
+    | "card_success_service_payment_failed"
+    | "card_success_service_payment_pending"
+    | "service_payment_timeout"
+    | "service_payment_pending"
     | "receipt_unavailable"
     | "duplicate_attempt"
     | "duplicate_charge_claim"
@@ -304,7 +302,7 @@ export type AdminNotificationDelivery = {
 };
 
 export type ReconciliationSummary = {
-  provider_type: "card_processor" | "prontipagos";
+  provider_type: "card_processor";
   status: "not_implemented" | "ready_for_sandbox" | "partial";
   summary: {
     total_count: number;

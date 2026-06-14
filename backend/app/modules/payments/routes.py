@@ -45,7 +45,7 @@ def create_sandbox_payment(
         mock_card_token=payload.mock_card_token,
         idempotency_key=payload.idempotency_key,
         card_scenario=payload.card_scenario,
-        prontipagos_scenario=payload.prontipagos_scenario,
+        service_scenario=payload.service_scenario,
         request_context=get_request_context(request),
     )
     return SandboxPaymentRead(

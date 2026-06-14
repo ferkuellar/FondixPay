@@ -386,23 +386,6 @@ def get_card_reconciliation(
     return _reconciliation_placeholder("card_processor")
 
 
-@router.get("/reconciliation/prontipagos", response_model=ReconciliationSummaryPlaceholder)
-def get_prontipagos_reconciliation(
-    request: Request,
-    current_user: User = Depends(require_admin_permission("admin.reconciliation.prontipagos.view")),
-    db: Session = Depends(get_db),
-) -> ReconciliationSummaryPlaceholder:
-    _audit(
-        db,
-        request,
-        current_user,
-        "admin.reconciliation_prontipagos_viewed",
-        "admin.reconciliation.prontipagos.view",
-        "Reconciliation",
-        "prontipagos",
-    )
-    return _reconciliation_placeholder("prontipagos")
-
 
 @router.get("/manual-review", response_model=list[ManualReviewCaseRead])
 def list_manual_review(

@@ -9,7 +9,7 @@ from app.modules.user_services.models import UserService
 from app.modules.users.models import User
 
 
-def test_prontipagos_pending_and_timeout_are_not_success_and_do_not_generate_receipt(
+def test_service_payment_pending_and_timeout_are_not_success_and_do_not_generate_receipt(
     client: TestClient,
     db_session: Session,
     create_user: Callable[[str | None], User],
@@ -25,7 +25,7 @@ def test_prontipagos_pending_and_timeout_are_not_success_and_do_not_generate_rec
             json={
                 "user_service_id": service.id,
                 "idempotency_key": f"sandbox-provider-{scenario}",
-                "prontipagos_scenario": scenario,
+                "service_scenario": scenario,
             },
             headers=auth_headers(user),
         )
@@ -39,7 +39,7 @@ def test_prontipagos_pending_and_timeout_are_not_success_and_do_not_generate_rec
     assert db_session.query(Receipt).count() == 0
 
 
-def test_prontipagos_failure_enters_recovery_state(
+def test_service_payment_failure_enters_recovery_state(
     client: TestClient,
     create_user: Callable[[str | None], User],
     auth_headers: Callable[[User | None], dict[str, str]],
@@ -53,7 +53,7 @@ def test_prontipagos_failure_enters_recovery_state(
         json={
             "user_service_id": service.id,
             "idempotency_key": "sandbox-provider-failure",
-            "prontipagos_scenario": "provider_unavailable",
+            "service_scenario": "provider_unavailable",
         },
         headers=auth_headers(user),
     )

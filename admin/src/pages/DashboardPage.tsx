@@ -39,10 +39,6 @@ export function DashboardPage() {
               <dt>Tarjeta</dt>
               <dd><StatusBadge value={data.card_reconciliation_status} /></dd>
             </div>
-            <div className="detail-row">
-              <dt>Prontipagos</dt>
-              <dd><StatusBadge value={data.prontipagos_reconciliation_status} /></dd>
-            </div>
           </dl>
         </article>
         <article className="panel">

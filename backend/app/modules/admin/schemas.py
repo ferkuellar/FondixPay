@@ -23,7 +23,7 @@ SupportTicketCategory = Literal[
     "payment_failed",
     "payment_pending",
     "receipt_missing",
-    "prontipagos_issue",
+    "service_payment_issue",
     "duplicate_charge_claim",
     "pending_payment",
     "account_access",
@@ -41,10 +41,10 @@ ManualReviewStatus = Literal[
     "closed",
 ]
 ManualReviewCaseType = Literal[
-    "card_success_prontipagos_failed",
-    "card_success_prontipagos_pending",
-    "prontipagos_timeout",
-    "prontipagos_pending",
+    "card_success_service_payment_failed",
+    "card_success_service_payment_pending",
+    "service_payment_timeout",
+    "service_payment_pending",
     "receipt_unavailable",
     "duplicate_attempt",
     "duplicate_charge_claim",
@@ -93,7 +93,6 @@ class DashboardSummary(BaseModel):
     manual_review_open_count: int
     support_tickets_open_count: int
     card_reconciliation_status: str
-    prontipagos_reconciliation_status: str
     note: str | None = None
 
 
@@ -469,7 +468,7 @@ class ReconciliationSummaryCounts(BaseModel):
 
 
 class ReconciliationSummaryPlaceholder(BaseModel):
-    provider_type: Literal["card_processor", "prontipagos"]
+    provider_type: Literal["card_processor"]
     status: Literal["not_implemented", "ready_for_sandbox", "partial"]
     summary: ReconciliationSummaryCounts
     items: list[dict] = Field(default_factory=list)

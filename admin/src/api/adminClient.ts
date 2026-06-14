@@ -128,7 +128,6 @@ export function createAdminClient(getToken: TokenProvider, on401?: () => void) {
     search: (params: { q: string; type?: string }) =>
       request<AdminSearchResponse>(`/admin/search${query(params)}`),
     cardReconciliation: () => request<ReconciliationSummary>("/admin/reconciliation/card"),
-    prontipagosReconciliation: () => request<ReconciliationSummary>("/admin/reconciliation/prontipagos"),
     manualReview: () => request<ManualReviewCase[]>("/admin/manual-review"),
     manualReviewCase: (id: string) => request<ManualReviewCase>(`/admin/manual-review/${id}`),
     updateManualReviewCase: (id: string, payload: Partial<ManualReviewCase> & { note?: string }) =>

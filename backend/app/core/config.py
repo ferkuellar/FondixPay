@@ -34,12 +34,6 @@ class Settings(BaseSettings):
     card_processor_secret_key: str = ""
     card_processor_webhook_secret: str = ""
     card_processor_timeout_seconds: int = 15
-    prontipagos_env: str = "sandbox"
-    prontipagos_api_base_url: str = ""
-    prontipagos_client_id: str = ""
-    prontipagos_client_secret: str = ""
-    prontipagos_timeout_seconds: int = 15
-    prontipagos_enable_sandbox_mock: bool = True
     whatsapp_provider: str = "mock"
     whatsapp_env: str = "sandbox"
     whatsapp_enable_receipt_mvp: bool = False

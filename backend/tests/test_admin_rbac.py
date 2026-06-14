@@ -20,7 +20,7 @@ def test_finance_reconciliation_and_auditor_read_only_permissions(client: TestCl
     finance = create_user("5510000002", "FINANCE")
     auditor = create_user("5510000003", "AUDITOR")
 
-    assert client.get("/admin/reconciliation/prontipagos", headers=auth_headers(finance)).json()["status"] == "not_implemented"
+    assert client.get("/admin/reconciliation/card", headers=auth_headers(finance)).json()["status"] == "not_implemented"
     assert client.get("/admin/audit-events", headers=auth_headers(auditor)).status_code == 200
     assert client.post(
         "/admin/support/tickets",

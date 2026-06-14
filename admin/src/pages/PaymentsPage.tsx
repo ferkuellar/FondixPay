@@ -26,7 +26,7 @@ export function PaymentsPage() {
       <header className="page-header stacked">
         <div>
           <h1>Pagos</h1>
-          <p>Detalle separa card status, Prontipagos status, recibo y correlation_id.</p>
+          <p>Detalle separa card status, servicio status, recibo y correlation_id.</p>
         </div>
         <form className="filters" onSubmit={submit}>
           <select value={draft.status} onChange={(event) => setDraft({ ...draft, status: event.target.value })}>

@@ -61,7 +61,6 @@ def dashboard_summary(db: Session) -> DashboardSummary:
         .scalar()
         or 0,
         card_reconciliation_status="not_implemented",
-        prontipagos_reconciliation_status="not_implemented",
         note="Receipt pending count requires receipt status persistence in a later phase.",
     )
 
@@ -376,11 +375,11 @@ def detect_manual_review_reason(
     amount_mismatch: bool = False,
 ) -> str | None:
     if card_status in {"succeeded", "authorized", "captured"} and provider_status in {"provider_failed", "provider_rejected"}:
-        return "card_success_prontipagos_failed"
+        return "card_success_service_payment_failed"
     if card_status in {"succeeded", "authorized", "captured"} and provider_status == "provider_pending":
-        return "card_success_prontipagos_pending"
+        return "card_success_service_payment_pending"
     if provider_status == "provider_timeout":
-        return "prontipagos_timeout"
+        return "service_payment_timeout"
     if receipt_status == "unavailable" and provider_status in {"provider_confirmed", "mock_confirmed"}:
         return "receipt_unavailable"
     if duplicate_suspected:

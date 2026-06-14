@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from decimal import Decimal
+from hashlib import sha256
+from typing import Literal
+from uuid import uuid4
 
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
@@ -20,10 +23,58 @@ from app.modules.payments.fees import calculate_fee_minor
 from app.modules.payments.models import Payment, PaymentStatus
 from app.modules.providers.card_processor.adapter import CardProcessorSandboxAdapter
 from app.modules.providers.card_processor.schemas import CardChargeRequest, CardMockScenario
-from app.modules.providers.prontipagos.adapter import ProntipagosSandboxAdapter
-from app.modules.providers.prontipagos.schemas import ProntipagosMockScenario, ServicePaymentRequest
 from app.modules.receipts.repository import create_receipt
 from app.modules.user_services.repository import get_for_user
+
+ServiceMockScenario = Literal["success", "pending", "invalid_reference", "amount_mismatch", "timeout", "provider_unavailable", "duplicate_blocked", "failed"]
+
+_SERVICE_MOCK_STATUS_MAP = {
+    "success":              ("provider_confirmed",        None,                   None),
+    "pending":              ("provider_pending",          None,                   "Pago pendiente de confirmacion."),
+    "invalid_reference":    ("provider_rejected",         "invalid_reference",    "La referencia del servicio no es valida."),
+    "amount_mismatch":      ("provider_failed",           "amount_mismatch",      "El monto no coincide con el esperado por el proveedor."),
+    "timeout":              ("provider_timeout",          "provider_timeout",     "El proveedor no respondio a tiempo."),
+    "provider_unavailable": ("provider_failed",           "provider_unavailable", "El proveedor no esta disponible temporalmente."),
+    "duplicate_blocked":    ("provider_duplicate_blocked","duplicate_transaction","Transaccion duplicada bloqueada por el proveedor."),
+    "failed":               ("provider_failed",           "provider_failed",      "El proveedor rechazo el pago."),
+}
+
+
+@dataclass(frozen=True)
+class _ServiceMockResponse:
+    provider_name: str
+    provider_reference: str | None
+    status: str
+    amount_minor: int
+    currency: str
+    receipt_reference: str | None
+    error_code: str | None
+    error_message_safe: str | None
+    raw_response_hash: str | None
+
+
+def _mock_service_payment(
+    scenario: ServiceMockScenario,
+    *,
+    payment_intent_id: int,
+    amount_minor: int,
+    currency: str,
+    idempotency_key: str,
+) -> _ServiceMockResponse:
+    status_str, error_code, error_message = _SERVICE_MOCK_STATUS_MAP[scenario]
+    confirmed = status_str == "provider_confirmed"
+    raw = sha256(f"{payment_intent_id}:{idempotency_key}:{status_str}".encode()).hexdigest()
+    return _ServiceMockResponse(
+        provider_name="service_mock",
+        provider_reference=f"svc_mock_{uuid4().hex[:16]}" if confirmed else None,
+        status=status_str,
+        amount_minor=amount_minor,
+        currency=currency,
+        receipt_reference=f"folio_{uuid4().hex[:12]}" if confirmed else None,
+        error_code=error_code,
+        error_message_safe=error_message,
+        raw_response_hash=raw,
+    )
 
 
 @dataclass(frozen=True)
@@ -154,10 +205,9 @@ def process_sandbox_payment(
     mock_card_token: str,
     idempotency_key: str,
     card_scenario: CardMockScenario = "success",
-    prontipagos_scenario: ProntipagosMockScenario = "success",
+    service_scenario: ServiceMockScenario = "success",
     request_context: RequestContext | None = None,
     card_processor: CardProcessorSandboxAdapter | None = None,
-    prontipagos: ProntipagosSandboxAdapter | None = None,
 ) -> SandboxPaymentResult:
     context = request_context or RequestContext()
     user_service = get_for_user(db, user_service_id, user_id)
@@ -342,32 +392,25 @@ def process_sandbox_payment(
         correlation_id=intent.correlation_id,
     )
 
-    prontipagos_adapter = prontipagos or ProntipagosSandboxAdapter()
-    service_attempt = _create_attempt(db, intent, "prontipagos", "service_payment")
+    service_attempt = _create_attempt(db, intent, "service_mock", "service_payment")
     transition_attempt(service_attempt, PaymentAttemptStatus.SUBMITTED_TO_PROVIDER)
     create_audit_event(
         db,
-        event_type="prontipagos.payment_execution_submitted",
+        event_type="service_payment.submitted",
         actor_type="SYSTEM",
         entity_type="PaymentAttempt",
         entity_id=service_attempt.id,
         result="success",
-        metadata={"sandbox": True, "provider_name": "prontipagos"},
+        metadata={"sandbox": True, "provider_name": "service_mock"},
         request_id=context.request_id,
         correlation_id=intent.correlation_id,
     )
-    service_response = prontipagos_adapter.execute_service_payment(
-        ServicePaymentRequest(
-            payment_intent_id=intent.id,
-            user_service_id=user_service.id,
-            service_provider_id=user_service.provider_id,
-            service_reference=user_service.reference,
-            amount_minor=intent.amount_minor,
-            currency=intent.currency,
-            idempotency_key=f"{idempotency_key}:service_payment",
-            correlation_id=intent.correlation_id,
-            scenario=prontipagos_scenario,
-        )
+    service_response = _mock_service_payment(
+        service_scenario,
+        payment_intent_id=intent.id,
+        amount_minor=intent.amount_minor,
+        currency=intent.currency,
+        idempotency_key=f"{idempotency_key}:service_payment",
     )
     _provider_transaction(
         db,
@@ -388,7 +431,7 @@ def process_sandbox_payment(
         transition_intent(intent, PaymentIntentStatus.PROVIDER_PENDING)
         transition_intent(intent, PaymentIntentStatus.PROVIDER_CONFIRMED)
         transition_intent(intent, PaymentIntentStatus.SUCCEEDED)
-        payment = payment_repository.mark_success(db, payment, service_response.provider_reference or "pp_mock_confirmed")
+        payment = payment_repository.mark_success(db, payment, service_response.provider_reference or "svc_mock_confirmed")
         account = ledger_repository.get_or_create_account(
             db,
             owner_type="SYSTEM",
@@ -414,7 +457,7 @@ def process_sandbox_payment(
         )
         create_audit_event(
             db,
-            event_type="prontipagos.payment_execution_succeeded",
+            event_type="service_payment.succeeded",
             actor_type="SYSTEM",
             entity_type="PaymentAttempt",
             entity_id=service_attempt.id,
@@ -463,14 +506,14 @@ def process_sandbox_payment(
         transition_attempt(service_attempt, PaymentAttemptStatus.TIMEOUT)
         transition_intent(intent, PaymentIntentStatus.PROVIDER_PENDING)
         payment_repository.mark_status(db, payment, PaymentStatus.PENDING)
-        audit_event = "prontipagos.payment_execution_timeout"
+        audit_event = "service_payment.timeout"
         payment_status = "manual_review_required"
         audit_result = "pending"
     elif service_response.status == "provider_pending":
         transition_attempt(service_attempt, PaymentAttemptStatus.ACCEPTED_BY_PROVIDER)
         transition_intent(intent, PaymentIntentStatus.PROVIDER_PENDING)
         payment_repository.mark_status(db, payment, PaymentStatus.PENDING)
-        audit_event = "prontipagos.payment_execution_pending"
+        audit_event = "service_payment.pending"
         payment_status = "manual_review_required"
         audit_result = "pending"
     else:
@@ -479,9 +522,9 @@ def process_sandbox_payment(
         transition_intent(intent, PaymentIntentStatus.FAILED)
         payment_repository.mark_status(db, payment, PaymentStatus.FAILED)
         audit_event = (
-            "prontipagos.duplicate_blocked"
+            "service_payment.duplicate_blocked"
             if service_response.status == "provider_duplicate_blocked"
-            else "prontipagos.payment_execution_failed"
+            else "service_payment.failed"
         )
         payment_status = "manual_review_required"
         audit_result = "blocked" if service_response.status == "provider_duplicate_blocked" else "failure"

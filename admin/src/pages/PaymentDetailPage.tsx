@@ -19,7 +19,7 @@ export function PaymentDetailPage({ id }: { id: string }) {
       <header className="page-header">
         <div>
           <h1>Pago #{data.id}</h1>
-          <p>La vista separa pago, card processor mock, Prontipagos mock y recibo.</p>
+          <p>La vista separa pago, card processor mock, pago de servicio mock y recibo.</p>
         </div>
         {data.receipt_id ? <a className="button button-link" href={`#/receipts/${data.receipt_id}`}>Abrir recibo</a> : null}
       </header>
@@ -38,7 +38,7 @@ export function PaymentDetailPage({ id }: { id: string }) {
           <h2>Estados operativos</h2>
           <dl>
             <DetailRow label="Card status" value={<StatusBadge value={data.card_status} />} />
-            <DetailRow label="Prontipagos status" value={<StatusBadge value={data.service_payment_status} />} />
+            <DetailRow label="Servicio status" value={<StatusBadge value={data.service_payment_status} />} />
             <DetailRow label="Receipt status" value={<StatusBadge value={data.receipt_status} />} />
             <DetailRow label="Correlation ID" value={<RedactedValue>{data.correlation_id ?? "No disponible"}</RedactedValue>} />
             <DetailRow label="Provider reference" value={<RedactedValue>{data.provider_reference ?? "Limitada por rol/backend"}</RedactedValue>} />

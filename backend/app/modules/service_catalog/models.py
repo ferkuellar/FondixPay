@@ -72,7 +72,7 @@ class ProviderServiceCapability(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     service_catalog_item_id: Mapped[int] = mapped_column(ForeignKey("service_catalog_items.id"), index=True)
-    provider_name: Mapped[str] = mapped_column(String(80), default="prontipagos_future", index=True)
+    provider_name: Mapped[str] = mapped_column(String(80), default="service_provider_tbd", index=True)
     provider_service_code: Mapped[str | None] = mapped_column(String(120), nullable=True)
     supports_reference_validation: Mapped[bool] = mapped_column(Boolean, default=False)
     supports_amount_lookup: Mapped[bool] = mapped_column(Boolean, default=False)

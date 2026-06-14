@@ -135,7 +135,7 @@ def _create_seed_item(
     repository.add_capability(
         db,
         service_catalog_item_id=item.id,
-        provider_name="prontipagos_future",
+        provider_name="service_provider_tbd",
         provider_service_code=None,
         supports_reference_validation=False,
         supports_amount_lookup=False,
