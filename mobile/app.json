@@ -24,7 +24,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#020B2D"
-      }
+      },
+      "permissions": [
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/icon.png"
@@ -36,6 +40,12 @@
           "locationWhenInUsePermission": "Podemos usar tu ubicación para sugerir tu estado. También puedes elegirlo manualmente."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "b1e6ae3f-847a-438d-8f3b-cfc044fa1972"
+      }
+    },
+    "owner": "kuellarfer"
   }
 }
