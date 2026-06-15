@@ -8,6 +8,7 @@ from app.core.request_context import get_request_context
 from app.core.security import create_access_token
 from app.modules.audit.services import create_audit_event, hash_value
 from app.modules.auth.models import OTP_TTL_SECONDS, consume_otp, save_otp
+from app.modules.auth.services import _send_otp_sms
 from app.modules.admin.permissions import ADMIN_ROLES, normalize_role
 from app.modules.users.repository import get_by_phone
 
@@ -85,6 +86,10 @@ def admin_request_otp(
 ) -> AdminOtpSentResponse:
     _require_admin_user(db, payload.phone)
     otp = save_otp(payload.phone)
+
+    if not settings.allow_otp_dev_response:
+        _send_otp_sms(payload.phone, otp)
+
     ctx = get_request_context(request)
     create_audit_event(
         db,
