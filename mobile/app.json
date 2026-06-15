@@ -15,10 +15,12 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.fondixpay.app"
+      "bundleIdentifier": "com.fondixpay.app",
+      "buildNumber": "1"
     },
     "android": {
       "package": "com.fondixpay.app",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#020B2D"
