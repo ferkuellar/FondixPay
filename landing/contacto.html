@@ -108,10 +108,11 @@
                       text-align: center; line-height: 1.5; }
   .form-legal { font-size: 12px; color: #8A9ABB; line-height: 1.65; margin-top: 18px; }
 
-  /* ── Form stub notice (shown on submit, not production) ── */
-  .form-stub { background: #FEF3C7; border: 1px solid #FCD34D; border-left: 3px solid #F59E0B;
-    border-radius: 0 10px 10px 0; padding: 14px 16px; font-size: 14px;
-    color: #92400E; margin-top: 16px; line-height: 1.55; display: none; }
+  /* ── Form feedback (success / error) ── */
+  .form-feedback { border-radius: 0 10px 10px 0; padding: 14px 16px; font-size: 14px;
+    margin-top: 16px; line-height: 1.55; display: none; }
+  .form-feedback.success { background: #EDFAF3; border: 1px solid #6EE7B7; border-left: 3px solid #10B981; color: #065F46; }
+  .form-feedback.error   { background: #FEF3C7; border: 1px solid #FCD34D; border-left: 3px solid #F59E0B; color: #92400E; }
 
   /* ── Sidebar ── */
   .sidebar { display: flex; flex-direction: column; gap: 14px; }
@@ -213,7 +214,8 @@
   [data-theme="dark"] .btn-submit:hover { background: #0D4FCC; }
   [data-theme="dark"] .form-action-note { color: #4E6788; }
   [data-theme="dark"] .form-legal { color: #4E6788; }
-  [data-theme="dark"] .form-stub { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.20); border-left-color: #F59E0B; color: #FCD34D; }
+  [data-theme="dark"] .form-feedback.success { background: rgba(16,185,129,.08); border-color: rgba(110,231,183,.25); color: #6EE7B7; }
+  [data-theme="dark"] .form-feedback.error   { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.20); border-left-color: #F59E0B; color: #FCD34D; }
   [data-theme="dark"] .sidebar-card { background: #0F1E36; border-color: #1B335A; }
   [data-theme="dark"] .sidebar-tag { background: #142848; color: #5CB8FF; }
   [data-theme="dark"] .sidebar-tag-green { background: #0A2318; color: #4ADE80; }
@@ -283,12 +285,6 @@
 
 <main>
 <div class="page-wrap">
-
-  <!-- ── Draft banner ── -->
-  <div class="draft-banner" role="note" aria-label="Aviso de borrador">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 9v5m0-8v.5"/></svg>
-    <span><strong>Borrador — no publicar en producción.</strong> Los elementos marcados como <mark class="pend">pendiente</mark> deben resolverse antes de publicar. El formulario no está conectado — <span class="pend">[FORM_ACTION]</span> es un bloqueante de publicación.</span>
-  </div>
 
   <!-- ── Hero ── -->
   <div class="page-hero">
@@ -374,17 +370,11 @@
           </div>
 
           <!-- Submit -->
-          <button type="submit" class="btn-submit">Enviar mensaje</button>
-          <p class="form-action-note">
-            Formulario no conectado — <span class="pend">[FORM_ACTION]</span> pendiente antes de publicar.
-          </p>
+          <button type="submit" id="btnSubmit" class="btn-submit">Enviar mensaje</button>
 
         </form>
 
-        <!-- Stub notice (shown on submit, clearly not production) -->
-        <div id="formStub" class="form-stub" role="status" aria-live="polite">
-          <strong>Formulario no conectado.</strong> Este es un borrador — el endpoint <span class="pend">[FORM_ACTION]</span> aún no está configurado. Mientras tanto, escríbenos directamente a <span class="pend">[CORREO_SOPORTE]</span> o inicia una aclaración desde la sección Soporte dentro de la app.
-        </div>
+        <div id="formFeedback" class="form-feedback" role="status" aria-live="polite"></div>
 
         <!-- Form legal note -->
         <p class="form-legal">
@@ -411,7 +401,7 @@
       <div class="sidebar-card">
         <span class="sidebar-tag"><span class="pend">[HORARIO]</span></span>
         <div class="sidebar-card-title">Correo de soporte</div>
-        <span class="sidebar-email pend">[CORREO_SOPORTE]</span>
+        <a class="sidebar-email" href="mailto:soporte@fondixpay.com">soporte@fondixpay.com</a>
         <p>Incluye tu folio y descríbenos lo que pasó.</p>
       </div>
 
@@ -419,7 +409,7 @@
       <div class="sidebar-card">
         <span class="sidebar-tag">ARCO · LFPDPPP</span>
         <div class="sidebar-card-title">Privacidad y derechos ARCO</div>
-        <span class="sidebar-email pend">[CORREO_PRIVACIDAD]</span>
+        <a class="sidebar-email" href="mailto:privacidad@fondixpay.com">privacidad@fondixpay.com</a>
         <p>Acceso, rectificación, cancelación u oposición de tus datos. Respondemos en máximo 20 días hábiles (LFPDPPP).</p>
       </div>
 
@@ -427,7 +417,7 @@
       <div class="sidebar-card">
         <span class="sidebar-tag">Legal</span>
         <div class="sidebar-card-title">Consultas legales</div>
-        <span class="sidebar-email pend">[CORREO_LEGAL]</span>
+        <a class="sidebar-email" href="mailto:legal@fondixpay.com">legal@fondixpay.com</a>
         <dl class="legal-data">
           <dt>Razón social</dt>
           <dd><span class="pend">[NOMBRE_LEGAL]</span></dd>
@@ -452,7 +442,7 @@
     <ul>
       <li>FONDIX PAY <strong>nunca</strong> te pedirá contraseñas, OTP ni datos de tarjeta.</li>
       <li>No respondas mensajes que digan ser de soporte y pidan esos datos.</li>
-      <li>Reporta mensajes sospechosos a <span class="pend">[CORREO_SOPORTE]</span>.</li>
+      <li>Reporta mensajes sospechosos a <a href="mailto:soporte@fondixpay.com">soporte@fondixpay.com</a>.</li>
     </ul>
   </div>
 
@@ -465,91 +455,6 @@
     · <a href="soporte">Soporte</a>
   </p>
 
-  <hr style="border:none;border-top:1px solid #DDE3EE;margin:48px 0 0;">
-
-  <!-- ── INTERNAL-ONLY BLOCK ── -->
-  <div class="internal-block" aria-label="Bloque interno — eliminar antes de publicar">
-    <div class="internal-block-hd">
-      <span class="internal-badge">Interno</span>
-      <h3>⚠ USO INTERNO — ELIMINAR ANTES DE PUBLICAR</h3>
-    </div>
-    <p>Esta sección no debe aparecer en la versión pública de la página de Contacto. Contiene pendientes que bloquean la publicación en producción.</p>
-    <div class="int-table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Pendiente</th>
-            <th>Recomendación</th>
-            <th>¿Bloquea?</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td><code>[FORM_ACTION]</code> — endpoint real de envío del formulario</td>
-            <td>Formspree, Netlify Forms, Resend, o endpoint backend aprobado</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td><code>[CORREO_SOPORTE]</code> — correo de soporte</td>
-            <td>soporte@fondixpay.com</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td><code>[CORREO_PRIVACIDAD]</code> — correo ARCO / privacidad</td>
-            <td>privacidad@fondixpay.com</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td><code>[CORREO_LEGAL]</code> — correo de consultas legales</td>
-            <td>legal@fondixpay.com</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td><code>[NOMBRE_LEGAL]</code> — razón social de la entidad operadora</td>
-            <td>Fernando + abogado</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td><code>[DOMICILIO_LEGAL]</code> — domicilio fiscal completo</td>
-            <td>Fernando + abogado</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>7</td>
-            <td><code>[RFC]</code> — RFC de la entidad operadora</td>
-            <td>Fernando + contador / abogado</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>8</td>
-            <td><code>[HORARIO]</code> — horario real de atención del correo de soporte</td>
-            <td>Ej: Lunes a viernes, 9:00 – 18:00 h (hora CDMX)</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>9</td>
-            <td>Decidir si el formulario usa endpoint propio (backend), servicio tercero (Formspree, Resend), o solo correo directo</td>
-            <td>Requiere aprobación de sprint antes de implementar</td>
-            <td class="blocker-si">Sí</td>
-          </tr>
-          <tr>
-            <td>10</td>
-            <td>Confirmar flujo in-app de aclaración antes de publicar el canal "Desde la app"</td>
-            <td>Si no existe en v1, ajustar texto a correo como único canal</td>
-            <td class="blocker-no">No (lenguaje genérico mientras no se confirme)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!-- /INTERNAL BLOCK -->
 
 </div>
 </main>
@@ -581,13 +486,16 @@
     });
   })();
 
-  /* ── Form: conditional folio + contextual hints ── */
+  /* ── Form: conditional folio + contextual hints + submit ── */
   (() => {
-    var tipoSel   = document.getElementById('tipo');
-    var folioGrp  = document.getElementById('folioGroup');
-    var hintBox   = document.getElementById('hintBox');
-    var form      = document.getElementById('contactForm');
-    var stubBox   = document.getElementById('formStub');
+    var API_BASE = 'https://fondixpay-production.up.railway.app';
+
+    var tipoSel  = document.getElementById('tipo');
+    var folioGrp = document.getElementById('folioGroup');
+    var hintBox  = document.getElementById('hintBox');
+    var form     = document.getElementById('contactForm');
+    var feedback = document.getElementById('formFeedback');
+    var btnSub   = document.getElementById('btnSubmit');
 
     var FOLIO_TIPOS = ['soporte_pago', 'aclaracion_reembolso'];
 
@@ -604,27 +512,57 @@
 
     function onTipoChange() {
       var val = tipoSel.value;
-
-      /* folio field */
-      var showFolio = FOLIO_TIPOS.indexOf(val) !== -1;
-      folioGrp.style.display = showFolio ? '' : 'none';
-
-      /* hint */
-      if (HINTS[val]) {
-        hintBox.textContent = HINTS[val];
-        hintBox.style.display = '';
-      } else {
-        hintBox.style.display = 'none';
-      }
+      folioGrp.style.display = FOLIO_TIPOS.indexOf(val) !== -1 ? '' : 'none';
+      if (HINTS[val]) { hintBox.textContent = HINTS[val]; hintBox.style.display = ''; }
+      else { hintBox.style.display = 'none'; }
     }
 
     tipoSel.addEventListener('change', onTipoChange);
 
-    /* Form submit stub — not production */
+    function showFeedback(type, msg) {
+      feedback.className = 'form-feedback ' + type;
+      feedback.textContent = msg;
+      feedback.style.display = 'block';
+      feedback.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
-      stubBox.style.display = 'block';
-      stubBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      btnSub.disabled = true;
+      btnSub.textContent = 'Enviando…';
+      feedback.style.display = 'none';
+
+      var body = {
+        tipo:     document.getElementById('tipo').value,
+        nombre:   document.getElementById('nombre').value,
+        telefono: document.getElementById('telefono').value,
+        correo:   document.getElementById('correo').value || null,
+        folio:    document.getElementById('folio').value || null,
+        mensaje:  document.getElementById('mensaje').value,
+      };
+
+      fetch(API_BASE + '/api/public/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+        .then(function (res) {
+          if (res.status === 204) {
+            showFeedback('success', 'Mensaje enviado. Te respondemos pronto — revisa tu correo si lo proporcionaste.');
+            form.reset();
+            folioGrp.style.display = 'none';
+            hintBox.style.display = 'none';
+          } else {
+            showFeedback('error', 'No pudimos enviar tu mensaje en este momento. Escríbenos directamente a soporte@fondixpay.com.');
+          }
+        })
+        .catch(function () {
+          showFeedback('error', 'Error de conexión. Escríbenos a soporte@fondixpay.com o intenta de nuevo.');
+        })
+        .finally(function () {
+          btnSub.disabled = false;
+          btnSub.textContent = 'Enviar mensaje';
+        });
     });
   })();
 </script>
