@@ -4,6 +4,9 @@ Updated: 2026-06-12
 
 | Risk | Impact | Current Mitigation | Next Action |
 | --- | --- | --- | --- |
+| Backend activated with TEKAE_ENABLED=true but missing TEKAE_UID, TEKAE_PASSWORD, or TEKAE_BASE_URL in staging/production | High / SEV-2 | backend/app/core/config.py validates these in validate_security_settings when is_production_like=true | Confirm STAGING variables before any sandbox testing sprint |
+| TEKAE_REQUIRE_PRIVATE_NETWORK=true enforcement is documentation-only; no runtime network check exists | High / SEV-2 | Config var exists; operational runbook documents requirement | Implement network check or documented pre-flight verification before any PROD activation |
+| Tekae sandbox credentials received outside approved channel (email, chat, repo) | High / SEV-2 | ADR-177: Tekae materials are confidential external references; must not be committed | Use AWS Secrets Manager or approved vault when credentials are received |
 | Tekae SSO launch or token generation could be mistaken for payment success | High / SEV-2 | Sprint 010 separates launch/session states from payment states | Implement pending/manual-review states before any runtime launch |
 | Tekae credentials, tokens, or full launch URLs could leak to frontend, logs, commits, or support views | High / SEV-2 | Backend-only SSO generation and redaction are required | Define secret management, log redaction, support-view redaction, and audit controls before implementation |
 | Tekae webhook specification is missing | High / SEV-2 | Sprint 010 captures webhook gaps | Obtain Tekae webhook/callback contract before payment success or receipt confirmation logic |

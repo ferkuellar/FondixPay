@@ -1471,3 +1471,35 @@ Decision: Future backend catalog APIs may temporarily accept legacy short codes 
 Rationale: Current backend tables use short codes. A compatibility window reduces migration risk, while canonical public output prevents new short-code dependency.
 
 Status: Accepted in Sprint 027.
+
+## ADR-182 - Tekae menu/categoria/carrier Parameters Are Backend-Controlled
+
+Decision: Optional Tekae launch parameters (`redirect`, `menu`, `categoria`, `carrier`, `blockview`) must be determined and validated by the backend, not constructed by mobile. Mobile may pass intent and context to the backend session endpoint; backend maps them to Tekae parameters.
+
+Rationale: Tekae parameter values (menu=null/1/2/3) have direct product impact on what users see inside the Tekae platform. Letting mobile construct these raw opens the door to unsanctioned menu routing and bypasses catalog coverage checks.
+
+Status: Accepted 2026-06-15.
+
+## ADR-183 - TEKAE_ENABLED=false Is the Mandatory Default in All Environments
+
+Decision: `TEKAE_ENABLED` must default to `false` in all backend environments. Setting it to `true` requires explicit configuration with validated credentials and network path for the target environment.
+
+Rationale: Accidental activation without sandbox credentials, VPN/VPC, or approved security review creates a broken or insecure integration that could be confused with real payment readiness.
+
+Status: Accepted 2026-06-15.
+
+## ADR-184 - Backend Config Must Validate Tekae Credentials on Startup in Staging/Production
+
+Decision: `validate_security_settings` in `backend/app/core/config.py` must raise `ValueError` if `TEKAE_ENABLED=true` and `TEKAE_UID`, `TEKAE_PASSWORD`, or `TEKAE_BASE_URL` are empty in staging or production.
+
+Rationale: Failing fast at startup is safer than failing silently at runtime when the first user attempts a Tekae session. Missing credentials in a live environment would produce 500 errors with potential secret-adjacent error messages.
+
+Status: Accepted 2026-06-15.
+
+## ADR-185 - Tekae menu Values Are Documented Internal Constants
+
+Decision: Tekae `menu` values confirmed from Manual v3.1 (`null`=Home, `"1"`=Tiempo Aire, `"2"`=Pago de Servicios, `"3"`=Entretenimiento) must be modeled as typed constants in the backend service when implemented, not as magic strings scattered through code.
+
+Rationale: Tekae menu routing directly controls the payment category the user sees. Typed constants prevent invalid values, document intent, and make the mapping auditable.
+
+Status: Accepted 2026-06-15.

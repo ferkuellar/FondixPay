@@ -1,9 +1,9 @@
 # Tekae Integration Overview
 
-**Status:** PENDING — Implementation blocked until official Tekae documentation is reviewed.
+**Status:** PENDING — Runtime implementation blocked. SSO model confirmed from Manual v3.1; sandbox URL/credentials/Swagger still pending from Tekae.
 **Provider:** Tekae Business
 **Supersedes:** Prontipagos (see `docs/PRONTIPAGOS_SANDBOX_INTEGRATION_DESIGN.md` — historical, preserved)
-**Last updated:** 2026-06-02
+**Last updated:** 2026-06-15 (updated with Sprint 011 readiness matrix findings from Manual de integración Tekae Business v3.1)
 
 ---
 
@@ -25,31 +25,45 @@ FONDIXPAY must **not** build a payment processor, wallet, bill payment aggregato
 
 ---
 
-## Assumed Integration Flow
+## Confirmed Integration Flow (Manual v3.1 — Sprint 011)
 
 ```
-Mobile App → Tekae Business
+Mobile App → FondixPay Backend → Tekae /tokens/cipherData → Tekae /tokens/generateTokenCiphered
+→ Backend builds URL → Mobile opens https://tekae.com.mx/responsive/user/{uid}/token/{accessToken}
 ```
 
-This assumption is **unconfirmed** and remains pending until official Tekae documentation is reviewed.
+The integration model is **SSO responsivo** (browser/WebView/embed). Mobile never calls Tekae directly.
+Backend is the only component authorized to generate tokens and construct the launch URL.
 
 ---
 
-## Known vs Unknown
+## Known vs Unknown (updated 2026-06-15 from Manual de integración Tekae Business v3.1)
 
-| Item | Status |
-|---|---|
-| Provider name | Tekae Business |
-| Provider role | Primary transactional layer (MVP) |
-| Integration method | UNKNOWN — pending Tekae documentation |
-| API base URL | UNKNOWN |
-| Authentication method | UNKNOWN |
-| Sandbox availability | UNKNOWN |
-| Webhook support | UNKNOWN |
-| Error / status codes | UNKNOWN |
-| PCI scope / card handling | UNKNOWN |
-| Settlement model | UNKNOWN |
-| Supported payment methods | UNKNOWN |
+| Item | Status | Source |
+|---|---|---|
+| Provider name | **Confirmed**: Tekae Business | ADRs, Sprint 011 |
+| Provider role | **Confirmed**: SSO launch into Tekae responsive platform (not a direct payment API) | Manual v3.1 |
+| Integration method | **Confirmed**: Backend-brokered SSO. Backend calls `/tokens/cipherData` + `/tokens/generateTokenCiphered`, builds URL, returns only the URL to mobile. | Manual v3.1 §Token Generation |
+| Token endpoint 1 | **Confirmed**: `POST /tokens/cipherData` | Manual v3.1 |
+| Token endpoint 2 | **Confirmed**: `POST /tokens/generateTokenCiphered` | Manual v3.1 |
+| Responsive URL format | **Confirmed**: `https://tekae.com.mx/responsive/user/{uid}/token/{accessToken}` | Manual v3.1 |
+| Token lifetime | **Confirmed**: 20 minutes | Manual v3.1 |
+| Token uniqueness | **Confirmed**: Unique per user/session; a new token must be requested each time | Manual v3.1 |
+| Authentication method | **Confirmed**: uid + password (backend credentials). Exact header/scheme pending Swagger. | Manual v3.1 |
+| Production network requirement | **Confirmed**: VPN or VPC required for token generation in production | Manual v3.1 |
+| Optional launch params | **Confirmed**: `redirect`, `menu`, `categoria`, `carrier`, `blockview` | Manual v3.1 |
+| Menu values | **Confirmed**: `null`=Home, `"1"`=Tiempo Aire, `"2"`=Pago de Servicios, `"3"`=Entretenimiento | Manual v3.1 |
+| Mobile SDK | **Confirmed as not required**: Integration is URL-based, no native SDK needed | Manual v3.1 |
+| API base URL (sandbox) | **PENDING** — Tekae will provide sandbox URL separately | Sprint 011 matrix |
+| API base URL (production) | **PENDING** — Tekae will provide through approved secure channel | Sprint 011 matrix |
+| Swagger / OpenAPI | **PENDING** — Tekae will provide test Swagger | Sprint 011 matrix |
+| Test credentials | **PENDING** — Tekae will provide to authorized staff | Sprint 011 matrix |
+| Webhook support | **UNKNOWN** — No webhook specification in provided documents | Sprint 011 matrix |
+| Transaction status/query API | **UNKNOWN** — No status query API in provided documents | Sprint 011 matrix |
+| Error / status codes | **UNKNOWN** — Full error taxonomy pending Swagger | Sprint 011 matrix |
+| PCI scope / card handling | **N/A for SSO model** — Card handling is entirely within Tekae's platform | Manual v3.1 |
+| Settlement / reconciliation model | **UNKNOWN** — No reconciliation mechanism in provided documents | Sprint 011 matrix |
+| Receipt / comprobante | **Partial** — Tekae allows HTML receipt download within their platform; API retrieval pending | Personalization guide |
 
 ---
 

@@ -56,6 +56,16 @@ class Settings(BaseSettings):
     twilio_from_number: str = ""
     twilio_timeout_seconds: int = 10
 
+    # Tekae SSO — disabled by default; requires backend-only credentials and approved network path
+    tekae_enabled: bool = False
+    tekae_base_url: str = ""
+    tekae_responsive_base_url: str = "https://tekae.com.mx/responsive"
+    tekae_uid: str = ""
+    tekae_password: str = ""
+    tekae_timeout_seconds: int = 10
+    # TEKAE_REQUIRE_PRIVATE_NETWORK=true blocks token generation in production without VPN/VPC approval
+    tekae_require_private_network: bool = True
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property
@@ -93,6 +103,14 @@ class Settings(BaseSettings):
         origins = self.cors_origins_list
         if not origins or "*" in origins:
             raise ValueError("CORS_ORIGINS must be explicit in staging and production")
+
+        if self.tekae_enabled:
+            if not self.tekae_uid.strip():
+                raise ValueError("TEKAE_UID is required when TEKAE_ENABLED=true in staging/production")
+            if not self.tekae_password.strip():
+                raise ValueError("TEKAE_PASSWORD is required when TEKAE_ENABLED=true in staging/production")
+            if not self.tekae_base_url.strip():
+                raise ValueError("TEKAE_BASE_URL is required when TEKAE_ENABLED=true in staging/production")
 
         return self
 

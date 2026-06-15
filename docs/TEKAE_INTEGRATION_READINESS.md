@@ -37,6 +37,8 @@ Tekae flow documented for readiness:
 
 1. Backend prepares the required data: `UserCustomer`, `uid`, and `password`.
 2. Optional Tekae launch parameters may include `redirect`, `menu`, `categoria`, `carrier`, and `blockview`.
+   - `menu` values confirmed from Manual v3.1: `null` = Home (default), `"1"` = Tiempo Aire, `"2"` = Pago de Servicios, `"3"` = Entretenimiento.
+   - `blockview`, `redirect`, `categoria`, `carrier`: exact behavior and allowed values pending Swagger.
 3. Backend calls Tekae `POST /tokens/cipherData`.
 4. Backend calls Tekae `POST /tokens/generateTokenCiphered`.
 5. Tekae returns `accessToken`.

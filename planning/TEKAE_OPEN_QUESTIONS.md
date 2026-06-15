@@ -1,7 +1,7 @@
 # Tekae Integration — Open Questions
 
-**Status:** ACTIVE — All items below block implementation.
-**Last updated:** 2026-06-02
+**Status:** ACTIVE — Most items block implementation. Q-001, Q-014 confirmed from Manual v3.1; Q-003 partially confirmed.
+**Last updated:** 2026-06-15 (updated with Sprint 011 readiness matrix findings)
 
 ---
 
@@ -19,12 +19,18 @@ When an answer is confirmed:
 ## Open (Blocking)
 
 ### Q-001 — Integration Method
-**What is the integration architecture?**
+**PARTIALLY RESOLVED** — Confirmed from Manual de integración Tekae Business v3.1 (reviewed Sprint 011).
 
-Does the mobile app call Tekae directly (SDK, WebView, or redirect), or does it call a FONDIXPAY backend endpoint that proxies to Tekae?
+Integration model: Backend-brokered SSO responsivo.
+- Mobile never calls Tekae directly.
+- Backend calls `POST /tokens/cipherData` then `POST /tokens/generateTokenCiphered`.
+- Backend constructs `https://tekae.com.mx/responsive/user/{uid}/token/{accessToken}`.
+- Mobile opens the URL in browser, WebView, or embed.
+- No native mobile SDK required.
 
-- Affects: PCI scope, mobile code architecture, backend API design, credential storage model.
-- Source required: Tekae developer documentation or Tekae integration team confirmation.
+Still pending: base URL (sandbox + production), full token endpoint schema, auth header format, exact error codes.
+
+- Source: Manual de integración Tekae Business v3.1 — confirmed 2026-06-15.
 
 ---
 
@@ -38,11 +44,12 @@ Is it API key, OAuth 2.0 (client credentials), mutual TLS, or another mechanism?
 ---
 
 ### Q-003 — Sandbox Environment
-**Does Tekae provide a sandbox or test environment?**
+**PARTIALLY RESOLVED** — Manual v3.1 confirms Tekae will provide a sandbox/development environment.
 
-If yes: Is it always-on, self-service, or requires Tekae setup? What are the test credential policies?
+Confirmed: Tekae provides a development URL and test Swagger/credentials for authorized staff.
+Still pending: actual sandbox base URL, test credentials (to be delivered through approved secure channel), Swagger document.
 
-- Affects: development workflow, sprint planning, QA strategy.
+- Source: Manual de integración Tekae Business v3.1 — partially confirmed 2026-06-15.
 
 ---
 
@@ -137,17 +144,21 @@ Are sandbox credentials available for development? Is a production merchant acco
 ---
 
 ### Q-014 — Mobile SDK Availability
-**Does Tekae provide a native mobile SDK (iOS / Android / React Native / Flutter)?**
+**RESOLVED** — Confirmed from Manual de integración Tekae Business v3.1.
 
-If yes: What is the current SDK version and where is it hosted?
+Tekae does not require a native mobile SDK. Integration is URL-based (SSO responsivo).
+Mobile opens the Tekae responsive URL via browser, WebView, or embed.
+No React Native / iOS / Android SDK dependency is needed.
 
-- Affects: mobile integration approach, dependency decisions.
+- Source: Manual de integración Tekae Business v3.1 — confirmed 2026-06-15.
 
 ---
 
 ## Resolved
 
-> *(None yet. Items will move here as answers are confirmed.)*
+### Q-014 — Mobile SDK Availability (RESOLVED 2026-06-15)
+No native SDK required. Integration is URL-based (SSO responsivo).
+Source: Manual de integración Tekae Business v3.1.
 
 ---
 
