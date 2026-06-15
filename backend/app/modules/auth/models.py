@@ -1,3 +1,4 @@
+import secrets
 from datetime import datetime, timedelta, timezone
 
 from app.core.config import settings
@@ -8,9 +9,10 @@ OTP_TTL_SECONDS = OTP_TTL_MINUTES * 60
 
 
 def save_otp(phone: str) -> str:
+    otp = settings.otp_dev_code if settings.allow_otp_dev_response else str(secrets.randbelow(1_000_000)).zfill(6)
     expires_at = datetime.now(timezone.utc) + timedelta(minutes=OTP_TTL_MINUTES)
-    _otp_store[phone] = (settings.otp_dev_code, expires_at)
-    return settings.otp_dev_code
+    _otp_store[phone] = (otp, expires_at)
+    return otp
 
 
 def consume_otp(phone: str, otp: str) -> bool:

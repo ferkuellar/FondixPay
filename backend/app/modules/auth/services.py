@@ -7,7 +7,34 @@ from app.core.security import create_access_token
 from app.modules.audit.services import create_audit_event, hash_value
 from app.modules.auth.models import OTP_TTL_SECONDS, consume_otp, save_otp
 from app.modules.auth.schemas import TokenResponse
+from app.modules.notifications.providers.sms_errors import SmsProviderError
 from app.modules.users.repository import get_or_create_by_phone
+
+_OTP_BODY = "Tu código de acceso FondixPay es: {otp}. Válido por 5 minutos. No lo compartas."
+
+
+def _get_sms_provider():
+    if settings.sms_provider != "twilio":
+        return None
+    if not settings.twilio_account_sid or not settings.twilio_auth_token or not settings.twilio_from_number:
+        return None
+    from app.modules.notifications.providers.sms_twilio import TwilioSmsProvider
+    return TwilioSmsProvider(
+        account_sid=settings.twilio_account_sid,
+        auth_token=settings.twilio_auth_token,
+        from_number=settings.twilio_from_number,
+        timeout=settings.twilio_timeout_seconds,
+    )
+
+
+def _send_otp_sms(phone: str, otp: str) -> None:
+    provider = _get_sms_provider()
+    if provider is None:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="sms_unavailable")
+    try:
+        provider.send_sms(to=phone, body=_OTP_BODY.format(otp=otp))
+    except SmsProviderError:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="sms_send_failed")
 
 
 def request_otp(
@@ -20,6 +47,10 @@ def request_otp(
         phone = str(db_or_phone)
 
     otp = save_otp(phone)
+
+    if not settings.allow_otp_dev_response:
+        _send_otp_sms(phone, otp)
+
     if not legacy_call_without_db:
         db = db_or_phone
         context = request_context or RequestContext()

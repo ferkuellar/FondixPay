@@ -50,6 +50,11 @@ class Settings(BaseSettings):
     resend_from_email: str = "contacto@fondixpay.com"
     resend_to_email: str = "fernando.cuellar@fondixpay.com"
     admin_init_phone: str = ""
+    sms_provider: str = "mock"
+    twilio_account_sid: str = ""
+    twilio_auth_token: str = ""
+    twilio_from_number: str = ""
+    twilio_timeout_seconds: int = 10
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
