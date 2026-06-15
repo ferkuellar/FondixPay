@@ -1503,3 +1503,43 @@ Decision: Tekae `menu` values confirmed from Manual v3.1 (`null`=Home, `"1"`=Tie
 Rationale: Tekae menu routing directly controls the payment category the user sees. Typed constants prevent invalid values, document intent, and make the mapping auditable.
 
 Status: Accepted 2026-06-15.
+
+## ADR-186 - API Timeout Is 15 Seconds via AbortController
+
+Decision: All `apiRequest()` calls have a 15-second timeout enforced with a native `AbortController`. The timeout error maps to a user-facing Spanish message.
+
+Rationale: A hung request without timeout leaves the user on an infinite loading screen with no recovery path. 15s is generous for mobile on a weak network; the AbortController is the only cross-platform timeout pattern in React Native that doesn't require an external library.
+
+Status: Accepted 2026-06-15.
+
+## ADR-187 - 401 Handler Uses Callback Pattern to Break Circular Dependency
+
+Decision: `api.ts` exports `setUnauthorizedHandler(handler)` that stores a module-level callback. `AppNavigator.tsx` registers `useAuthStore.getState().signOut()` as that callback on mount.
+
+Rationale: Importing `authStore` directly in `api.ts` creates a circular dependency chain: `api.ts` → `authStore.ts` → `authApi.ts` → `api.ts`. The callback pattern inverts the dependency — `api.ts` knows nothing about auth state; callers wire the behavior externally.
+
+Status: Accepted 2026-06-15.
+
+## ADR-188 - QA Scenario Picker Requires Explicit Opt-In Via Env Flag
+
+Decision: The internal payment scenario picker in `ConfirmPaymentScreen` is gated by `EXPO_PUBLIC_ENABLE_PAYMENT_QA_SCENARIOS === 'true'` in addition to `isDemoPaymentEnabled()`. Default (flag absent) = picker hidden.
+
+Rationale: The existing `isDemoPaymentEnabled()` guard relies on `NODE_ENV`, which can be truthy in preview/staging EAS builds. An explicit per-variable opt-in is the only safe default that prevents internal QA tooling from appearing in any build where the flag is not explicitly set.
+
+Status: Accepted 2026-06-15.
+
+## ADR-189 - MexicoStateCode Expanded to All 32 ISO 3166-2:MX Entities
+
+Decision: `MexicoStateCode` union type and `MEXICO_STATE_OPTIONS` now cover all 32 Mexican federal entities with official ISO 3166-2:MX codes. `locationStateResolver.ts` covers all 32 states with normalized aliases for geocoder output.
+
+Rationale: GPS-based state resolution and manual state selection were unusable for 85% of Mexico. The 5-state limitation was an MVP artifact with no intentional product boundary.
+
+Status: Accepted 2026-06-15.
+
+## ADR-190 - ProfileScreen Uses Real Stores; Empty States Are Honest
+
+Decision: `ProfileScreen` reads payment methods and saved services from `usePaymentMethodStore` and `useServiceStore`. If a store is empty, the screen shows an honest empty state. Demo data seeded in stores (from `serviceStore.ts`) is the source of truth, not duplicated in the screen.
+
+Rationale: The screen was shadowing real store data with a local hardcoded list, making it impossible to verify that stores were working. Any user session would always see fake data regardless of actual app state.
+
+Status: Accepted 2026-06-15.

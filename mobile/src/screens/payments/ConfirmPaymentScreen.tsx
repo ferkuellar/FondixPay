@@ -11,6 +11,7 @@ import { PrimaryButton } from '../../components/PrimaryButton';
 import { Screen } from '../../components/Screen';
 import { AlertCard } from '../../components/AlertCard';
 import { AmountCard } from '../../components/AmountCard';
+import { isQaScenariosEnabled } from '../../config/environment';
 import { getProviderReadinessPresentation, isDemoPaymentEnabled } from '../../integrations/providerReadiness';
 import { usePaymentMethodStore } from '../../store/paymentMethodStore';
 import { usePaymentStore } from '../../store/paymentStore';
@@ -35,6 +36,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
   const [isPaying, setIsPaying] = useState(false);
   const [duplicateMessage, setDuplicateMessage] = useState(false);
   const demoPaymentEnabled = isDemoPaymentEnabled();
+  const qaScenariosEnabled = isQaScenariosEnabled();
   const providerUnavailable = getProviderReadinessPresentation();
 
   useEffect(() => {
@@ -162,7 +164,7 @@ export function ConfirmPaymentScreen({ navigation, route }: Props) {
                   : 'Aún no hay proveedor transaccional activo. No se iniciará ningún pago desde esta pantalla.'
               }
             />
-            {demoPaymentEnabled ? (
+            {demoPaymentEnabled && qaScenariosEnabled ? (
               <View style={[styles.scenarioSection, { backgroundColor: theme.surface2, borderColor: theme.border }]}>
                 <Text style={[styles.scenarioTitle, { color: theme.fg }]}>Escenario demo</Text>
                 <Text style={[styles.scenarioCopy, { color: theme.fg2 }]}>

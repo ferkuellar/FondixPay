@@ -1780,3 +1780,34 @@ Replaced the paste-token login form with a real two-step OTP flow. Backend admin
 - `LoginPage.tsx` rewritten — phone → OTP two-step; role from backend response; dev OTP badge; expired-session alert; legacy paste-token as collapsible fallback.
 
 Tests: 9/9 backend tests passing. TypeScript: 0 errors.
+
+## Sprint 085 — Mobile Production Hardening Fixes
+
+Date: 2026-06-15
+
+Status: COMPLETE
+
+Corrected 6 SEV-2 findings from the Sprint 084 audit. No Tekae runtime changes. No new dependencies.
+
+**F-01 + F-06 — Mexico coverage 5 → 32 states:**
+- `mobile/src/constants/mexicoStates.ts`: `MexicoStateCode` union type and `MEXICO_STATE_OPTIONS` expanded from 5 to 32 ISO 3166-2:MX entities. Existing codes (MX-CHH, MX-COA, MX-NLE, MX-CMX, MX-JAL) unchanged. Default remains MX-CHH.
+- `mobile/src/utils/locationStateResolver.ts`: `STATE_ALIASES` expanded to 32 entries covering all states with normalized aliases (lowercase, no diacritics, common abbreviations, geocoder variants).
+
+**F-02 — QA scenario picker gated:**
+- `mobile/src/config/environment.ts` (NEW): `isQaScenariosEnabled()` returns `true` only when `EXPO_PUBLIC_ENABLE_PAYMENT_QA_SCENARIOS === 'true'`. Default = false.
+- `mobile/src/screens/payments/ConfirmPaymentScreen.tsx`: scenario picker now requires `demoPaymentEnabled && isQaScenariosEnabled()`.
+
+**F-03 — ProfileScreen real stores:**
+- `mobile/src/screens/profile/ProfileScreen.tsx`: removed local `PaymentMethod`/`SavedService` types and hardcoded arrays. Now reads from `usePaymentMethodStore` and `useServiceStore`. Empty states shown when stores are empty. Navigation to `ServiceDetail` and `AddPaymentMethodMock` made functional.
+
+**F-04 + F-05 — API timeout + 401 handler:**
+- `mobile/src/services/api.ts`: `DEFAULT_API_TIMEOUT_MS = 15_000`, `AbortController` with `finally` cleanup, 401 detection with `onUnauthorized` callback, `setUnauthorizedHandler()` export.
+- `mobile/src/navigation/AppNavigator.tsx`: registers `setUnauthorizedHandler(() => useAuthStore.getState().signOut())` on mount; cleans up on unmount.
+
+**Docs:**
+- `mobile/.env.example`: added `EXPO_PUBLIC_APP_ENV` and `EXPO_PUBLIC_ENABLE_PAYMENT_QA_SCENARIOS`.
+- `planning/DECISIONS.md`: ADR-186 through ADR-190.
+- `planning/RISKS.md`: 4 new residual risk entries.
+- `planning/sprints/085-mobile-production-hardening-fixes/`: requirements, blueprint, acceptance.
+
+TypeScript: 0 errors. Lint: 0 warnings.

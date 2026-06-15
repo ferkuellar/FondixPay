@@ -24,6 +24,7 @@ import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { AddServiceScreen } from '../screens/services/AddServiceScreen';
 import { ServiceDetailScreen } from '../screens/services/ServiceDetailScreen';
 import { SupportPlaceholderScreen } from '../screens/support/SupportPlaceholderScreen';
+import { setUnauthorizedHandler } from '../services/api';
 import { useAuthStore } from '../store/authStore';
 import { useAppTheme } from '../theme';
 import type { RootStackParamList } from '../types';
@@ -40,6 +41,15 @@ export function AppNavigator() {
   useEffect(() => {
     restoreSession();
   }, [restoreSession]);
+
+  useEffect(() => {
+    setUnauthorizedHandler(() => {
+      void useAuthStore.getState().signOut();
+    });
+    return () => {
+      setUnauthorizedHandler(null);
+    };
+  }, []);
 
   if (isRestoring) {
     return (

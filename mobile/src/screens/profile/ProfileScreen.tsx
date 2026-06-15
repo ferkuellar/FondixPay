@@ -9,45 +9,13 @@ import { StateSelectorCard } from '../../components/StateSelectorCard';
 import { PRIVACY_PAGE_URL } from '../../constants/links';
 import { useAuthStore } from '../../store/authStore';
 import { useNotificationPreferencesStore } from '../../store/notificationPreferencesStore';
+import { usePaymentMethodStore } from '../../store/paymentMethodStore';
+import { useServiceStore } from '../../store/serviceStore';
 import { colors, radius, spacing, typography, useAppTheme } from '../../theme';
 import type { RootStackParamList } from '../../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Profile'>;
 
-type PaymentMethod = {
-  badge: string;
-  color: string;
-  title: string;
-  subtitle: string;
-  isPrimary?: boolean;
-};
-
-type SavedService = {
-  name: string;
-  provider: string;
-};
-
-const paymentMethods: PaymentMethod[] = [
-  {
-    badge: 'DEMO',
-    color: '#0F5CC8',
-    isPrimary: true,
-    subtitle: 'Método de prueba principal',
-    title: 'Método demo •••0000',
-  },
-  {
-    badge: 'DEMO',
-    color: '#A7191D',
-    subtitle: 'Escenario alterno de prueba',
-    title: 'Método demo •••1111',
-  },
-];
-
-const savedServices: SavedService[] = [
-  { name: 'Luz · Casa', provider: 'CFE' },
-  { name: 'Internet Izzi', provider: 'Izzi' },
-  { name: 'Agua bimestral · SACMEX', provider: 'SACMEX' },
-];
 
 export function ProfileScreen({ navigation }: Props) {
   const { mode, theme, toggleMode } = useAppTheme();
@@ -57,6 +25,8 @@ export function ProfileScreen({ navigation }: Props) {
   const whatsappReceipt = useNotificationPreferencesStore((state) => state.whatsappReceipt);
   const preferencesError = useNotificationPreferencesStore((state) => state.error);
   const fetchPreferences = useNotificationPreferencesStore((state) => state.fetchPreferences);
+  const paymentMethods = usePaymentMethodStore((state) => state.paymentMethods);
+  const services = useServiceStore((state) => state.services);
 
   const displayName = user?.name?.trim() || 'Usuario';
   const displayPhone = formatProfilePhone(user?.phone);
@@ -90,31 +60,43 @@ export function ProfileScreen({ navigation }: Props) {
 
         <SectionTitle label="PRUEBAS DE PAGO" />
         <View style={[styles.groupCard, { backgroundColor: theme.surface }]}>
-          {paymentMethods.map((method, index) => (
-            <View
-              key={method.title}
-              style={[
-                styles.row,
-                index < paymentMethods.length - 1 ? { borderBottomColor: theme.divider, borderBottomWidth: 1 } : null,
-              ]}
-            >
-              <View style={[styles.bankLogo, { backgroundColor: method.color }]}>
-                <Text style={styles.bankLogoText}>{method.badge}</Text>
+          {paymentMethods.length === 0 ? (
+            <View style={[styles.row, { borderBottomColor: theme.divider, borderBottomWidth: 1 }]}>
+              <View style={styles.softIcon}>
+                <Feather color={theme.fg2} name="credit-card" size={18} />
               </View>
-              <View style={styles.rowCopy}>
-                <Text style={[styles.rowTitle, { color: theme.fg }]}>{method.title}</Text>
-                <Text style={[styles.rowSubtitle, { color: theme.fg2 }]}>{method.subtitle}</Text>
-              </View>
-              {method.isPrimary ? (
-                <View style={styles.primaryPill}>
-                  <Feather color={colors.primary} name="star" size={12} />
-                  <Text style={styles.primaryPillText}>Principal</Text>
-                </View>
-              ) : null}
+              <Text style={[styles.rowTitle, { color: theme.fg2 }]}>Sin métodos de prueba</Text>
             </View>
-          ))}
+          ) : (
+            paymentMethods.map((method, index) => (
+              <View
+                key={method.id}
+                style={[
+                  styles.row,
+                  index < paymentMethods.length - 1 ? { borderBottomColor: theme.divider, borderBottomWidth: 1 } : null,
+                ]}
+              >
+                <View style={[styles.bankLogo, { backgroundColor: colors.primary }]}>
+                  <Text style={styles.bankLogoText}>DEMO</Text>
+                </View>
+                <View style={styles.rowCopy}>
+                  <Text style={[styles.rowTitle, { color: theme.fg }]}>
+                    {method.label}{method.displayLast4 ? ` •••${method.displayLast4}` : ''}
+                  </Text>
+                  <Text style={[styles.rowSubtitle, { color: theme.fg2 }]}>{method.description}</Text>
+                </View>
+                {method.isDefault ? (
+                  <View style={styles.primaryPill}>
+                    <Feather color={colors.primary} name="star" size={12} />
+                    <Text style={styles.primaryPillText}>Principal</Text>
+                  </View>
+                ) : null}
+              </View>
+            ))
+          )}
           <Pressable
             accessibilityRole="button"
+            onPress={() => navigation.navigate('AddPaymentMethodMock', {})}
             style={({ pressed }) => [styles.row, styles.actionRow, pressed ? styles.pressed : null]}
           >
             <View style={styles.softIcon}>
@@ -127,25 +109,35 @@ export function ProfileScreen({ navigation }: Props) {
 
         <SectionTitle label="SERVICIOS GUARDADOS" />
         <View style={[styles.groupCard, { backgroundColor: theme.surface }]}>
-          {savedServices.map((service, index) => (
-            <Pressable
-              accessibilityRole="button"
-              key={service.name}
-              style={({ pressed }) => [
-                styles.row,
-                styles.serviceRow,
-                index < savedServices.length - 1 ? { borderBottomColor: theme.divider, borderBottomWidth: 1 } : null,
-                pressed ? styles.pressed : null,
-              ]}
-            >
+          {services.length === 0 ? (
+            <View style={styles.row}>
               <View style={styles.softIcon}>
-                <Feather color={theme.fg2} name="credit-card" size={18} />
+                <Feather color={theme.fg2} name="inbox" size={18} />
               </View>
-              <Text style={[styles.serviceName, { color: theme.fg }]}>{service.name}</Text>
-              <Text style={[styles.provider, { color: theme.fg2 }]}>{service.provider}</Text>
-              <Feather color={theme.fg2} name="chevron-right" size={20} />
-            </Pressable>
-          ))}
+              <Text style={[styles.serviceName, { color: theme.fg2 }]}>Sin servicios guardados</Text>
+            </View>
+          ) : (
+            services.map((service, index) => (
+              <Pressable
+                accessibilityRole="button"
+                key={service.id}
+                onPress={() => navigation.navigate('ServiceDetail', { serviceId: service.id })}
+                style={({ pressed }) => [
+                  styles.row,
+                  styles.serviceRow,
+                  index < services.length - 1 ? { borderBottomColor: theme.divider, borderBottomWidth: 1 } : null,
+                  pressed ? styles.pressed : null,
+                ]}
+              >
+                <View style={styles.softIcon}>
+                  <Feather color={theme.fg2} name="credit-card" size={18} />
+                </View>
+                <Text style={[styles.serviceName, { color: theme.fg }]}>{service.alias}</Text>
+                <Text style={[styles.provider, { color: theme.fg2 }]}>{service.provider.displayName}</Text>
+                <Feather color={theme.fg2} name="chevron-right" size={20} />
+              </Pressable>
+            ))
+          )}
         </View>
 
         <SectionTitle label="ESTADO PARA SERVICIOS" />
