@@ -66,7 +66,7 @@ export function LoginPage() {
       return;
     }
     try {
-      signIn(pasteToken.trim(), devAuthEnabled ? devRole : undefined);
+      signIn(pasteToken.trim(), devRole);
     } catch (signInError) {
       setError(signInError instanceof Error ? signInError.message : "No se pudo iniciar la sesion.");
     }
@@ -169,16 +169,12 @@ export function LoginPage() {
                 Bearer token
                 <textarea value={pasteToken} onChange={(e) => setPasteToken(e.target.value)} rows={4} autoComplete="off" />
               </label>
-              {devAuthEnabled ? (
-                <label>
-                  Rol
-                  <select value={devRole} onChange={(e) => setDevRole(e.target.value as AdminRole)}>
-                    {ROLES.map((value) => <option key={value}>{value}</option>)}
-                  </select>
-                </label>
-              ) : (
-                <p className="inline-warning">Dev auth deshabilitado. El token debe contener el rol.</p>
-              )}
+              <label>
+                Rol
+                <select value={devRole} onChange={(e) => setDevRole(e.target.value as AdminRole)}>
+                  {ROLES.map((value) => <option key={value}>{value}</option>)}
+                </select>
+              </label>
               {error ? <p className="form-error">{error}</p> : null}
               <button type="submit" className="button">Entrar con token</button>
             </form>
