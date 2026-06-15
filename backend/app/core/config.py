@@ -49,6 +49,7 @@ class Settings(BaseSettings):
     resend_api_key: str = ""
     resend_from_email: str = "contacto@fondixpay.com"
     resend_to_email: str = "fernando.cuellar@fondixpay.com"
+    admin_init_phone: str = ""
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 

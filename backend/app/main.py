@@ -60,6 +60,23 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="FONDIX PAY API", version="0.1.0")
 
+
+@app.on_event("startup")
+def _seed_admin_user() -> None:
+    if not settings.admin_init_phone:
+        return
+    from app.core.database import SessionLocal
+    from app.modules.users.models import User
+    db = SessionLocal()
+    try:
+        exists = db.query(User).filter(User.phone == settings.admin_init_phone, User.role == "SUPER_ADMIN").first()
+        if not exists:
+            admin = User(phone=settings.admin_init_phone, name="Admin", role="SUPER_ADMIN", is_active=True)
+            db.add(admin)
+            db.commit()
+    finally:
+        db.close()
+
 app.add_middleware(RequestContextMiddleware)
 
 app.add_middleware(
