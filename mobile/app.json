@@ -7,6 +7,12 @@
     "scheme": "fondixpay",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#020B2D"
+    },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.fondixpay.app"
@@ -14,8 +20,12 @@
     "android": {
       "package": "com.fondixpay.app",
       "adaptiveIcon": {
-        "backgroundColor": "#1E5FE8"
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#020B2D"
       }
+    },
+    "web": {
+      "favicon": "./assets/icon.png"
     },
     "plugins": [
       [
