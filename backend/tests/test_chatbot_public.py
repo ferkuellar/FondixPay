@@ -115,7 +115,7 @@ def test_public_chat_calls_claude_and_returns_ai_reply(
 ) -> None:
     monkeypatch.setattr(settings, "chatbot_ai_api_key", "sk-test-key")
 
-    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value="La comisión es del 2%.")):
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=("La comisión es del 2%.", 120, 10, 15))):
         response = client.post(
             "/api/public/chat",
             json={"message": "¿Cuál es la comisión?", "sessionId": "claude-ok", "source": "landing"},
@@ -135,7 +135,7 @@ def test_public_chat_falls_back_gracefully_when_claude_returns_none(
 ) -> None:
     monkeypatch.setattr(settings, "chatbot_ai_api_key", "sk-test-key")
 
-    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=(None, 0, 0, 0))):
         response = client.post(
             "/api/public/chat",
             json={"message": "Pregunta sin cobertura AI", "sessionId": "claude-fail", "source": "landing"},
@@ -195,7 +195,7 @@ def test_public_chat_ai_reply_not_in_api_key_exposure(
     fake_key = "sk-ant-api03-supersecret"
     monkeypatch.setattr(settings, "chatbot_ai_api_key", fake_key)
 
-    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value="Respuesta normal.")):
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=("Respuesta normal.", 100, 8, 12))):
         response = client.post(
             "/api/public/chat",
             json={"message": "Hola", "sessionId": "key-check", "source": "landing"},
@@ -404,7 +404,7 @@ def test_public_chat_ip_rate_limit_blocks_after_limit(client: TestClient) -> Non
 
 
 def test_public_chat_has_security_headers(client: TestClient) -> None:
-    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=(None, 0, 0, 0))):
         response = client.post(
             "/api/public/chat",
             json={"message": "Hola", "sessionId": "sec-headers-test", "source": "landing"},
@@ -426,7 +426,7 @@ def test_public_chat_fallback_ai_down_uses_configurable_message(
     db_session.commit()
     monkeypatch.setattr(settings, "chatbot_ai_api_key", "sk-test-key")
 
-    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=(None, 0, 0, 0))):
         response = client.post(
             "/api/public/chat",
             json={"message": "cualquier cosa", "sessionId": "fallback-custom", "source": "landing"},
@@ -454,7 +454,7 @@ def test_conversation_expiry_creates_new_after_24h(
     db_session.commit()
     old_id = old_conv.id
 
-    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=None)):
+    with patch("app.modules.chatbot.services._call_claude_async", new=AsyncMock(return_value=(None, 0, 0, 0))):
         response = client.post(
             "/api/public/chat",
             json={"message": "Hola de nuevo", "sessionId": "expiry-test-session", "source": "landing"},

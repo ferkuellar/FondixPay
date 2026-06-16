@@ -37,6 +37,7 @@ def test_production_like_does_not_return_otp_dev(monkeypatch: pytest.MonkeyPatch
     test_settings = _secure_settings(app_env="staging")
     monkeypatch.setattr(auth_services, "settings", test_settings)
     monkeypatch.setattr(auth_models, "settings", test_settings)
+    monkeypatch.setattr(auth_services, "_send_otp_sms", lambda phone, otp: None)
 
     response = auth_services.request_otp("5512345679")
 
