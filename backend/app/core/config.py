@@ -59,9 +59,15 @@ class Settings(BaseSettings):
     # Tekae SSO — disabled by default; requires backend-only credentials and approved network path
     tekae_enabled: bool = False
     tekae_base_url: str = ""
-    tekae_responsive_base_url: str = "https://tekae.com.mx/responsive"
+    tekae_responsive_base_url: str = ""
+    # Bearer token for Authorization header on all Tekae API requests
+    tekae_bearer: str = ""
+    # UID used in the cipherData / generateTokenCiphered request bodies
     tekae_uid: str = ""
+    # KMS-encrypted password provided by Tekae for cipherData request body
     tekae_password: str = ""
+    # UID used in the portal responsive URL (different from tekae_uid)
+    tekae_portal_uid: str = ""
     tekae_timeout_seconds: int = 10
     # TEKAE_REQUIRE_PRIVATE_NETWORK=true blocks token generation in production without VPN/VPC approval
     tekae_require_private_network: bool = True
@@ -105,12 +111,22 @@ class Settings(BaseSettings):
             raise ValueError("CORS_ORIGINS must be explicit in staging and production")
 
         if self.tekae_enabled:
-            if not self.tekae_uid.strip():
-                raise ValueError("TEKAE_UID is required when TEKAE_ENABLED=true in staging/production")
-            if not self.tekae_password.strip():
-                raise ValueError("TEKAE_PASSWORD is required when TEKAE_ENABLED=true in staging/production")
-            if not self.tekae_base_url.strip():
-                raise ValueError("TEKAE_BASE_URL is required when TEKAE_ENABLED=true in staging/production")
+            missing = [
+                name
+                for name, val in [
+                    ("TEKAE_BASE_URL", self.tekae_base_url),
+                    ("TEKAE_RESPONSIVE_BASE_URL", self.tekae_responsive_base_url),
+                    ("TEKAE_BEARER", self.tekae_bearer),
+                    ("TEKAE_UID", self.tekae_uid),
+                    ("TEKAE_PASSWORD", self.tekae_password),
+                    ("TEKAE_PORTAL_UID", self.tekae_portal_uid),
+                ]
+                if not val.strip()
+            ]
+            if missing:
+                raise ValueError(
+                    f"Required Tekae vars missing when TEKAE_ENABLED=true in staging/production: {', '.join(missing)}"
+                )
 
         return self
 

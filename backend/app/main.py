@@ -31,6 +31,7 @@ from app.modules.chatbot.models import (
 from app.modules.chatbot.routes import admin_router as chatbot_admin_router
 from app.modules.chatbot.routes import public_router as chatbot_public_router
 from app.modules.contact.routes import router as contact_router
+from app.modules.tekae.routes import router as tekae_router
 from app.modules.ledger.models import (
     LedgerAccount,
     LedgerEntry,
@@ -108,6 +109,7 @@ app.include_router(service_catalog_admin_router, prefix="/admin/service-catalog"
 app.include_router(chatbot_public_router, prefix="/api/public", tags=["public chatbot"])
 app.include_router(chatbot_admin_router, prefix="/admin/chat", tags=["admin chatbot"])
 app.include_router(contact_router, prefix="/api/public", tags=["contact"])
+app.include_router(tekae_router, prefix="/api", tags=["tekae"])
 
 
 @app.get("/health")
