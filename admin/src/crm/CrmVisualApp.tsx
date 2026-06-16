@@ -4,6 +4,10 @@ import { useAdminApi } from "../api/useAdminApi";
 import type { AdminOperatorCreate, CategoryVolumePoint, HourlyTrafficPoint, PaymentTrendPoint } from "../api/adminClient";
 import { useAdminAuth } from "../auth/AdminAuthProvider";
 import { ChatOperationsPage } from "../pages/ChatOperationsPage";
+import { PaymentDetailPage } from "../pages/PaymentDetailPage";
+import { ReceiptDetailPage } from "../pages/ReceiptDetailPage";
+import { SearchPage } from "../pages/SearchPage";
+import { UserDetailPage } from "../pages/UserDetailPage";
 import type { AdminNotificationDelivery, AdminPayment, AdminReceipt, AdminUser, AuditEvent } from "../types/admin";
 import { formatDate, formatMoney } from "../utils/format";
 import "./crmVisual.css";
@@ -19,7 +23,10 @@ type ModuleKey =
   | "audit-logs"
   | "bot-landing"
   | "admin-users"
-  | "notifications";
+  | "notifications"
+  | "user-detail"
+  | "payment-detail"
+  | "receipt-detail";
 
 type NavItem = {
   key: ModuleKey;
@@ -68,6 +75,9 @@ const routes: Record<ModuleKey, string> = {
   "bot-landing": "/chatbot",
   "admin-users": "/admin-users",
   notifications: "/notifications",
+  "user-detail": "/users",
+  "payment-detail": "/payments",
+  "receipt-detail": "/receipts",
 };
 
 const routeToKey: Record<string, ModuleKey> = Object.fromEntries(
@@ -146,8 +156,17 @@ function currentPath() {
 }
 
 function keyFromPath(path: string): ModuleKey {
+  if (/^\/users\/\d+$/.test(path)) return "user-detail";
+  if (/^\/payments\/\d+$/.test(path)) return "payment-detail";
+  if (/^\/receipts\/\d+$/.test(path)) return "receipt-detail";
   return routeToKey[path] ?? "dashboard";
 }
+
+const parentKeyMap: Partial<Record<ModuleKey, ModuleKey>> = {
+  "user-detail": "users",
+  "payment-detail": "payments",
+  "receipt-detail": "receipts",
+};
 
 function setHashForKey(key: ModuleKey) {
   window.location.hash = routes[key];
@@ -162,6 +181,7 @@ export function CrmVisualApp() {
   const [environment, setEnvironment] = useState<"DEV" | "STAGING" | "PRODUCTION">("DEV");
   const [showBanner, setShowBanner] = useState(() => localStorage.getItem("crm-dev-banner-hidden") !== "1");
   const activeKey = keyFromPath(path);
+  const navActiveKey = parentKeyMap[activeKey] ?? activeKey;
 
   useEffect(() => {
     const sync = () => setPath(currentPath());
@@ -191,7 +211,7 @@ export function CrmVisualApp() {
               <div className="crm-nav-group-title">{group.title}</div>
               {group.items.filter((item) => !item.requiredRole || item.requiredRole === role).map((item) => (
                 <a
-                  className={`crm-nav-link ${activeKey === item.key ? "active" : ""}`}
+                  className={`crm-nav-link ${navActiveKey === item.key ? "active" : ""}`}
                   href={`#${routes[item.key]}`}
                   key={item.key}
                   onClick={(event) => {
@@ -208,10 +228,10 @@ export function CrmVisualApp() {
           ))}
         </nav>
         <div className="crm-user">
-          <span className="crm-avatar">AV</span>
+          <span className="crm-avatar">{role ? role.slice(0, 2) : "OP"}</span>
           <div>
-            <strong>Ana Vega</strong>
-            <span>ana.vega@fondix.mx</span>
+            <strong>{role ?? "Operador"}</strong>
+            <span>CRM Admin</span>
           </div>
         </div>
       </aside>
@@ -246,13 +266,14 @@ export function CrmVisualApp() {
             <button type="button" onClick={hideBanner} aria-label="Ocultar banner">×</button>
           </div>
         ) : null}
-        <main className="crm-content">{renderView(activeKey)}</main>
+        <main className="crm-content">{renderView(activeKey, path)}</main>
       </section>
     </div>
   );
 }
 
-function renderView(key: ModuleKey) {
+function renderView(key: ModuleKey, path: string) {
+  const entityId = path.split("/").pop() ?? "";
   switch (key) {
     case "dashboard":
       return <DashboardView />;
@@ -263,7 +284,7 @@ function renderView(key: ModuleKey) {
     case "receipts":
       return <ReceiptsView />;
     case "search":
-      return <SearchView />;
+      return <SearchPage />;
     case "chat":
       return <ChatOperationsPage />;
     case "reconciliation-tekae":
@@ -276,6 +297,12 @@ function renderView(key: ModuleKey) {
       return <AdminUsersView />;
     case "notifications":
       return <NotificationsView />;
+    case "user-detail":
+      return <UserDetailPage id={entityId} />;
+    case "payment-detail":
+      return <PaymentDetailPage id={entityId} />;
+    case "receipt-detail":
+      return <ReceiptDetailPage id={entityId} />;
   }
 }
 
@@ -699,7 +726,7 @@ function UsersView() {
               {visible.length === 0 ? (
                 <tr><td colSpan={6} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin usuarios</td></tr>
               ) : visible.map((u) => (
-                <tr key={u.id}>
+                <tr key={u.id} style={{ cursor: "pointer" }} onClick={() => { window.location.hash = `/users/${u.id}`; }}>
                   <td><span className="crm-mono">{u.phone}</span></td>
                   <td>{u.name ?? "—"}</td>
                   <td>{u.role}</td>
@@ -766,7 +793,7 @@ function PaymentsView() {
               {filtered.length === 0 ? (
                 <tr><td colSpan={6} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin pagos</td></tr>
               ) : filtered.map((p) => (
-                <tr key={p.id}>
+                <tr key={p.id} style={{ cursor: "pointer" }} onClick={() => { window.location.hash = `/payments/${p.id}`; }}>
                   <td>
                     <span className="crm-mono">#{p.id}</span>
                     {p.is_mock ? <span className="crm-badge" style={{ fontSize: 10, marginLeft: 6 }}>mock</span> : null}
@@ -861,24 +888,6 @@ function ChannelChip({ channel }: { channel: string }) {
   return <span className="crm-channel-chip"><i style={{ background: color }} />{channel === "chat" ? "Chat" : channel === "email" ? "Email" : channel}</span>;
 }
 
-function SearchView() {
-  return (
-    <>
-      <ViewHeader title="Búsqueda global" subtitle="Busca en usuarios, pagos, recibos y notificaciones" />
-      <input className="crm-input" style={{ height: 54, fontSize: 16 }} placeholder="Buscar usuario, pago o recibo..." />
-      <div className="crm-grid-even" style={{ marginTop: 18 }}>
-        <Card title="Resultados recientes">
-          {["usr_01022 · Carlos Ortiz Díaz", "tx_0847200 · Pago CFE", "REC-00123 · Recibo agua"].map((item) => <div className="crm-note" style={{ marginBottom: 8 }} key={item}>{item}</div>)}
-        </Card>
-        <Card title="Filtros rápidos">
-          <div className="crm-pills">
-            {["Usuarios", "Pagos", "Recibos", "Notificaciones"].map((item) => <span className="crm-small-pill" key={item}>{item}</span>)}
-          </div>
-        </Card>
-      </div>
-    </>
-  );
-}
 
 function ReconciliationView({ title, subtitle }: { title: string; subtitle: string }) {
   return (
@@ -917,7 +926,7 @@ function ReceiptsView() {
               {receipts.length === 0 ? (
                 <tr><td colSpan={5} style={{ textAlign: "center", color: "var(--crm-muted)", padding: 20 }}>Sin recibos</td></tr>
               ) : receipts.map((r) => (
-                <tr key={r.id}>
+                <tr key={r.id} style={{ cursor: "pointer" }} onClick={() => { window.location.hash = `/receipts/${r.id}`; }}>
                   <td>
                     <span className="crm-mono">{r.folio}</span>
                     {r.is_mock ? <span className="crm-badge" style={{ fontSize: 10, marginLeft: 6 }}>mock</span> : null}

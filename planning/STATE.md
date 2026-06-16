@@ -1887,3 +1887,17 @@ Key deliverables:
 - Payment success detection (requires Q-006 webhook resolution)
 - Reconciliation (requires Q-009 resolution)
 - Production credentials and VPN/VPC configuration
+
+## Sprint 088 — CRM Operational UX
+
+Date: 2026-06-16
+
+Status: COMPLETE
+
+Fixed three CRM production gaps in `admin/src/crm/CrmVisualApp.tsx`:
+
+- **C2 — Real user in sidebar:** Replaced hardcoded "Ana Vega / ana.vega@fondix.mx" with `role` from `useAdminAuth()`.
+- **S1 — Search wired to backend:** Deleted stub `SearchView` with hardcoded results; `renderView` now renders `<SearchPage />` which calls `/admin/search`.
+- **F1 — Row click → detail pages:** Added `user-detail`, `payment-detail`, `receipt-detail` to `ModuleKey`; `keyFromPath()` matches dynamic paths via regex; `parentKeyMap` keeps nav highlighted on detail views; `UsersView`, `PaymentsView`, `ReceiptsView` rows are clickable.
+
+TypeScript: 0 errors. No backend changes. See `planning/sprints/088-crm-operational-ux/COMPLETION_REPORT.md`.
