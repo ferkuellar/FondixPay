@@ -1847,20 +1847,43 @@ No runtime code changed. `TEKAE_ENABLED=false` remains required.
 
 Date: 2026-06-16
 
+Status: COMPLETE (commit `b60c3bb`)
+
+Implemented `POST /api/payments/tekae/session`:
+- New module `backend/app/modules/tekae/` with `client`, `service`, `routes`
+- Two-step Tekae flow: `cipherData` → `generateTokenCiphered`; `accessToken` discarded after building `portalUrl`
+- Audit events: `tekae.session.requested` / `tekae.session.created` / `tekae.session.failed`
+- `tekae_bearer` and `tekae_portal_uid` added to `Settings`; startup validation checks all 6 Tekae vars
+- 7 tests, 30/30 acceptance criteria met
+- See `planning/sprints/086-tekae-backend-session-endpoint/COMPLETION_REPORT.md`
+
+**Still blocked:**
+- Mobile browser launch (Sprint 087)
+- Payment success detection (requires Q-006 webhook resolution)
+- Reconciliation (requires Q-009 resolution)
+- Production credentials and VPN/VPC configuration
+
+---
+
+## Sprint 087 — Tekae Mobile Session Launch
+
+Date: 2026-06-16
+
 Status: DEFINED — Ready for implementation
 
-Sprint 086 will implement `POST /api/payments/tekae/session` in the FONDIXPAY backend:
-- Validates authenticated FONDIXPAY user
-- Calls Tekae `cipherData` → `generateTokenCiphered` using sandbox credentials from env vars
-- Returns `{ portalUrl, expiresIn: 1800, sessionRef }` to mobile
-- Never stores or logs `accessToken` or `portalUrl`
-- Writes audit events per attempt (session_ref only, no token)
-- Gated by `TEKAE_ENABLED` env var
+Active sprint: `planning/sprints/087-tekae-mobile-session-launch/`
 
-Active sprint: `planning/sprints/086-tekae-backend-session-endpoint/`
+Sprint 087 wires the mobile app to call `POST /api/payments/tekae/session` and open `portalUrl` in an external browser (via `expo-web-browser`). No backend changes. No payment success detection.
 
-**Still blocked pending Sprint 086:**
-- Mobile WebView/browser launch (Sprint 087)
+Key deliverables:
+- `mobile/src/services/tekaeApi.ts` — `startTekaeSession()` API client
+- `mobile/src/screens/payments/TekaeSessionScreen.tsx` — loading → browser launch → in-progress → error
+- Align `TekaeSessionResponse` in `types.ts` to actual backend contract (`portalUrl`, `expiresIn`, `sessionRef`)
+- `TEKAE_ENABLED` driven by `EXPO_PUBLIC_TEKAE_ENABLED` env var (default `false`)
+- Conditional "Pagar con Tekae (sandbox)" entry in `ServiceDetailScreen`
+- `TekaeSession` route added to `RootStackParamList`
+
+**Still blocked pending Sprint 087:**
 - Payment success detection (requires Q-006 webhook resolution)
 - Reconciliation (requires Q-009 resolution)
 - Production credentials and VPN/VPC configuration
