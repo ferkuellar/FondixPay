@@ -1552,13 +1552,13 @@ Rationale: Confirmed via live sandbox API test on 2026-06-16. `TEKAE_BEARER` is 
 
 Status: Accepted 2026-06-16.
 
-## ADR-192 - TEKAE_UID and TEKAE_PORTAL_UID Are Two Different Identifiers
+## ADR-192 - TEKAE_UID and TEKAE_PORTAL_UID Are the Same Value
 
-Decision: The `uid` field sent in the `cipherData` and `generateTokenCiphered` request bodies (`TEKAE_UID`) is a different value from the `uid` segment in the portal responsive URL (`TEKAE_PORTAL_UID`). Both must be configured as separate env vars.
+Decision: The `uid` used in `cipherData`/`generateTokenCiphered` request bodies (`TEKAE_UID`) and the `uid` segment in the portal responsive URL (`TEKAE_PORTAL_UID`) are the **same value**. Both env vars are kept separate in config for explicit documentation, but must be set to the same credential.
 
-Rationale: Confirmed via sandbox credentials package received 2026-06-16. Mixing the two UIDs causes auth failure.
+Rationale: Initially assumed to be different identifiers based on an error in the credentials package. Corrected by Tekae on 2026-06-16 — the portal URL uses the same UID as the API body. Using a different UID in the portal URL caused "sesión caducada" in sandbox testing.
 
-Status: Accepted 2026-06-16.
+Status: Corrected 2026-06-16.
 
 ## ADR-193 - Tekae accessToken TTL Is 30 Minutes; No Caching Allowed
 
