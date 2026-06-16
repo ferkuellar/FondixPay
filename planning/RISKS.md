@@ -588,3 +588,25 @@ Open production risks:
 | `EXPO_PUBLIC_ENABLE_PAYMENT_QA_SCENARIOS` absent from actual `.env` of a team member enabling dev scenarios manually | Low / SEV-5 | `.env.example` documents the flag; default-off is safe | Sprint 085: documented in `.env.example` with clear comment |
 | `resolveMexicoStateFromAddress` returns null for unknown geocoder variants of state names not in alias list | Medium / SEV-3 | null falls back to manual selection; no UX breakage | Sprint 087: expand alias coverage with real device testing data |
 | Stores are in-memory; payment methods and saved services reset on app restart | Medium / SEV-3 | Documented MVP limitation; Sprint 085 out of scope | Address in a future persistence sprint (AsyncStorage / SecureStore) |
+
+## Production Closure Plan Risks (Sprints 091–102)
+
+Added 2026-06-16 from Sprint 087 audit. These risks map directly to blockers B-01 through B-10.
+
+| Risk | Severity | Current Mitigation | Sprint |
+|------|----------|--------------------|--------|
+| OTP in process memory resets on restart — real users lose pending OTPs | SEV-1 | Documented; TEKAE_ENABLED=false | Sprint 091 |
+| No rate limit on OTP endpoints — brute-force trivial | SEV-1 | Documented; single-node dev only | Sprint 091 |
+| No staging environment — changes go directly to production | SEV-1 | Documented | Sprint 093 |
+| `create_all` at startup bypasses Alembic migrations | SEV-2 | 11 migrations exist but are overridden | Sprint 092 |
+| Tekae payment confirmation contract unknown — no webhook spec | SEV-2 | Session launch only; no receipt without confirmation | Sprint 094 |
+| Service catalog contains demo/test entries only | SEV-2 | TEKAE_ENABLED=false; no real payments | Sprint 096 |
+| Landing legal pages have unresolved placeholders | SEV-2 | Pages marked internal pending; not published | Sprint 097 |
+| App not in Google Play or App Store | SEV-2 | EAS configured; no build submitted | Sprint 098 |
+| No structured logging, error tracking, or uptime monitoring | SEV-2 | Local logs only; no production observability | Sprint 099 |
+| JWT has no refresh rotation or server-side revocation | SEV-2 | 60-min TTL limits exposure window | Sprint 100 |
+| `POST /payments/sandbox` accessible in production without env gate | SEV-3 | TEKAE_ENABLED=false; sandbox not reached | Sprint 091 |
+| Tekae never provides webhook spec — polling-only fallback needed | SEV-1 | Sprint 094 designs polling as fallback | Sprint 094/095 |
+| Tekae production VPN/VPC topology unknown | SEV-1 | Sandbox confirmed; production network path unverified | Sprint 093/102 |
+| Apple App Review rejection due to demo language or missing legal pages | SEV-2 | Sprint 097 resolves legal; Sprint 098 audits demo strings | Sprint 097/098 |
+| Legal attorney unavailable for Sprint 097 deadline | SEV-2 | Begin legal engagement in parallel with Sprint 093 | Sprint 097 |

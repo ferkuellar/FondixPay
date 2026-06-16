@@ -1915,3 +1915,75 @@ Three CRM UX gaps closed in `admin/src/crm/CrmVisualApp.tsx`:
 - **Token expiry warning:** `jwtExpiry()` decodes JWT `exp` claim via `atob` (no library). `formatExpiry()` formats countdown. `setInterval` (30s) keeps `tokenSecsLeft` live. Sidebar shows remaining time (orange when <15 min). Banner appears when <15 min remain; red banner on expiry, both with Salir button.
 
 TypeScript: 0 errors. No backend changes. See `planning/sprints/089-crm-produccion-polish/COMPLETION_REPORT.md`.
+
+## Sprint 090 — Remove Unused CRM Modules
+
+Date: 2026-06-16
+
+Status: COMPLETE (commit `2fc3b9c`)
+
+Removed unused CRM modules that were present in the admin panel but had no backend implementation or operational value: fraud signals, disputes, tickets, manual review queue, and card reconciliation. These views were stubs or placeholders inherited from earlier planning phases that are no longer in scope.
+
+No backend changes. TypeScript: 0 errors.
+
+---
+
+## Production Closure Plan Phase (Sprints 091–102)
+
+Date opened: 2026-06-16
+
+Status: PLANNED — Sprint 091 is the active next sprint.
+
+The Sprint 087 production readiness audit identified 10 blockers (B-01 through B-10) preventing real user operation and production launch. The full closure plan is documented in `planning/PRODUCTION_CLOSURE_PLAN.md`.
+
+**Active sprint:** 091-auth-rate-limit-hardening
+
+Sprint completion records will be added below as each sprint executes.
+
+### Sprint 091 — Auth Rate Limit Hardening
+Status: DEFINED. Closes B-01 (OTP in-memory), B-02 (no auth rate limit), B-10 (sandbox endpoint open in prod).
+See: `planning/sprints/091-auth-rate-limit-hardening/`
+
+### Sprint 092 — Database Migration Startup Discipline
+Status: DEFINED. Closes B-04 (`create_all` at startup).
+See: `planning/sprints/092-database-migration-startup-discipline/`
+
+### Sprint 093 — Staging Environment Foundation
+Status: DEFINED. Closes B-03 (no staging environment).
+See: `planning/sprints/093-staging-environment-foundation/`
+
+### Sprint 094 — Tekae Payment Confirmation Contract Closure
+Status: DEFINED. Design sprint to resolve B-05 (no webhook contract from Tekae).
+See: `planning/sprints/094-tekae-payment-confirmation-contract-closure/`
+
+### Sprint 095 — Tekae Payment Confirmation Implementation
+Status: DEFINED. Implements B-05 confirmation mechanism after Sprint 094 design.
+See: `planning/sprints/095-tekae-payment-confirmation-implementation/`
+
+### Sprint 096 — Service Catalog Production Activation
+Status: DEFINED. Closes B-06 (demo catalog only).
+See: `planning/sprints/096-service-catalog-production-activation/`
+
+### Sprint 097 — Landing Legal & Support Closure
+Status: DEFINED. Closes B-07 (legal page placeholders).
+See: `planning/sprints/097-landing-legal-support-closure/`
+
+### Sprint 098 — Mobile Store Readiness
+Status: DEFINED. Closes B-08 (app not in stores).
+See: `planning/sprints/098-mobile-store-readiness/`
+
+### Sprint 099 — Observability, Operations & Incident Readiness
+Status: DEFINED. Closes B-09 (no observability).
+See: `planning/sprints/099-observability-operations-incident-readiness/`
+
+### Sprint 100 — Security & Abuse Hardening
+Status: DEFINED. Closes remaining JWT/CORS/Tekae-rate-limit security gaps.
+See: `planning/sprints/100-security-abuse-hardening/`
+
+### Sprint 101 — Closed Beta, Release Candidate & QA
+Status: DEFINED. Final gate: beta users, load test, Go/No-Go vote.
+See: `planning/sprints/101-closed-beta-release-candidate-qa/`
+
+### Sprint 102 — Production Launch Gate
+Status: DEFINED. Final production activation with real Tekae credentials and 24-hour monitoring.
+See: `planning/sprints/102-production-launch-gate/`

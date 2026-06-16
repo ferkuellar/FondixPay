@@ -149,6 +149,44 @@ The following questions predate Sprint 010 and may need cleanup because Prontipa
 - What validation threshold is required before exposing normalized services in STAGING?
 - Should future APIs expose only `MX-*` codes, or accept both canonical `MX-*` and current short codes during migration?
 
+## Production Closure Plan Questions (Added 2026-06-16)
+
+### Q-CPC-001 — Tekae Confirmation Mechanism
+Does Tekae provide a webhook callback after payment completion, or must FONDIXPAY poll a transaction query API? If webhook: what is the payload schema, HMAC signature method, and retry behavior?
+**Blocks:** Sprint 094, Sprint 095
+
+### Q-CPC-002 — Tekae Transaction Query API
+What is the format of the Tekae transaction status query API? Endpoint, request headers, response schema, terminal states, and identifier format.
+**Blocks:** Sprint 094, Sprint 095
+
+### Q-CPC-003 — Tekae Receipt/Comprobante
+Which Tekae evidence is sufficient to generate a FONDIXPAY receipt? Which fields must be persisted from the Tekae confirmation event?
+**Blocks:** Sprint 094, Sprint 095
+
+### Q-CPC-004 — Tekae Production Network Path
+Does Tekae production API require VPN, IP allowlist, or mTLS? What is the exact topology requirement for production backend to reach Tekae production API?
+**Blocks:** Sprint 102
+
+### Q-CPC-005 — Apple Developer Account Status
+Has the Apple Developer account (fercuellar@gmail.com) been confirmed active and paid for FONDIXPAY? Is the `com.fondixpay.app` bundle ID available?
+**Blocks:** Sprint 098
+
+### Q-CPC-006 — Contact Form Submission Provider
+Which form submission backend is approved for `landing/contacto.html`? Options: Formspree, Resend, backend endpoint, Netlify Forms. Must be recorded as ADR-198.
+**Blocks:** Sprint 097
+
+### Q-CPC-007 — LFPDPPP Attorney Engagement
+Has a qualified Mexican attorney specializing in LFPDPPP been engaged to review `landing/terminos.html` and `landing/privacidad.html`? If not, when will this engagement begin?
+**Blocks:** Sprint 097
+
+### Q-CPC-008 — OTP Persistence Backend
+Should Sprint 091 use Redis or PostgreSQL for OTP persistence? Redis adds operational complexity (separate service); PostgreSQL reuses existing DB. Must be recorded as ADR-195.
+**Blocks:** Sprint 091
+
+### Q-CPC-009 — Production Tekae Credentials
+Have Tekae production credentials (separate from sandbox: TEKAE_UID, TEKAE_PASSWORD, TEKAE_BEARER, TEKAE_BASE_URL, TEKAE_PORTAL_UID) been confirmed available for Sprint 102?
+**Blocks:** Sprint 102
+
 ## Sprint 026 Mobile Dependency And Tekae NDA Questions
 
 - What Expo SDK version should be the next approved mobile dependency remediation target?

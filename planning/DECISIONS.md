@@ -1575,3 +1575,51 @@ Decision: The Tekae `accessToken` is used solely to construct `portalUrl` and is
 Rationale: Storing or logging tokens creates credential leak risk. The token is short-lived and single-use per session. If the user needs to re-enter Tekae, a new session is generated.
 
 Status: Accepted 2026-06-16.
+
+## ADR-195 - OTP Persistence Backend: Redis vs. PostgreSQL
+
+Decision: PENDING — Sprint 091 must choose between Redis (`REDIS_URL`) and PostgreSQL (`otp_tokens` table) for OTP persistence.
+
+Rationale: PostgreSQL reuses existing infrastructure (no new service); Redis provides atomic TTL and is standard for short-lived tokens. The choice affects operational complexity (Redis requires provisioning) vs. simplicity (PostgreSQL is already managed). If Redis is unavailable in staging, PostgreSQL is the fallback.
+
+Status: PENDING — must be decided and recorded before Sprint 091 implementation begins.
+
+## ADR-196 - JWT Refresh Token Rotation and Revocation Model
+
+Decision: PENDING — Sprint 100 must implement JWT refresh token rotation. Key parameters: refresh token TTL (recommended 30 days), access token TTL in production (recommended 15 minutes), rotation strategy (revoke-on-use), server-side revocation table (`refresh_tokens`).
+
+Rationale: Current HS256/60-min access-token-only model has no server-side revocation and no session inventory. If a token is stolen, it is valid for 60 minutes with no kill switch. Refresh rotation and a `refresh_tokens` table with `revoked_at` closes this gap.
+
+Status: PENDING — must be decided and recorded in Sprint 100.
+
+## ADR-197 - Tekae Production Network Path
+
+Decision: PENDING — Sprint 093/102 must confirm whether Tekae production API access requires VPN, IP allowlist, or mTLS. Sandbox uses public HTTPS endpoints. Production topology may differ.
+
+Rationale: ADR-161 blocked production Tekae until network path is confirmed. Sandbox-to-production network changes are a common source of production failures for SSO integrations.
+
+Status: PENDING — must be confirmed with Tekae before Sprint 102.
+
+## ADR-198 - Contact Form Submission Backend
+
+Decision: PENDING — Sprint 097 must choose and implement a real form submission endpoint for `landing/contacto.html`. Options: Formspree (no backend), Resend (email API), backend `POST /api/public/contact`, Netlify Forms.
+
+Rationale: The form currently has `action="#"` — a production-blocked stub. Users who submit the form get no confirmation and no email is sent. A real endpoint is required before landing publish.
+
+Status: PENDING — must be decided and recorded in Sprint 097.
+
+## ADR-199 - Production Observability Backend
+
+Decision: PENDING — Sprint 099 must choose and configure an error tracking and uptime monitoring backend. Options for error tracking: Sentry (recommended, free tier available), Datadog, Rollbar. Options for uptime: BetterUptime, UptimeRobot, AWS CloudWatch Synthetics.
+
+Rationale: Without error tracking, production incidents are invisible until a user reports them. Without uptime monitoring, downtime is detected by users, not operators. Both are required before Sprint 102 production launch.
+
+Status: PENDING — must be decided and recorded in Sprint 099.
+
+## ADR-200 - Closed Beta User Acquisition and Invitation Model
+
+Decision: PENDING — Sprint 101 must define how closed beta users are invited. Options: TestFlight internal group (iOS), Google Play internal testing track (Android), EAS preview build with direct APK/IPA download, or all three.
+
+Rationale: Beta testers must use production-equivalent builds to surface real issues before launch. The invitation model affects how quickly testers can onboard and whether real Tekae sandbox payments can be tested.
+
+Status: PENDING — must be decided before Sprint 101 begins.
