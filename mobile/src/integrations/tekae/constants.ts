@@ -10,11 +10,11 @@
  * Do not set TEKAE_ENABLED=true without explicit product + security approval.
  */
 
-export const TEKAE_ENABLED = false as const;
+export const TEKAE_ENABLED: boolean = process.env.EXPO_PUBLIC_TEKAE_ENABLED === 'true';
 
 export type TekaeMode = 'disabled' | 'unavailable' | 'ready_for_sandbox' | 'ready_for_production';
 
-export const TEKAE_MODE: TekaeMode = 'disabled';
+export const TEKAE_MODE: TekaeMode = TEKAE_ENABLED ? 'ready_for_sandbox' : 'disabled';
 
 /**
  * User-facing message shown in any screen where Tekae payment action would appear.

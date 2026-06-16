@@ -30,44 +30,26 @@ export type TekaeSessionParams = {
 
 /**
  * Request mobile sends to the FondixPay backend session endpoint.
- * POST /api/payments/tekae/session (proposed — not yet implemented)
- * Mobile sends intent and optional context; backend handles all Tekae credential logic.
+ * POST /api/payments/tekae/session
+ * Backend handles all Tekae credential logic — mobile only passes optional context.
  */
 export type TekaeSessionRequest = {
-  intent: 'open_tekae_tool';
-  user_service_id?: string;
   menu?: TekaeMenuValue;
   categoria?: string | null;
   carrier?: string | null;
   blockview?: boolean;
-  redirect?: boolean;
-  idempotency_key?: string;
 };
 
 /**
- * Response mobile receives from the FondixPay backend session endpoint.
- * Mobile opens launch_url in an approved WebView or browser.
- * Mobile never receives uid, password, accessToken, or raw Tekae URLs with credentials embedded.
- * launch_url is a short-lived Tekae responsive URL valid for ~20 minutes.
+ * Response mobile receives from the FondixPay backend session endpoint (Sprint 086).
+ * Mobile opens portalUrl in the device browser — never stores or logs this URL.
+ * portalUrl contains an embedded accessToken valid for expiresIn seconds.
+ * sessionRef is a safe audit correlation ID only.
  */
 export type TekaeSessionResponse = {
-  session_id: string;
-  launch_url: string;
-  expires_at: string;
-  launch_mode: 'browser' | 'webview' | 'redirect';
-  status: 'session_ready';
-};
-
-/**
- * Internal session state FONDIXPAY tracks for audit traceability.
- * Only safe identifiers — no credentials, no raw accessToken, no uid/password.
- */
-export type TekaeSessionReference = {
-  sessionId: string;
-  launchMode: 'browser' | 'webview' | 'redirect';
-  requestedAt: string;
-  expiresAt: string;
-  menuContext: TekaeMenuValue;
+  portalUrl: string;
+  expiresIn: number;
+  sessionRef: string;
 };
 
 /**

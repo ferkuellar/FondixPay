@@ -19,6 +19,7 @@ import { PaymentPendingScreen } from '../screens/payments/PaymentPendingScreen';
 import { PaymentSuccessScreen } from '../screens/payments/PaymentSuccessScreen';
 import { ProviderCallbackScreen } from '../screens/payments/ProviderCallbackScreen';
 import { ReceiptDetailScreen } from '../screens/payments/ReceiptDetailScreen';
+import { TekaeSessionScreen } from '../screens/payments/TekaeSessionScreen';
 import { NotificationsScreen } from '../screens/notifications/NotificationsScreen';
 import { ProfileScreen } from '../screens/profile/ProfileScreen';
 import { AddServiceScreen } from '../screens/services/AddServiceScreen';
@@ -119,6 +120,7 @@ export function AppNavigator() {
           <Stack.Screen name="Notifications" component={NotificationsScreen} options={{ title: 'Notificaciones' }} />
           <Stack.Screen name="History" component={HistoryScreen} options={{ title: 'Historial' }} />
           <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: 'Perfil' }} />
+          <Stack.Screen name="TekaeSession" component={TekaeSessionScreen} options={{ title: 'Pago de servicios' }} />
         </>
       ) : (
         <>

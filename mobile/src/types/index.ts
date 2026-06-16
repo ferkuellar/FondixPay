@@ -20,6 +20,7 @@ export type RootStackParamList = {
   Notifications: undefined;
   History: undefined;
   Profile: undefined;
+  TekaeSession: { menu?: string; categoria?: string; carrier?: string; blockview?: boolean };
 };
 
 export type PaymentMethodType = 'card_mock';

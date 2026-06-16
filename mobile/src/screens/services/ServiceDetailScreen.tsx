@@ -4,6 +4,7 @@ import { Feather } from '@expo/vector-icons';
 
 import { AmountDisplay } from '../../components/AmountDisplay';
 import { PrimaryButton } from '../../components/PrimaryButton';
+import { TEKAE_ENABLED } from '../../integrations/tekae/constants';
 import { Screen } from '../../components/Screen';
 import { SecondaryButton } from '../../components/SecondaryButton';
 import { usePaymentMethodStore } from '../../store/paymentMethodStore';
@@ -109,6 +110,14 @@ export function ServiceDetailScreen({ navigation, route }: Props) {
         </Text>
 
         <View style={styles.actions}>
+          {TEKAE_ENABLED && (
+            <PrimaryButton
+              onPress={() => navigation.navigate('TekaeSession', {})}
+              variant="primary"
+            >
+              Pagar con Tekae (sandbox)
+            </PrimaryButton>
+          )}
           <PrimaryButton disabled={currentService.amountDue <= 0} onPress={pay} variant="primary">
             Simular pago {formatMoneyMinor(breakdown.totalMinor)}
           </PrimaryButton>
