@@ -1811,3 +1811,56 @@ Corrected 6 SEV-2 findings from the Sprint 084 audit. No Tekae runtime changes. 
 - `planning/sprints/085-mobile-production-hardening-fixes/`: requirements, blueprint, acceptance.
 
 TypeScript: 0 errors. Lint: 0 warnings.
+
+## Sprint 011 — Tekae Contract Closure & Runtime Readiness Design
+
+Date: 2026-06-16
+
+Status: COMPLETE (documentation and discovery only — no runtime changes)
+
+Tekae sandbox API contract confirmed end-to-end via live API testing:
+
+**Confirmed:**
+- Sandbox API URL: `https://endpointtekaetoken-917994269107.us-central1.run.app`
+- Prod API URL: `https://endpointtekaetokenprod-704030137706.us-central1.run.app`
+- Sandbox portal URL: `https://responsive-dot-tekae-des-gtec.ue.r.appspot.com/responsive/user/{TEKAE_PORTAL_UID}/token/{accessToken}`
+- Auth: `Authorization: Bearer {TEKAE_BEARER}` on all requests.
+- Step 1: `POST /tokens/cipherData` → `{ data, uid }`
+- Step 2: `POST /tokens/generateTokenCiphered` → `{ accessToken, refreshToken }`
+- Token TTL: 30 minutes (1800 seconds). No caching.
+- `TEKAE_UID` (API body) ≠ `TEKAE_PORTAL_UID` (portal URL) — two separate identifiers.
+- `password` field is a KMS-encrypted value provided by Tekae (not a plain password).
+
+**Open questions resolved:** Q-001, Q-002, Q-003, Q-013, Q-014
+**Still open:** Q-004–Q-012 (payment methods, transaction states, webhooks, PCI, refunds, reconciliation, error codes, rate limits, idempotency)
+
+**Documents updated:**
+- `planning/TEKAE_OPEN_QUESTIONS.md`: Q-001/002/003/013 moved to Resolved
+- `docs/TEKAE_INTEGRATION_READINESS.md`: confirmed contract added
+- `planning/DECISIONS.md`: ADR-191 through ADR-194
+- `backend/.env.example`: `TEKAE_BEARER`, `TEKAE_PORTAL_UID` added as required vars
+- `planning/sprints/011-tekae-contract-closure-runtime-readiness-design/COMPLETION_REPORT.md`: created
+
+No runtime code changed. `TEKAE_ENABLED=false` remains required.
+
+## Sprint 086 — Tekae Backend Session Endpoint
+
+Date: 2026-06-16
+
+Status: DEFINED — Ready for implementation
+
+Sprint 086 will implement `POST /api/payments/tekae/session` in the FONDIXPAY backend:
+- Validates authenticated FONDIXPAY user
+- Calls Tekae `cipherData` → `generateTokenCiphered` using sandbox credentials from env vars
+- Returns `{ portalUrl, expiresIn: 1800, sessionRef }` to mobile
+- Never stores or logs `accessToken` or `portalUrl`
+- Writes audit events per attempt (session_ref only, no token)
+- Gated by `TEKAE_ENABLED` env var
+
+Active sprint: `planning/sprints/086-tekae-backend-session-endpoint/`
+
+**Still blocked pending Sprint 086:**
+- Mobile WebView/browser launch (Sprint 087)
+- Payment success detection (requires Q-006 webhook resolution)
+- Reconciliation (requires Q-009 resolution)
+- Production credentials and VPN/VPC configuration

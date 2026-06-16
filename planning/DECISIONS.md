@@ -1543,3 +1543,35 @@ Decision: `ProfileScreen` reads payment methods and saved services from `usePaym
 Rationale: The screen was shadowing real store data with a local hardcoded list, making it impossible to verify that stores were working. Any user session would always see fake data regardless of actual app state.
 
 Status: Accepted 2026-06-15.
+
+## ADR-191 - Tekae API Uses Two-Layer Authentication
+
+Decision: Tekae API requires `Authorization: Bearer {TEKAE_BEARER}` in every HTTP header, plus `uid` (= `TEKAE_UID`) and `password` (= `TEKAE_PASSWORD`, a KMS-encrypted value) in the request body of `cipherData`. Both layers are required; either alone returns 401.
+
+Rationale: Confirmed via live sandbox API test on 2026-06-16. `TEKAE_BEARER` is a separate static secret from `TEKAE_UID`/`TEKAE_PASSWORD`.
+
+Status: Accepted 2026-06-16.
+
+## ADR-192 - TEKAE_UID and TEKAE_PORTAL_UID Are Two Different Identifiers
+
+Decision: The `uid` field sent in the `cipherData` and `generateTokenCiphered` request bodies (`TEKAE_UID`) is a different value from the `uid` segment in the portal responsive URL (`TEKAE_PORTAL_UID`). Both must be configured as separate env vars.
+
+Rationale: Confirmed via sandbox credentials package received 2026-06-16. Mixing the two UIDs causes auth failure.
+
+Status: Accepted 2026-06-16.
+
+## ADR-193 - Tekae accessToken TTL Is 30 Minutes; No Caching Allowed
+
+Decision: Each `POST /api/payments/tekae/session` call must generate a fresh Tekae session. `accessToken` TTL is 1800 seconds (30 minutes). Backend must not cache or reuse tokens across requests.
+
+Rationale: JWT payload from sandbox confirmed `exp - iat = 1800s`. Reusing an expired token would cause a broken session for the user in the Tekae portal.
+
+Status: Accepted 2026-06-16.
+
+## ADR-194 - accessToken Is Never Stored or Logged; portalUrl Is Returned Once
+
+Decision: The Tekae `accessToken` is used solely to construct `portalUrl` and is immediately discarded. `portalUrl` is returned to mobile once and not persisted. Audit events record only `session_ref` (UUID), not the token or URL.
+
+Rationale: Storing or logging tokens creates credential leak risk. The token is short-lived and single-use per session. If the user needs to re-enter Tekae, a new session is generated.
+
+Status: Accepted 2026-06-16.

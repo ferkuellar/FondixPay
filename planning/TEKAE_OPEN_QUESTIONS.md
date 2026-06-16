@@ -1,7 +1,7 @@
 # Tekae Integration — Open Questions
 
-**Status:** ACTIVE — Most items block implementation. Q-001, Q-014 confirmed from Manual v3.1; Q-003 partially confirmed.
-**Last updated:** 2026-06-15 (updated with Sprint 011 readiness matrix findings)
+**Status:** PARTIALLY RESOLVED — Q-001, Q-002, Q-003, Q-013, Q-014 confirmed via live sandbox API test (2026-06-16). Q-004 to Q-012 remain open; they do not block Sprint 086 backend session endpoint but block full payment confirmation, reconciliation, and webhook handling.
+**Last updated:** 2026-06-16 (Sprint 011 closure — sandbox API contract confirmed end-to-end)
 
 ---
 
@@ -19,37 +19,44 @@ When an answer is confirmed:
 ## Open (Blocking)
 
 ### Q-001 — Integration Method
-**PARTIALLY RESOLVED** — Confirmed from Manual de integración Tekae Business v3.1 (reviewed Sprint 011).
+**RESOLVED** — Confirmed via live sandbox API test 2026-06-16.
 
 Integration model: Backend-brokered SSO responsivo.
 - Mobile never calls Tekae directly.
 - Backend calls `POST /tokens/cipherData` then `POST /tokens/generateTokenCiphered`.
-- Backend constructs `https://tekae.com.mx/responsive/user/{uid}/token/{accessToken}`.
-- Mobile opens the URL in browser, WebView, or embed.
+- Backend constructs `{TEKAE_RESPONSIVE_BASE_URL}/user/{TEKAE_PORTAL_UID}/token/{accessToken}`.
+- Mobile opens the URL via browser, WebView, or embed.
 - No native mobile SDK required.
+- Sandbox portal base: `https://responsive-dot-tekae-des-gtec.ue.r.appspot.com/responsive`
+- Prod portal base: `https://tekae.com.mx/responsive`
 
-Still pending: base URL (sandbox + production), full token endpoint schema, auth header format, exact error codes.
-
-- Source: Manual de integración Tekae Business v3.1 — confirmed 2026-06-15.
+- Source: Live sandbox API test — confirmed 2026-06-16.
 
 ---
 
 ### Q-002 — Authentication Method
-**How does FONDIXPAY authenticate to Tekae APIs?**
+**RESOLVED** — Confirmed via live sandbox API test 2026-06-16.
 
-Is it API key, OAuth 2.0 (client credentials), mutual TLS, or another mechanism?
+Authentication uses **two layers**:
+1. HTTP header: `Authorization: Bearer {TEKAE_BEARER}` on every request.
+2. Request body: `uid` (API identifier) + `password` (KMS-encrypted value provided by Tekae).
 
-- Affects: credential management, secret rotation policy, backend security design.
+`TEKAE_BEARER`, `TEKAE_UID`, and `TEKAE_PASSWORD` are secrets — must be in secret store, never in repo.
+
+- Source: Live sandbox API test — confirmed 2026-06-16.
 
 ---
 
 ### Q-003 — Sandbox Environment
-**PARTIALLY RESOLVED** — Manual v3.1 confirms Tekae will provide a sandbox/development environment.
+**RESOLVED** — Sandbox credentials received and verified 2026-06-16.
 
-Confirmed: Tekae provides a development URL and test Swagger/credentials for authorized staff.
-Still pending: actual sandbox base URL, test credentials (to be delivered through approved secure channel), Swagger document.
+- Sandbox API base URL: `https://endpointtekaetoken-917994269107.us-central1.run.app`
+- Sandbox portal base URL: `https://responsive-dot-tekae-des-gtec.ue.r.appspot.com/responsive`
+- Swagger documentation: accessible at `{sandbox_base}/swagger/login` (credentials required)
+- Full token flow verified end-to-end in live sandbox test.
+- Credentials received through approved secure channel; not committed to repo.
 
-- Source: Manual de integración Tekae Business v3.1 — partially confirmed 2026-06-15.
+- Source: Tekae sandbox credentials delivered 2026-06-16; live API test confirmed.
 
 ---
 
@@ -135,11 +142,11 @@ If yes: What is the key header and scope (per-session, per-merchant)?
 ---
 
 ### Q-013 — Onboarding and Commercial Agreement
-**Has FONDIXPAY completed a commercial agreement with Tekae?**
+**RESOLVED** — Sandbox credentials received 2026-06-16.
 
-Are sandbox credentials available for development? Is a production merchant account set up?
+Sandbox credentials are available and verified. A production merchant account and its credentials are separate and not yet received.
 
-- Affects: ability to begin any technical integration work.
+- Source: Tekae sandbox credentials delivered 2026-06-16.
 
 ---
 
@@ -155,6 +162,22 @@ No React Native / iOS / Android SDK dependency is needed.
 ---
 
 ## Resolved
+
+### Q-001 — Integration Method (RESOLVED 2026-06-16)
+Backend-brokered SSO responsivo. Two-step token flow: cipherData → generateTokenCiphered. Portal URL launched by mobile.
+Source: Live sandbox API test 2026-06-16.
+
+### Q-002 — Authentication Method (RESOLVED 2026-06-16)
+Bearer token in Authorization header + uid + KMS-encrypted password in request body.
+Source: Live sandbox API test 2026-06-16.
+
+### Q-003 — Sandbox Environment (RESOLVED 2026-06-16)
+Sandbox API and portal URLs confirmed. Swagger accessible. Full token flow verified.
+Source: Tekae sandbox credentials delivered and tested 2026-06-16.
+
+### Q-013 — Onboarding and Commercial Agreement (RESOLVED 2026-06-16)
+Sandbox credentials received through secure channel. Production credentials separate/pending.
+Source: Tekae sandbox credentials delivered 2026-06-16.
 
 ### Q-014 — Mobile SDK Availability (RESOLVED 2026-06-15)
 No native SDK required. Integration is URL-based (SSO responsivo).
