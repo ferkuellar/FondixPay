@@ -13,10 +13,6 @@ import type {
   ChatbotSetting,
   ChatOperationsMetrics,
   DashboardSummary,
-  DisputeCase,
-  FraudSignal,
-  ManualReviewCase,
-  ReconciliationSummary,
   SupportTicket,
 } from "../types/admin";
 import type { ApiErrorBody } from "../types/api";
@@ -127,45 +123,6 @@ export function createAdminClient(getToken: TokenProvider, on401?: () => void) {
       request<AdminNotificationDelivery>(`/admin/notifications/deliveries/${id}`),
     search: (params: { q: string; type?: string }) =>
       request<AdminSearchResponse>(`/admin/search${query(params)}`),
-    cardReconciliation: () => request<ReconciliationSummary>("/admin/reconciliation/card"),
-    manualReview: () => request<ManualReviewCase[]>("/admin/manual-review"),
-    manualReviewCase: (id: string) => request<ManualReviewCase>(`/admin/manual-review/${id}`),
-    updateManualReviewCase: (id: string, payload: Partial<ManualReviewCase> & { note?: string }) =>
-      request<ManualReviewCase>(`/admin/manual-review/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
-    fraudSignals: (params: { status?: string; severity?: string; payment_id?: string }) =>
-      request<FraudSignal[]>(`/admin/fraud/signals${query(params)}`),
-    fraudSignal: (id: string) => request<FraudSignal>(`/admin/fraud/signals/${id}`),
-    createFraudSignal: (payload: Partial<FraudSignal>) =>
-      request<FraudSignal>("/admin/fraud/signals", { method: "POST", body: JSON.stringify(payload) }),
-    updateFraudSignalStatus: (id: string, payload: Pick<FraudSignal, "status"> & { resolution?: string }) =>
-      request<FraudSignal>(`/admin/fraud/signals/${id}/status`, { method: "PATCH", body: JSON.stringify(payload) }),
-    disputes: (params: { status?: string; case_type?: string; payment_id?: string }) =>
-      request<DisputeCase[]>(`/admin/disputes${query(params)}`),
-    dispute: (id: string) => request<DisputeCase>(`/admin/disputes/${id}`),
-    createDispute: (payload: Partial<DisputeCase>) =>
-      request<DisputeCase>("/admin/disputes", { method: "POST", body: JSON.stringify(payload) }),
-    updateDisputeStatus: (id: string, payload: Pick<DisputeCase, "status"> & { assigned_to?: number | null }) =>
-      request<DisputeCase>(`/admin/disputes/${id}/status`, { method: "PATCH", body: JSON.stringify(payload) }),
-    addDisputeEvidence: (
-      id: string,
-      payload: {
-        evidence_type: string;
-        title: string;
-        description?: string;
-        storage_reference?: string;
-        source_entity_type?: string;
-        source_entity_id?: string;
-      },
-    ) =>
-      request<DisputeCase>(`/admin/disputes/${id}/evidence`, { method: "POST", body: JSON.stringify(payload) }),
-    tickets: () => request<SupportTicket[]>("/admin/support/tickets"),
-    ticket: (id: string) => request<SupportTicket>(`/admin/support/tickets/${id}`),
-    createTicket: (payload: Partial<SupportTicket>) =>
-      request<SupportTicket>("/admin/support/tickets", { method: "POST", body: JSON.stringify(payload) }),
-    updateTicket: (id: string, payload: Partial<SupportTicket> & { resolution_note?: string }) =>
-      request<SupportTicket>(`/admin/support/tickets/${id}`, { method: "PATCH", body: JSON.stringify(payload) }),
-    addTicketNote: (id: string, payload: { note: string; is_internal: boolean }) =>
-      request<SupportTicket>(`/admin/support/tickets/${id}/notes`, { method: "POST", body: JSON.stringify(payload) }),
     chatbotFaqs: () => request<ChatbotFaq[]>("/admin/chat/faqs"),
     createChatbotFaq: (payload: Partial<ChatbotFaq>) =>
       request<ChatbotFaq>("/admin/chat/faqs", { method: "POST", body: JSON.stringify(payload) }),

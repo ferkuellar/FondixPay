@@ -42,11 +42,9 @@ type IconName =
   | "payments"
   | "receipts"
   | "search"
-  | "tickets"
   | "chat"
   | "shield"
   | "fraud"
-  | "disputes"
   | "recon"
   | "audit"
   | "bell"
@@ -2050,11 +2048,9 @@ function Icon({ name }: { name: IconName }) {
     payments: <><path d="M3 7h13l-3-3M21 17H8l3 3" /></>,
     receipts: <><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" /></>,
     search: <><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></>,
-    tickets: <><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z" /></>,
     chat: <><path d="M21 12a8 8 0 1 1-3.5-6.6L21 4l-1 4.4A8 8 0 0 1 21 12z" /><path d="M8 12h.01M12 12h.01M16 12h.01" /></>,
     shield: <><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z" /><path d="m9 12 2 2 4-4" /></>,
     fraud: <><path d="M12 3 2 21h20z" /><path d="M12 10v5M12 18h.01" /></>,
-    disputes: <><path d="M4 21V4l14 4-6 4 6 4z" /></>,
     recon: <><rect x="3" y="4" width="18" height="16" rx="2" /><path d="M3 9h18M8 13h4M8 16h7" /></>,
     audit: <><path d="M9 11l3 3L22 4" /><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" /></>,
     bell: <><path d="M6 8a6 6 0 1 1 12 0c0 7 3 7 3 9H3c0-2 3-2 3-9z" /><path d="M10 21a2 2 0 0 0 4 0" /></>,

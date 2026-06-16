@@ -171,103 +171,6 @@ export type SupportTicket = {
   notes: SupportTicketNote[];
 };
 
-export type ManualReviewCase = {
-  id: number;
-  case_type:
-    | "card_success_service_payment_failed"
-    | "card_success_service_payment_pending"
-    | "service_payment_timeout"
-    | "service_payment_pending"
-    | "receipt_unavailable"
-    | "duplicate_attempt"
-    | "duplicate_charge_claim"
-    | "amount_mismatch"
-    | "chargeback_suspected"
-    | "user_claims_not_paid"
-    | "provider_timeout"
-    | "provider_status_unknown"
-    | "reconciliation_mismatch"
-    | "other";
-  status:
-    | "open"
-    | "assigned"
-    | "investigating"
-    | "waiting_provider"
-    | "waiting_user"
-    | "resolved"
-    | "escalated"
-    | "closed";
-  severity: "low" | "medium" | "high" | "urgent";
-  user_id?: number | null;
-  payment_id?: number | null;
-  receipt_id?: number | null;
-  support_ticket_id?: number | null;
-  card_reference?: string | null;
-  provider_reference?: string | null;
-  correlation_id?: string | null;
-  assigned_to?: number | null;
-  summary: string;
-  resolution?: string | null;
-  created_at: string;
-  updated_at: string;
-  closed_at?: string | null;
-};
-
-export type FraudSignal = {
-  id: number;
-  signal_type: string;
-  severity: "low" | "medium" | "high" | "urgent";
-  status: "open" | "reviewed" | "dismissed" | "escalated";
-  entity_type: string;
-  entity_id: string;
-  user_id?: number | null;
-  payment_id?: number | null;
-  transaction_id?: number | null;
-  reason: string;
-  metadata_json?: Record<string, unknown> | null;
-  created_by: number;
-  created_at: string;
-  reviewed_at?: string | null;
-  reviewed_by?: number | null;
-  resolution?: string | null;
-};
-
-export type DisputeEvidence = {
-  id: number;
-  dispute_case_id: number;
-  evidence_type: string;
-  title: string;
-  description?: string | null;
-  storage_reference?: string | null;
-  source_entity_type?: string | null;
-  source_entity_id?: string | null;
-  created_at: string;
-  created_by: number;
-};
-
-export type DisputeCase = {
-  id: number;
-  case_type: "dispute" | "chargeback";
-  status: "OPEN" | "UNDER_REVIEW" | "EVIDENCE_GATHERING" | "SUBMITTED" | "WON" | "LOST" | "CLOSED" | "CANCELED";
-  payment_id?: number | null;
-  transaction_id?: number | null;
-  user_id?: number | null;
-  provider_transaction_id?: string | null;
-  card_processor_reference?: string | null;
-  amount_minor?: number | null;
-  currency: string;
-  reason_code?: string | null;
-  summary: string;
-  opened_at: string;
-  due_at?: string | null;
-  closed_at?: string | null;
-  assigned_to?: number | null;
-  created_by: number;
-  updated_by?: number | null;
-  updated_at: string;
-  evidence: DisputeEvidence[];
-};
-
 export type AuditEvent = {
   id: number;
   event_type: string;
@@ -299,21 +202,6 @@ export type AdminNotificationDelivery = {
   created_at: string;
   updated_at: string;
   metadata_json?: Record<string, unknown> | null;
-};
-
-export type ReconciliationSummary = {
-  provider_type: "card_processor";
-  status: "not_implemented" | "ready_for_sandbox" | "partial";
-  summary: {
-    total_count: number;
-    matched_count: number;
-    mismatch_count: number;
-    pending_count: number;
-    manual_review_count: number;
-  };
-  items: Record<string, unknown>[];
-  message: string;
-  production_ready: boolean;
 };
 
 export type AdminSearchResult = {
