@@ -1901,3 +1901,17 @@ Fixed three CRM production gaps in `admin/src/crm/CrmVisualApp.tsx`:
 - **F1 — Row click → detail pages:** Added `user-detail`, `payment-detail`, `receipt-detail` to `ModuleKey`; `keyFromPath()` matches dynamic paths via regex; `parentKeyMap` keeps nav highlighted on detail views; `UsersView`, `PaymentsView`, `ReceiptsView` rows are clickable.
 
 TypeScript: 0 errors. No backend changes. See `planning/sprints/088-crm-operational-ux/COMPLETION_REPORT.md`.
+
+## Sprint 089 — CRM Producción Polish
+
+Date: 2026-06-15
+
+Status: COMPLETE
+
+Three CRM UX gaps closed in `admin/src/crm/CrmVisualApp.tsx`:
+
+- **Export CSV:** Added `downloadCsv()` utility (client-side, no backend). Wired all four Exportar buttons: `usuarios-<ts>.csv`, `pagos-<ts>.csv`, `recibos-<ts>.csv`, `audit-logs-<ts>.csv`. Exports current filtered view with UTF-8 BOM for Excel compatibility.
+- **Topbar search ⌘K:** `searchRef` added to topbar input; global `keydown` handler binds `⌘K`/`Ctrl+K` to focus it; `Enter` navigates to `#/search` and blurs.
+- **Token expiry warning:** `jwtExpiry()` decodes JWT `exp` claim via `atob` (no library). `formatExpiry()` formats countdown. `setInterval` (30s) keeps `tokenSecsLeft` live. Sidebar shows remaining time (orange when <15 min). Banner appears when <15 min remain; red banner on expiry, both with Salir button.
+
+TypeScript: 0 errors. No backend changes. See `planning/sprints/089-crm-produccion-polish/COMPLETION_REPORT.md`.

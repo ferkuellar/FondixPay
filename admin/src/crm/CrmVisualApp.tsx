@@ -172,14 +172,46 @@ function setHashForKey(key: ModuleKey) {
   window.location.hash = routes[key];
 }
 
+function jwtExpiry(token: string | null): number | null {
+  if (!token) return null;
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))) as { exp?: number };
+    return payload.exp ?? null;
+  } catch {
+    return null;
+  }
+}
+
+function formatExpiry(secs: number): string {
+  if (secs <= 0) return "Sesión expirada";
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  if (h > 0) return `Sesión: ${h}h ${m}m`;
+  return secs < 60 ? "Sesión: <1 min" : `Sesión: ${m} min`;
+}
+
+function downloadCsv(filename: string, headers: string[], rows: string[][]) {
+  const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
+  const lines = [headers, ...rows].map((row) => row.map(esc).join(",")).join("\n");
+  const blob = new Blob(["﻿" + lines], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 export function CrmVisualApp() {
-  const { logout, role, devAuthEnabled } = useAdminAuth();
+  const { logout, role, devAuthEnabled, token } = useAdminAuth();
   const [path, setPath] = useState(currentPath);
   const [theme, setTheme] = useState<"light" | "dark">(
     document.documentElement.dataset.theme === "dark" ? "dark" : "light",
   );
   const [environment, setEnvironment] = useState<"DEV" | "STAGING" | "PRODUCTION">("DEV");
   const [showBanner, setShowBanner] = useState(() => localStorage.getItem("crm-dev-banner-hidden") !== "1");
+  const [tokenSecsLeft, setTokenSecsLeft] = useState<number | null>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const activeKey = keyFromPath(path);
   const navActiveKey = parentKeyMap[activeKey] ?? activeKey;
 
@@ -192,6 +224,26 @@ export function CrmVisualApp() {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
+
+  useEffect(() => {
+    const expiry = jwtExpiry(token);
+    if (!expiry) return;
+    const tick = () => setTokenSecsLeft(Math.max(0, Math.floor(expiry - Date.now() / 1000)));
+    tick();
+    const id = setInterval(tick, 30000);
+    return () => clearInterval(id);
+  }, [token]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   const hideBanner = () => {
     localStorage.setItem("crm-dev-banner-hidden", "1");
@@ -231,7 +283,9 @@ export function CrmVisualApp() {
           <span className="crm-avatar">{role ? role.slice(0, 2) : "OP"}</span>
           <div>
             <strong>{role ?? "Operador"}</strong>
-            <span>CRM Admin</span>
+            <span style={{ color: tokenSecsLeft !== null && tokenSecsLeft < 900 ? "var(--crm-orange, #f97316)" : undefined }}>
+              {tokenSecsLeft !== null ? formatExpiry(tokenSecsLeft) : "CRM Admin"}
+            </span>
           </div>
         </div>
       </aside>
@@ -240,7 +294,17 @@ export function CrmVisualApp() {
         <header className="crm-topbar">
           <div className="crm-search">
             <Icon name="search" />
-            <input aria-label="Buscar" placeholder="Buscar transacción, usuario, ticket..." />
+            <input
+              ref={searchRef}
+              aria-label="Buscar"
+              placeholder="Buscar transacción, usuario, ticket..."
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  window.location.hash = "/search";
+                  e.currentTarget.blur();
+                }
+              }}
+            />
             <span className="crm-shortcut">⌘K</span>
           </div>
           <div className="crm-top-actions">
@@ -264,6 +328,18 @@ export function CrmVisualApp() {
           <div className="crm-banner">
             <span>⚠ Operación interna · DEV AUTH habilitado. No usar en producción.</span>
             <button type="button" onClick={hideBanner} aria-label="Ocultar banner">×</button>
+          </div>
+        ) : null}
+        {tokenSecsLeft !== null && tokenSecsLeft > 0 && tokenSecsLeft < 900 ? (
+          <div className="crm-banner" style={{ background: "var(--crm-orange, #f97316)", borderColor: "transparent", color: "#fff" }}>
+            <span>⚠ Sesión expira en {Math.ceil(tokenSecsLeft / 60)} min — guarda tu trabajo.</span>
+            <button type="button" onClick={() => logout()} aria-label="Cerrar sesión">Salir</button>
+          </div>
+        ) : null}
+        {tokenSecsLeft === 0 ? (
+          <div className="crm-banner" style={{ background: "var(--crm-red, #ef4444)", borderColor: "transparent", color: "#fff" }}>
+            <span>Sesión expirada. Inicia sesión nuevamente.</span>
+            <button type="button" onClick={() => logout()} aria-label="Cerrar sesión">Salir</button>
           </div>
         ) : null}
         <main className="crm-content">{renderView(activeKey, path)}</main>
@@ -703,7 +779,13 @@ function UsersView() {
       <ViewHeader
         title="Usuarios"
         subtitle={loading ? "Cargando…" : `${mobileUsers.length} registrados`}
-        actions={<button className="crm-btn"><Icon name="download" />Exportar CSV</button>}
+        actions={
+          <button className="crm-btn" onClick={() => downloadCsv(
+            `usuarios-${Date.now()}.csv`,
+            ["Teléfono", "Nombre", "Rol", "Estado", "Pagos", "Registrado"],
+            visible.map((u) => [u.phone, u.name ?? "", u.role, u.is_active ? "Activo" : "Inactivo", String(u.recent_payment_ids?.length ?? 0), formatDate(u.created_at)]),
+          )}><Icon name="download" />Exportar CSV</button>
+        }
       />
       <div className="crm-toolbar">
         <Segmented options={["Todos", "Activo", "Inactivo"]} value={filter} onChange={setFilter} />
@@ -765,7 +847,13 @@ function PaymentsView() {
       <ViewHeader
         title="Pagos"
         subtitle={loading ? "Cargando…" : `${payments.length} transacciones`}
-        actions={<button className="crm-btn"><Icon name="download" />Exportar CSV</button>}
+        actions={
+          <button className="crm-btn" onClick={() => downloadCsv(
+            `pagos-${Date.now()}.csv`,
+            ["ID", "Servicio", "Referencia", "Total", "Estado", "Creado"],
+            filtered.map((p) => [String(p.id), p.service_name, p.service_reference_masked, formatMoney(p.total_minor), p.status, formatDate(p.created_at)]),
+          )}><Icon name="download" />Exportar CSV</button>
+        }
       />
       <div className="crm-mini-grid">
         <MiniStat label="Total" value={loading ? "…" : String(payments.length)} />
@@ -915,7 +1003,17 @@ function ReceiptsView() {
 
   return (
     <>
-      <ViewHeader title="Recibos" subtitle={loading ? "Cargando…" : `${receipts.length} comprobantes`} actions={<button className="crm-btn"><Icon name="download" />Exportar</button>} />
+      <ViewHeader
+        title="Recibos"
+        subtitle={loading ? "Cargando…" : `${receipts.length} comprobantes`}
+        actions={
+          <button className="crm-btn" onClick={() => downloadCsv(
+            `recibos-${Date.now()}.csv`,
+            ["Folio", "Pago ID", "Monto", "Estado", "Creado"],
+            receipts.map((r) => [r.folio, String(r.payment_id), formatMoney(r.total_minor), r.receipt_status ?? r.payment_status, formatDate(r.created_at)]),
+          )}><Icon name="download" />Exportar</button>
+        }
+      />
       {loading ? <div className="crm-loading">Cargando recibos…</div> : (
         <div className="crm-card crm-table-wrap">
           <table className="crm-table">
@@ -956,7 +1054,17 @@ function AuditLogsView() {
 
   return (
     <>
-      <ViewHeader title="Audit logs" subtitle={loading ? "Cargando…" : `${events.length} eventos`} actions={<button className="crm-btn"><Icon name="download" />Exportar</button>} />
+      <ViewHeader
+        title="Audit logs"
+        subtitle={loading ? "Cargando…" : `${events.length} eventos`}
+        actions={
+          <button className="crm-btn" onClick={() => downloadCsv(
+            `audit-logs-${Date.now()}.csv`,
+            ["Tiempo", "Actor", "Acción", "Entidad", "Resultado"],
+            events.map((e) => [formatDate(e.created_at), e.actor_id ?? e.actor_type, e.event_type, e.entity_type ? `${e.entity_type} ${e.entity_id}` : "", e.result]),
+          )}><Icon name="download" />Exportar</button>
+        }
+      />
       {loading ? <div className="crm-loading">Cargando eventos…</div> : (
         <div className="crm-card crm-table-wrap">
           <table className="crm-table">
